@@ -2,54 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://192.168.0.177:1313/categories/</loc>
+    <loc>https://softon-top.github.io/categories/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/immortalwrt/</loc>
+    <loc>https://softon-top.github.io/tags/immortalwrt/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/pve/</loc>
+    <loc>https://softon-top.github.io/tags/pve/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/</loc>
+    <loc>https://softon-top.github.io/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/</loc>
+    <loc>https://softon-top.github.io/tags/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tutorials/</loc>
+    <loc>https://softon-top.github.io/tutorials/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/zorin/</loc>
+    <loc>https://softon-top.github.io/tags/zorin/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tutorials/build-personal-website-with-pve-and-hugo/</loc>
+    <loc>https://softon-top.github.io/tutorials/build-personal-website-with-pve-and-hugo/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/categories/tutorials/</loc>
+    <loc>https://softon-top.github.io/categories/tutorials/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/</loc>
+    <loc>https://softon-top.github.io/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/</loc>
     <lastmod>2026-01-31T20:21:25+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/ai/</loc>
+    <loc>https://softon-top.github.io/tags/ai/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/hugo/</loc>
+    <loc>https://softon-top.github.io/tags/hugo/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/others/</loc>
+    <loc>https://softon-top.github.io/others/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/tags/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</loc>
+    <loc>https://softon-top.github.io/tags/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/categories/others/</loc>
+    <loc>https://softon-top.github.io/categories/others/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/others/welcome-to-ai-powered-software-blog/</loc>
+    <loc>https://softon-top.github.io/others/welcome-to-ai-powered-software-blog/</loc>
     <lastmod>2026-01-30T11:58:02+08:00</lastmod>
   </url><url>
-    <loc>http://192.168.0.177:1313/categories/software/</loc>
+    <loc>https://softon-top.github.io/categories/software/</loc>
   </url>
 </urlset>

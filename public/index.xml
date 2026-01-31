@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>softon.top</title>
-        <link>http://192.168.0.177:1313/</link>
+        <link>https://softon-top.github.io/</link>
         <description>Recent content on softon.top</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sat, 31 Jan 2026 20:21:25 +0800</lastBuildDate><atom:link href="http://192.168.0.177:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 31 Jan 2026 20:21:25 +0800</lastBuildDate><atom:link href="https://softon-top.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>从软路由到 Hugo：我的家庭服务器搭建全记录</title>
-        <link>http://192.168.0.177:1313/tutorials/build-personal-website-with-pve-and-hugo/</link>
+        <link>https://softon-top.github.io/tutorials/build-personal-website-with-pve-and-hugo/</link>
         <pubDate>Sat, 31 Jan 2026 20:21:25 +0800</pubDate>
         
-        <guid>http://192.168.0.177:1313/tutorials/build-personal-website-with-pve-and-hugo/</guid>
+        <guid>https://softon-top.github.io/tutorials/build-personal-website-with-pve-and-hugo/</guid>
         <description>&lt;p&gt;我搭建个人站点的初衷，不是为了追求流量，只是想拥有一个完全属于自己的“数字小窝”，记录技术探索、日常思考，也顺便折腾一下各类软路由、虚拟机相关的玩法。初衷落地的第一步，就是搞定硬件设备和基础环境，毕竟“巧妇难为无米之炊”，今天就和大家详细拆解，我这套个人建站方案用到的所有设备、具体成本，以及各个组件的用途，全程干货无废话，适合想入门自建站点、喜欢折腾软路由的朋友参考～
 先交代一个基础前提：我家的网络是电信宽带，速率日常够用，用来支撑个人站点的本地搭建、远程调试和数据推送完全没问题，这也是整个建站方案的网络基础，无需额外为网络单独增加成本（除了日常缴纳的宽带费）。&lt;/p&gt;
 &lt;h2 id=&#34;一核心设备清单软路由为主配件为辅&#34;&gt;一、核心设备清单：软路由为主，配件为辅
@@ -64,10 +64,10 @@
         </item>
         <item>
         <title>致每一位同频的软件爱好者：这个站点，为热爱而生</title>
-        <link>http://192.168.0.177:1313/others/welcome-to-ai-powered-software-blog/</link>
+        <link>https://softon-top.github.io/others/welcome-to-ai-powered-software-blog/</link>
         <pubDate>Fri, 30 Jan 2026 11:58:02 +0800</pubDate>
         
-        <guid>http://192.168.0.177:1313/others/welcome-to-ai-powered-software-blog/</guid>
+        <guid>https://softon-top.github.io/others/welcome-to-ai-powered-software-blog/</guid>
         <description>&lt;p&gt;大家好，欢迎来到 &lt;strong&gt;softon.top&lt;/strong&gt;—— 一个属于软件爱好者的小天地，也是我第一次以文字的形式，和屏幕前的你聊聊我搭建这个站点的初衷。&lt;/p&gt;
 &lt;p&gt;先做个简单的自我介绍吧，我是一个不折不扣的“电脑迷”，从小就喜欢和各类软件打交道。不管是系统重装后的软件调试、小众工具的挖掘，还是常用软件的进阶技巧，哪怕是花一下午时间折腾一个插件、优化一组快捷键，都能让我觉得充满乐趣。这种对软件的热爱，就像一种习惯，陪着我走过了很多时光，也让我在不断折腾中，积累了一些不算高深，但足够实用的经验。&lt;/p&gt;
 &lt;p&gt;随着AI技术的飞速发展，我的“折腾范围”也慢慢扩展到了AI领域。现在的我，已经是AI的重度使用者——不管是用AI辅助编写代码、优化文案，还是遇到软件使用中的疑难杂症时，和AI对话排查问题、寻找解决方案，AI都成了我身边最得力的“帮手”。更重要的是，我计划让AI主导整个站点的内容创作与流程落地，充分发挥AI的动能：从软件教程的框架搭建、文案润色，到AI实战案例的梳理、建站流程的问题排查，甚至是内容排版优化，都会以AI为核心辅助，既提高创作效率，也能让分享的内容更精准、更实用。在这个过程中我发现，很多好用的软件、实用的技巧，还有和AI高效协作的实战经验，其实都值得被记录和分享；而很多和我一样喜欢软件、想用好AI的朋友，也可能正在寻找这些零散的知识点。&lt;/p&gt;
