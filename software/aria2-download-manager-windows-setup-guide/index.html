@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、什么是Aria2？ Aria2是一款轻量级、跨平台的命令行下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent、Metalink等多种协议，凭借超高的下载速度、极低的资源占用和灵活的配置能力，成为众多用户心中的「下载神器」。\n但Aria2本身无图形界面，搭配AriaNg（一款基于网页的Aria2前端管理工具），可实现可视化操作，兼顾命令行的高效与图形界面的易用性。\n二、准备工作：下载所需文件 1. 下载Aria2 下载地址：aria2官方发布页 选择版本：aria2-1.37.0-win-64bit-build1.zip（Windows 64位） 2. 下载AriaNg 下载地址：AriaNg官方发布页 选择版本：AriaNg-1.3.13-AllInOne.zip（全能版，无需部署服务器） 3. 下载Servy（用于将Aria2注册为系统服务） 下载地址：Servy官方仓库 选择版本：servy-6.4-x64-installer.exe 4. 下载Chrome扩展（可选，快速调用Aria2） 扩展地址：Aria2 整合 - Chrome应用商店 三、安装与文件解压 1. 创建核心目录 在D盘创建主目录：D:\\Program Files\\Aria2\n再创建AriaNg子目录：D:\\Program Files\\Aria2\\AriaNg\n2. 解压文件 将aria2-1.37.0-win-64bit-build1.zip解压到D:\\Program Files\\Aria2（解压后确保目录内有aria2c.exe）； 将AriaNg-1.3.13-AllInOne.zip解压到D:\\Program Files\\Aria2\\AriaNg（解压后可见index.html）； 双击D:\\Program Files\\Aria2\\AriaNg\\index.html，自动在浏览器打开AriaNg界面\n但是现在打开会提示出错，我们继续操作 四、配置Aria2（核心步骤） 在D:\\Program Files\\Aria2目录下新建aria2.conf文件，右键用记事本打开，填写以下配置内容（根据需求可自行调整）： # RPC 设置（AriaNg连接核心） enable-rpc=true rpc-listen-all=true rpc-allow-origin-all=true rpc-listen-port=6800 rpc-secret=123456 # 下载设置 dir=D:\\Downloads # 下载文件保存路径 continue=true # 支持断点续传 max-concurrent-downloads=5 # 最大同时下载任务数 max-connection-per-server=16 # 单服务器最大连接数 split=16 # 分块下载数 min-split-size=10M # 最小分块大小 # 日志设置 log-level=warn # 日志级别（warn仅记录警告，减少日志体积） console-log-level=error # 控制台日志级别 # BT 设置（可选，优化BT下载） bt-enable-lpd=true bt-max-peers=50 注意：D:\\Downloads目录需提前创建，或者你可以自定义自己的下载文件夹。\n">
+<title>Windows下Aria2&#43;AriaNg安装配置教程 打造高效全能下载神器</title>
+
+<link rel='canonical' href='https://softon.top/software/aria2-download-manager-windows-setup-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="Windows下Aria2+AriaNg安装配置教程 打造高效全能下载神器">
+<meta property='og:description' content="一、什么是Aria2？ Aria2是一款轻量级、跨平台的命令行下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent、Metalink等多种协议，凭借超高的下载速度、极低的资源占用和灵活的配置能力，成为众多用户心中的「下载神器」。\n但Aria2本身无图形界面，搭配AriaNg（一款基于网页的Aria2前端管理工具），可实现可视化操作，兼顾命令行的高效与图形界面的易用性。\n二、准备工作：下载所需文件 1. 下载Aria2 下载地址：aria2官方发布页 选择版本：aria2-1.37.0-win-64bit-build1.zip（Windows 64位） 2. 下载AriaNg 下载地址：AriaNg官方发布页 选择版本：AriaNg-1.3.13-AllInOne.zip（全能版，无需部署服务器） 3. 下载Servy（用于将Aria2注册为系统服务） 下载地址：Servy官方仓库 选择版本：servy-6.4-x64-installer.exe 4. 下载Chrome扩展（可选，快速调用Aria2） 扩展地址：Aria2 整合 - Chrome应用商店 三、安装与文件解压 1. 创建核心目录 在D盘创建主目录：D:\\Program Files\\Aria2\n再创建AriaNg子目录：D:\\Program Files\\Aria2\\AriaNg\n2. 解压文件 将aria2-1.37.0-win-64bit-build1.zip解压到D:\\Program Files\\Aria2（解压后确保目录内有aria2c.exe）； 将AriaNg-1.3.13-AllInOne.zip解压到D:\\Program Files\\Aria2\\AriaNg（解压后可见index.html）； 双击D:\\Program Files\\Aria2\\AriaNg\\index.html，自动在浏览器打开AriaNg界面\n但是现在打开会提示出错，我们继续操作 四、配置Aria2（核心步骤） 在D:\\Program Files\\Aria2目录下新建aria2.conf文件，右键用记事本打开，填写以下配置内容（根据需求可自行调整）： # RPC 设置（AriaNg连接核心） enable-rpc=true rpc-listen-all=true rpc-allow-origin-all=true rpc-listen-port=6800 rpc-secret=123456 # 下载设置 dir=D:\\Downloads # 下载文件保存路径 continue=true # 支持断点续传 max-concurrent-downloads=5 # 最大同时下载任务数 max-connection-per-server=16 # 单服务器最大连接数 split=16 # 分块下载数 min-split-size=10M # 最小分块大小 # 日志设置 log-level=warn # 日志级别（warn仅记录警告，减少日志体积） console-log-level=error # 控制台日志级别 # BT 设置（可选，优化BT下载） bt-enable-lpd=true bt-max-peers=50 注意：D:\\Downloads目录需提前创建，或者你可以自定义自己的下载文件夹。\n">
+<meta property='og:url' content='https://softon.top/software/aria2-download-manager-windows-setup-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Aria2' /><meta property='article:tag' content='AriaNg' /><meta property='article:tag' content='下载工具' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='安装配置' /><meta property='article:tag' content='Servy' /><meta property='article:published_time' content='2026-02-12T16:43:59&#43;08:00'/><meta property='article:modified_time' content='2026-02-12T16:43:59&#43;08:00'/>
+<meta name="twitter:title" content="Windows下Aria2+AriaNg安装配置教程 打造高效全能下载神器">
+<meta name="twitter:description" content="一、什么是Aria2？ Aria2是一款轻量级、跨平台的命令行下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent、Metalink等多种协议，凭借超高的下载速度、极低的资源占用和灵活的配置能力，成为众多用户心中的「下载神器」。\n但Aria2本身无图形界面，搭配AriaNg（一款基于网页的Aria2前端管理工具），可实现可视化操作，兼顾命令行的高效与图形界面的易用性。\n二、准备工作：下载所需文件 1. 下载Aria2 下载地址：aria2官方发布页 选择版本：aria2-1.37.0-win-64bit-build1.zip（Windows 64位） 2. 下载AriaNg 下载地址：AriaNg官方发布页 选择版本：AriaNg-1.3.13-AllInOne.zip（全能版，无需部署服务器） 3. 下载Servy（用于将Aria2注册为系统服务） 下载地址：Servy官方仓库 选择版本：servy-6.4-x64-installer.exe 4. 下载Chrome扩展（可选，快速调用Aria2） 扩展地址：Aria2 整合 - Chrome应用商店 三、安装与文件解压 1. 创建核心目录 在D盘创建主目录：D:\\Program Files\\Aria2\n再创建AriaNg子目录：D:\\Program Files\\Aria2\\AriaNg\n2. 解压文件 将aria2-1.37.0-win-64bit-build1.zip解压到D:\\Program Files\\Aria2（解压后确保目录内有aria2c.exe）； 将AriaNg-1.3.13-AllInOne.zip解压到D:\\Program Files\\Aria2\\AriaNg（解压后可见index.html）； 双击D:\\Program Files\\Aria2\\AriaNg\\index.html，自动在浏览器打开AriaNg界面\n但是现在打开会提示出错，我们继续操作 四、配置Aria2（核心步骤） 在D:\\Program Files\\Aria2目录下新建aria2.conf文件，右键用记事本打开，填写以下配置内容（根据需求可自行调整）： # RPC 设置（AriaNg连接核心） enable-rpc=true rpc-listen-all=true rpc-allow-origin-all=true rpc-listen-port=6800 rpc-secret=123456 # 下载设置 dir=D:\\Downloads # 下载文件保存路径 continue=true # 支持断点续传 max-concurrent-downloads=5 # 最大同时下载任务数 max-connection-per-server=16 # 单服务器最大连接数 split=16 # 分块下载数 min-split-size=10M # 最小分块大小 # 日志设置 log-level=warn # 日志级别（warn仅记录警告，减少日志体积） console-log-level=error # 控制台日志级别 # BT 设置（可选，优化BT下载） bt-enable-lpd=true bt-max-peers=50 注意：D:\\Downloads目录需提前创建，或者你可以自定义自己的下载文件夹。\n"><link rel="stylesheet" href="/css/custom.min.7fd66700661ad48ef7287492d241166346eff0c30681d6c2f2f056351ab54ef4.css" integrity="sha256-f9ZnAGYa1I73KHSS0kEWY0bv8MMGgdbC8vBWNRq1TvQ=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一什么是aria2">一、什么是Aria2？</a></li>
+    <li><a href="#二准备工作下载所需文件">二、准备工作：下载所需文件</a>
+      <ul>
+        <li><a href="#1-下载aria2">1. 下载Aria2</a></li>
+        <li><a href="#2-下载ariang">2. 下载AriaNg</a></li>
+        <li><a href="#3-下载servy用于将aria2注册为系统服务">3. 下载Servy（用于将Aria2注册为系统服务）</a></li>
+        <li><a href="#4-下载chrome扩展可选快速调用aria2">4. 下载Chrome扩展（可选，快速调用Aria2）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三安装与文件解压">三、安装与文件解压</a>
+      <ul>
+        <li><a href="#1-创建核心目录">1. 创建核心目录</a></li>
+        <li><a href="#2-解压文件">2. 解压文件</a></li>
+      </ul>
+    </li>
+    <li><a href="#四配置aria2核心步骤">四、配置Aria2（核心步骤）</a></li>
+    <li><a href="#五临时启动aria2测试基础功能">五、临时启动Aria2（测试基础功能）</a></li>
+    <li><a href="#六安装chrome扩展便捷调用">六、安装Chrome扩展（便捷调用）</a></li>
+    <li><a href="#七注册aria2为系统服务开机自启">七、注册Aria2为系统服务（开机自启）</a>
+      <ul>
+        <li><a href="#1-直接安装servy">1. 直接安装Servy</a></li>
+        <li><a href="#2-创建服务配置">2. 创建服务配置</a></li>
+        <li><a href="#3-启动服务">3. 启动服务</a></li>
+      </ul>
+    </li>
+    <li><a href="#八常见问题排查">八、常见问题排查</a></li>
+    <li><a href="#九最终效果展示">九、最终效果展示</a></li>
+    <li><a href="#十总结">十、总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/aria2/">
+                Aria2
+            </a>
+        
+            <a href="/tags/ariang/">
+                AriaNg
+            </a>
+        
+            <a href="/tags/cloudflare/">
+                Cloudflare
+            </a>
+        
+            <a href="/tags/github/">
+                Github
+            </a>
+        
+            <a href="/tags/idm%E6%9B%BF%E4%BB%A3/">
+                IDM替代
+            </a>
+        
+            <a href="/tags/immortalwrt/">
+                Immortalwrt
+            </a>
+        
+            <a href="/tags/ndm/">
+                NDM
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/aria2-download-manager-windows-setup-guide/">Windows下Aria2&#43;AriaNg安装配置教程 打造高效全能下载神器</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-12T16:43:59&#43;08:00'>
+                    2026-02-12，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/aria2-download-manager-windows-setup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一什么是aria2">一、什么是Aria2？</a></li>
+    <li><a href="#二准备工作下载所需文件">二、准备工作：下载所需文件</a>
+      <ul>
+        <li><a href="#1-下载aria2">1. 下载Aria2</a></li>
+        <li><a href="#2-下载ariang">2. 下载AriaNg</a></li>
+        <li><a href="#3-下载servy用于将aria2注册为系统服务">3. 下载Servy（用于将Aria2注册为系统服务）</a></li>
+        <li><a href="#4-下载chrome扩展可选快速调用aria2">4. 下载Chrome扩展（可选，快速调用Aria2）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三安装与文件解压">三、安装与文件解压</a>
+      <ul>
+        <li><a href="#1-创建核心目录">1. 创建核心目录</a></li>
+        <li><a href="#2-解压文件">2. 解压文件</a></li>
+      </ul>
+    </li>
+    <li><a href="#四配置aria2核心步骤">四、配置Aria2（核心步骤）</a></li>
+    <li><a href="#五临时启动aria2测试基础功能">五、临时启动Aria2（测试基础功能）</a></li>
+    <li><a href="#六安装chrome扩展便捷调用">六、安装Chrome扩展（便捷调用）</a></li>
+    <li><a href="#七注册aria2为系统服务开机自启">七、注册Aria2为系统服务（开机自启）</a>
+      <ul>
+        <li><a href="#1-直接安装servy">1. 直接安装Servy</a></li>
+        <li><a href="#2-创建服务配置">2. 创建服务配置</a></li>
+        <li><a href="#3-启动服务">3. 启动服务</a></li>
+      </ul>
+    </li>
+    <li><a href="#八常见问题排查">八、常见问题排查</a></li>
+    <li><a href="#九最终效果展示">九、最终效果展示</a></li>
+    <li><a href="#十总结">十、总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="一什么是aria2">一、什么是Aria2？
+</h2><p>Aria2是一款轻量级、跨平台的命令行下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent、Metalink等多种协议，凭借超高的下载速度、极低的资源占用和灵活的配置能力，成为众多用户心中的「下载神器」。</p>
+<p>但Aria2本身无图形界面，搭配AriaNg（一款基于网页的Aria2前端管理工具），可实现可视化操作，兼顾命令行的高效与图形界面的易用性。</p>
+<h2 id="二准备工作下载所需文件">二、准备工作：下载所需文件
+</h2><h3 id="1-下载aria2">1. 下载Aria2
+</h3><ul>
+<li>下载地址：<a class="link" href="https://github.com/aria2/aria2/releases"  target="_blank" rel="noopener"
+    >aria2官方发布页</a></li>
+<li>选择版本：aria2-1.37.0-win-64bit-build1.zip（Windows 64位）</li>
+</ul>
+<h3 id="2-下载ariang">2. 下载AriaNg
+</h3><ul>
+<li>下载地址：<a class="link" href="https://github.com/mayswind/AriaNg/releases"  target="_blank" rel="noopener"
+    >AriaNg官方发布页</a></li>
+<li>选择版本：AriaNg-1.3.13-AllInOne.zip（全能版，无需部署服务器）</li>
+</ul>
+<h3 id="3-下载servy用于将aria2注册为系统服务">3. 下载Servy（用于将Aria2注册为系统服务）
+</h3><ul>
+<li>下载地址：<a class="link" href="https://github.com/aelassas/servy"  target="_blank" rel="noopener"
+    >Servy官方仓库</a></li>
+<li>选择版本：servy-6.4-x64-installer.exe</li>
+</ul>
+<h3 id="4-下载chrome扩展可选快速调用aria2">4. 下载Chrome扩展（可选，快速调用Aria2）
+</h3><ul>
+<li>扩展地址：<a class="link" href="https://chromewebstore.google.com/detail/aria2-%E6%95%B4%E5%90%88/hnenidncmoeebipinjdfniagjnfjbapi?hl=zh-CN&amp;utm_source=ext_sidebar"  target="_blank" rel="noopener"
+    >Aria2 整合 - Chrome应用商店</a></li>
+</ul>
+<h2 id="三安装与文件解压">三、安装与文件解压
+</h2><h3 id="1-创建核心目录">1. 创建核心目录
+</h3><p>在D盘创建主目录：D:\Program Files\Aria2<br>
+再创建AriaNg子目录：D:\Program Files\Aria2\AriaNg</p>
+<h3 id="2-解压文件">2. 解压文件
+</h3><ul>
+<li>
+<p>将aria2-1.37.0-win-64bit-build1.zip解压到D:\Program Files\Aria2（解压后确保目录内有aria2c.exe）；
+<img src="https://img.softon.top/2026/02/0933050_aPiFdSDRO9.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Aria2解压后文件结构"
+	
+	
+></p>
+</li>
+<li>
+<p>将AriaNg-1.3.13-AllInOne.zip解压到D:\Program Files\Aria2\AriaNg（解压后可见index.html）；
+<img src="https://img.softon.top/2026/02/0934033_dZMOpRUe6Z.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="AriaNg解压后文件结构"
+	
+	
+></p>
+</li>
+</ul>
+<p>双击D:\Program Files\Aria2\AriaNg\index.html，自动在浏览器打开AriaNg界面</p>
+<p>但是现在打开会提示出错，我们继续操作
+<img src="https://img.softon.top/2026/02/0920265_NvIxGaVYNn.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="AriaNg打开出错"
+	
+	
+></p>
+<h2 id="四配置aria2核心步骤">四、配置Aria2（核心步骤）
+</h2><p>在D:\Program Files\Aria2目录下新建aria2.conf文件，右键用记事本打开，填写以下配置内容（根据需求可自行调整）：
+<img src="https://img.softon.top/2026/02/oMFXUCowP5.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="新建aria2.conf配置文件"
+	
+	
+></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># RPC 设置（AriaNg连接核心）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">enable-rpc</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rpc-listen-all</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rpc-allow-origin-all</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rpc-listen-port</span><span style="color:#f92672">=</span><span style="color:#e6db74">6800</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rpc-secret</span><span style="color:#f92672">=</span><span style="color:#e6db74">123456</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 下载设置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dir</span><span style="color:#f92672">=</span><span style="color:#e6db74">D:\Downloads  # 下载文件保存路径</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">continue</span><span style="color:#f92672">=</span><span style="color:#e6db74">true     # 支持断点续传</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">max-concurrent-downloads</span><span style="color:#f92672">=</span><span style="color:#e6db74">5  # 最大同时下载任务数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">max-connection-per-server</span><span style="color:#f92672">=</span><span style="color:#e6db74">16  # 单服务器最大连接数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">split</span><span style="color:#f92672">=</span><span style="color:#e6db74">16  # 分块下载数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">min-split-size</span><span style="color:#f92672">=</span><span style="color:#e6db74">10M  # 最小分块大小</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 日志设置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log-level</span><span style="color:#f92672">=</span><span style="color:#e6db74">warn  # 日志级别（warn仅记录警告，减少日志体积）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">console-log-level</span><span style="color:#f92672">=</span><span style="color:#e6db74">error  # 控制台日志级别</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># BT 设置（可选，优化BT下载）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bt-enable-lpd</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bt-max-peers</span><span style="color:#f92672">=</span><span style="color:#e6db74">50</span>
+</span></span></code></pre></div><blockquote>
+<p>注意：D:\Downloads目录需提前创建，或者你可以自定义自己的下载文件夹。</p>
+</blockquote>
+<h2 id="五临时启动aria2测试基础功能">五、临时启动Aria2（测试基础功能）
+</h2><p>打开CMD命令提示符，依次执行以下命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">1. cd /d &#34;D:\Program Files\Aria2&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. aria2c.exe --conf-path</span><span style="color:#f92672">=</span><span style="color:#e6db74">aria2.conf</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/0941878_ass0XeTvJs.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="CMD临时启动Aria2"
+	
+	
+></p>
+<p>若命令行无报错，说明Aria2基础配置正常，再打开提示已连接表示成功。
+<img src="https://img.softon.top/2026/02/0943288_VOwAATtqsK.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="AriaNg打开成功"
+	
+	
+></p>
+<p>点击Aria2状态显示如下
+<img src="https://img.softon.top/2026/02/1526934_V1LYyta8wx.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Aria2状态"
+	
+	
+></p>
+<h2 id="六安装chrome扩展便捷调用">六、安装Chrome扩展（便捷调用）
+</h2><ol>
+<li>
+<p>打开Chrome扩展商店，安装「Aria2 整合」扩展；</p>
+</li>
+<li>
+<p>扩展设置中填写Aria2的RPC地址和密钥（与AriaNg一致，rpc-secret=123456，可自定义修改）；
+<img src="https://img.softon.top/2026/02/SQiZ10Jr7s.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Aria2扩展设置"
+	
+	
+>
+<img src="https://img.softon.top/2026/02/fxbLMSV8TM.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Aria2扩展密钥设置"
+	
+	
+></p>
+</li>
+<li>
+<p>浏览网页时，右键点击下载链接，选择「使用Aria2下载」，即可快速添加任务；
+<img src="https://img.softon.top/2026/02/1528307_ktWlySvk3K.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="鼠标右键选择Aria2下载链接"
+	
+	
+>
+<img src="https://img.softon.top/2026/02/MCCPj7Abaa.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="新建aria2下载任务"
+	
+	
+>
+<img src="https://img.softon.top/2026/02/1531935_Wz8miL299f.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="下载任务显示"
+	
+	
+></p>
+</li>
+</ol>
+<h2 id="七注册aria2为系统服务开机自启">七、注册Aria2为系统服务（开机自启）
+</h2><h3 id="1-直接安装servy">1. 直接安装Servy
+</h3><p>默认安装到C:\Program Files\Servy，可以自定义文件夹，安装后在开始菜单可见。
+<img src="https://img.softon.top/2026/02/1118960_crAmvYhCcG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Servy开始菜单"
+	
+	
+></p>
+<h3 id="2-创建服务配置">2. 创建服务配置
+</h3><p>直接点击Servy创建Aria2服务，填好后点击Install安装成服务
+<img src="https://img.softon.top/2026/02/1519001_WjxDivfogu.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="新建aria2服务配置"
+	
+	
+></p>
+<h3 id="3-启动服务">3. 启动服务
+</h3><p>点击Servy Manager 选择创建的aria2服务 点启动
+<img src="https://img.softon.top/2026/02/1521342_mwpcKKSOy4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="启动Aria2服务"
+	
+	
+></p>
+<h2 id="八常见问题排查">八、常见问题排查
+</h2><ol>
+<li>
+<p><strong>AriaNg连接失败</strong>：</p>
+<ul>
+<li>检查Aria2是否启动；</li>
+<li>核对aria2.conf中RPC端口、密钥是否与AriaNg一致；</li>
+<li>关闭防火墙/杀毒软件，避免拦截6800端口。</li>
+</ul>
+</li>
+<li>
+<p><strong>下载速度慢</strong>：</p>
+<ul>
+<li>调整max-connection-per-server、split参数（数值越大，分块越多，速度可能越快）；</li>
+<li>BT下载可添加公共Tracker地址，提升节点数。</li>
+</ul>
+</li>
+<li>
+<p><strong>服务注册失败</strong>：</p>
+<ul>
+<li>确保Servy填写的路径及参数是否正确。</li>
+</ul>
+</li>
+</ol>
+<h2 id="九最终效果展示">九、最终效果展示
+</h2><p>通过以上步骤，即可实现：</p>
+<ul>
+<li>Aria2后台运行+AriaNg可视化管理，支持多协议下载、断点续传；</li>
+<li>Chrome扩展一键调用，无需手动复制链接；</li>
+<li>注册系统服务后开机自启，无需每次手动启动CMD。</li>
+</ul>
+<h2 id="十总结">十、总结
+</h2><ol>
+<li>先完成Aria2基础配置和临时启动，验证核心功能可用；</li>
+<li>再配置AriaNg可视化和Chrome扩展，提升使用体验；</li>
+<li>最后注册系统服务，实现开机自启，完成完整的下载体系搭建。</li>
+</ol>
+<p>Aria2+AriaNg的组合兼顾速度与易用性，是Windows系统下高效的下载解决方案。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/aria2/">Aria2</a>
+        
+            <a href="/tags/ariang/">AriaNg</a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">下载工具</a>
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">安装配置</a>
+        
+            <a href="/tags/servy/">Servy</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/aria2-download-manager-windows-setup-guide\/'; 
+        const pageTitle = 'Windows下Aria2\u002bAriaNg安装配置教程 打造高效全能下载神器';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 45 天 15 小时 · 4 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-02-15 23:27:08 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

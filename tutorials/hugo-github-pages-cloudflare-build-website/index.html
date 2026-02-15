@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="对于个人站长而言，搭建教程类网站最核心的痛点莫过于「截图量大、图床成本高、上传繁琐、建站开支高」—— 教程类内容离不开大量步骤截图辅助讲解，没有服务器资源的情况下，付费图床和虚拟主机长期使用成本居高不下，免费图床又多存在不稳定、限速、广告植入等问题；同时，截图后手动上传、复制链接、插入文章，再配合网站发布，整套流程繁琐耗时，严重影响内容产出效率。\n今天就给大家分享一套仅需域名成本、其余全免费的建站解决方案，无需服务器，仅需花费极低的域名注册费用，通过「ShareX（免费截图 + 自动上传工具）+ Cloudflare 免费图床（R2 对象存储）+ Hugo（静态网站生成器）+ GitHub Pages（免费空间）」的组合，彻底解决教程类网站的截图管理、图床成本和建站部署难题，全程实操落地，新手站长也能快速上手，同时兼顾 SEO 优化，助力网站获得更好的搜索排名。\n一、核心痛点与解决方案 1. 个人站长做教程类网站的4大困境 截图管理痛点：每篇教程需10-20张步骤截图，手动保存、命名、压缩优化繁琐，后续修改时查找困难； 图床成本痛点：付费图床按月收取存储费+流量费，长期使用成本高；免费图床易跑路、加载慢，甚至添加广告水印； 建站成本痛点：传统虚拟主机/云服务器每年开支上百元，个人站长性价比低； 发布效率痛点：截图上传、文章编辑、网站发布环节割裂，创作效率低下。 2. 低成本解决方案：仅域名付费，其余全免费 核心需求 工具/服务 成本 核心优势 域名注册 Porkbun 70余元/3年 支付宝直付，首年1.63$起，赠隐私保护 域名解析/加速 Cloudflare 免费DNS 0元 免费CDN+SSL证书，提升访问速度与安全性 免费建站部署 Hugo + GitHub Pages 0元 静态网站极速生成+全球免费托管，无流量限制 稳定免费图床 Cloudflare R2 对象存储 0元 10GB免费存储+无限出口流量，大厂背书不跑路 截图自动化管理 ShareX 0元 截图→上传→复制Markdown链接一键完成 二、核心工具解析 1. ShareX：免费全能截图工具，截图+自动上传一步到位 ShareX是Windows平台免费开源的截图工具，GitHub超33k星标，核心能力适配教程类网站需求：\n支持全屏、区域、滚动截图、延时截图、录屏，截图后可即时编辑（标注、裁剪、加水印）； 对接Cloudflare R2，截图后自动上传，且自动复制Markdown格式图片链接，直接粘贴到Hugo文章即可； 内置文件管理功能，可按时间/关键词搜索已上传截图，支持编辑、删除远程文件，解决截图管理混乱问题。 Sharex官网地址：https://github.com/ShareX/ShareX\n2. Cloudflare：一站式免费服务，图床+域名解析全搞定 Cloudflare作为全球最大CDN服务商，免费功能是本方案的核心支撑：\n免费DNS解析：支持自定义域名解析、CDN加速、免费SSL证书配置，生效速度快，操作简单，提升网站访问速度和安全性； ">
+<title>Hugo&#43;Github Pages&#43;Cloudflare免费图床 个人低成本建站保姆级教程</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="Hugo+Github Pages+Cloudflare免费图床 个人低成本建站保姆级教程">
+<meta property='og:description' content="对于个人站长而言，搭建教程类网站最核心的痛点莫过于「截图量大、图床成本高、上传繁琐、建站开支高」—— 教程类内容离不开大量步骤截图辅助讲解，没有服务器资源的情况下，付费图床和虚拟主机长期使用成本居高不下，免费图床又多存在不稳定、限速、广告植入等问题；同时，截图后手动上传、复制链接、插入文章，再配合网站发布，整套流程繁琐耗时，严重影响内容产出效率。\n今天就给大家分享一套仅需域名成本、其余全免费的建站解决方案，无需服务器，仅需花费极低的域名注册费用，通过「ShareX（免费截图 + 自动上传工具）+ Cloudflare 免费图床（R2 对象存储）+ Hugo（静态网站生成器）+ GitHub Pages（免费空间）」的组合，彻底解决教程类网站的截图管理、图床成本和建站部署难题，全程实操落地，新手站长也能快速上手，同时兼顾 SEO 优化，助力网站获得更好的搜索排名。\n一、核心痛点与解决方案 1. 个人站长做教程类网站的4大困境 截图管理痛点：每篇教程需10-20张步骤截图，手动保存、命名、压缩优化繁琐，后续修改时查找困难； 图床成本痛点：付费图床按月收取存储费+流量费，长期使用成本高；免费图床易跑路、加载慢，甚至添加广告水印； 建站成本痛点：传统虚拟主机/云服务器每年开支上百元，个人站长性价比低； 发布效率痛点：截图上传、文章编辑、网站发布环节割裂，创作效率低下。 2. 低成本解决方案：仅域名付费，其余全免费 核心需求 工具/服务 成本 核心优势 域名注册 Porkbun 70余元/3年 支付宝直付，首年1.63$起，赠隐私保护 域名解析/加速 Cloudflare 免费DNS 0元 免费CDN+SSL证书，提升访问速度与安全性 免费建站部署 Hugo + GitHub Pages 0元 静态网站极速生成+全球免费托管，无流量限制 稳定免费图床 Cloudflare R2 对象存储 0元 10GB免费存储+无限出口流量，大厂背书不跑路 截图自动化管理 ShareX 0元 截图→上传→复制Markdown链接一键完成 二、核心工具解析 1. ShareX：免费全能截图工具，截图+自动上传一步到位 ShareX是Windows平台免费开源的截图工具，GitHub超33k星标，核心能力适配教程类网站需求：\n支持全屏、区域、滚动截图、延时截图、录屏，截图后可即时编辑（标注、裁剪、加水印）； 对接Cloudflare R2，截图后自动上传，且自动复制Markdown格式图片链接，直接粘贴到Hugo文章即可； 内置文件管理功能，可按时间/关键词搜索已上传截图，支持编辑、删除远程文件，解决截图管理混乱问题。 Sharex官网地址：https://github.com/ShareX/ShareX\n2. Cloudflare：一站式免费服务，图床+域名解析全搞定 Cloudflare作为全球最大CDN服务商，免费功能是本方案的核心支撑：\n免费DNS解析：支持自定义域名解析、CDN加速、免费SSL证书配置，生效速度快，操作简单，提升网站访问速度和安全性； ">
+<meta property='og:url' content='https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='github' /><meta property='article:tag' content='cloudflare' /><meta property='article:tag' content='免费图床' /><meta property='article:tag' content='个人建站' /><meta property='article:tag' content='sharex' /><meta property='article:tag' content='静态网站' /><meta property='article:published_time' content='2026-02-15T20:44:44&#43;08:00'/><meta property='article:modified_time' content='2026-02-15T20:44:44&#43;08:00'/>
+<meta name="twitter:title" content="Hugo+Github Pages+Cloudflare免费图床 个人低成本建站保姆级教程">
+<meta name="twitter:description" content="对于个人站长而言，搭建教程类网站最核心的痛点莫过于「截图量大、图床成本高、上传繁琐、建站开支高」—— 教程类内容离不开大量步骤截图辅助讲解，没有服务器资源的情况下，付费图床和虚拟主机长期使用成本居高不下，免费图床又多存在不稳定、限速、广告植入等问题；同时，截图后手动上传、复制链接、插入文章，再配合网站发布，整套流程繁琐耗时，严重影响内容产出效率。\n今天就给大家分享一套仅需域名成本、其余全免费的建站解决方案，无需服务器，仅需花费极低的域名注册费用，通过「ShareX（免费截图 + 自动上传工具）+ Cloudflare 免费图床（R2 对象存储）+ Hugo（静态网站生成器）+ GitHub Pages（免费空间）」的组合，彻底解决教程类网站的截图管理、图床成本和建站部署难题，全程实操落地，新手站长也能快速上手，同时兼顾 SEO 优化，助力网站获得更好的搜索排名。\n一、核心痛点与解决方案 1. 个人站长做教程类网站的4大困境 截图管理痛点：每篇教程需10-20张步骤截图，手动保存、命名、压缩优化繁琐，后续修改时查找困难； 图床成本痛点：付费图床按月收取存储费+流量费，长期使用成本高；免费图床易跑路、加载慢，甚至添加广告水印； 建站成本痛点：传统虚拟主机/云服务器每年开支上百元，个人站长性价比低； 发布效率痛点：截图上传、文章编辑、网站发布环节割裂，创作效率低下。 2. 低成本解决方案：仅域名付费，其余全免费 核心需求 工具/服务 成本 核心优势 域名注册 Porkbun 70余元/3年 支付宝直付，首年1.63$起，赠隐私保护 域名解析/加速 Cloudflare 免费DNS 0元 免费CDN+SSL证书，提升访问速度与安全性 免费建站部署 Hugo + GitHub Pages 0元 静态网站极速生成+全球免费托管，无流量限制 稳定免费图床 Cloudflare R2 对象存储 0元 10GB免费存储+无限出口流量，大厂背书不跑路 截图自动化管理 ShareX 0元 截图→上传→复制Markdown链接一键完成 二、核心工具解析 1. ShareX：免费全能截图工具，截图+自动上传一步到位 ShareX是Windows平台免费开源的截图工具，GitHub超33k星标，核心能力适配教程类网站需求：\n支持全屏、区域、滚动截图、延时截图、录屏，截图后可即时编辑（标注、裁剪、加水印）； 对接Cloudflare R2，截图后自动上传，且自动复制Markdown格式图片链接，直接粘贴到Hugo文章即可； 内置文件管理功能，可按时间/关键词搜索已上传截图，支持编辑、删除远程文件，解决截图管理混乱问题。 Sharex官网地址：https://github.com/ShareX/ShareX\n2. Cloudflare：一站式免费服务，图床+域名解析全搞定 Cloudflare作为全球最大CDN服务商，免费功能是本方案的核心支撑：\n免费DNS解析：支持自定义域名解析、CDN加速、免费SSL证书配置，生效速度快，操作简单，提升网站访问速度和安全性； "><link rel="stylesheet" href="/css/custom.min.7fd66700661ad48ef7287492d241166346eff0c30681d6c2f2f056351ab54ef4.css" integrity="sha256-f9ZnAGYa1I73KHSS0kEWY0bv8MMGgdbC8vBWNRq1TvQ=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一核心痛点与解决方案">一、核心痛点与解决方案</a>
+      <ul>
+        <li><a href="#1-个人站长做教程类网站的4大困境">1. 个人站长做教程类网站的4大困境</a></li>
+        <li><a href="#2-低成本解决方案仅域名付费其余全免费">2. 低成本解决方案：仅域名付费，其余全免费</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心工具解析">二、核心工具解析</a>
+      <ul>
+        <li><a href="#1-sharex免费全能截图工具截图自动上传一步到位">1. ShareX：免费全能截图工具，截图+自动上传一步到位</a></li>
+        <li><a href="#2-cloudflare一站式免费服务图床域名解析全搞定">2. Cloudflare：一站式免费服务，图床+域名解析全搞定</a></li>
+        <li><a href="#3-hugo--github-pages免费静态建站组合">3. Hugo + GitHub Pages：免费静态建站组合</a></li>
+        <li><a href="#4-porkbun高性价比域名注册平台">4. Porkbun：高性价比域名注册平台</a></li>
+      </ul>
+    </li>
+    <li><a href="#三实操步骤从域名注册到网站发布">三、实操步骤：从域名注册到网站发布</a>
+      <ul>
+        <li><a href="#第一步porkbun注册域名唯一成本">第一步：Porkbun注册域名（唯一成本）</a></li>
+        <li><a href="#第二步cloudflare配置域名解析r2图床搭建">第二步：Cloudflare配置（域名解析+R2图床搭建）</a></li>
+        <li><a href="#第三步sharex配置自动上传文件管理">第三步：ShareX配置（自动上传+文件管理）</a></li>
+        <li><a href="#第四步hugo建站github-pages部署">第四步：Hugo建站+GitHub Pages部署</a></li>
+        <li><a href="#第五步发布教程文章sharexhugo联动">第五步：发布教程文章（ShareX+Hugo联动）</a></li>
+      </ul>
+    </li>
+    <li><a href="#四总结">四、总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/aria2/">
+                Aria2
+            </a>
+        
+            <a href="/tags/ariang/">
+                AriaNg
+            </a>
+        
+            <a href="/tags/cloudflare/">
+                Cloudflare
+            </a>
+        
+            <a href="/tags/github/">
+                Github
+            </a>
+        
+            <a href="/tags/idm%E6%9B%BF%E4%BB%A3/">
+                IDM替代
+            </a>
+        
+            <a href="/tags/immortalwrt/">
+                Immortalwrt
+            </a>
+        
+            <a href="/tags/ndm/">
+                NDM
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/hugo-github-pages-cloudflare-build-website/">Hugo&#43;Github Pages&#43;Cloudflare免费图床 个人低成本建站保姆级教程</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-15T20:44:44&#43;08:00'>
+                    2026-02-15，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一核心痛点与解决方案">一、核心痛点与解决方案</a>
+      <ul>
+        <li><a href="#1-个人站长做教程类网站的4大困境">1. 个人站长做教程类网站的4大困境</a></li>
+        <li><a href="#2-低成本解决方案仅域名付费其余全免费">2. 低成本解决方案：仅域名付费，其余全免费</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心工具解析">二、核心工具解析</a>
+      <ul>
+        <li><a href="#1-sharex免费全能截图工具截图自动上传一步到位">1. ShareX：免费全能截图工具，截图+自动上传一步到位</a></li>
+        <li><a href="#2-cloudflare一站式免费服务图床域名解析全搞定">2. Cloudflare：一站式免费服务，图床+域名解析全搞定</a></li>
+        <li><a href="#3-hugo--github-pages免费静态建站组合">3. Hugo + GitHub Pages：免费静态建站组合</a></li>
+        <li><a href="#4-porkbun高性价比域名注册平台">4. Porkbun：高性价比域名注册平台</a></li>
+      </ul>
+    </li>
+    <li><a href="#三实操步骤从域名注册到网站发布">三、实操步骤：从域名注册到网站发布</a>
+      <ul>
+        <li><a href="#第一步porkbun注册域名唯一成本">第一步：Porkbun注册域名（唯一成本）</a></li>
+        <li><a href="#第二步cloudflare配置域名解析r2图床搭建">第二步：Cloudflare配置（域名解析+R2图床搭建）</a></li>
+        <li><a href="#第三步sharex配置自动上传文件管理">第三步：ShareX配置（自动上传+文件管理）</a></li>
+        <li><a href="#第四步hugo建站github-pages部署">第四步：Hugo建站+GitHub Pages部署</a></li>
+        <li><a href="#第五步发布教程文章sharexhugo联动">第五步：发布教程文章（ShareX+Hugo联动）</a></li>
+      </ul>
+    </li>
+    <li><a href="#四总结">四、总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>对于个人站长而言，搭建教程类网站最核心的痛点莫过于「<strong>截图量大、图床成本高、上传繁琐、建站开支高</strong>」—— 教程类内容离不开大量步骤截图辅助讲解，没有服务器资源的情况下，付费图床和虚拟主机长期使用成本居高不下，免费图床又多存在不稳定、限速、广告植入等问题；同时，截图后手动上传、复制链接、插入文章，再配合网站发布，整套流程繁琐耗时，严重影响内容产出效率。</p>
+<p>今天就给大家分享一套仅需域名成本、其余全免费的建站解决方案，无需服务器，仅需花费极低的域名注册费用，通过「<strong>ShareX（免费截图 + 自动上传工具）+ Cloudflare 免费图床（R2 对象存储）+ Hugo（静态网站生成器）+ GitHub Pages（免费空间）</strong>」的组合，彻底解决教程类网站的截图管理、图床成本和建站部署难题，全程实操落地，新手站长也能快速上手，同时兼顾 SEO 优化，助力网站获得更好的搜索排名。</p>
+<h2 id="一核心痛点与解决方案">一、核心痛点与解决方案
+</h2><h3 id="1-个人站长做教程类网站的4大困境">1. 个人站长做教程类网站的4大困境
+</h3><ul>
+<li><strong>截图管理痛点</strong>：每篇教程需10-20张步骤截图，手动保存、命名、压缩优化繁琐，后续修改时查找困难；</li>
+<li><strong>图床成本痛点</strong>：付费图床按月收取存储费+流量费，长期使用成本高；免费图床易跑路、加载慢，甚至添加广告水印；</li>
+<li><strong>建站成本痛点</strong>：传统虚拟主机/云服务器每年开支上百元，个人站长性价比低；</li>
+<li><strong>发布效率痛点</strong>：截图上传、文章编辑、网站发布环节割裂，创作效率低下。</li>
+</ul>
+<h3 id="2-低成本解决方案仅域名付费其余全免费">2. 低成本解决方案：仅域名付费，其余全免费
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>核心需求</th>
+          <th>工具/服务</th>
+          <th>成本</th>
+          <th>核心优势</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>域名注册</td>
+          <td>Porkbun</td>
+          <td>70余元/3年</td>
+          <td>支付宝直付，首年1.63$起，赠隐私保护</td>
+      </tr>
+      <tr>
+          <td>域名解析/加速</td>
+          <td>Cloudflare 免费DNS</td>
+          <td>0元</td>
+          <td>免费CDN+SSL证书，提升访问速度与安全性</td>
+      </tr>
+      <tr>
+          <td>免费建站部署</td>
+          <td>Hugo + GitHub Pages</td>
+          <td>0元</td>
+          <td>静态网站极速生成+全球免费托管，无流量限制</td>
+      </tr>
+      <tr>
+          <td>稳定免费图床</td>
+          <td>Cloudflare R2 对象存储</td>
+          <td>0元</td>
+          <td>10GB免费存储+无限出口流量，大厂背书不跑路</td>
+      </tr>
+      <tr>
+          <td>截图自动化管理</td>
+          <td>ShareX</td>
+          <td>0元</td>
+          <td>截图→上传→复制Markdown链接一键完成</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="二核心工具解析">二、核心工具解析
+</h2><h3 id="1-sharex免费全能截图工具截图自动上传一步到位">1. ShareX：免费全能截图工具，截图+自动上传一步到位
+</h3><p>ShareX是Windows平台免费开源的截图工具，GitHub超33k星标，核心能力适配教程类网站需求：</p>
+<p><img src="https://img.softon.top/2026/02/15/2142802_rc291ZqZQv.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2142802_rc291ZqZQv.png"
+	
+	
+></p>
+<ul>
+<li>支持全屏、区域、滚动截图、延时截图、录屏，截图后可即时编辑（标注、裁剪、加水印）；</li>
+<li>对接Cloudflare R2，截图后自动上传，且自动复制Markdown格式图片链接，直接粘贴到Hugo文章即可；</li>
+<li>内置文件管理功能，可按时间/关键词搜索已上传截图，支持编辑、删除远程文件，解决截图管理混乱问题。</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2142517_oefTk9XcLA.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2142517_oefTk9XcLA.png"
+	
+	
+></p>
+<p>Sharex官网地址：<a class="link" href="https://github.com/ShareX/ShareX"  target="_blank" rel="noopener"
+    >https://github.com/ShareX/ShareX</a></p>
+<h3 id="2-cloudflare一站式免费服务图床域名解析全搞定">2. Cloudflare：一站式免费服务，图床+域名解析全搞定
+</h3><p>Cloudflare作为全球最大CDN服务商，免费功能是本方案的核心支撑：</p>
+<ul>
+<li><strong>免费DNS解析</strong>：支持自定义域名解析、CDN加速、免费SSL证书配置，生效速度快，操作简单，提升网站访问速度和安全性；</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2151124_7z8lXuP2wg.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/15/2153056_N1LM2w6CFW.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<ul>
+<li><strong>R2 对象存储（免费图床）</strong>：10GB免费存储空间、每月100万次上传、1000万次读取，出口流量全免费（区别于阿里云/腾讯云OSS），兼容S3 API，无需备案。</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2155984_p3RSa2VKaL.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>Cloudflare官网地址：<a class="link" href="https://dash.cloudflare.com/"  target="_blank" rel="noopener"
+    >https://dash.cloudflare.com/</a></p>
+<h3 id="3-hugo--github-pages免费静态建站组合">3. Hugo + GitHub Pages：免费静态建站组合
+</h3><ul>
+<li><strong>Hugo</strong>：高性能静态网站生成器，无需数据库，生成的网页加载速度快，SEO友好；支持Markdown编辑文章，与ShareX生成的图片链接完美适配；拥有2000+开源主题，快速搭建专业教程站；</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2159972_ms6jb1KSrX.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>Hugo官网地址：<a class="link" href="https://gohugo.io/"  target="_blank" rel="noopener"
+    >https://gohugo.io/</a></p>
+<ul>
+<li><strong>GitHub Pages</strong>：每个账号免费提供静态网站托管服务，无流量/存储限制，支持自定义域名绑定，全球CDN加速，无需担心空间过期问题。</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2206694_16wBv6dWZd.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>本站项目地址：<a class="link" href="https://github.com/softon-top/softon-top.github.io"  target="_blank" rel="noopener"
+    >https://github.com/softon-top/softon-top.github.io</a></p>
+<h3 id="4-porkbun高性价比域名注册平台">4. Porkbun：高性价比域名注册平台
+</h3><p>本方案唯一的成本来源，核心优势：</p>
+<ul>
+<li>价格极低：如softon.top类域名首年注册仅1.63美元，续费4.63美元/年，3年合计70余元；</li>
+<li>支付便捷：支持支付宝直接支付，无需外币信用卡；</li>
+<li>增值服务：免费赠送WHOIS隐私保护、SSL证书、Cloudflare DNS管理，无额外开支。</li>
+</ul>
+<p><img src="https://img.softon.top/2026/02/15/2140005_8vUESZbn52.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>Porkbun官方地址：<a class="link" href="https://porkbun.com/"  target="_blank" rel="noopener"
+    >https://porkbun.com/</a></p>
+<h2 id="三实操步骤从域名注册到网站发布">三、实操步骤：从域名注册到网站发布
+</h2><h3 id="第一步porkbun注册域名唯一成本">第一步：Porkbun注册域名（唯一成本）
+</h3><ol>
+<li>访问Porkbun官网，注册账号后查询心仪域名（如softon.top）；</li>
+<li>将可注册域名加入购物车，结算时选择支付宝支付；</li>
+<li>还有更便宜的域名，可以搜索按价格排序，但是注意续费（renews）价格，部分价格是首年活动价，别踩坑；</li>
+<li>域名注册成功后，进入域名管理后台，将DNS服务器切换为Cloudflare，完成解析管理权移交。</li>
+</ol>
+<h3 id="第二步cloudflare配置域名解析r2图床搭建">第二步：Cloudflare配置（域名解析+R2图床搭建）
+</h3><h4 id="1-域名解析与ssl配置">1. 域名解析与SSL配置
+</h4><ol>
+<li>登录Cloudflare官网，添加已注册的域名，选择免费计划；</li>
+<li>等待Cloudflare扫描解析记录，确认后完成DNS服务器验证（已在Porkbun配置，无需手动修改）；</li>
+<li>开启「始终使用HTTPS」，Cloudflare自动配置免费SSL证书，同时开启CDN加速。</li>
+</ol>
+<h4 id="2-搭建cloudflare-r2免费图床">2. 搭建Cloudflare R2免费图床
+</h4><ol>
+<li>进入Cloudflare「R2对象存储」，绑定支付方式（仅身份验证，免费额度内不扣费）后开通服务；</li>
+<li>创建存储桶：输入全局唯一名称（如softon-top-images），选择亚太地区（国内访问更快）；</li>
+<li>配置公开访问：添加自定义子域名（如img.softon.top），Cloudflare自动生成CNAME记录；</li>
+<li>生成API令牌：进入「我的个人资料→API令牌」，创建自定义令牌（勾选R2编辑/读取权限），记录账户ID、存储桶名称、API令牌。</li>
+</ol>
+<h3 id="第三步sharex配置自动上传文件管理">第三步：ShareX配置（自动上传+文件管理）
+</h3><ol>
+<li>
+<p>下载安装ShareX，启动后进入「设置→任务设置→上传」；</p>
+</li>
+<li>
+<p>上传目标选择「Amazon S3」（兼容R2），配置参数：</p>
+<ul>
+<li>
+<p>服务端点：填写以账户ID开头的R2服务地址；</p>
+</li>
+<li>
+<p>访问密钥ID：填写R2 API令牌；</p>
+</li>
+<li>
+<p>存储桶名称：创建的R2存储桶名；</p>
+</li>
+<li>
+<p>URL样式：自定义域名（如img.softon.top）；</p>
+</li>
+</ul>
+</li>
+<li>
+<p>开启「捕获后自动上传」「上传后复制URL到剪贴板」，URL格式选择「Markdown」；</p>
+</li>
+<li>
+<p>自定义截图快捷键（如Ctrl+Alt+A），开启图片自动压缩（比例80%），优化截图命名规则（如「教程关键词-步骤-日期」）。</p>
+</li>
+</ol>
+<h3 id="第四步hugo建站github-pages部署">第四步：Hugo建站+GitHub Pages部署
+</h3><ol>
+<li>
+<p>安装Hugo：</p>
+<ul>
+<li>
+<p>Windows用户可通过Scoop工具安装Hugo扩展版；</p>
+</li>
+<li>
+<p>Mac用户可通过Homebrew工具安装Hugo；</p>
+</li>
+</ul>
+</li>
+<li>
+<p>创建Hugo网站：</p>
+<ul>
+<li>
+<p>执行创建网站命令，进入新建的网站目录；</p>
+</li>
+<li>
+<p>初始化Git仓库，安装PaperMod主题；</p>
+</li>
+</ul>
+</li>
+<li>
+<p>配置网站（修改config.yml文件）：
+填写主题为PaperMod，基础URL为你的自定义域名，网站标题、语言为中文，开启中文优化，配置导航菜单等核心信息；</p>
+</li>
+<li>
+<p>部署到GitHub Pages：</p>
+<ul>
+<li>
+<p>在GitHub创建仓库，名称格式为「用户名.github.io」；</p>
+</li>
+<li>
+<p>将本地Hugo网站关联到该仓库，生成静态文件后提交代码；</p>
+</li>
+<li>
+<p>在GitHub仓库设置中绑定自定义域名，开启HTTPS。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="第五步发布教程文章sharexhugo联动">第五步：发布教程文章（ShareX+Hugo联动）
+</h3><ol>
+<li>创建文章：执行Hugo新建文章命令，生成教程类文章的Markdown文件；</li>
+<li>编辑文章：
+填写文章标题、发布时间、标签、分类、描述等信息，将draft设为false；</li>
+<li>创作时截图：按ShareX快捷键截图，自动上传R2并复制Markdown链接，直接粘贴到文章中；</li>
+<li>发布文章：保存后生成静态文件，提交代码到GitHub，等待5分钟后访问域名即可查看。</li>
+</ol>
+<h2 id="四总结">四、总结
+</h2><p>这套「<strong>ShareX+Cloudflare+Hugo+GitHub Pages</strong>」的组合，仅需70余元/3年的域名成本，就能搭建出稳定、高效、专业的教程类网站：<strong>Cloudflare解决图床和解析问题，ShareX提升截图创作效率，Hugo+GitHub Pages实现免费建站部署</strong>。全程无需服务器，新手也能快速落地，彻底摆脱付费图床、虚拟主机的成本负担，专注于教程内容创作本身。</p>
+<p>本站<a class="link" href="https://softon.top"  target="_blank" rel="noopener"
+    >https://softon.top</a>正是基于这套方案搭建完成的实操样板，接下来我会把从域名注册、图床搭建到网站部署的全套建站步骤和实操流程逐一拆解解析，毫无保留地分享给大家，这也是我个人学习成长的经历，希望能让更多个人站长少走弯路，快速搭建起属于自己的专业网站。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/hugo/">Hugo</a>
+        
+            <a href="/tags/github/">Github</a>
+        
+            <a href="/tags/cloudflare/">Cloudflare</a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">免费图床</a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">个人建站</a>
+        
+            <a href="/tags/sharex/">Sharex</a>
+        
+            <a href="/tags/%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/">静态网站</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/about/welcome-to-ai-powered-software-blog/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">致每一位同频的软件爱好者：这个站点，为热爱而生</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/hugo-github-pages-cloudflare-build-website\/'; 
+        const pageTitle = 'Hugo\u002bGithub Pages\u002bCloudflare免费图床 个人低成本建站保姆级教程';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 45 天 15 小时 · 4 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-02-15 23:27:08 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

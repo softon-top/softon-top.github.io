@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>softon.top</title>
+        <link>https://softon.top/</link>
+        <description>Recent content on softon.top</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sun, 15 Feb 2026 20:44:44 +0800</lastBuildDate><atom:link href="https://softon.top/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Hugo&#43;Github Pages&#43;Cloudflare免费图床 个人低成本建站保姆级教程</title>
+        <link>https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/</link>
+        <pubDate>Sun, 15 Feb 2026 20:44:44 +0800</pubDate>
+        
+        <guid>https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/</guid>
+        <description>&lt;p&gt;对于个人站长而言，搭建教程类网站最核心的痛点莫过于「&lt;strong&gt;截图量大、图床成本高、上传繁琐、建站开支高&lt;/strong&gt;」—— 教程类内容离不开大量步骤截图辅助讲解，没有服务器资源的情况下，付费图床和虚拟主机长期使用成本居高不下，免费图床又多存在不稳定、限速、广告植入等问题；同时，截图后手动上传、复制链接、插入文章，再配合网站发布，整套流程繁琐耗时，严重影响内容产出效率。&lt;/p&gt;
+&lt;p&gt;今天就给大家分享一套仅需域名成本、其余全免费的建站解决方案，无需服务器，仅需花费极低的域名注册费用，通过「&lt;strong&gt;ShareX（免费截图 + 自动上传工具）+ Cloudflare 免费图床（R2 对象存储）+ Hugo（静态网站生成器）+ GitHub Pages（免费空间）&lt;/strong&gt;」的组合，彻底解决教程类网站的截图管理、图床成本和建站部署难题，全程实操落地，新手站长也能快速上手，同时兼顾 SEO 优化，助力网站获得更好的搜索排名。&lt;/p&gt;
+&lt;h2 id=&#34;一核心痛点与解决方案&#34;&gt;一、核心痛点与解决方案
+&lt;/h2&gt;&lt;h3 id=&#34;1-个人站长做教程类网站的4大困境&#34;&gt;1. 个人站长做教程类网站的4大困境
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;截图管理痛点&lt;/strong&gt;：每篇教程需10-20张步骤截图，手动保存、命名、压缩优化繁琐，后续修改时查找困难；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;图床成本痛点&lt;/strong&gt;：付费图床按月收取存储费+流量费，长期使用成本高；免费图床易跑路、加载慢，甚至添加广告水印；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;建站成本痛点&lt;/strong&gt;：传统虚拟主机/云服务器每年开支上百元，个人站长性价比低；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;发布效率痛点&lt;/strong&gt;：截图上传、文章编辑、网站发布环节割裂，创作效率低下。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-低成本解决方案仅域名付费其余全免费&#34;&gt;2. 低成本解决方案：仅域名付费，其余全免费
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;核心需求&lt;/th&gt;
+          &lt;th&gt;工具/服务&lt;/th&gt;
+          &lt;th&gt;成本&lt;/th&gt;
+          &lt;th&gt;核心优势&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;域名注册&lt;/td&gt;
+          &lt;td&gt;Porkbun&lt;/td&gt;
+          &lt;td&gt;70余元/3年&lt;/td&gt;
+          &lt;td&gt;支付宝直付，首年1.63$起，赠隐私保护&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;域名解析/加速&lt;/td&gt;
+          &lt;td&gt;Cloudflare 免费DNS&lt;/td&gt;
+          &lt;td&gt;0元&lt;/td&gt;
+          &lt;td&gt;免费CDN+SSL证书，提升访问速度与安全性&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;免费建站部署&lt;/td&gt;
+          &lt;td&gt;Hugo + GitHub Pages&lt;/td&gt;
+          &lt;td&gt;0元&lt;/td&gt;
+          &lt;td&gt;静态网站极速生成+全球免费托管，无流量限制&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;稳定免费图床&lt;/td&gt;
+          &lt;td&gt;Cloudflare R2 对象存储&lt;/td&gt;
+          &lt;td&gt;0元&lt;/td&gt;
+          &lt;td&gt;10GB免费存储+无限出口流量，大厂背书不跑路&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;截图自动化管理&lt;/td&gt;
+          &lt;td&gt;ShareX&lt;/td&gt;
+          &lt;td&gt;0元&lt;/td&gt;
+          &lt;td&gt;截图→上传→复制Markdown链接一键完成&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;二核心工具解析&#34;&gt;二、核心工具解析
+&lt;/h2&gt;&lt;h3 id=&#34;1-sharex免费全能截图工具截图自动上传一步到位&#34;&gt;1. ShareX：免费全能截图工具，截图+自动上传一步到位
+&lt;/h3&gt;&lt;p&gt;ShareX是Windows平台免费开源的截图工具，GitHub超33k星标，核心能力适配教程类网站需求：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2142802_rc291ZqZQv.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;2142802_rc291ZqZQv.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持全屏、区域、滚动截图、延时截图、录屏，截图后可即时编辑（标注、裁剪、加水印）；&lt;/li&gt;
+&lt;li&gt;对接Cloudflare R2，截图后自动上传，且自动复制Markdown格式图片链接，直接粘贴到Hugo文章即可；&lt;/li&gt;
+&lt;li&gt;内置文件管理功能，可按时间/关键词搜索已上传截图，支持编辑、删除远程文件，解决截图管理混乱问题。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2142517_oefTk9XcLA.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;2142517_oefTk9XcLA.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Sharex官网地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/ShareX/ShareX&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/ShareX/ShareX&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-cloudflare一站式免费服务图床域名解析全搞定&#34;&gt;2. Cloudflare：一站式免费服务，图床+域名解析全搞定
+&lt;/h3&gt;&lt;p&gt;Cloudflare作为全球最大CDN服务商，免费功能是本方案的核心支撑：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;免费DNS解析&lt;/strong&gt;：支持自定义域名解析、CDN加速、免费SSL证书配置，生效速度快，操作简单，提升网站访问速度和安全性；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2151124_7z8lXuP2wg.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2153056_N1LM2w6CFW.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;R2 对象存储（免费图床）&lt;/strong&gt;：10GB免费存储空间、每月100万次上传、1000万次读取，出口流量全免费（区别于阿里云/腾讯云OSS），兼容S3 API，无需备案。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2155984_p3RSa2VKaL.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Cloudflare官网地址：&lt;a class=&#34;link&#34; href=&#34;https://dash.cloudflare.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://dash.cloudflare.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-hugo--github-pages免费静态建站组合&#34;&gt;3. Hugo + GitHub Pages：免费静态建站组合
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Hugo&lt;/strong&gt;：高性能静态网站生成器，无需数据库，生成的网页加载速度快，SEO友好；支持Markdown编辑文章，与ShareX生成的图片链接完美适配；拥有2000+开源主题，快速搭建专业教程站；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2159972_ms6jb1KSrX.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Hugo官网地址：&lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://gohugo.io/&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub Pages&lt;/strong&gt;：每个账号免费提供静态网站托管服务，无流量/存储限制，支持自定义域名绑定，全球CDN加速，无需担心空间过期问题。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2206694_16wBv6dWZd.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;本站项目地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/softon-top/softon-top.github.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/softon-top/softon-top.github.io&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;4-porkbun高性价比域名注册平台&#34;&gt;4. Porkbun：高性价比域名注册平台
+&lt;/h3&gt;&lt;p&gt;本方案唯一的成本来源，核心优势：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;价格极低：如softon.top类域名首年注册仅1.63美元，续费4.63美元/年，3年合计70余元；&lt;/li&gt;
+&lt;li&gt;支付便捷：支持支付宝直接支付，无需外币信用卡；&lt;/li&gt;
+&lt;li&gt;增值服务：免费赠送WHOIS隐私保护、SSL证书、Cloudflare DNS管理，无额外开支。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/15/2140005_8vUESZbn52.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Porkbun官方地址：&lt;a class=&#34;link&#34; href=&#34;https://porkbun.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://porkbun.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;三实操步骤从域名注册到网站发布&#34;&gt;三、实操步骤：从域名注册到网站发布
+&lt;/h2&gt;&lt;h3 id=&#34;第一步porkbun注册域名唯一成本&#34;&gt;第一步：Porkbun注册域名（唯一成本）
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;访问Porkbun官网，注册账号后查询心仪域名（如softon.top）；&lt;/li&gt;
+&lt;li&gt;将可注册域名加入购物车，结算时选择支付宝支付；&lt;/li&gt;
+&lt;li&gt;还有更便宜的域名，可以搜索按价格排序，但是注意续费（renews）价格，部分价格是首年活动价，别踩坑；&lt;/li&gt;
+&lt;li&gt;域名注册成功后，进入域名管理后台，将DNS服务器切换为Cloudflare，完成解析管理权移交。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第二步cloudflare配置域名解析r2图床搭建&#34;&gt;第二步：Cloudflare配置（域名解析+R2图床搭建）
+&lt;/h3&gt;&lt;h4 id=&#34;1-域名解析与ssl配置&#34;&gt;1. 域名解析与SSL配置
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;登录Cloudflare官网，添加已注册的域名，选择免费计划；&lt;/li&gt;
+&lt;li&gt;等待Cloudflare扫描解析记录，确认后完成DNS服务器验证（已在Porkbun配置，无需手动修改）；&lt;/li&gt;
+&lt;li&gt;开启「始终使用HTTPS」，Cloudflare自动配置免费SSL证书，同时开启CDN加速。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2-搭建cloudflare-r2免费图床&#34;&gt;2. 搭建Cloudflare R2免费图床
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;进入Cloudflare「R2对象存储」，绑定支付方式（仅身份验证，免费额度内不扣费）后开通服务；&lt;/li&gt;
+&lt;li&gt;创建存储桶：输入全局唯一名称（如softon-top-images），选择亚太地区（国内访问更快）；&lt;/li&gt;
+&lt;li&gt;配置公开访问：添加自定义子域名（如img.softon.top），Cloudflare自动生成CNAME记录；&lt;/li&gt;
+&lt;li&gt;生成API令牌：进入「我的个人资料→API令牌」，创建自定义令牌（勾选R2编辑/读取权限），记录账户ID、存储桶名称、API令牌。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第三步sharex配置自动上传文件管理&#34;&gt;第三步：ShareX配置（自动上传+文件管理）
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;下载安装ShareX，启动后进入「设置→任务设置→上传」；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;上传目标选择「Amazon S3」（兼容R2），配置参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;服务端点：填写以账户ID开头的R2服务地址；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;访问密钥ID：填写R2 API令牌；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;存储桶名称：创建的R2存储桶名；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;URL样式：自定义域名（如img.softon.top）；&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;开启「捕获后自动上传」「上传后复制URL到剪贴板」，URL格式选择「Markdown」；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;自定义截图快捷键（如Ctrl+Alt+A），开启图片自动压缩（比例80%），优化截图命名规则（如「教程关键词-步骤-日期」）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第四步hugo建站github-pages部署&#34;&gt;第四步：Hugo建站+GitHub Pages部署
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装Hugo：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Windows用户可通过Scoop工具安装Hugo扩展版；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mac用户可通过Homebrew工具安装Hugo；&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创建Hugo网站：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;执行创建网站命令，进入新建的网站目录；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;初始化Git仓库，安装PaperMod主题；&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;配置网站（修改config.yml文件）：
+填写主题为PaperMod，基础URL为你的自定义域名，网站标题、语言为中文，开启中文优化，配置导航菜单等核心信息；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;部署到GitHub Pages：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;在GitHub创建仓库，名称格式为「用户名.github.io」；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将本地Hugo网站关联到该仓库，生成静态文件后提交代码；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在GitHub仓库设置中绑定自定义域名，开启HTTPS。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第五步发布教程文章sharexhugo联动&#34;&gt;第五步：发布教程文章（ShareX+Hugo联动）
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;创建文章：执行Hugo新建文章命令，生成教程类文章的Markdown文件；&lt;/li&gt;
+&lt;li&gt;编辑文章：
+填写文章标题、发布时间、标签、分类、描述等信息，将draft设为false；&lt;/li&gt;
+&lt;li&gt;创作时截图：按ShareX快捷键截图，自动上传R2并复制Markdown链接，直接粘贴到文章中；&lt;/li&gt;
+&lt;li&gt;发布文章：保存后生成静态文件，提交代码到GitHub，等待5分钟后访问域名即可查看。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;四总结&#34;&gt;四、总结
+&lt;/h2&gt;&lt;p&gt;这套「&lt;strong&gt;ShareX+Cloudflare+Hugo+GitHub Pages&lt;/strong&gt;」的组合，仅需70余元/3年的域名成本，就能搭建出稳定、高效、专业的教程类网站：&lt;strong&gt;Cloudflare解决图床和解析问题，ShareX提升截图创作效率，Hugo+GitHub Pages实现免费建站部署&lt;/strong&gt;。全程无需服务器，新手也能快速落地，彻底摆脱付费图床、虚拟主机的成本负担，专注于教程内容创作本身。&lt;/p&gt;
+&lt;p&gt;本站&lt;a class=&#34;link&#34; href=&#34;https://softon.top&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://softon.top&lt;/a&gt;正是基于这套方案搭建完成的实操样板，接下来我会把从域名注册、图床搭建到网站部署的全套建站步骤和实操流程逐一拆解解析，毫无保留地分享给大家，这也是我个人学习成长的经历，希望能让更多个人站长少走弯路，快速搭建起属于自己的专业网站。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>告别IDM收费与破解烦恼！Neat Download Manager才是真正的下载神器</title>
+        <link>https://softon.top/software/neat-download-manager-free-alternative-to-idm/</link>
+        <pubDate>Sat, 14 Feb 2026 09:57:49 +0800</pubDate>
+        
+        <guid>https://softon.top/software/neat-download-manager-free-alternative-to-idm/</guid>
+        <description>&lt;p&gt;提到下载工具，很多人第一时间会想到IDM，它的多线程高速下载、断点续传功能确实惊艳，但&lt;strong&gt;收费授权&lt;/strong&gt;和&lt;strong&gt;破解版的各种坑&lt;/strong&gt;，却让无数用户苦不堪言：正版IDM单设备终身授权百元起步，一年订阅版也需数十元；而网上的破解版不仅随时会因官方更新失效，还暗藏木马、病毒、隐私窃取等安全风险，轻则电脑蓝屏卡顿，重则账号密码、硬盘数据被盗。&lt;/p&gt;
+&lt;p&gt;今天就给大家安利一款能&lt;strong&gt;完美替代IDM&lt;/strong&gt;的免费下载神器——&lt;strong&gt;Neat Download Manager（简称NDM）&lt;/strong&gt;，跨平台支持、全功能免费、无广告无捆绑，复刻IDM核心优势的同时，彻底解决收费和破解的痛点，堪称下载工具的“最优解”。官网直达：&lt;a class=&#34;link&#34; href=&#34;https://www.neatdownloadmanager.com/index.php/en/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.neatdownloadmanager.com/index.php/en/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;为何放弃idm收费与破解的双重痛点&#34;&gt;为何放弃IDM？收费与破解的双重痛点
+&lt;/h2&gt;&lt;p&gt;IDM作为下载工具的标杆，其功能无可挑剔，但实际使用中却满是槽点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;正版收费不低&lt;/strong&gt;：IDM无永久免费版本，单设备一年订阅版约49元起，终身授权版常规价110-179元，多设备使用成本更高，对于普通用户来说实属额外开销；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;破解版风险重重&lt;/strong&gt;：网传的IDM破解补丁、激活脚本，不仅会随官方更新不定期失效，还常被植入恶意程序——有的后台偷跑流量挖矿，有的窃取浏览器账号密码、加密货币钱包信息，甚至还有勒索软件会加密硬盘数据，让用户蒙受财产损失；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;激活操作繁琐&lt;/strong&gt;：即便找到暂时可用的破解方法，也需要修改注册表、关闭杀毒软件，新手操作极易出错，还可能导致系统故障。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;而NDM的出现，直接抹平了这些痛点，以&lt;strong&gt;完全免费&lt;/strong&gt;的姿态，带来了不输IDM的使用体验。&lt;/p&gt;
+&lt;h2 id=&#34;ndm核心优势复刻idm更胜idm&#34;&gt;NDM核心优势：复刻IDM，更胜IDM
+&lt;/h2&gt;&lt;p&gt;Neat Download Manager是一款专为Windows（7及以上）和macOS（10.10及以上）打造的轻量级下载管理器，安装包仅900KB（Windows版）/1.4MB（Mac版），内存占用极低，却拥有IDM的核心功能，甚至在部分细节上更贴合用户需求，堪称“IDM平替天花板”。&lt;/p&gt;
+&lt;h3 id=&#34;1-高速下载榨干全网带宽&#34;&gt;1. 高速下载，榨干全网带宽
+&lt;/h3&gt;&lt;p&gt;NDM搭载&lt;strong&gt;优化的动态分段算法&lt;/strong&gt;，支持最高32线程并发下载，能将单个文件分割为多段同时下载，速度可提升3-5倍，轻松跑满你的宽带带宽，实测浏览器原生下载1M/s的资源，用NDM可直达4-5M/s，和IDM下载速度几乎无差别。同时支持HTTP、HTTPS、FTP三大主流协议，覆盖绝大多数网络下载场景。&lt;/p&gt;
+&lt;h3 id=&#34;2-断点续传再也不怕下载中断&#34;&gt;2. 断点续传，再也不怕下载中断
+&lt;/h3&gt;&lt;p&gt;和IDM一样，NDM拥有完善的&lt;strong&gt;暂停/续传功能&lt;/strong&gt;，不仅支持手动暂停后恢复下载，即便遇到网络断开、电脑死机、程序崩溃等突发情况，重新打开软件也能从断点继续下载，大文件下载再也不用从头开始。甚至还支持&lt;strong&gt;刷新过期下载链接&lt;/strong&gt;，解决链接失效导致的下载失败问题。&lt;/p&gt;
+&lt;h3 id=&#34;3-智能管理下载文件井井有条&#34;&gt;3. 智能管理，下载文件井井有条
+&lt;/h3&gt;&lt;p&gt;NDM会自动将下载任务按&lt;strong&gt;状态（完成/未完成）&lt;strong&gt;和&lt;/strong&gt;文件类型（视频/音频/文档/压缩包等）&lt;strong&gt;分类，无需手动整理，查找文件时一键筛选，效率翻倍。同时支持下载过程中&lt;/strong&gt;随时调整带宽限制&lt;/strong&gt;和&lt;strong&gt;最大连接数&lt;/strong&gt;，一边高速下载，一边刷视频、聊工作，网络互不干扰；Mac端还支持拖拽添加下载链接，操作更便捷。&lt;/p&gt;
+&lt;h3 id=&#34;4-浏览器无缝集成一键嗅探音视频&#34;&gt;4. 浏览器无缝集成，一键嗅探音视频
+&lt;/h3&gt;&lt;p&gt;NDM配备专属浏览器扩展，支持Chrome、Edge、Firefox等主流浏览器，安装后可&lt;strong&gt;自动接管浏览器下载链接&lt;/strong&gt;，无需手动复制粘贴，和IDM的操作逻辑完全一致。更实用的是，扩展能智能嗅探网页中的视频、音频资源，无论什么网站，都能一键捕获下载，轻松保存网课、短视频、音乐等内容；还能下载HLS视频的所有.ts分段文件，并自动合并为单个文件，解决流媒体下载难题。&lt;/p&gt;
+&lt;h3 id=&#34;5-全功能免费无广告无捆绑&#34;&gt;5. 全功能免费，无广告无捆绑
+&lt;/h3&gt;&lt;p&gt;这是NDM最核心的优势：&lt;strong&gt;所有功能永久免费&lt;/strong&gt;，无付费墙、无弹窗广告、无后台捆绑程序，不用注册、不用激活，下载安装即可使用，彻底告别IDM的收费困扰和破解版的安全风险。同时支持代理设置（HTTP Proxy、SOCKS）和多种认证方式（Basic、Digest、NTLM），满足办公、跨境等特殊网络环境的下载需求。&lt;/p&gt;
+&lt;h2 id=&#34;极简操作5分钟上手配套截图更直观&#34;&gt;极简操作，5分钟上手！配套截图更直观
+&lt;/h2&gt;&lt;p&gt;NDM的操作门槛极低，从安装到使用全程无复杂配置，新手也能快速上手，结合配套的截图，步骤一目了然：&lt;/p&gt;
+&lt;h3 id=&#34;1-官网下载安装&#34;&gt;1. 官网下载安装
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0941504_BXrjpOsP4F.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM官网截图&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;打开NDM官网，根据自己的系统（Windows/Mac）点击下载，安装包体积极小，10秒即可完成安装，无多余捆绑选项。&lt;/p&gt;
+&lt;h3 id=&#34;2-软件主界面&#34;&gt;2. 软件主界面
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0940584_0UdmFfnYEf.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM软件打开截图&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;界面简洁清爽，核心功能按钮（新建下载、暂停/续传、删除、设置）一目了然，下载列表清晰展示文件名称、大小、状态、最后下载时间，和IDM界面高度相似，上手无成本。&lt;/p&gt;
+&lt;h3 id=&#34;3-高速下载体验&#34;&gt;3. 高速下载体验
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0940003_2kgiREhNRJ.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM下载时的截图&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;添加下载链接后，可实时查看下载速度、进度、连接数，支持随时暂停、调整带宽，大文件下载全程稳定，无卡顿无断连。&lt;/p&gt;
+&lt;h3 id=&#34;4-个性化设置&#34;&gt;4. 个性化设置
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0941207_19b4JZmZKx.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM设置的截图&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;在设置界面可自定义下载路径、临时文件路径、最大连接数、带宽限制等，还能设置代理、认证信息，适配不同使用场景，操作简单易懂。&lt;strong&gt;虽然是英文界面，但是基本不需要改什么，下载文件夹有需要可以自己选择设置&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;5-安装浏览器扩展&#34;&gt;5. 安装浏览器扩展
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0940412_hDRyQ7lvjK.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM安装扩展的截图&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;在软件中点击“Browsers”即可跳转到对应浏览器的扩展商店，一键安装，安装后浏览器右上角会显示NDM图标，开启自动嗅探和下载接管功能，全程无需复杂配置。&lt;/p&gt;
+&lt;p&gt;扩展生效后，你还可以直接在浏览器里&lt;strong&gt;鼠标右键点击下载链接&lt;/strong&gt;，选择使用NDM下载，操作更快捷。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/4W01nI3JH6.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NDM扩展安装后下载链接&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结免费替代idmndm当之无愧&#34;&gt;总结：免费替代IDM，NDM当之无愧
+&lt;/h2&gt;&lt;p&gt;如果你受够了IDM的收费授权、破解版的安全风险和频繁失效，那Neat Download Manager绝对是你的不二之选：它复刻了IDM的高速下载、断点续传、浏览器集成等核心功能，解决了IDM的所有痛点，还做到了&lt;strong&gt;全平台支持、全功能免费、轻量无广告&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;无论是日常下载文档、安装包，还是保存网页音视频、下载大体积镜像文件，NDM都能轻松应对，堪称真正的“下载神器”。现在就打开官网下载体验：&lt;a class=&#34;link&#34; href=&#34;https://www.neatdownloadmanager.com/index.php/en/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.neatdownloadmanager.com/index.php/en/&lt;/a&gt;，告别收费与破解，享受纯粹的高速下载体验！&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Windows下Aria2&#43;AriaNg安装配置教程 打造高效全能下载神器</title>
+        <link>https://softon.top/software/aria2-download-manager-windows-setup-guide/</link>
+        <pubDate>Thu, 12 Feb 2026 16:43:59 +0800</pubDate>
+        
+        <guid>https://softon.top/software/aria2-download-manager-windows-setup-guide/</guid>
+        <description>&lt;h2 id=&#34;一什么是aria2&#34;&gt;一、什么是Aria2？
+&lt;/h2&gt;&lt;p&gt;Aria2是一款轻量级、跨平台的命令行下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent、Metalink等多种协议，凭借超高的下载速度、极低的资源占用和灵活的配置能力，成为众多用户心中的「下载神器」。&lt;/p&gt;
+&lt;p&gt;但Aria2本身无图形界面，搭配AriaNg（一款基于网页的Aria2前端管理工具），可实现可视化操作，兼顾命令行的高效与图形界面的易用性。&lt;/p&gt;
+&lt;h2 id=&#34;二准备工作下载所需文件&#34;&gt;二、准备工作：下载所需文件
+&lt;/h2&gt;&lt;h3 id=&#34;1-下载aria2&#34;&gt;1. 下载Aria2
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;下载地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/aria2/aria2/releases&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;aria2官方发布页&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;选择版本：aria2-1.37.0-win-64bit-build1.zip（Windows 64位）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-下载ariang&#34;&gt;2. 下载AriaNg
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;下载地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/mayswind/AriaNg/releases&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;AriaNg官方发布页&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;选择版本：AriaNg-1.3.13-AllInOne.zip（全能版，无需部署服务器）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-下载servy用于将aria2注册为系统服务&#34;&gt;3. 下载Servy（用于将Aria2注册为系统服务）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;下载地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/aelassas/servy&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Servy官方仓库&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;选择版本：servy-6.4-x64-installer.exe&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;4-下载chrome扩展可选快速调用aria2&#34;&gt;4. 下载Chrome扩展（可选，快速调用Aria2）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;扩展地址：&lt;a class=&#34;link&#34; href=&#34;https://chromewebstore.google.com/detail/aria2-%E6%95%B4%E5%90%88/hnenidncmoeebipinjdfniagjnfjbapi?hl=zh-CN&amp;amp;utm_source=ext_sidebar&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Aria2 整合 - Chrome应用商店&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;三安装与文件解压&#34;&gt;三、安装与文件解压
+&lt;/h2&gt;&lt;h3 id=&#34;1-创建核心目录&#34;&gt;1. 创建核心目录
+&lt;/h3&gt;&lt;p&gt;在D盘创建主目录：D:\Program Files\Aria2&lt;br&gt;
+再创建AriaNg子目录：D:\Program Files\Aria2\AriaNg&lt;/p&gt;
+&lt;h3 id=&#34;2-解压文件&#34;&gt;2. 解压文件
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;将aria2-1.37.0-win-64bit-build1.zip解压到D:\Program Files\Aria2（解压后确保目录内有aria2c.exe）；
+&lt;img src=&#34;https://img.softon.top/2026/02/0933050_aPiFdSDRO9.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Aria2解压后文件结构&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将AriaNg-1.3.13-AllInOne.zip解压到D:\Program Files\Aria2\AriaNg（解压后可见index.html）；
+&lt;img src=&#34;https://img.softon.top/2026/02/0934033_dZMOpRUe6Z.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;AriaNg解压后文件结构&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;双击D:\Program Files\Aria2\AriaNg\index.html，自动在浏览器打开AriaNg界面&lt;/p&gt;
+&lt;p&gt;但是现在打开会提示出错，我们继续操作
+&lt;img src=&#34;https://img.softon.top/2026/02/0920265_NvIxGaVYNn.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;AriaNg打开出错&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;四配置aria2核心步骤&#34;&gt;四、配置Aria2（核心步骤）
+&lt;/h2&gt;&lt;p&gt;在D:\Program Files\Aria2目录下新建aria2.conf文件，右键用记事本打开，填写以下配置内容（根据需求可自行调整）：
+&lt;img src=&#34;https://img.softon.top/2026/02/oMFXUCowP5.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;新建aria2.conf配置文件&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# RPC 设置（AriaNg连接核心）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;enable-rpc&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rpc-listen-all&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rpc-allow-origin-all&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rpc-listen-port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;6800&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rpc-secret&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;123456&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 下载设置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;dir&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;D:\Downloads  # 下载文件保存路径&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;continue&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;true     # 支持断点续传&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;max-concurrent-downloads&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;5  # 最大同时下载任务数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;max-connection-per-server&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;16  # 单服务器最大连接数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;16  # 分块下载数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;min-split-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;10M  # 最小分块大小&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 日志设置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;log-level&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;warn  # 日志级别（warn仅记录警告，减少日志体积）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;console-log-level&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;error  # 控制台日志级别&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# BT 设置（可选，优化BT下载）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bt-enable-lpd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bt-max-peers&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;50&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;注意：D:\Downloads目录需提前创建，或者你可以自定义自己的下载文件夹。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;五临时启动aria2测试基础功能&#34;&gt;五、临时启动Aria2（测试基础功能）
+&lt;/h2&gt;&lt;p&gt;打开CMD命令提示符，依次执行以下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;1. cd /d &amp;#34;D:\Program Files\Aria2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;2. aria2c.exe --conf-path&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;aria2.conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/02/0941878_ass0XeTvJs.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CMD临时启动Aria2&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;若命令行无报错，说明Aria2基础配置正常，再打开提示已连接表示成功。
+&lt;img src=&#34;https://img.softon.top/2026/02/0943288_VOwAATtqsK.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;AriaNg打开成功&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;点击Aria2状态显示如下
+&lt;img src=&#34;https://img.softon.top/2026/02/1526934_V1LYyta8wx.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Aria2状态&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;六安装chrome扩展便捷调用&#34;&gt;六、安装Chrome扩展（便捷调用）
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;打开Chrome扩展商店，安装「Aria2 整合」扩展；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;扩展设置中填写Aria2的RPC地址和密钥（与AriaNg一致，rpc-secret=123456，可自定义修改）；
+&lt;img src=&#34;https://img.softon.top/2026/02/SQiZ10Jr7s.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Aria2扩展设置&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://img.softon.top/2026/02/fxbLMSV8TM.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Aria2扩展密钥设置&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;浏览网页时，右键点击下载链接，选择「使用Aria2下载」，即可快速添加任务；
+&lt;img src=&#34;https://img.softon.top/2026/02/1528307_ktWlySvk3K.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;鼠标右键选择Aria2下载链接&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://img.softon.top/2026/02/MCCPj7Abaa.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;新建aria2下载任务&#34;
+	
+	
+&gt;
+&lt;img src=&#34;https://img.softon.top/2026/02/1531935_Wz8miL299f.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;下载任务显示&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;七注册aria2为系统服务开机自启&#34;&gt;七、注册Aria2为系统服务（开机自启）
+&lt;/h2&gt;&lt;h3 id=&#34;1-直接安装servy&#34;&gt;1. 直接安装Servy
+&lt;/h3&gt;&lt;p&gt;默认安装到C:\Program Files\Servy，可以自定义文件夹，安装后在开始菜单可见。
+&lt;img src=&#34;https://img.softon.top/2026/02/1118960_crAmvYhCcG.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Servy开始菜单&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-创建服务配置&#34;&gt;2. 创建服务配置
+&lt;/h3&gt;&lt;p&gt;直接点击Servy创建Aria2服务，填好后点击Install安装成服务
+&lt;img src=&#34;https://img.softon.top/2026/02/1519001_WjxDivfogu.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;新建aria2服务配置&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-启动服务&#34;&gt;3. 启动服务
+&lt;/h3&gt;&lt;p&gt;点击Servy Manager 选择创建的aria2服务 点启动
+&lt;img src=&#34;https://img.softon.top/2026/02/1521342_mwpcKKSOy4.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;启动Aria2服务&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;八常见问题排查&#34;&gt;八、常见问题排查
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;AriaNg连接失败&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;检查Aria2是否启动；&lt;/li&gt;
+&lt;li&gt;核对aria2.conf中RPC端口、密钥是否与AriaNg一致；&lt;/li&gt;
+&lt;li&gt;关闭防火墙/杀毒软件，避免拦截6800端口。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;下载速度慢&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调整max-connection-per-server、split参数（数值越大，分块越多，速度可能越快）；&lt;/li&gt;
+&lt;li&gt;BT下载可添加公共Tracker地址，提升节点数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;服务注册失败&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;确保Servy填写的路径及参数是否正确。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;九最终效果展示&#34;&gt;九、最终效果展示
+&lt;/h2&gt;&lt;p&gt;通过以上步骤，即可实现：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Aria2后台运行+AriaNg可视化管理，支持多协议下载、断点续传；&lt;/li&gt;
+&lt;li&gt;Chrome扩展一键调用，无需手动复制链接；&lt;/li&gt;
+&lt;li&gt;注册系统服务后开机自启，无需每次手动启动CMD。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十总结&#34;&gt;十、总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;先完成Aria2基础配置和临时启动，验证核心功能可用；&lt;/li&gt;
+&lt;li&gt;再配置AriaNg可视化和Chrome扩展，提升使用体验；&lt;/li&gt;
+&lt;li&gt;最后注册系统服务，实现开机自启，完成完整的下载体系搭建。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Aria2+AriaNg的组合兼顾速度与易用性，是Windows系统下高效的下载解决方案。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>从软路由到 Hugo：我的家庭服务器搭建全记录</title>
+        <link>https://softon.top/tutorials/build-personal-website-with-pve-and-hugo/</link>
+        <pubDate>Sat, 31 Jan 2026 20:21:25 +0800</pubDate>
+        
+        <guid>https://softon.top/tutorials/build-personal-website-with-pve-and-hugo/</guid>
+        <description>&lt;p&gt;我搭建个人站点的初衷，不是为了追求流量，只是想拥有一个完全属于自己的“数字小窝”，记录技术探索、日常思考，也顺便折腾一下各类软路由、虚拟机相关的玩法。初衷落地的第一步，就是搞定硬件设备和基础环境，毕竟“巧妇难为无米之炊”，今天就和大家详细拆解，我这套个人建站方案用到的所有设备、具体成本，以及各个组件的用途，全程干货无废话，适合想入门自建站点、喜欢折腾软路由的朋友参考～
+先交代一个基础前提：我家的网络是电信宽带，速率日常够用，用来支撑个人站点的本地搭建、远程调试和数据推送完全没问题，这也是整个建站方案的网络基础，无需额外为网络单独增加成本（除了日常缴纳的宽带费）。&lt;/p&gt;
+&lt;h2 id=&#34;一核心设备清单软路由为主配件为辅&#34;&gt;一、核心设备清单：软路由为主，配件为辅
+&lt;/h2&gt;&lt;p&gt;不同于传统的硬路由，我选择了软路由作为整个方案的核心硬件——软路由的灵活性更高，可扩展性极强，既能当主路由管理家庭网络，又能搭建虚拟机、容器，承载建站相关的服务，一举多得。下面是所有设备的详细清单，包含型号、配置、购买渠道和成本（价格为我购买时的实际花费，仅供参考，不同渠道、不同时段可能有波动）。&lt;/p&gt;
+&lt;h3 id=&#34;1-核心硬件康耐信软路由裸机&#34;&gt;1. 核心硬件：康耐信软路由（裸机）
+&lt;/h3&gt;&lt;p&gt;软路由是整个系统的“心脏”，所有的虚拟机、容器、网络管理都依赖它运行，所以我在选择时优先考虑了性能足够、稳定性强的型号，最终在咸鱼入手了康耐信软路由裸机（裸机意味着不含内存、硬盘，需要自己额外搭配，灵活性更高）。&lt;/p&gt;
+&lt;p&gt;核心配置：CPU 为 Intel N8505，这款CPU属于低功耗、高性能的入门级工控CPU，日常运行软路由系统、多个虚拟机和容器完全无压力，不会出现卡顿、死机的情况，而且功耗低，长期开机也不用担心电费过高。&lt;/p&gt;
+&lt;p&gt;购买渠道及成本：咸鱼，900元（裸机价，不含内存、硬盘）。&lt;/p&gt;
+&lt;h3 id=&#34;2-配套配件内存硬盘&#34;&gt;2. 配套配件：内存、硬盘
+&lt;/h3&gt;&lt;p&gt;软路由裸机没有内置内存和硬盘，需要自己搭配，考虑到要运行PVE系统、多个虚拟机（VM）和容器（LXC），还要存储站点相关文件，所以在配件上没有太节省，选择了够用且稳定的配置，分别在不同渠道入手了内存和硬盘。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;内存：16G DDR4 笔记本内存 × 2 根，总内存32G。之所以选择32G内存，是因为虚拟机和容器运行时会占用一定的内存，多开几个（比如我目前的2个VM+2个LXC）也不会出现内存不足的情况，后续如果想增加更多服务，也有扩展空间。购买渠道及成本：咸鱼，单根200元，2根共计400元。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;硬盘：1T NVMe SSD 固态硬盘。选择SSD而非机械硬盘，主要是因为SSD的读写速度更快，运行PVE系统、虚拟机和站点服务时，响应会更流畅，而且SSD的稳定性更好，适合长期开机运行，存储站点源码、配置文件等也足够用。购买渠道及成本：拼多多，400元。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-总成本核算&#34;&gt;3. 总成本核算
+&lt;/h3&gt;&lt;p&gt;以上所有硬件的总成本的为：软路由裸机（900元）+ 内存（400元）+ 硬盘（400元）= 1700元。&lt;/p&gt;
+&lt;p&gt;补充说明：这个成本是核心硬件的花费，不包含电信宽带费（日常正常缴纳）、GitHub Pages（免费），也不包含后期可能新增的配件，整体属于入门级偏高一点的配置，主要是为了稳定性和扩展性，如果只是单纯建站、不折腾太多虚拟机，也可以选择更低配的内存和硬盘，能节省几百元成本。&lt;/p&gt;
+&lt;h2 id=&#34;二基础环境搭建pve系统--vmlxc-容器&#34;&gt;二、基础环境搭建：PVE系统 + VM/LXC 容器
+&lt;/h2&gt;&lt;p&gt;硬件组装完成后，第一步就是安装系统——我没有直接安装软路由系统或建站系统，而是先安装了PVE（Proxmox Virtual Environment），这是一款开源的虚拟化平台，简单来说，它可以让我们在一台软路由上，同时运行多个独立的系统，也就是虚拟机（VM）和容器（LXC），相当于把一台物理机“分成”了多台虚拟的电脑，每台虚拟电脑可以运行不同的服务，互不干扰。&lt;/p&gt;
+&lt;h3 id=&#34;1-先搞懂vm虚拟机和-lxc容器的区别&#34;&gt;1. 先搞懂：VM（虚拟机）和 LXC（容器）的区别
+&lt;/h3&gt;&lt;p&gt;很多朋友第一次接触虚拟化，会分不清VM和LXC的区别，我用最通俗的话给大家解释，不用纠结复杂的技术术语，看懂核心区别就好：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;VM（虚拟机）：相当于“完整的虚拟电脑”。它会模拟一整套电脑硬件（CPU、内存、硬盘、网卡等），然后在上面安装完整的操作系统（比如Windows、Linux、软路由系统），每个VM都是独立的，拥有自己的内核，互不影响。优点是兼容性强，能运行几乎所有操作系统和软件；缺点是占用资源较多（因为要模拟完整硬件、运行完整系统）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;LXC（容器）：相当于“轻量化的虚拟环境”。它不会模拟完整的硬件，而是共享宿主系统（这里就是PVE）的内核，只隔离应用程序的运行环境，相当于在同一台电脑上，开辟了多个独立的“小空间”，每个空间运行不同的服务。优点是占用资源少、启动快，适合运行简单的服务；缺点是兼容性不如VM，只能运行和宿主内核兼容的系统（主要是Linux相关）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对我来说，两者搭配使用最合适：需要运行完整系统（比如软路由系统、桌面系统）的场景，用VM；需要运行简单服务（比如文件管理、监控）的场景，用LXC，既节省资源，又能满足不同的需求。目前我搭建的环境中，主要用了2个VM，LXC暂时只创建了备用，后续会根据需求增加服务。&lt;/p&gt;
+&lt;h3 id=&#34;2-两个核心vm软路由--建站主机&#34;&gt;2. 两个核心VM：软路由 + 建站主机
+&lt;/h3&gt;&lt;p&gt;在PVE上创建了两个虚拟机，各自承担不同的角色，相辅相成，构成了我个人建站的基础环境，下面分别介绍：&lt;/p&gt;
+&lt;h4 id=&#34;1vm1immortalwrt-主路由系统&#34;&gt;（1）VM1：ImmortalWrt 主路由系统
+&lt;/h4&gt;&lt;p&gt;第一个虚拟机，我安装了 ImmortalWrt 系统（一款开源的软路由系统，基于OpenWrt开发，稳定性更强，功能更丰富），作为整个家庭网络的主路由，负责管理网络连接、分配IP、防火墙设置等。&lt;/p&gt;
+&lt;p&gt;其中最关键的一个配置，就是在 ImmortalWrt 里安装了 OpenClash——熟悉软路由的朋友应该都知道，OpenClash 是一款常用的代理工具，主要作用是解决一些海外资源访问的问题（比如后续我可能会用到一些海外的建站插件、调试工具），同时也能优化网络连接速度。&lt;/p&gt;
+&lt;p&gt;至于具体的网络结构、OpenClash 配置方法，以及 ImmortalWrt 系统的其他设置，内容比较多，也比较细致，后续我会单独写一篇文章详细拆解，感兴趣的朋友可以持续关注～&lt;/p&gt;
+&lt;h4 id=&#34;2vm2zorin-系统--hugo-建站&#34;&gt;（2）VM2：Zorin 系统 + Hugo 建站
+&lt;/h4&gt;&lt;p&gt;第二个虚拟机，是我真正的“建站主机”，安装了 Zorin 系统——一款基于Ubuntu开发的Linux桌面系统，界面简洁、易用，对新手很友好，而且稳定性强，适合长期运行建站服务。&lt;/p&gt;
+&lt;p&gt;在 Zorin 系统上，我安装了 Hugo 建站工具——Hugo 是一款静态站点生成器，最大的优点是速度快、轻量化，不需要搭建复杂的数据库，只需要编写Markdown文档，就能快速生成静态站点（也就是我现在的个人blog）。&lt;/p&gt;
+&lt;p&gt;我的建站流程很简单：在本地（Zorin 系统里）用 Hugo 编写文章、调试站点样式，完成后，通过Git工具将站点源码推送到 GitHub Pages，GitHub Pages 会自动部署站点，生成可公开访问的网址，这样一来，既不需要购买服务器，也能实现站点的公开访问，而且完全免费、稳定。&lt;/p&gt;
+&lt;h2 id=&#34;三总结与后续规划&#34;&gt;三、总结与后续规划
+&lt;/h2&gt;&lt;p&gt;到这里，我个人建站的硬件设备、成本明细，以及基础的环境搭建，就全部介绍完了。整体来说，这套方案的核心是“软路由+虚拟化”，既满足了家庭网络的需求，又实现了本地建站、免费部署，而且有足够的扩展性，后续可以根据自己的需求，增加更多的服务（比如文件服务器、监控系统等）。&lt;/p&gt;
+&lt;p&gt;后续的文章，我会逐步拆解更细致的内容：比如 PVE 系统的安装与配置、ImmortalWrt 软路由的详细设置（含 OpenClash 配置）、Hugo 建站的具体操作（从安装到推送 GitHub Pages），以及整个网络结构的详细拆解。&lt;/p&gt;
+&lt;p&gt;如果大家有疑问，比如设备选型、成本优化、环境搭建中的坑，都可以在评论区留言，我会尽自己所能分享经验～ 毕竟，折腾的过程，本身就是一种乐趣呀。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>致每一位同频的软件爱好者：这个站点，为热爱而生</title>
+        <link>https://softon.top/about/welcome-to-ai-powered-software-blog/</link>
+        <pubDate>Fri, 30 Jan 2026 11:58:02 +0800</pubDate>
+        
+        <guid>https://softon.top/about/welcome-to-ai-powered-software-blog/</guid>
+        <description>&lt;p&gt;大家好，欢迎来到 &lt;strong&gt;softon.top&lt;/strong&gt;—— 一个属于软件爱好者的小天地，也是我第一次以文字的形式，和屏幕前的你聊聊我搭建这个站点的初衷。&lt;/p&gt;
+&lt;p&gt;先做个简单的自我介绍吧，我是一个不折不扣的“电脑迷”，从小就喜欢和各类软件打交道。不管是系统重装后的软件调试、小众工具的挖掘，还是常用软件的进阶技巧，哪怕是花一下午时间折腾一个插件、优化一组快捷键，都能让我觉得充满乐趣。这种对软件的热爱，就像一种习惯，陪着我走过了很多时光，也让我在不断折腾中，积累了一些不算高深，但足够实用的经验。&lt;/p&gt;
+&lt;p&gt;随着AI技术的飞速发展，我的“折腾范围”也慢慢扩展到了AI领域。现在的我，已经是AI的重度使用者——不管是用AI辅助编写代码、优化文案，还是遇到软件使用中的疑难杂症时，和AI对话排查问题、寻找解决方案，AI都成了我身边最得力的“帮手”。更重要的是，我计划让AI主导整个站点的内容创作与流程落地，充分发挥AI的动能：从软件教程的框架搭建、文案润色，到AI实战案例的梳理、建站流程的问题排查，甚至是内容排版优化，都会以AI为核心辅助，既提高创作效率，也能让分享的内容更精准、更实用。在这个过程中我发现，很多好用的软件、实用的技巧，还有和AI高效协作的实战经验，其实都值得被记录和分享；而很多和我一样喜欢软件、想用好AI的朋友，也可能正在寻找这些零散的知识点。&lt;/p&gt;
+&lt;p&gt;这就是我搭建 &lt;strong&gt;softon.top&lt;/strong&gt; 的第一个初衷：打造一个记录与分享的平台。未来，这个站点会聚焦于三个核心方向，希望能给你带来一些帮助：&lt;/p&gt;
+&lt;p&gt;第一，&lt;strong&gt;软件使用教程&lt;/strong&gt;。我会把自己常用的软件技巧、进阶玩法，还有一些新手容易踩坑的地方，整理成通俗易懂的教程，不管是办公软件、设计工具，还是小众实用的工具类软件，力求每一篇都能让你看完就会用、用了就有收获，避免走我曾经走过的弯路。&lt;/p&gt;
+&lt;p&gt;第二，&lt;strong&gt;好用软件推荐&lt;/strong&gt;。市面上的软件五花八门，很多人都在为“找一款合适的软件”浪费时间。我会持续挖掘各类优质软件，不管是免费开源的工具，还是付费但性价比极高的应用，都会客观分享它们的优缺点和适用场景，帮你快速找到适合自己的“宝藏软件”。&lt;/p&gt;
+&lt;p&gt;第三，&lt;strong&gt;AI实战经验分享&lt;/strong&gt;。作为重度AI使用者，我会记录下自己和AI对话解决问题的真实过程——比如用AI排查软件报错、用AI辅助优化软件操作流程、用AI生成软件相关的文案等，不夸大AI的作用，也不忽视它的便捷，希望能给同样想用好AI的朋友一些参考。&lt;/p&gt;
+&lt;p&gt;除此之外，我也坦诚地说，搭建这个站点还有一个小小的私心：希望未来能通过挂AdSense赚一点外快。一方面，能覆盖一部分站点运营的相关成本；另一方面，也能给我持续更新内容的动力——毕竟，能把自己的热爱变成一份小小的收入，也是一件很有成就感的事情。当然，我一定会把握好尺度，不会让广告影响大家的阅读体验，这是我对自己、也是对每一位来访朋友的承诺。&lt;/p&gt;
+&lt;p&gt;其实，搭建这个站点的过程，本身也是一次“折腾”的体验——从在本地PVE创建虚拟机安装Zorin系统，到在服务器上配置Hugo，再到将静态文件推送到GitHub Pages，每一步都有过困惑和卡顿，但这整个过程，我也全程以AI为主导，遇到配置报错、流程卡点时，都通过与AI对话寻找解决方案，充分发挥AI的辅助动能，最终顺利完成部署，当看到 softon.top 成功上线的那一刻，所有的麻烦都变成了满满的成就感。这也和我喜欢软件、喜欢折腾的性格不谋而合：过程或许繁琐，但结果一定值得。除此之外，我也希望把这次建站的全流程详细记录下来，从虚拟机搭建、系统配置，到Hugo部署、GitHub Pages对接，每一个步骤都整理成可参考的指南，尤其会重点分享AI在其中的应用技巧，为那些同样感兴趣、想搭建自己个人站点的朋友提供一点指导，避免大家走我曾经走过的弯路。&lt;/p&gt;
+&lt;p&gt;我不知道这个站点未来会走多远，也不知道能更新多少内容，但我会坚持做自己喜欢的事情，分享真实、实用的内容。如果你也是软件爱好者，也喜欢折腾电脑、用好AI，欢迎常来看看，也欢迎在评论区和我交流——你的每一次来访和留言，都是我前进的动力。&lt;/p&gt;
+&lt;p&gt;未来可期，愿我们都能在软件和AI的世界里，找到属于自己的乐趣和价值。&lt;/p&gt;
+&lt;p&gt;—— 一个热爱软件、喜欢折腾、重度AI使用的普通爱好者&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
