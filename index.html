@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head>
+	<meta name="generator" content="Hugo 0.155.1"><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="分享软件技巧、AI实战与效率工具">
+<title>softon.top</title>
+
+<link rel='canonical' href='https://softon.top/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="softon.top">
+<meta property='og:description' content="分享软件技巧、AI实战与效率工具">
+<meta property='og:url' content='https://softon.top/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2026-03-04T00:00:00&#43;00:00 '/>
+<meta name="twitter:title" content="softon.top">
+<meta name="twitter:description" content="分享软件技巧、AI实战与效率工具"><link rel="alternate" type="application/rss&#43;xml" href="https://softon.top/index.xml"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li  class='current' >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width"><section class="article-list">
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            解决 OpenClaw 飞书插件部署中的两大高频问题：重复插件 ID 冲突和 API 调用额度快速耗尽。提供完整排查思路、根治方案与优化代码。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-03-04T00:00:00Z'>
+                    2026-03-04，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">OpenClaw 进阶：Skills 配置 &#43; Gateway 设置 &#43; 对接飞书全攻略</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            OpenClaw 高级技能：网关守护进程配置详解，包含安装、配置、故障排查等完整指南。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-25T11:06:09&#43;08:00'>
+                    2026-02-25，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：43分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-initialization-configuration-startup-guide/">OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            OpenClaw 初始化配置与启动指南，帮助新手快速完成首次部署和基础配置。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-25T10:49:52&#43;08:00'>
+                    2026-02-25，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：27分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-initialization-configuration-startup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/pve-install-openclaw-lxc-guide/">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            在 Proxmox VE 的 LXC 容器中安装 OpenClaw 的完整教程，包含配置优化和问题排查。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-23T22:13:26&#43;08:00'>
+                    2026-02-23，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：18分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/pve-install-openclaw-lxc-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/">Hugo建站必备：ShareX&#43;Cloudflare 实现截图自动上传图床（全流程教程）</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            ShareX 配置 Cloudflare R2 对象存储，实现截图自动上传和云端管理的完整方案。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-23T16:18:57&#43;08:00'>
+                    2026-02-23，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：32分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/hugo-github-pages-cloudflare-build-website/">Hugo&#43;Github Pages&#43;Cloudflare免费图床 个人低成本建站保姆级教程</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Hugo &#43; GitHub Pages &#43; Cloudflare 组合搭建免费静态网站的完整流程，适合博客、文档站等场景。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-15T20:44:44&#43;08:00'>
+                    2026-02-15，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/hugo-github-pages-cloudflare-build-website/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/neat-download-manager-free-alternative-to-idm/">告别IDM收费与破解烦恼！Neat Download Manager才是真正的下载神器</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Neat Download Manager 免费试用体验，作为 IDM 替代品的功能评测与安装教程。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-14T09:57:49&#43;08:00'>
+                    2026-02-14，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/neat-download-manager-free-alternative-to-idm/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/aria2-download-manager-windows-setup-guide/">Windows下Aria2&#43;AriaNg安装配置教程 打造高效全能下载神器</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Windows 平台下安装配置 Aria2&#43;AriaNg 下载组合，支持 HTTP/HTTPS/BT 等多种协议，打造高效全能的下载神器。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-12T16:43:59&#43;08:00'>
+                    2026-02-12，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/aria2-download-manager-windows-setup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+            
+<article class="">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/build-personal-website-with-pve-and-hugo/">从软路由到 Hugo：我的家庭服务器搭建全记录</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            使用 Proxmox VE 虚拟机 &#43; Hugo 静态网站生成器，从零搭建个人网站的完整教程。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-01-31T20:21:25&#43;08:00'>
+                    2026-01-31，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/build-personal-website-with-pve-and-hugo/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+</article>
+        
+    </section><footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 63 天 2 小时 · 9 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-05 10:11:29 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

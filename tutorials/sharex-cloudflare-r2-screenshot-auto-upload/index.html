@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="ShareX 配置 Cloudflare R2 对象存储，实现截图自动上传和云端管理的完整方案。">
+<title>Hugo建站必备：ShareX&#43;Cloudflare 实现截图自动上传图床（全流程教程）</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="Hugo建站必备：ShareX+Cloudflare 实现截图自动上传图床（全流程教程）">
+<meta property='og:description' content="ShareX 配置 Cloudflare R2 对象存储，实现截图自动上传和云端管理的完整方案。">
+<meta property='og:url' content='https://softon.top/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='hugo' /><meta property='article:tag' content='sharex' /><meta property='article:tag' content='免费图床' /><meta property='article:tag' content='Cloudflare R2' /><meta property='article:tag' content='image-hosting' /><meta property='article:tag' content='Amazon S3' /><meta property='article:tag' content='截图' /><meta property='article:tag' content='个人建站' /><meta property='article:published_time' content='2026-02-23T16:18:57&#43;08:00'/><meta property='article:modified_time' content='2026-02-23T16:18:57&#43;08:00'/>
+<meta name="twitter:title" content="Hugo建站必备：ShareX+Cloudflare 实现截图自动上传图床（全流程教程）">
+<meta name="twitter:description" content="ShareX 配置 Cloudflare R2 对象存储，实现截图自动上传和云端管理的完整方案。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#11-注册域名porkbun平台全程支付宝直付">1.1 注册域名（Porkbun平台，全程支付宝直付）</a></li>
+    <li><a href="#12-将porkbun注册的域名绑定到cloudflare完成托管">1.2 将Porkbun注册的域名，绑定到Cloudflare完成托管</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-开通cloudflare-r2存储服务">2.1 开通Cloudflare R2存储服务</a></li>
+    <li><a href="#22-创建存储桶用于存放截图图片">2.2 创建存储桶（用于存放截图图片）</a></li>
+    <li><a href="#23-配置存储桶公开访问关键步骤">2.3 配置存储桶公开访问（关键步骤）</a></li>
+    <li><a href="#24-获取api凭证用于sharex关联">2.4 获取API凭证（用于ShareX关联）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-sharex下载与安装免费无广告">3.1 ShareX下载与安装（免费无广告）</a></li>
+    <li><a href="#32-sharex界面与核心功能说明">3.2 ShareX界面与核心功能说明</a>
+      <ul>
+        <li><a href="#321-主界面打开sharex后显示">3.2.1 主界面（打开ShareX后显示）</a></li>
+        <li><a href="#322-系统托盘功能最小化后">3.2.2 系统托盘功能（最小化后）</a></li>
+      </ul>
+    </li>
+    <li><a href="#33-sharex核心操作关联cloudflare图床关键步骤">3.3 ShareX核心操作：关联Cloudflare图床（关键步骤）</a></li>
+    <li><a href="#34-sharex日常操作步骤截图自动上传复制链接">3.4 ShareX日常操作步骤（截图→自动上传→复制链接）</a></li>
+    <li><a href="#35-sharex高级设置优化使用体验适配hugo建站">3.5 ShareX高级设置（优化使用体验，适配Hugo建站）</a>
+      <ul>
+        <li><a href="#351-自定义快捷键提升效率">3.5.1 自定义快捷键（提升效率）</a></li>
+        <li><a href="#352-设置图片格式与质量适配hugo加载速度">3.5.2 设置图片格式与质量（适配Hugo加载速度）</a></li>
+        <li><a href="#353-设置自动命名避免图片重名">3.5.3 设置自动命名（避免图片重名）</a></li>
+        <li><a href="#354-设置截图本地文件夹及路径">3.5.4 设置截图本地文件夹及路径</a></li>
+        <li><a href="#355-设置导入导出">3.5.5 设置导入导出</a></li>
+        <li><a href="#356-用好历史记录">3.5.6 用好历史记录</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+    
+
+    
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/">Hugo建站必备：ShareX&#43;Cloudflare 实现截图自动上传图床（全流程教程）</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            ShareX 配置 Cloudflare R2 对象存储，实现截图自动上传和云端管理的完整方案。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-23T16:18:57&#43;08:00'>
+                    2026-02-23，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：32分钟</span>
+            </div>
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#11-注册域名porkbun平台全程支付宝直付">1.1 注册域名（Porkbun平台，全程支付宝直付）</a></li>
+    <li><a href="#12-将porkbun注册的域名绑定到cloudflare完成托管">1.2 将Porkbun注册的域名，绑定到Cloudflare完成托管</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-开通cloudflare-r2存储服务">2.1 开通Cloudflare R2存储服务</a></li>
+    <li><a href="#22-创建存储桶用于存放截图图片">2.2 创建存储桶（用于存放截图图片）</a></li>
+    <li><a href="#23-配置存储桶公开访问关键步骤">2.3 配置存储桶公开访问（关键步骤）</a></li>
+    <li><a href="#24-获取api凭证用于sharex关联">2.4 获取API凭证（用于ShareX关联）</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-sharex下载与安装免费无广告">3.1 ShareX下载与安装（免费无广告）</a></li>
+    <li><a href="#32-sharex界面与核心功能说明">3.2 ShareX界面与核心功能说明</a>
+      <ul>
+        <li><a href="#321-主界面打开sharex后显示">3.2.1 主界面（打开ShareX后显示）</a></li>
+        <li><a href="#322-系统托盘功能最小化后">3.2.2 系统托盘功能（最小化后）</a></li>
+      </ul>
+    </li>
+    <li><a href="#33-sharex核心操作关联cloudflare图床关键步骤">3.3 ShareX核心操作：关联Cloudflare图床（关键步骤）</a></li>
+    <li><a href="#34-sharex日常操作步骤截图自动上传复制链接">3.4 ShareX日常操作步骤（截图→自动上传→复制链接）</a></li>
+    <li><a href="#35-sharex高级设置优化使用体验适配hugo建站">3.5 ShareX高级设置（优化使用体验，适配Hugo建站）</a>
+      <ul>
+        <li><a href="#351-自定义快捷键提升效率">3.5.1 自定义快捷键（提升效率）</a></li>
+        <li><a href="#352-设置图片格式与质量适配hugo加载速度">3.5.2 设置图片格式与质量（适配Hugo加载速度）</a></li>
+        <li><a href="#353-设置自动命名避免图片重名">3.5.3 设置自动命名（避免图片重名）</a></li>
+        <li><a href="#354-设置截图本地文件夹及路径">3.5.4 设置截图本地文件夹及路径</a></li>
+        <li><a href="#355-设置导入导出">3.5.5 设置导入导出</a></li>
+        <li><a href="#356-用好历史记录">3.5.6 用好历史记录</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>对于使用Hugo建站的博主而言，截图插入（比如教程类文章、网站效果展示）是高频需求——手动截图、保存本地、上传图床、复制链接、粘贴到文章，整个流程繁琐且耗时。今天就给大家带来一套高效解决方案：利用 <strong>ShareX（免费截图工具）+ Cloudflare（免费CDN+存储）</strong>，实现「截图即上传、上传即获链接」，全程自动化，彻底解放双手，让你专注于文章创作本身。</p>
+<p>本教程分为三大部分，从域名准备、图床搭建到工具配置，每一步都附带详细操作截图（文字清晰可落地），新手也能轻松跟着走，无需专业技术基础。</p>
+<h1 id="第一部分通过porkbun注册域名并绑定到cloudflare管理">第一部分：通过Porkbun注册域名，并绑定到Cloudflare管理
+</h1><p>搭建稳定且高可用的图床，<strong>自定义域名</strong>是绕不开的核心前提 —— 它将替代 Cloudflare 提供的临时域名，成为图片资源的永久唯一标识。</p>
+<p>将域名托管至 Cloudflare 后，我们不仅能借助其免费 CDN 大幅提升图片的加载速度，还能一站式获得专业的 DNS 解析与安全防护服务。作为建站唯一的成本投入，域名的重要性无需赘述（详见前文：<a class="link" href="/tutorials/hugo-github-pages-cloudflare-build-website/" >Hugo+Github Pages+Cloudflare 免费图床 个人低成本建站保姆级教程</a>）。若你计划长期运营个人站点，强烈建议注册专属域名并以此搭建图床。本站亲测采用「<strong>Porkbun 注册域名 + Cloudflare 免费托管</strong>」的组合，全程流程简洁高效，且价相比国内服务商更具优势，非常适合开发者入门。</p>
+<p>先重点介绍Porkbun域名注册商的核心优势，这也是我选择它的关键原因，尤其适配Hugo建站用户的需求，对比国内阿里云、腾讯云等注册商，优势十分明显：</p>
+<ul>
+<li>
+<p><strong>价格更实惠</strong>：核心优势之一，同等后缀的域名（如.com、.top、.xyz等），Porkbun首年注册价普遍比国内注册商低30%-50%，且无隐藏消费，续费价格也相对稳定，适合个人博主长期使用，用于图床搭建性价比拉满；</p>
+</li>
+<li>
+<p><strong>支持支付宝直付</strong>：无需绑定信用卡、PayPal，直接支持支付宝付款，流程和国内购物付款一样便捷，解决了很多用户国际付款不便的痛点，付款后即时生效，无需等待审核；</p>
+</li>
+<li>
+<p><strong>无需备案，全程无门槛</strong>：Porkbun注册的域名属于国际域名，无需进行国内ICP备案，注册完成后可直接使用，省去了国内注册商域名备案的繁琐流程（备案通常需要3-7天，还需准备主体证明材料），大大缩短了图床搭建周期；</p>
+</li>
+<li>
+<p><strong>口碑优质，服务稳定</strong>：Porkbun是ICANN认证的域名注册商，连续2023-2025年被《今日美国》评为全球最佳域名注册商，Trustpilot上拥有大量5星好评，支持全年365天客服响应，且不会强制推销无关服务，使用体验简洁流畅。</p>
+</li>
+</ul>
+<h2 id="11-注册域名porkbun平台全程支付宝直付">1.1 注册域名（Porkbun平台，全程支付宝直付）
+</h2><ol>
+<li>
+<p>访问Porkbun官网（<a class="link" href="https://porkbun.com/"  target="_blank" rel="noopener"
+    >https://porkbun.com/</a>），注册/登录Porkbun账号：点击右上角「<strong>SIGN IN</strong>」，在登录页面，点击「<strong>Create a New Account</strong>」，按要求输入邮箱、密码，姓名、地址、电话等（带*号的都要填写），验证邮箱后即可完成注册（无需绑定任何支付方式，注册全程免费）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1110522_Tqc4Oe9yzb.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1110522_Tqc4Oe9yzb.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1111160_RLP9ATIE1Z.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1111160_RLP9ATIE1Z.png"
+	
+	
+></p>
+</li>
+<li>
+<p>在搜索框输入想要的域名（可以先只输入前缀，比如softxxx），点击搜索，会批量查询哪些域名是否可注册；</p>
+<p><img src="https://img.softon.top/2026/02/23/1128913_pUCJzI7x5j.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1128913_pUCJzI7x5j.png"
+	
+	
+></p>
+<p>点击「<strong>sort by price</strong>」会按价格排序，可以看到最低费用，首年注册低至1.54美元，但是要注意下面的续费费用，有的首年很便宜，但是续费价格较高（避坑）。</p>
+<p><img src="https://img.softon.top/2026/02/23/1129582_DUM99S7JwZ.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1129582_DUM99S7JwZ.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1129839_JYF9ERMaPF.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1129839_JYF9ERMaPF.png"
+	
+	
+></p>
+<p>目前能找到的还是.top域名，首年1.63美元，续费4.63美元，算是性价比很高的了。</p>
+<p><img src="https://img.softon.top/2026/02/23/1150286_ZPJ0C4jJy3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1150286_ZPJ0C4jJy3.png"
+	
+	
+></p>
+</li>
+<li>
+<p>选择可注册的域名，点击「<strong>+</strong>」加入购物车，点击购物车图标，结算时选择注册年限（首年最优，后续可续费），确认域名信息无误后，点击「<strong>Checkout</strong>」进入付款页面；</p>
+<p><img src="https://img.softon.top/2026/02/23/1153139_9fVvZ9Ysr2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1153139_9fVvZ9Ysr2.png"
+	
+	
+></p>
+<p>在这里可以选择注册年限，如果想长期用建议直接选3年或5年甚至直接10年，比注册1年再每年续费还要优惠。</p>
+<p><img src="https://img.softon.top/2026/02/23/1157369_RqvyNQNrsl.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1157369_RqvyNQNrsl.png"
+	
+	
+></p>
+<p>确认后，在右下角点击「<strong>Continue to Billing</strong>」进入付款页面；</p>
+<p><img src="https://img.softon.top/2026/02/23/1202610_7ZGLsyDSEC.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1202610_7ZGLsyDSEC.png"
+	
+	
+></p>
+</li>
+<li>
+<p>在该页面直接选择Alipay（支付宝），点击「<strong>Continue to Alipay</strong>」，会直接跳到支付宝界面进行支付。</p>
+<p><img src="https://img.softon.top/2026/02/23/1203358_84H1btpRc4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1203358_84H1btpRc4.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1205647_lkSUvkeQAi.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1205647_lkSUvkeQAi.png"
+	
+	
+></p>
+</li>
+<li>
+<p>付款完成后，返回Porkbun官网，进入「Domains」控制台，即可看到已注册的域名，记住其「Manage」（管理）入口，后续需要修改DNS服务器，完成与Cloudflare的绑定。</p>
+<p><img src="https://img.softon.top/2026/02/23/1214623_N5h4ERsXMA.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1214623_N5h4ERsXMA.png"
+	
+	
+></p>
+</li>
+</ol>
+<p>小贴士：域名后缀优先选择 .com、.top、.xyz 等常见后缀，Porkbun这类后缀的首年价格通常在1-5美元（折合人民币几元到几十元），比国内同类型域名便宜不少；由于Porkbun属于国际注册商，注册的域名无需备案，绑定Cloudflare国际节点后，国内外均可快速访问，完全适配图床使用需求。</p>
+<h2 id="12-将porkbun注册的域名绑定到cloudflare完成托管">1.2 将Porkbun注册的域名，绑定到Cloudflare完成托管
+</h2><p>Cloudflare提供免费的DNS解析、CDN加速服务，将Porkbun注册的域名托管到这里后，后续我们搭建的图床可以借助其全球节点，让图片在国内外都能快速加载，同时避免图片被墙、加载缓慢的问题。操作流程和国内注册商域名托管一致，重点是修改Porkbun域名的DNS服务器。</p>
+<ol>
+<li>
+<p>注册/登录Cloudflare账号：访问Cloudflare官网（<a class="link" href="https://dash.cloudflare.com/sign-up"  target="_blank" rel="noopener"
+    >https://dash.cloudflare.com/sign-up</a>），输入邮箱、密码，点击「<strong>Sign up</strong>（创建账户）」，然后验证邮箱即可完成注册（全程免费，无需绑定信用卡）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1217445_sZVx58NfP2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1217445_sZVx58NfP2.png"
+	
+	
+></p>
+</li>
+<li>
+<p>添加域名到Cloudflare：登录后，点击页面顶部「<strong>+Add</strong>」，在下拉项目选择「<strong>Connect a domain</strong>」；</p>
+<p><img src="https://img.softon.top/2026/02/23/1221479_yBxcuKScqg.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1221479_yBxcuKScqg.png"
+	
+	
+></p>
+<p>然后输入你需要托管的域名，直接选推荐的「<strong>Quick scan for DNS records</strong>」，下面的AI爬虫策略选默认设置即可，然后点击「<strong>Continue</strong>」继续；</p>
+<p><img src="https://img.softon.top/2026/02/23/1224296_3bRFJp6CUb.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1224296_3bRFJp6CUb.png"
+	
+	
+></p>
+</li>
+<li>
+<p>选择Cloudflare计划：弹出套餐选择页面，我们选择「<strong>Free</strong>（免费计划）」，点击「<strong>Continue（继续）</strong>」，免费计划完全满足个人图床需求，包含无限流量、DNS解析、基础CDN加速等核心功能；</p>
+<p><img src="https://img.softon.top/2026/02/23/1233186_cN3Ibier8Y.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1233186_cN3Ibier8Y.png"
+	
+	
+></p>
+</li>
+<li>
+<p>验证并导入DNS记录：Cloudflare会自动扫描你域名当前的DNS记录（如果是新注册的域名，可能没有任何记录，直接点击「<strong>Continue</strong>」即可）；扫描完成后，无需修改任何记录，直接点击「<strong>Continue</strong>」；</p>
+<p><img src="https://img.softon.top/2026/02/23/1235265_qpfHG0i5tX.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1235265_qpfHG0i5tX.png"
+	
+	
+></p>
+</li>
+<li>
+<p>修改域名DNS服务器：这是关键一步！Cloudflare会给出两组DNS服务器地址（<strong>coleman.ns.cloudflare.com</strong> 和 <strong>ziggy.ns.cloudflare.com</strong>），我们需要回到Porkbun域名控制台，将域名的DNS服务器修改为这两组地址；</p>
+<p><img src="https://img.softon.top/2026/02/23/1237621_bxk2G3I069.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1237621_bxk2G3I069.png"
+	
+	
+></p>
+</li>
+<li>
+<p>Porkbun域名控制台：登录Porkbun，进入「<strong>Domains</strong>」，找到对应域名，点击「<strong>NS（域名服务器）</strong>」，删除默认的Porkbun DNS服务器，粘贴Cloudflare提供的两组DNS地址，点击「<strong>Submit</strong>」保存并确认；</p>
+<p><img src="https://img.softon.top/2026/02/23/1214623_N5h4ERsXMA.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1214623_N5h4ERsXMA.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1240335_EI14l1y2Pf.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1240335_EI14l1y2Pf.png"
+	
+	
+></p>
+</li>
+<li>
+<p>注意：DNS服务器修改后，生效需要时间（通常5-30分钟，最长不超过24小时），耐心等待即可，可通过 <a class="link" href="https://www.whatsmydns.net/#NS/"  target="_blank" rel="noopener"
+    >https://www.whatsmydns.net/#NS/</a> 输入域名，查询DNS是否生效。</p>
+<p><img src="https://img.softon.top/2026/02/23/1242598_Gg9ZWN552U.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1242598_Gg9ZWN552U.png"
+	
+	
+></p>
+</li>
+<li>
+<p>确认托管成功：回到Cloudflare页面，点击左侧导航栏「<strong>Domain</strong>」，进入域名管理页面，如果页面显示域名为「<strong>Status：Active</strong>」，说明Porkbun注册的域名已经成功托管到Cloudflare，后续我们就可以在Cloudflare上管理这个域名的解析、CDN等功能了。</p>
+<p><img src="https://img.softon.top/2026/02/23/1244136_GfjCkIs5lU.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1244136_GfjCkIs5lU.png"
+	
+	
+></p>
+</li>
+</ol>
+<p>补充说明：Porkbun修改DNS服务器的操作比国内部分注册商更简洁，无需人工审核，保存后即时提交修改请求；如果后续你更换其他国际注册商，修改DNS服务器的步骤类似，找到域名的「Nameservers」设置，替换为Cloudflare提供的DNS地址即可。</p>
+<h1 id="第二部分利用cloudflare-storage建立免费图床">第二部分：利用Cloudflare Storage建立免费图床
+</h1><p>Cloudflare Storage（R2 Object Storage）是Cloudflare推出的对象存储服务，专门用于存储图片、文件等静态资源，核心优势是「免费额度高、出口流量全免」——提供10GB免费存储（足够个人博客存储上万张截图）、每月100万次上传、1000万次读取，且出口流量完全免费，无需担心后续产生额外费用，是个人图床的最优选择之一。</p>
+<p>这一步我们将完成「创建存储桶→配置公开访问→获取API凭证」，为后续ShareX自动上传做好准备，全程在Cloudflare后台操作，无需编写代码。</p>
+<h2 id="21-开通cloudflare-r2存储服务">2.1 开通Cloudflare R2存储服务
+</h2><ol>
+<li>
+<p>登录Cloudflare后台，在左侧导航栏找到「<strong>Storage &amp; databases</strong>」→「<strong>R2 object storage</strong>」，点击「<strong>Overview</strong>」进入；</p>
+<p><img src="https://img.softon.top/2026/02/23/1251098_4vD08RYuWz.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1251098_4vD08RYuWz.png"
+	
+	
+></p>
+</li>
+<li>
+<p>首次使用会提示「<strong>开通R2服务</strong>」，点击「<strong>开通</strong>」，此时会要求绑定支付方式（信用卡或PayPal），这里无需担心，仅用于身份验证，<strong>不会自动扣费，免费额度内完全免费</strong>；</p>
+<ol>
+<li>
+<p>支持绑定：信用卡（Visa、MasterCard、银联均可）、PayPal；</p>
+<p><img src="https://img.softon.top/2026/02/23/1258962_g5nr7IBls2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1258962_g5nr7IBls2.png"
+	
+	
+></p>
+<p>我使用的银联的信用卡，非常方便。</p>
+</li>
+<li>
+<p>绑定完成后，再次点击「开通R2服务」，几秒钟即可开通成功。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="22-创建存储桶用于存放截图图片">2.2 创建存储桶（用于存放截图图片）
+</h2><p>存储桶相当于我们图床的「文件夹」，所有通过ShareX上传的截图，都会自动存放在这个存储桶中，我们需要创建一个专属存储桶，并配置相关参数。</p>
+<ol>
+<li>
+<p>开通R2后，点击页面右上角「<strong>Create bucket</strong>」，进入创建页面；</p>
+</li>
+<li>
+<p>填写存储桶信息：</p>
+<ol>
+<li>
+<p>Bucket name（存储桶）名称：自定义，建议简洁且有辨识度（比如 softxxx-img、hugo-img-bed等），注意名称是全局唯一的，如果提示重名，更换一个即可；</p>
+</li>
+<li>
+<p>Location（位置）选择：有小技巧可参考——亚太地区（APAC）国内访问更快，但国际访问受限；北美西部（WNAM）配合Cloudflare CDN，全球访问速度更均衡，建议默认：Automatic；</p>
+</li>
+<li>
+<p>存储类：默认选择「标准（Standard）」即可，适合频繁访问的截图资源。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>点击「<strong>Create bucket</strong>」，几秒钟后，存储桶即可创建完成，进入存储桶详情页，后续的配置都在这里进行。</p>
+<p><img src="https://img.softon.top/2026/02/23/1302432_qs91f3TA43.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1302432_qs91f3TA43.png"
+	
+	
+></p>
+</li>
+</ol>
+<h2 id="23-配置存储桶公开访问关键步骤">2.3 配置存储桶公开访问（关键步骤）
+</h2><p>R2存储桶默认是私有的，也就是说，上传的图片无法通过公网访问，我们需要配置公开访问，让图片能够通过域名直接访问（即图床的核心功能），推荐使用「自定义域名」配置（避免默认临时域名限速）。</p>
+<ol>
+<li>
+<p>进入存储桶详情页，点击顶部「<strong>Settings（设置）</strong>」标签，向下滚动找到「<strong>Custom Domains（自定义域名）</strong>」；</p>
+<p><img src="https://img.softon.top/2026/02/23/1306734_auBfPjFGMC.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1306734_auBfPjFGMC.png"
+	
+	
+></p>
+</li>
+<li>
+<p>点击「<strong>Add（添加）</strong>」，输入我们想要用于图床的子域名（比如 img.softon.top）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1310940_NpiRkW269b.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1310940_NpiRkW269b.png"
+	
+	
+></p>
+</li>
+<li>
+<p>点击「<strong>继续</strong>」，Cloudflare会自动在你的域名DNS记录中添加一条CNAME记录，无需手动操作，可以在domain管理里面查看绑定的DNS记录；</p>
+<p><img src="https://img.softon.top/2026/02/23/1311039_05wYCQgPF1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1311039_05wYCQgPF1.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1312332_7W45aFNvZV.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1312332_7W45aFNvZV.png"
+	
+	
+></p>
+</li>
+<li>
+<p>当设置页面Custom Domains显示<strong>Access「Enabled」</strong>，说明自定义域名已经绑定成功，后续访问图片的URL就是「https://img.softon.top/图片名称.png」；</p>
+</li>
+<li>
+<p>小贴士：避免使用 Public Development URL「r2.dev 子域名」（仅适合测试），该临时域名有访问速率限制，博客访问量稍大就会导致图片加载失败，生产环境务必使用自定义域名。</p>
+</li>
+</ol>
+<h2 id="24-获取api凭证用于sharex关联">2.4 获取API凭证（用于ShareX关联）
+</h2><p>ShareX要实现自动上传图片到Cloudflare R2，需要通过API凭证验证身份，我们需要创建一个API令牌，并保存好关键信息（仅显示一次，务必妥善保管）。</p>
+<ol>
+<li>
+<p>回到R2对象存储的「<strong>Overview（概述）</strong>」页面，在右下角的 <strong>Account Details</strong>点击「<strong>Manage（管理）</strong>」；</p>
+<p><img src="https://img.softon.top/2026/02/23/1323985_FOkRVp6tEt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1323985_FOkRVp6tEt.png"
+	
+	
+></p>
+</li>
+<li>
+<p>点击「<strong>Create Account API token（创建API令牌）</strong>」，填写令牌信息：</p>
+<ol>
+<li>
+<p>令牌名称：自定义，比如 sharex-upload-token，用于区分用途；</p>
+</li>
+<li>
+<p>权限：选择「对象读和写（Object Read &amp; Write）」，确保ShareX能够正常上传和读取图片；</p>
+</li>
+<li>
+<p>存储桶：选择我们刚才创建的存储桶（或选择「所有存储桶」）。</p>
+<p><img src="https://img.softon.top/2026/02/23/1334825_Hec1ugD2Yh.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1334825_Hec1ugD2Yh.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1338713_1X4NxBx8a3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1338713_1X4NxBx8a3.png"
+	
+	
+></p>
+</li>
+</ol>
+</li>
+<li>
+<p>点击「<strong>Create Account API token（创建API令牌）</strong>」，创建完成后，页面会显示三个关键信息，<strong>务必立即复制并保存到记事本</strong>（<mark>关闭页面后再也无法查看，只能重新创建</mark>）：</p>
+<ol>
+<li>
+<p>访问密钥ID（Access Key ID）；</p>
+</li>
+<li>
+<p>访问密钥（Secret Access Key）；</p>
+</li>
+<li>
+<p>S3 API端点（类似 <a class="link" href="https://xxxxx.r2.cloudflarestorage.com"  target="_blank" rel="noopener"
+    >https://xxxxx.r2.cloudflarestorage.com</a>，可后续在R2概述页右下角<strong>Account Details</strong>看到。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>至此，Cloudflare R2免费图床已经搭建完成，我们拥有了「自定义域名+免费存储+CDN加速」的图床，接下来配置ShareX，实现截图自动上传。</p>
+</li>
+</ol>
+<h1 id="第三部分sharex详细操作界面功能步骤设置">第三部分：ShareX详细操作（界面、功能、步骤、设置）
+</h1><p>ShareX是一款免费、开源、无广告的全能截图工具（仅支持Windows系统），不仅支持多种截图模式，还能实现截图编辑、自动上传、链接复制等功能，在GitHub上收获了超过33.8k星标，深受开发者、博主喜爱。配合我们刚才搭建的Cloudflare图床，就能实现「截图→上传→复制链接」全程自动化，完美适配Hugo文章创作。</p>
+<p><img src="https://img.softon.top/2026/02/15/2142802_rc291ZqZQv.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2142802_rc291ZqZQv.png"
+	
+	
+></p>
+<p>这一部分我们从「软件安装→界面功能→图床配置→操作步骤→高级设置」，全方位拆解ShareX的使用方法，确保你能快速上手。</p>
+<h2 id="31-sharex下载与安装免费无广告">3.1 ShareX下载与安装（免费无广告）
+</h2><ol>
+<li>
+<p>下载ShareX：访问ShareX官网（<a class="link" href="https://getsharex.com/"  target="_blank" rel="noopener"
+    >https://getsharex.com/</a>），点击首页「Download」，下载最新版本的安装包（Windows系统，约20MB，无需付费）；</p>
+</li>
+<li>
+<p>安装ShareX：双击安装包，按照提示下一步即可，无需修改默认设置（可自定义安装路径）；</p>
+</li>
+<li>
+<p>启动ShareX：安装完成后，桌面会生成快捷方式，双击启动，启动后会自动最小化到系统托盘（右下角），不会占用桌面空间。</p>
+</li>
+</ol>
+<h2 id="32-sharex界面与核心功能说明">3.2 ShareX界面与核心功能说明
+</h2><p>ShareX的界面简洁明了，核心功能集中在「截图、上传、工具」三大模块，新手无需复杂学习，熟悉几个关键按钮即可上手，下面介绍常用界面和功能：</p>
+<h3 id="321-主界面打开sharex后显示">3.2.1 主界面（打开ShareX后显示）
+</h3><p>主界面分为4个核心区域，对应不同功能，一目了然：</p>
+<p><img src="https://img.softon.top/2026/02/15/2142517_oefTk9XcLA.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2142517_oefTk9XcLA.png"
+	
+	
+></p>
+<ol>
+<li>
+<p><strong>截图（左侧第一个按钮）</strong>：核心功能区，包含多种截图/录屏模式，常用的有：</p>
+<ol>
+<li>
+<p>矩形截图：拖动鼠标选择任意矩形区域，截图后自动进入编辑界面；</p>
+</li>
+<li>
+<p>窗口截图：自动识别当前打开的窗口，点击即可截取整个窗口（不含桌面背景）；</p>
+</li>
+<li>
+<p>全屏截图：截取整个电脑屏幕（所有显示器，可设置单屏）；</p>
+</li>
+<li>
+<p>滚动截图：截取网页、文档等可滚动的内容（比如长网页，自动滚动并拼接成一张图片）；</p>
+</li>
+<li>
+<p>屏幕录制：录制屏幕视频或GIF动图，适合展示操作流程。</p>
+<p><img src="https://img.softon.top/2026/02/23/7EENPpXGsw.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="7EENPpXGsw.png"
+	
+	
+></p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>上传（左侧第二个按钮）</strong>：用于手动上传本地图片、文件，也可查看上传历史（所有通过ShareX上传的图片，都能在这里找到）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1355116_oN19v2Id4K.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1355116_oN19v2Id4K.png"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>工具（左侧第四个按钮）</strong>：有很多实用的工具可以选择，最重要的是<strong>图像编辑器</strong>，截图完成后，点击此处可进入编辑界面，常用功能有：</p>
+<ol>
+<li>
+<p>标注工具：添加箭头、矩形、圆形、文字等，用于突出截图重点（适合教程类截图）；</p>
+</li>
+<li>
+<p>裁剪工具：裁剪截图多余部分，调整图片尺寸；</p>
+</li>
+<li>
+<p>模糊工具：模糊截图中的敏感信息（比如密码、个人信息）；</p>
+</li>
+<li>
+<p>格式转换：将截图保存为PNG、JPG、GIF等格式（默认PNG，清晰度最高）。</p>
+<p><img src="https://img.softon.top/2026/02/23/6ajN0KYlhq.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="6ajN0KYlhq.png"
+	
+	
+></p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>设置（左侧中间区域）</strong>：核心配置区，程序设置、动作设置、上传目的地设置，后续图床关联、快捷键设置、自动上传设置等，都在这里操作。</p>
+<p><img src="https://img.softon.top/2026/02/23/1400760_AqUt75Tq6l.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1400760_AqUt75Tq6l.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="322-系统托盘功能最小化后">3.2.2 系统托盘功能（最小化后）
+</h3><p>ShareX启动后最小化到系统托盘，右键点击托盘图标，可快速访问常用功能：</p>
+<ul>
+<li>
+<p>快速截图：选择任意截图模式，无需打开主界面；</p>
+</li>
+<li>
+<p>上传文件：手动选择本地文件上传到图床；</p>
+</li>
+<li>
+<p><strong>历史记录</strong>：查看截图和上传历史；（<mark>这是后期最常用且最方便的功能</mark>）</p>
+</li>
+<li>
+<p>退出：关闭ShareX（退出后无法使用快捷键截图）。</p>
+<p><img src="https://img.softon.top/2026/02/23/EmHBB4Ultd.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="EmHBB4Ultd.png"
+	
+	
+></p>
+</li>
+</ul>
+<h2 id="33-sharex核心操作关联cloudflare图床关键步骤">3.3 ShareX核心操作：关联Cloudflare图床（关键步骤）
+</h2><p>这是实现「截图自动上传」的核心配置，我们需要在ShareX中添加Cloudflare R2图床，填写之前获取的API凭证，让ShareX能够正常上传图片到我们搭建的图床。</p>
+<ol>
+<li>
+<p>打开ShareX，点击设置区域的「<strong>Destination settings（目的地设置）</strong>」；</p>
+</li>
+<li>
+<p>在跳出的设置窗口中，选择「Amazon S3」（因为Cloudflare R2兼容S3 API，无需选择其他选项）；</p>
+</li>
+<li>
+<p>点击下方「Amazon S3」，进入详细配置页面，填写我们在第二部分获取的API凭证和图床信息，每一项都要填写正确：</p>
+<ol>
+<li>
+<p>访问密钥ID：粘贴我们保存的「Access Key ID」；</p>
+</li>
+<li>
+<p>秘密访问密钥：粘贴我们保存的「Secret Access Key」；</p>
+</li>
+<li>
+<p>存储桶名称：填写我们创建的Cloudflare R2存储桶名称（比如 softxxx-img）；</p>
+</li>
+<li>
+<p>端点：粘贴我们保存的「S3 API端点」（比如 <a class="link" href="https://xxxxx.r2.cloudflarestorage.com"  target="_blank" rel="noopener"
+    >https://xxxxx.r2.cloudflarestorage.com</a>）；</p>
+</li>
+<li>
+<p>区域：默认auto（Cloudflare R2自动适配）；</p>
+</li>
+<li>
+<p>URL样式：选择「自定义域名」，填写我们绑定的图床自定义域名（比如 <a class="link" href="https://img.softon.top"  target="_blank" rel="noopener"
+    >https://img.softon.top</a>）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1412176_pkHLfunFf4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1412176_pkHLfunFf4.png"
+	
+	
+></p>
+</li>
+<li>
+<p>上传路径：填写时点击输入框，右边会有输入提示，可以按照自己的喜好设置，我的设置为「%y/%mo/%d」（按照年/月/日上传，将图片存放在存储桶的相应文件夹下，在cloudflare的R2存储桶的总揽页面可以看到相应的文件夹结构和上传的图片文件，可以在这里进行管理）；</p>
+<p><img src="https://img.softon.top/2026/02/23/1430078_Y9C1TcSVOY.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1430078_Y9C1TcSVOY.png"
+	
+	
+></p>
+</li>
+<li>
+<p>其他选项默认即可，无需修改。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>填写完成后，点击主界面左侧下部的「调试」→「测试图片上传」，如果弹出「上传成功」的提示，说明ShareX已经成功关联Cloudflare图床；在「调试日志」可以看到上传信息，在「历史记录」可以看到上传的时间、文件名、上传成功的网址信息；如果失败，需要检查API凭证、存储桶名称、自定义域名是否填写正确，同样可以在调试信息里面查找错误信息根据信息排查；</p>
+<p><img src="https://img.softon.top/2026/02/23/302wy5n8oG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="302wy5n8oG.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1436801_qHSr3rvnac.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1436801_qHSr3rvnac.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/23/1439535_bQLg7IvYdd.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1439535_bQLg7IvYdd.png"
+	
+	
+></p>
+</li>
+<li>
+<p>关联成功后，点击「确定」，保存设置，返回主界面。</p>
+</li>
+</ol>
+<h2 id="34-sharex日常操作步骤截图自动上传复制链接">3.4 ShareX日常操作步骤（截图→自动上传→复制链接）
+</h2><p>配置完成后，日常使用非常简单，全程只需2步，即可获取截图的图床链接，直接粘贴到Hugo文章中：</p>
+<ol>
+<li>
+<p>启动截图：</p>
+<ol>
+<li>
+<p>方式1：打开ShareX主界面，点击「截图」，选择对应的截图模式（比如矩形截图）；</p>
+</li>
+<li>
+<p>方式2：使用快捷键（推荐，效率更高），默认快捷键：矩形截图「Ctrl+PrintScreen」、全屏截图「PrintScreen」、窗口截图「Alt+PrintScreen」、滚动截图「Ctrl+Alt+PrintScreen」；</p>
+</li>
+<li>
+<p>截图时，拖动鼠标选择区域（矩形截图），松开鼠标后，自动进入编辑界面（可跳过编辑，直接上传）。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>编辑与上传：</p>
+<ol>
+<li>
+<p>编辑截图（可选）：在编辑界面，使用标注工具、裁剪工具等，编辑完成后，点击右上角绿色对勾；</p>
+<p><img src="https://img.softon.top/2026/02/23/1515848_ycmaKEq1K4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1515848_ycmaKEq1K4.png"
+	
+	
+></p>
+</li>
+<li>
+<p>自动上传：编辑完成后，ShareX会自动上传图片到Cloudflare图床（无需手动点击上传），上传过程中会显示进度条；</p>
+</li>
+<li>
+<p>复制链接：上传成功后，图片的图床链接会自动复制到剪贴板（右下角会弹出「URL已复制到剪贴板」的提示）；</p>
+</li>
+<li>
+<p>粘贴使用：先在历史记录里面选择需要复制的图片，鼠标右键→复制→Markdown图像，然后在Markdown编辑器（比如Obsidian、VS Code），粘贴即可插入截图。</p>
+<p><img src="https://img.softon.top/2026/02/23/uKqTELGKAI.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="uKqTELGKAI.png"
+	
+	
+></p>
+</li>
+</ol>
+</li>
+</ol>
+<p>小贴士：<strong>如何设置截图后自动打开图像编辑和自动上传</strong>：在主界面左侧点击「<strong>截图后的任务</strong>」，选中「<strong>打开图像编辑器</strong>」和「<strong>上传图片</strong>」即可，如果不想自动打开编辑截图，可取消勾选「打开图像编辑器」，截图后会直接自动上传，效率更高。注意：选中后字体变粗，但是与不选中区别不大，可以仔细对比一下。</p>
+<p><img src="https://img.softon.top/2026/02/23/lyxnouDgHV.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="lyxnouDgHV.png"
+	
+	
+></p>
+<h2 id="35-sharex高级设置优化使用体验适配hugo建站">3.5 ShareX高级设置（优化使用体验，适配Hugo建站）
+</h2><p>根据Hugo建站的需求，我们可以对ShareX进行一些优化设置，让截图上传更贴合文章创作习惯，推荐3个常用设置：</p>
+<h3 id="351-自定义快捷键提升效率">3.5.1 自定义快捷键（提升效率）
+</h3><p>默认快捷键可能不符合你的使用习惯，可自定义快捷键，比如将矩形截图设置为「Ctrl+Q」，更方便操作：</p>
+<ol>
+<li>
+<p>进入ShareX主界面→「<strong>快捷键设置</strong>」，点击「<strong>添加</strong>」；</p>
+</li>
+<li>
+<p>在「任务」下拉菜单中，选择对应的功能（比如「屏幕截图→截图矩形区域」）；</p>
+</li>
+<li>
+<p>点击「设置热键」，按下想要设置的快捷键（比如Ctrl+Q），点击「确定」；</p>
+</li>
+<li>
+<p>保存设置后，即可使用自定义快捷键启动截图。</p>
+<p><img src="https://img.softon.top/2026/02/23/1531759_XaVJNDuR5Z.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1531759_XaVJNDuR5Z.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="352-设置图片格式与质量适配hugo加载速度">3.5.2 设置图片格式与质量（适配Hugo加载速度）
+</h3><p>Hugo博客追求加载速度，截图图片不宜过大，可设置图片格式为PNG（清晰度高+体积小），并压缩质量：</p>
+<ol>
+<li>
+<p>进入ShareX主界面→「动作设置」→「图像」；</p>
+</li>
+<li>
+<p>图像格式：选择「PNG」（默认），如需更小体积，可选择「JPG」（质量设置为80%左右，兼顾清晰度和体积）；</p>
+</li>
+<li>
+<p>PNG位深：默认即可；</p>
+</li>
+<li>
+<p>保存设置，后续截图会自动按此格式和质量生成。</p>
+<p><img src="https://img.softon.top/2026/02/23/1532492_BUuxg51sdm.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1532492_BUuxg51sdm.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="353-设置自动命名避免图片重名">3.5.3 设置自动命名（避免图片重名）
+</h3><p>如果截图名称重复，上传时会覆盖之前的图片，可设置自动命名规则，让每张截图都有唯一名称：</p>
+<ol>
+<li>
+<p>进入ShareX主界面→「动作设置」→「上传」；</p>
+</li>
+<li>
+<p>默认即可，也可以根据需要自定义；</p>
+</li>
+<li>
+<p>保存设置，后续截图会自动按设置的规则命名，避免重名覆盖。</p>
+<p><img src="https://img.softon.top/2026/02/23/1536822_2d8drzCSZA.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1536822_2d8drzCSZA.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="354-设置截图本地文件夹及路径">3.5.4 设置截图本地文件夹及路径
+</h3><p>默认情况下，ShareX会将截图保存到系统默认的个人文件夹中，路径较深且不易查找。建议将截图保存到自定义本地文件夹（文件夹结构最好和cloudflare的bucket相同），便于后续管理。</p>
+<ol>
+<li>
+<p>进入ShareX主界面→「应用程序设置」→「路径」；</p>
+</li>
+<li>
+<p>勾选「使用自定义截图文件夹」；</p>
+</li>
+<li>
+<p>子文件夹模式建议和之前的上传路径一致。</p>
+<p><img src="https://img.softon.top/2026/02/23/1545106_x6lxkbVYLn.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1545106_x6lxkbVYLn.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="355-设置导入导出">3.5.5 设置导入导出
+</h3><p>我们在ShareX中完成了图床关联、快捷键、路径等一系列个性化配置后，通过导入导出功能，可以实现「配置备份」「多设备同步」「快速恢复」，避免更换电脑、重装系统或软件后，重新繁琐配置。</p>
+<ol>
+<li>
+<p>进入ShareX主界面→「应用程序设置」→「设置」；</p>
+</li>
+<li>
+<p>可以选中设置和历史记录，也可以根据需要选择；</p>
+</li>
+<li>
+<p>选择导出保存设置，后续或者重装后可以导入设置。</p>
+<p><img src="https://img.softon.top/2026/02/23/1549040_JgtQr1c6Lk.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1549040_JgtQr1c6Lk.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="356-用好历史记录">3.5.6 用好历史记录
+</h3><p>ShareX的历史记录是非常实用的功能，直观的显示了截图的时间、文件名、图床链接、预览图，可以很方便的在文章中插入截图。在你还没有开始写文章的时候可以先对某些操作和使用场景进行截图保存，避免了需要的时候再去重新还原场景。</p>
+<p><img src="https://img.softon.top/2026/02/23/1439535_bQLg7IvYdd.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1439535_bQLg7IvYdd.png"
+	
+	
+></p>
+<h1 id="总结">总结
+</h1><p>至此，ShareX+Cloudflare图床的全流程配置已经完成，结合Hugo+Stack建站，我们实现了「截图→编辑→上传→获取链接」全程自动化，彻底解决了手动上传截图的繁琐问题。</p>
+<p>回顾整个流程：先通过Porkbun注册域名并托管到Cloudflare（依托Porkbun便宜、支付宝直付、无需备案的优势，快速获取稳定自定义域名），再利用Cloudflare R2搭建免费图床（免费存储+CDN加速），最后配置ShareX（实现自动上传），三步联动，不仅免费、稳定，还能大幅提升Hugo文章创作效率。</p>
+<p>后续使用中，只需启动ShareX，按下快捷键截图，即可获得图床链接，直接粘贴到文章中，专注于内容创作，无需再花费时间在截图上传上。如果配置过程中遇到问题，可检查API凭证、域名绑定、存储桶设置是否正确，也可留言交流。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/hugo/">Hugo</a>
+        
+            <a href="/tags/sharex/">Sharex</a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">免费图床</a>
+        
+            <a href="/tags/cloudflare-r2/">Cloudflare R2</a>
+        
+            <a href="/tags/image-hosting/">Image-Hosting</a>
+        
+            <a href="/tags/amazon-s3/">Amazon S3</a>
+        
+            <a href="/tags/%E6%88%AA%E5%9B%BE/">截图</a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">个人建站</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/hugo-github-pages-cloudflare-build-website/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hugo&#43;Github Pages&#43;Cloudflare免费图床 个人低成本建站保姆级教程</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/about/welcome-to-ai-powered-software-blog/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">致每一位同频的软件爱好者：这个站点，为热爱而生</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/sharex-cloudflare-r2-screenshot-auto-upload\/'; 
+        const pageTitle = 'Hugo建站必备：ShareX\u002bCloudflare 实现截图自动上传图床（全流程教程）';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 63 天 2 小时 · 9 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-05 10:11:29 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
