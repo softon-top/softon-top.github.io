@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="OpenClaw 初始化配置与启动指南，帮助新手快速完成首次部署和基础配置。">
+<title>OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/openclaw-initialization-configuration-startup-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="OpenClaw 从零上手：大模型选择 + 聊天通道配置+ API Key申请全攻略">
+<meta property='og:description' content="OpenClaw 初始化配置与启动指南，帮助新手快速完成首次部署和基础配置。">
+<meta property='og:url' content='https://softon.top/tutorials/openclaw-initialization-configuration-startup-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='大龙虾部署' /><meta property='article:tag' content='本地AI助手' /><meta property='article:tag' content='Clawdbot' /><meta property='article:tag' content='AI Agent部署' /><meta property='article:published_time' content='2026-02-25T10:49:52&#43;08:00'/><meta property='article:modified_time' content='2026-02-25T10:49:52&#43;08:00'/>
+<meta name="twitter:title" content="OpenClaw 从零上手：大模型选择 + 聊天通道配置+ API Key申请全攻略">
+<meta name="twitter:description" content="OpenClaw 初始化配置与启动指南，帮助新手快速完成首次部署和基础配置。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#初始化流程">初始化流程</a>
+      <ul>
+        <li><a href="#第一步在容器里直接执行"><strong>第一步：在容器里直接执行：</strong></a></li>
+        <li><a href="#第二步模式选quickstart快速设置"><strong>第二步：模式选QuickStart快速设置</strong></a></li>
+        <li><a href="#第三步选大模型"><strong>第三步：选大模型</strong></a></li>
+        <li><a href="#直接入口--申请key步骤照着点就行"><strong>直接入口 + 申请Key步骤</strong>，照着点就行👇</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-initialization-configuration-startup-guide/">OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-25T10:49:52&#43;08:00'>
+                    2026-02-25，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：27分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-initialization-configuration-startup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#初始化流程">初始化流程</a>
+      <ul>
+        <li><a href="#第一步在容器里直接执行"><strong>第一步：在容器里直接执行：</strong></a></li>
+        <li><a href="#第二步模式选quickstart快速设置"><strong>第二步：模式选QuickStart快速设置</strong></a></li>
+        <li><a href="#第三步选大模型"><strong>第三步：选大模型</strong></a></li>
+        <li><a href="#直接入口--申请key步骤照着点就行"><strong>直接入口 + 申请Key步骤</strong>，照着点就行👇</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="前言">前言
+</h2><p>我现在已经在我的PVE LXC安装好了openclaw，最新版本：2026.2.22-2。详见前文：<a class="link" href="/tutorials/pve-install-openclaw-lxc-guide/" >OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</a></p>
+<p>接下来主要就是做<strong>初始化配置 （大模型+聊天通道选择）</strong>，然后才能通过聊天软件跟它对话。</p>
+<p>OpenClaw 是一个可以“真正做事”的个人 AI 代理（不是只聊天的那种），它通过 WhatsApp / Telegram / 飞书 / 钉钉 / Discord 等通道接收你的指令，然后帮你发邮件、日历管理、写代码、操作浏览器等。</p>
+<h2 id="初始化流程">初始化流程
+</h2><p>下面记录全流程及踩坑情况：</p>
+<h3 id="第一步在容器里直接执行"><strong>第一步：在容器里直接执行：</strong>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw onboard</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/23/2316593_hpJBluFFwp.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2316593_hpJBluFFwp.png"
+	
+	
+></p>
+<p>运行后会跳出安全提示，直接Yes下一步，</p>
+<h3 id="第二步模式选quickstart快速设置"><strong>第二步：模式选QuickStart快速设置</strong>
+</h3><p>先跑起来，后期可以随时手动调整。</p>
+<p><img src="https://img.softon.top/2026/02/23/2319084_N7z89bHH3a.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2319084_N7z89bHH3a.png"
+	
+	
+></p>
+<h3 id="第三步选大模型"><strong>第三步：选大模型</strong>
+</h3><p>我先申请了NVIDIA的API Key（见后述），我们这里<strong>选Custom Provider</strong></p>
+<p><img src="https://img.softon.top/2026/02/24/1205946_fvuDrLienn.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1205946_fvuDrLienn.png"
+	
+	
+></p>
+<p>选中 Custom Provider 后，按下表照着填：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">参数名</th>
+          <th style="text-align: left">填写内容</th>
+          <th style="text-align: left">说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Base URL</td>
+          <td style="text-align: left"><a class="link" href="https://integrate.api.nvidia.com/v1"  target="_blank" rel="noopener"
+    >https://integrate.api.nvidia.com/v1</a></td>
+          <td style="text-align: left">NVIDIA NIM 的接口地址</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">API Key</td>
+          <td style="text-align: left">你的 NVIDIA Key（nvapi-xxxx 开头）</td>
+          <td style="text-align: left">刚才生成的密钥</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Endpoint compatibility</td>
+          <td style="text-align: left">OpenAI-compatible</td>
+          <td style="text-align: left">默认即可，OpenClaw 能直接正确调用 NVIDIA 的接口</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Model ID</td>
+          <td style="text-align: left">moonshotai/kimi-k2.5</td>
+          <td style="text-align: left">默认用 Kimi，也可以填 qwen/qwen3.5-397b-a17b</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Endpoint ID</td>
+          <td style="text-align: left">nvidia-api-catalog</td>
+          <td style="text-align: left">自定义填写一个好辨别的词即可</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Model alias (optional)</td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left">选填，可以不填</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><img src="https://img.softon.top/2026/02/24/1444922_t7dmD6dtnd.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1444922_t7dmD6dtnd.png"
+	
+	
+></p>
+<p><strong>Verification successful表示成功。</strong></p>
+<p><strong>以下是NIVIDIA常用模型表格（Model ID + Owner）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Model ID</th>
+          <th>Owner</th>
+          <th>备注</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>qwen/qwen3.5-397b-a17b</td>
+          <td>qwen</td>
+          <td>2026年最热门多模态VLM（视觉+聊天+RAG+agent），MoE 397B，Featured模型，常被置顶推荐</td>
+      </tr>
+      <tr>
+          <td>qwen/qwen3-235b-a22b</td>
+          <td>qwen</td>
+          <td>Qwen3系列大模型，推理/编码强，下载量极高</td>
+      </tr>
+      <tr>
+          <td>qwen/qwen3-next-80b-a3b-instruct</td>
+          <td>qwen</td>
+          <td>长上下文+agentic，稳定性高，新一代热门</td>
+      </tr>
+      <tr>
+          <td>qwen/qwen2.5-coder-32b-instruct</td>
+          <td>qwen</td>
+          <td>编码专用，LiveCodeBench高分，常用于编程任务</td>
+      </tr>
+      <tr>
+          <td>moonshotai/kimi-k2.5</td>
+          <td>moonshotai</td>
+          <td>Kimi最新版，多模态+长上下文+强推理，Featured模型，2026年非常火</td>
+      </tr>
+      <tr>
+          <td>moonshotai/kimi-k2-instruct</td>
+          <td>moonshotai</td>
+          <td>Kimi基础Instruct版，稳定好用</td>
+      </tr>
+      <tr>
+          <td>moonshotai/kimi-k2-instruct-0905</td>
+          <td>moonshotai</td>
+          <td>Kimi变体，优化版</td>
+      </tr>
+      <tr>
+          <td>meta/llama-3.1-405b-instruct</td>
+          <td>meta</td>
+          <td>Llama 3.1最大版，经典开源王者，社区支持最广</td>
+      </tr>
+      <tr>
+          <td>meta/llama-3.1-70b-instruct</td>
+          <td>meta</td>
+          <td>Llama 3.1 70B，平衡性能/资源，下载量巨大</td>
+      </tr>
+      <tr>
+          <td>meta/llama-3.1-8b-instruct</td>
+          <td>meta</td>
+          <td>小模型入门首选，速度快</td>
+      </tr>
+      <tr>
+          <td>meta/llama-3.2-90b-vision-instruct</td>
+          <td>meta</td>
+          <td>Llama 3.2视觉版，多模态强</td>
+      </tr>
+      <tr>
+          <td>mistralai/mistral-large</td>
+          <td>mistralai</td>
+          <td>Mistral旗舰，复杂推理/多语言优秀</td>
+      </tr>
+      <tr>
+          <td>mistralai/mistral-large-2-instruct</td>
+          <td>mistralai</td>
+          <td>升级版，128k上下文，编码/推理好</td>
+      </tr>
+      <tr>
+          <td>mistralai/mistral-small-24b-instruct</td>
+          <td>mistralai</td>
+          <td>小型高效，适合本地/边缘部署</td>
+      </tr>
+      <tr>
+          <td>mistralai/mixtral-8x22b-instruct-v0.1</td>
+          <td>mistralai</td>
+          <td>MoE经典，性价比高</td>
+      </tr>
+      <tr>
+          <td>nvidia/llama-3.1-nemotron-70b-instruct</td>
+          <td>nvidia</td>
+          <td>NVIDIA自家调优Llama，速度/效率最高，常用于生产</td>
+      </tr>
+      <tr>
+          <td>nvidia/llama-3.1-nemotron-ultra-253b-v1</td>
+          <td>nvidia</td>
+          <td>Nemotron超大版，agentic/推理顶尖</td>
+      </tr>
+      <tr>
+          <td>nvidia/nemotron-4-340b-instruct</td>
+          <td>nvidia</td>
+          <td>Nemotron-4 340B，NVIDIA优化，Featured常客</td>
+      </tr>
+      <tr>
+          <td>google/gemma-2-27b-it</td>
+          <td>google</td>
+          <td>Gemma 2 27B，高效指令跟随，Google背书</td>
+      </tr>
+      <tr>
+          <td>google/gemma-3-27b-it</td>
+          <td>google</td>
+          <td>Gemma 3升级版，2026年新热门</td>
+      </tr>
+      <tr>
+          <td>google/gemma-3-12b-it</td>
+          <td>google</td>
+          <td>中型，平衡好</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="第四步选择聊天通道"><strong>第四步：选择聊天通道</strong>
+</h4><p>我是通过PVE在LXC里面安装的，我的网络环境属于内网，并没有公网IP，具体见前文：<a class="link" href="/tutorials/build-personal-website-with-pve-and-hugo/" >从软路由到 Hugo：我的家庭服务器搭建全记录</a></p>
+<p>针对我这样的网络，首选<strong>飞书</strong>，也适合大部分个人家用，没有公网IP的朋友。</p>
+<p><mark>飞书优势：国内最稳、不用公网、不用穿透、内网直接跑、安全不暴露、OpenClaw 支持最好。</mark></p>
+<p><img src="https://img.softon.top/2026/02/24/1643227_3Gofdvx5Sb.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1643227_3Gofdvx5Sb.png"
+	
+	
+></p>
+<p><strong>聊天通道对比表</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">通道</th>
+          <th style="text-align: center">要不要公网 / 穿透</th>
+          <th style="text-align: center">内网能不能直接跑</th>
+          <th style="text-align: center">优点</th>
+          <th style="text-align: center">缺点</th>
+          <th style="text-align: center">适合你吗</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center"><strong>飞书（Feishu）</strong></td>
+          <td style="text-align: center"><strong>完全不需要</strong></td>
+          <td style="text-align: center">✅ 直接跑</td>
+          <td style="text-align: center">稳定、国内快、WebSocket 出站、安全、配置简单</td>
+          <td style="text-align: center">必须装飞书</td>
+          <td style="text-align: center"><strong>强烈推荐</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>钉钉</strong></td>
+          <td style="text-align: center">默认要穿透</td>
+          <td style="text-align: center">要复杂配置</td>
+          <td style="text-align: center">国内办公常用</td>
+          <td style="text-align: center">配置麻烦、权限多</td>
+          <td style="text-align: center">一般</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>企业微信</strong></td>
+          <td style="text-align: center">大多要穿透</td>
+          <td style="text-align: center">部分可长连接</td>
+          <td style="text-align: center">微信生态近</td>
+          <td style="text-align: center">限制多、难配置</td>
+          <td style="text-align: center">不推荐</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>Telegram</strong></td>
+          <td style="text-align: center"><strong>必须公网</strong></td>
+          <td style="text-align: center">❌ 不能</td>
+          <td style="text-align: center">功能强、生态好</td>
+          <td style="text-align: center">你环境用不了、要暴露</td>
+          <td style="text-align: center">❌ 不适合</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>Discord</strong></td>
+          <td style="text-align: center">不需要</td>
+          <td style="text-align: center">✅ 能跑</td>
+          <td style="text-align: center">国外开发者常用</td>
+          <td style="text-align: center">国内慢、体验一般</td>
+          <td style="text-align: center">可备用</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>Web 界面</strong></td>
+          <td style="text-align: center">不需要</td>
+          <td style="text-align: center">✅ 仅局域网</td>
+          <td style="text-align: center">最简单、不用 APP</td>
+          <td style="text-align: center">只能内网自己用</td>
+          <td style="text-align: center">临时测试</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>微信个人号</strong></td>
+          <td style="text-align: center">不需要</td>
+          <td style="text-align: center">✅ 能跑</td>
+          <td style="text-align: center">人人都有微信</td>
+          <td style="text-align: center">容易风控、不安全</td>
+          <td style="text-align: center">❌ 不推荐</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>选择飞书后会提示下载安装，直接回车，安装后，会要求输入Feishu App ID及Feishu App Secret</p>
+<p><img src="https://img.softon.top/2026/02/24/1658449_BBSi9SCe5M.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1658449_BBSi9SCe5M.png"
+	
+	
+></p>
+<p><strong>快速获取步骤（适配 OpenClaw + PVE 内网）</strong></p>
+<ol>
+<li>
+<p>打开飞书开放平台：https://open.feishu.cn，登录企业管理员账号。</p>
+<p><img src="https://img.softon.top/2026/02/24/1648323_rP9yvoKqyl.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1648323_rP9yvoKqyl.png"
+	
+	
+></p>
+</li>
+<li>
+<p>进入「开发者后台」→「创建企业自建应用」，名称填 <code>OpenClaw-Bot</code>，类型选「企业自建应用」。</p>
+<p><img src="https://img.softon.top/2026/02/24/1648450_SM4jyTqB1i.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1648450_SM4jyTqB1i.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/24/1650287_ESenzq6orN.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1650287_ESenzq6orN.png"
+	
+	
+></p>
+</li>
+<li>
+<p>进入应用详情，点击左侧「凭证与基础信息」，在「应用凭证」栏复制 <strong>App ID</strong>（即要填的值）飞书。</p>
+</li>
+<li>
+<p>同时复制 <strong>App Secret</strong>，后续 OpenClaw 配置也需要。</p>
+<p><img src="https://img.softon.top/2026/02/24/1706781_frCvNXHaT2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1706781_frCvNXHaT2.png"
+	
+	
+></p>
+</li>
+</ol>
+<p>回到终端，输入Feishu App ID及Feishu App Secret，回车</p>
+<p>报错：Connection failed: API error: app do not have bot</p>
+<p><img src="https://img.softon.top/2026/02/24/1715807_EfVAfbv2gL.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1715807_EfVAfbv2gL.png"
+	
+	
+></p>
+<p><strong>🚨 报错原因</strong></p>
+<p>飞书应用默认没有机器人权限，必须手动开启「机器人」功能，否则 OpenClaw 连不上，和域名选择（<a class="link" href="https://feishu.cn/larksuite.com"  target="_blank" rel="noopener"
+    >feishu.cn/larksuite.com</a>）无关，先解决权限问题！</p>
+<p><strong>✅ 一步修复（2 分钟搞定）</strong></p>
+<ol>
+<li>
+<p>回到飞书开放平台你的应用详情页：</p>
+<p><a class="link" href="https://open.feishu.cn/app"  target="_blank" rel="noopener"
+    >https://open.feishu.cn/app</a></p>
+</li>
+<li>
+<p>左侧菜单栏找到 <strong>应用能力 → 添加应用能力→ 机器人</strong>（重点！）：</p>
+<p><img src="https://img.softon.top/2026/02/24/1713631_IsTfJ3pmuS.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1713631_IsTfJ3pmuS.png"
+	
+	
+></p>
+</li>
+<li>
+<p>添加机器人后需要点击创建版本</p>
+<p><img src="https://img.softon.top/2026/02/24/1728711_S33TmuHd0n.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1728711_S33TmuHd0n.png"
+	
+	
+></p>
+<p>填写版本详情，就按下图所示填写：</p>
+<p><img src="https://img.softon.top/2026/02/24/1731085_Ouzuynjxwa.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1731085_Ouzuynjxwa.png"
+	
+	
+></p>
+</li>
+<li>
+<p>保存后确认发布。</p>
+<p><img src="https://img.softon.top/2026/02/24/1731801_mzpe2P2ltO.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1731801_mzpe2P2ltO.png"
+	
+	
+></p>
+</li>
+<li>
+<p>手机端安装飞书App（也可以在电脑安装桌面版），注册账号登陆，登陆后点右上角「+」号→「创建群组」。</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-26-21-24_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-26-21-24_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>直接点右下角「创建」；</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-26-34-29_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-26-34-29_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>创建后进入群界面，点击右上角「&hellip;」，进入设置；</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-26-47-45_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-26-47-45_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>找到「群机器人」，点击进入；</p>
+<p><img src="https://img.softon.top/2026/02/25/Screenshot_2026-02-24-17-27-29-26.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-27-29-26.jpg"
+	
+	
+></p>
+<p>点击右上角「添加」；</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-27-46-00_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-27-46-00_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>找到之前创建的 OpenClaw AI助手，点击「添加」；</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-32-32-05_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-32-32-05_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>添加成功后，返回群设置界面，最底部可以看到 「会话 ID」。</p>
+<p><img src="https://img.softon.top/2026/02/24/Screenshot_2026-02-24-17-33-58-66_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-24-17-33-58-66_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p><strong>📌 后续操作</strong></p>
+<p>修复后回到 OpenClaw 的配置终端：</p>
+<ul>
+<li>
+<p>域名选择保持默认的 <code>Feishu (feishu.cn) - China</code>（国内用这个）；</p>
+</li>
+<li>
+<p>Group chat policy，直接默认Allowlist - only respond in specific groups（只在你<strong>指定的群</strong>里回复，最安全、不扰民、不乱回复。）</p>
+</li>
+<li>
+<p>复制上一步的会话ID，输入到终端的 Group chat allowlist (chat_ids)；</p>
+<p><img src="https://img.softon.top/2026/02/24/1754161_JjJMdjiTsl.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1754161_JjJMdjiTsl.png"
+	
+	
+></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>完成后，它会自动生成配置文件：~/.openclaw/openclaw.json</p>
+<p><img src="https://img.softon.top/2026/02/24/1756982_9EUUWR75fG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1756982_9EUUWR75fG.png"
+	
+	
+></p>
+<p>到这里第一步就大功告成了，我们已经完成了初步设置+聊天通道的建立。</p>
+<h3 id="直接入口--申请key步骤照着点就行"><strong>直接入口 + 申请Key步骤</strong>，照着点就行👇
+</h3><p><strong>1️⃣ NVIDIA NIM（主力，含 Kimi/GLM）</strong></p>
+<ul>
+<li>
+<p>入口：https://build.nvidia.com/models</p>
+</li>
+<li>
+<p>步骤：</p>
+<ol>
+<li>用邮箱 / 谷歌注册登录（免费）</li>
+<li>右上角头像 → <strong>API Keys</strong> → <strong>Generate API Key</strong></li>
+<li>复制 <code>nvapi-xxxx</code>（保存好）</li>
+<li>基础地址：<code>https://integrate.api.nvidia.com/v1</code></li>
+</ol>
+</li>
+<li>
+<p>免费：40 次 / 分钟，无日限</p>
+<p><img src="https://img.softon.top/2026/02/24/1113810_ScV55TVBOl.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1113810_ScV55TVBOl.png"
+	
+	
+></p>
+<p>用邮箱注册后会跳转到这里，输入账号名创建云账户，进去后还需要验证手机号</p>
+<p><img src="https://img.softon.top/2026/02/24/1121032_jPVeAUSZ2v.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1121032_jPVeAUSZ2v.png"
+	
+	
+></p>
+<p>填写+86+手机号，很多人说收不到验证码，有人说电信、联通的卡可以，移动不行，我测试了，我的移动收不到，电信很快收到，还有人说注册时如果使用域名邮箱极大概率不需要验证。</p>
+<p>验证后，点击右上角图像→「API Keys」，点击「Generate API Key」；</p>
+<p><img src="https://img.softon.top/2026/02/24/1144267_XzWjBSjcrs.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1144267_XzWjBSjcrs.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/24/1148984_olBOKmIYzU.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1148984_olBOKmIYzU.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/24/1148575_cl8yMHVXMO.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1148575_cl8yMHVXMO.png"
+	
+	
+></p>
+</li>
+</ul>
+<p><strong>2️⃣ 阿里云百炼（qwen3.5-plus）</strong></p>
+<ul>
+<li>
+<p>入口：https://www.aliyun.com/product/bailian</p>
+</li>
+<li>
+<p>后台：https://bailian.console.aliyun.com</p>
+</li>
+<li>
+<p>步骤：</p>
+<ol>
+<li>
+<p>注册阿里云 → <strong>实名认证</strong>（必须）</p>
+</li>
+<li>
+<p>开通百炼 → 自动发<strong>100 万 tokens 免费额度（90 天）</strong></p>
+</li>
+<li>
+<p>控制台 → <strong>密钥管理</strong> → 创建 API Key</p>
+</li>
+<li>
+<p>地址：<code>https://dashscope.aliyuncs.com/compatible-mode/v1</code></p>
+</li>
+</ol>
+</li>
+</ul>
+<p>登录后台后，点击菜单栏的「模型服务」，选择「<strong>Qwen3.5-Plus</strong>」模型</p>
+<p><img src="https://img.softon.top/2026/02/25/1025133_l0IiEghu5R.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1025133_l0IiEghu5R.png"
+	
+	
+></p>
+<p>可以看到免费额度<strong>100 万 tokens</strong>，建议测试的话打开「免费额度用完即停」</p>
+<p><img src="https://img.softon.top/2026/02/25/1028021_U53VHpvQzc.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1028021_U53VHpvQzc.png"
+	
+	
+></p>
+<p>继续下拉，点击「获取 API Key」</p>
+<p><img src="https://img.softon.top/2026/02/25/1030873_hQSi5N7dpz.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1030873_hQSi5N7dpz.png"
+	
+	
+></p>
+<p>点击「创建 API Key」</p>
+<p><img src="https://img.softon.top/2026/02/25/1032876_UbdnbmpBP1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1032876_UbdnbmpBP1.png"
+	
+	
+></p>
+<p><strong>3️⃣ 火山方舟（Doubao-Seed-2.0-pro）</strong></p>
+<ul>
+<li>
+<p>入口：https://www.volcengine.com/product/ark</p>
+</li>
+<li>
+<p>步骤：</p>
+<ol>
+<li>注册火山引擎 → 实名认证</li>
+<li>开通<strong>火山方舟</strong> → 领<strong>50 万 tokens 新人免费</strong></li>
+<li>控制台 → <strong>API 密钥</strong> → 创建 Key</li>
+<li>地址：<code>https://ark.cn-beijing.volces.com/api/v3</code></li>
+</ol>
+</li>
+</ul>
+<p><strong>登陆后台，点击右上角「API接入」</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1009545_NtDptVrsZF.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1009545_NtDptVrsZF.png"
+	
+	
+></p>
+<p><strong>第一步点击「创建 API Key」</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1011403_uYIIVpPVay.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1011403_uYIIVpPVay.png"
+	
+	
+></p>
+<p><strong>第二步选择模型并开通，推荐Doubao-Seed-2.0-pro</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1012241_rYmqGWj42a.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1012241_rYmqGWj42a.png"
+	
+	
+></p>
+<p>开通后可以看到Model ID 为 doubao-seed-2-0-pro-260215，这是在终端选择Custom Provider需要填写的，API Base URL 为 <a class="link" href="https://ark.cn-beijing.volces.com/api/v3"  target="_blank" rel="noopener"
+    >https://ark.cn-beijing.volces.com/api/v3</a>。</p>
+<p><img src="https://img.softon.top/2026/02/25/1013545_gTHq3psLBi.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1013545_gTHq3psLBi.png"
+	
+	
+></p>
+<p><strong>4️⃣ Google Gemini 1.5 Flash（海外 / 梯子，略过）</strong></p>
+<ul>
+<li>入口：https://aistudio.google.com</li>
+<li>步骤：
+<ol>
+<li>谷歌账号登录</li>
+<li>左侧 <strong>Get API key</strong> → 生成 Key</li>
+<li>免费：每天 1500 次请求</li>
+</ol>
+</li>
+</ul>
+<h2 id="总结">总结
+</h2><p>本文我们从零开始完成了 <strong>OpenClaw 完整入门流程</strong>：从<strong>大模型选型对比</strong>，到<strong>阿里云百炼、火山方舟等平台 API Key 申请</strong>，再到<strong>聊天通道对接的基础配置</strong>，一步步实现了 OpenClaw 基础可用环境。相信你已经可以正常调用大模型、发起对话，并避开了新手最容易遇到的权限、密钥、接口地址等坑点。</p>
+<p>基础配置只是开始，OpenClaw 的真正强大之处在于<strong>技能扩展与服务稳定运行</strong>。下一篇我们将进入进阶实战：<strong><a class="link" href="/tutorials/openclaw-initialization-configuration-startup-guide/" >OpenClaw 进阶：Skills 配置 + Gateway 设置 + 服务持久化启动全攻略</a></strong>，带你解锁自动化技能、网关路由、后台守护启动、开机自启等生产级部署能力，让你的 OpenClaw 真正好用、稳定、不掉线。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">大龙虾部署</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0ai%E5%8A%A9%E6%89%8B/">本地AI助手</a>
+        
+            <a href="/tags/clawdbot/">Clawdbot</a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">AI Agent部署</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/pve-install-openclaw-lxc-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/openclaw-initialization-configuration-startup-guide\/'; 
+        const pageTitle = 'OpenClaw 从零上手：大模型选择 \u002b 聊天通道配置\u002b API Key申请全攻略';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 66 天 16 小时 · 10 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-09 00:41:52 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

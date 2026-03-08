@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="解决 OpenClaw 飞书插件部署中的两大高频问题：重复插件 ID 冲突和 API 调用额度快速耗尽。提供完整排查思路、根治方案与优化代码。">
+<title>OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解">
+<meta property='og:description' content="解决 OpenClaw 飞书插件部署中的两大高频问题：重复插件 ID 冲突和 API 调用额度快速耗尽。提供完整排查思路、根治方案与优化代码。">
+<meta property='og:url' content='https://softon.top/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='飞书' /><meta property='article:tag' content='部署' /><meta property='article:tag' content='插件冲突' /><meta property='article:tag' content='API 优化' /><meta property='article:published_time' content='2026-03-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-04T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解">
+<meta name="twitter:description" content="解决 OpenClaw 飞书插件部署中的两大高频问题：重复插件 ID 冲突和 API 调用额度快速耗尽。提供完整排查思路、根治方案与优化代码。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#问题一网关启动提示duplicate-plugin-id-detected-feishu">问题一：网关启动提示「duplicate plugin id detected: feishu」</a>
+      <ul>
+        <li><a href="#问题根源分析">问题根源分析</a></li>
+        <li><a href="#解决方案无需改配置直接修复加载冲突">解决方案（无需改配置，直接修复加载冲突）</a></li>
+        <li><a href="#正确的删除操作步骤避免踩坑">正确的删除操作步骤（避免踩坑）</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#问题二飞书-api-调用很快耗尽">问题二：飞书 API 调用很快耗尽</a>
+      <ul>
+        <li><a href="#问题本质">问题本质</a></li>
+        <li><a href="#查询-api-使用情况">查询 API 使用情况</a></li>
+        <li><a href="#解决方案添加-24-小时缓存">解决方案：添加 24 小时缓存</a></li>
+        <li><a href="#优化效果">优化效果</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-03-04T00:00:00Z'>
+                    2026-03-04，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#问题一网关启动提示duplicate-plugin-id-detected-feishu">问题一：网关启动提示「duplicate plugin id detected: feishu」</a>
+      <ul>
+        <li><a href="#问题根源分析">问题根源分析</a></li>
+        <li><a href="#解决方案无需改配置直接修复加载冲突">解决方案（无需改配置，直接修复加载冲突）</a></li>
+        <li><a href="#正确的删除操作步骤避免踩坑">正确的删除操作步骤（避免踩坑）</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#问题二飞书-api-调用很快耗尽">问题二：飞书 API 调用很快耗尽</a>
+      <ul>
+        <li><a href="#问题本质">问题本质</a></li>
+        <li><a href="#查询-api-使用情况">查询 API 使用情况</a></li>
+        <li><a href="#解决方案添加-24-小时缓存">解决方案：添加 24 小时缓存</a></li>
+        <li><a href="#优化效果">优化效果</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p><strong>摘要</strong>：本文针对 OpenClaw 飞书插件部署中的两大高频问题——<strong>重复插件 ID 冲突</strong>和<strong>API 调用额度快速耗尽</strong>，从成因分析、排查方法到根治方案进行完整梳理，提供可直接执行的命令与配置代码，帮助你快速打通部署链路。</p>
+</blockquote>
+<h2 id="问题一网关启动提示duplicate-plugin-id-detected-feishu">问题一：网关启动提示「duplicate plugin id detected: feishu」
+</h2><p>在 OpenClaw 升级或网关启动过程中，可能会出现以下警告：</p>
+<pre tabindex="0"><code>Config warnings:
+- plugins.entries.feishu: plugin feishu: duplicate plugin id detected; 
+  later plugin may be overridden 
+  (/usr/lib/node_modules/openclaw/extensions/feishu/index.ts)
+</code></pre><p><img src="https://img.softon.top/2026/02/27/2156444_StzK7SpAGt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="插件重复报警"
+	
+	
+></p>
+<p>仔细检查了配置文件里的 <code>plugins</code> 部分，并没有看到重复的 <code>feishu</code> 插件条目。这说明「duplicate plugin id detected」的警告<strong>并非来自本地配置文件</strong>，而是 OpenClaw 升级过程中内部加载插件时产生的冲突。</p>
+<h3 id="问题根源分析">问题根源分析
+</h3><p>虽然配置文件里只显式配置了一个 <code>feishu</code> 插件，但 OpenClaw 在升级时会同时加载：</p>
+<ol>
+<li><strong>配置文件中手动启用的 feishu 插件</strong>（<code>~/.openclaw/openclaw.json</code> 里的配置）</li>
+<li><strong>OpenClaw 内置的 feishu 插件</strong>（系统路径 <code>/usr/lib/node_modules/openclaw/extensions/feishu/</code>）</li>
+</ol>
+<p><strong>关键变化</strong>：2026.2.x 版本后，OpenClaw 官方已将飞书插件（<code>@openclaw/feishu</code>）<strong>内置到核心包中</strong>，安装路径为 <code>/usr/lib/node_modules/openclaw/extensions/feishu</code>。</p>
+<p>而老版本用户手动安装的飞书插件仍残留于用户扩展目录 <code>/root/.openclaw/extensions/feishu</code>，两个插件 ID 均为 <code>feishu</code>，加载时触发冲突检测。</p>
+<h3 id="解决方案无需改配置直接修复加载冲突">解决方案（无需改配置，直接修复加载冲突）
+</h3><p><strong>核心思路</strong>：直接删除用户目录下的旧版飞书插件，保留官方内置版本。</p>
+<blockquote>
+<p><strong>⚠️ 重要提示</strong>：早期解决方案是&quot;保留自己装的、删除系统的&quot;，但升级后系统会重新安装内置插件，导致问题复发。因此<strong>推荐删除用户自装版本</strong>。</p>
+</blockquote>
+<h3 id="正确的删除操作步骤避免踩坑">正确的删除操作步骤（避免踩坑）
+</h3><h4 id="1-先停止-openclaw-相关进程可选但推荐">1. 先停止 OpenClaw 相关进程（可选但推荐）
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 终止可能正在运行的 OpenClaw 进程</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pkill -f openclaw</span>
+</span></span></code></pre></div><h4 id="2-安全删除内置-feishu-插件目录">2. 安全删除内置 feishu 插件目录
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 直接删除冲突的内置插件目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rm -rf /root/.openclaw/extensions/feishu</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 验证是否删除成功</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ls /root/.openclaw/extensions/feishu | grep feishu</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 执行后如果没有输出，说明删除成功</span>
+</span></span></code></pre></div><h4 id="3-关键重新加载插件并验证">3. 关键：重新加载插件并验证
+</h4><p>删除后必须执行这一步，让 OpenClaw 重新识别插件配置，避免插件失效：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 重新加载插件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw plugins enable feishu</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 运行健康检查，自动修复插件依赖/加载问题</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw doctor</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/27/2200060_gsPuHnzb89.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="重新加载插件"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/27/2201817_X1v70UHmM7.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="健康检查"
+	
+	
+></p>
+<h3 id="注意事项">注意事项
+</h3><p>✅ 如果手工删除飞书目录后，你发现在配置文件 <code>/root/.openclaw/openclaw.json</code> 里面的 <code>install</code> 部分还能找到飞书的内容：</p>
+<p><img src="https://img.softon.top/2026/03/03/1522783_NGelhEKIc3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="配置文件残留"
+	
+	
+></p>
+<p>有两种处理方式：</p>
+<ol>
+<li><strong>手动删除</strong>：可以删除整块内容，但注意大括号别删多了导致 JSON 格式出错</li>
+<li><strong>命令卸载</strong>：直接在终端输入以下命令：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw plugins uninstall feishu</span>
+</span></span></code></pre></div><h2 id="问题二飞书-api-调用很快耗尽">问题二：飞书 API 调用很快耗尽
+</h2><p>有没有遇到这样的情况：好不容易安装了 OpenClaw，折腾半天终于接入了飞书，结果还没聊几下，飞书提醒你 API 额度已使用 90%，第二天直接耗尽&hellip;</p>
+<p><img src="https://img.softon.top/2026/03/04/Screenshot_2026-03-04-14-46-49-01_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="API 额度耗尽"
+	
+	
+></p>
+<h3 id="问题本质">问题本质
+</h3><p><strong>默认情况下，OpenClaw 的飞书插件每分钟都会发起健康检查。</strong></p>
+<p>算笔账：</p>
+<pre tabindex="0"><code>1 分钟 1 次 × 60 分钟 × 24 小时 × 30 天 = 43,200 次/月
+</code></pre><p>飞书免费版额度才 50,000 次/月，这就没了？</p>
+<h3 id="查询-api-使用情况">查询 API 使用情况
+</h3><p>首先，教大家怎么查询 API 调用的日志和使用情况：</p>
+<ol>
+<li>
+<p>登录 <strong>飞书开放平台</strong> → <strong>飞书管理后台</strong></p>
+<p><img src="https://img.softon.top/2026/03/04/1455891_Up16vUhX1F.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="飞书管理后台"
+	
+	
+></p>
+</li>
+<li>
+<p>右上角可以看到使用量及额度（现在额度提升到了 100 万）</p>
+<p><img src="https://img.softon.top/2026/03/04/1510532_TASkRmuRYn.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="使用量查询"
+	
+	
+></p>
+</li>
+<li>
+<p>在左侧菜单找到 <strong>合规</strong> → <strong>日志审计</strong></p>
+<p><img src="https://img.softon.top/2026/03/04/1510087_ATBC7wyrt0.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="日志审计"
+	
+	
+></p>
+</li>
+<li>
+<p>点击 <strong>OpenAPI 日志</strong></p>
+<p><img src="https://img.softon.top/2026/03/04/1510831_i8WWu2DWU1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="OpenAPI 日志"
+	
+	
+></p>
+</li>
+<li>
+<p>选择时间，点击查询</p>
+<p><img src="https://img.softon.top/2026/03/04/1511604_xzbsyyaALk.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="查询日志"
+	
+	
+></p>
+</li>
+<li>
+<p>看到大量的 <code>undefined / GET/open-apis/bot/v3/info</code>，这就是罪魁祸首！</p>
+<p><img src="https://img.softon.top/2026/03/04/1513348_oRTQkuICBM.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="罪魁祸首"
+	
+	
+></p>
+</li>
+</ol>
+<p>这货不停地在消耗你的额度，我们的目的就是<strong>把它干掉</strong>。</p>
+<h3 id="解决方案添加-24-小时缓存">解决方案：添加 24 小时缓存
+</h3><p><strong>核心思路</strong>：给 <code>probe.ts</code> 加上 24 小时内存缓存。</p>
+<blockquote>
+<p><strong>来源</strong>：<a class="link" href="https://xx0a.com/blog/openclaw-feishu"  target="_blank" rel="noopener"
+    >https://xx0a.com/blog/openclaw-feishu</a></p>
+</blockquote>
+<p><strong>文件位置</strong>：<code>/usr/lib/node_modules/openclaw/extensions/feishu/src/probe.ts</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// 在文件顶部添加缓存常量
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PROBE_CACHE_TTL_MS</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">24</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">60</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">60</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>; <span style="color:#75715e">// 24 小时
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">probeCache</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Map</span>&lt;<span style="color:#f92672">string</span>, { <span style="color:#a6e22e">result</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">any</span><span style="color:#960050;background-color:#1e0010">;</span> <span style="color:#a6e22e">timestamp</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">number</span> }&gt;();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 在 probe 函数中，先检查缓存
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">cacheKey</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">gatewayUrl</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">port</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">cached</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">probeCache</span>.<span style="color:#66d9ef">get</span>(<span style="color:#a6e22e">cacheKey</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cached</span> <span style="color:#f92672">&amp;&amp;</span> Date.<span style="color:#a6e22e">now</span>() <span style="color:#f92672">-</span> <span style="color:#a6e22e">cached</span>.<span style="color:#a6e22e">timestamp</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">PROBE_CACHE_TTL_MS</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cached</span>.<span style="color:#a6e22e">result</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 正常发起请求...
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">fetch</span>(...);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 写入缓存
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">probeCache</span>.<span style="color:#66d9ef">set</span>(<span style="color:#a6e22e">cacheKey</span>, { <span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">timestamp</span>: <span style="color:#66d9ef">Date.now</span>() });
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
+</span></span></code></pre></div><blockquote>
+<p><strong>⚠️ 注意事项</strong>：因为版本更新，不要全部照搬原文代码。推荐的方法是把<strong>本文链接</strong>或<strong>原文链接</strong>发给 OpenClaw，让它自己修改，它会自动适配当前版本。</p>
+</blockquote>
+<h3 id="优化效果">优化效果
+</h3><p>API 调用从 <strong>43,200 次/月</strong> 降到约 <strong>30 次/月</strong>（每分钟 1 次变每天 1 次），<strong>节省 99.9%</strong>。</p>
+<p>优化完成后，基本就看不到 <code>undefined / GET/open-apis/bot/v3/info</code> 了，一般只在网关重启时会出现几次。</p>
+<h2 id="总结">总结
+</h2><ol>
+<li>✅ 直接删除 <code>/root/.openclaw/extensions/feishu</code> 是<strong>可行且有效的</strong>，能解决插件 ID 重复问题</li>
+<li>✅ 删除后执行 <code>openclaw doctor</code> 重新检查插件</li>
+<li>✅ 最简单的方案：在最初安装 OpenClaw 时直接跳过 channel 那部分，很多人就是按照旧教程重复安装飞书导致问题</li>
+<li>✅ 给飞书调用加上缓存可以大幅降低 API 调用，可以愉快地白嫖飞书了</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/%E9%A3%9E%E4%B9%A6/">飞书</a>
+        
+            <a href="/tags/%E9%83%A8%E7%BD%B2/">部署</a>
+        
+            <a href="/tags/%E6%8F%92%E4%BB%B6%E5%86%B2%E7%AA%81/">插件冲突</a>
+        
+            <a href="/tags/api-%E4%BC%98%E5%8C%96/">API 优化</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 进阶：Skills 配置 &#43; Gateway 设置 &#43; 对接飞书全攻略</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-initialization-configuration-startup-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/pve-install-openclaw-lxc-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion\/'; 
+        const pageTitle = 'OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 66 天 16 小时 · 10 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-09 00:41:52 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

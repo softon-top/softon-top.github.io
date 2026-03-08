@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从零开始集成 QMD 本地检索，放弃复杂的 MCP 协议，回归 CLI 直连，实现 120 倍性能提升。">
+<title>OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/openclaw-local-memory-qmd-token-reduction/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应">
+<meta property='og:description' content="从零开始集成 QMD 本地检索，放弃复杂的 MCP 协议，回归 CLI 直连，实现 120 倍性能提升。">
+<meta property='og:url' content='https://softon.top/tutorials/openclaw-local-memory-qmd-token-reduction/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='QMD' /><meta property='article:tag' content='RAG' /><meta property='article:tag' content='性能优化' /><meta property='article:tag' content='Token 节省' /><meta property='article:tag' content='本地检索' /><meta property='article:published_time' content='2026-03-08T12:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-03-08T12:00:00&#43;08:00'/>
+<meta name="twitter:title" content="OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应">
+<meta name="twitter:description" content="从零开始集成 QMD 本地检索，放弃复杂的 MCP 协议，回归 CLI 直连，实现 120 倍性能提升。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一ai-的-失忆症当模型记不住你说过的话">一、AI 的 &ldquo;失忆症&rdquo;：当模型记不住你说过的话</a></li>
+    <li><a href="#二性能对比远程-mcp-vs-本地-qmd含无-gpu-适配">二、性能对比：远程 MCP vs 本地 QMD（含无 GPU 适配）</a>
+      <ul>
+        <li><a href="#关键数据提升">关键数据提升</a></li>
+      </ul>
+    </li>
+    <li><a href="#三qmd-是什么附无-gpu-适配说明">三、QMD 是什么？（附无 GPU 适配说明）</a>
+      <ul>
+        <li><a href="#无-gpu-环境的核心适配逻辑">无 GPU 环境的核心适配逻辑</a></li>
+      </ul>
+    </li>
+    <li><a href="#四部署实战5-分钟完成集成含完整安装--配置--无-gpu-异常处理">四、部署实战：5 分钟完成集成（含完整安装 + 配置 + 无 GPU 异常处理）</a>
+      <ul>
+        <li><a href="#步骤-1环境准备与-qmd-安装兼容所有版本">步骤 1：环境准备与 QMD 安装（兼容所有版本）</a></li>
+        <li><a href="#步骤-2openclaw-配置核心关联-qmd-记忆后端">步骤 2：OpenClaw 配置（核心：关联 QMD 记忆后端）</a></li>
+        <li><a href="#步骤-3初始化-qmd-向量库分环境执行">步骤 3：初始化 QMD 向量库（分环境执行）</a></li>
+        <li><a href="#步骤-4重启生效与验证配置">步骤 4：重启生效与验证配置</a></li>
+        <li><a href="#步骤-5测试搜索分环境适配">步骤 5：测试搜索（分环境适配）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五实际效果从-失忆-到-过目不忘含无-gpu-场景">五、实际效果：从 &ldquo;失忆&rdquo; 到 &ldquo;过目不忘&rdquo;（含无 GPU 场景）</a>
+      <ul>
+        <li><a href="#场景-1回忆用户偏好">场景 1：回忆用户偏好</a></li>
+        <li><a href="#场景-2跨文件知识检索">场景 2：跨文件知识检索</a></li>
+      </ul>
+    </li>
+    <li><a href="#六进阶技巧含完整优化--自动降级">六、进阶技巧（含完整优化 + 自动降级）</a>
+      <ul>
+        <li><a href="#1-定期更新索引通用">1. 定期更新索引（通用）</a></li>
+        <li><a href="#2-集成到-openclaw自动降级--token-优化">2. 集成到 OpenClaw（自动降级 + Token 优化）</a></li>
+        <li><a href="#3-性能调优分环境">3. 性能调优（分环境）</a></li>
+        <li><a href="#4-错误处理最佳实践封装检索逻辑">4. 错误处理最佳实践（封装检索逻辑）</a></li>
+      </ul>
+    </li>
+    <li><a href="#七常见问题排查">七、常见问题排查</a>
+      <ul>
+        <li><a href="#1-openclaw-check-memory-报错-unknown-command-check">1. <code>openclaw check memory</code> 报错 <code>unknown command &#39;check&#39;</code></a></li>
+        <li><a href="#2-qmd-检索不到关键内容">2. QMD 检索不到关键内容</a></li>
+        <li><a href="#3-配置生效但-token-消耗未降低">3. 配置生效但 Token 消耗未降低</a></li>
+      </ul>
+    </li>
+    <li><a href="#八总结优雅降级回归本质">八、总结：优雅降级，回归本质</a>
+      <ul>
+        <li><a href="#关键点回顾">关键点回顾</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-local-memory-qmd-token-reduction/">OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-03-08T12:00:00&#43;08:00'>
+                    2026-03-08，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：23分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-local-memory-qmd-token-reduction/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一ai-的-失忆症当模型记不住你说过的话">一、AI 的 &ldquo;失忆症&rdquo;：当模型记不住你说过的话</a></li>
+    <li><a href="#二性能对比远程-mcp-vs-本地-qmd含无-gpu-适配">二、性能对比：远程 MCP vs 本地 QMD（含无 GPU 适配）</a>
+      <ul>
+        <li><a href="#关键数据提升">关键数据提升</a></li>
+      </ul>
+    </li>
+    <li><a href="#三qmd-是什么附无-gpu-适配说明">三、QMD 是什么？（附无 GPU 适配说明）</a>
+      <ul>
+        <li><a href="#无-gpu-环境的核心适配逻辑">无 GPU 环境的核心适配逻辑</a></li>
+      </ul>
+    </li>
+    <li><a href="#四部署实战5-分钟完成集成含完整安装--配置--无-gpu-异常处理">四、部署实战：5 分钟完成集成（含完整安装 + 配置 + 无 GPU 异常处理）</a>
+      <ul>
+        <li><a href="#步骤-1环境准备与-qmd-安装兼容所有版本">步骤 1：环境准备与 QMD 安装（兼容所有版本）</a></li>
+        <li><a href="#步骤-2openclaw-配置核心关联-qmd-记忆后端">步骤 2：OpenClaw 配置（核心：关联 QMD 记忆后端）</a></li>
+        <li><a href="#步骤-3初始化-qmd-向量库分环境执行">步骤 3：初始化 QMD 向量库（分环境执行）</a></li>
+        <li><a href="#步骤-4重启生效与验证配置">步骤 4：重启生效与验证配置</a></li>
+        <li><a href="#步骤-5测试搜索分环境适配">步骤 5：测试搜索（分环境适配）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五实际效果从-失忆-到-过目不忘含无-gpu-场景">五、实际效果：从 &ldquo;失忆&rdquo; 到 &ldquo;过目不忘&rdquo;（含无 GPU 场景）</a>
+      <ul>
+        <li><a href="#场景-1回忆用户偏好">场景 1：回忆用户偏好</a></li>
+        <li><a href="#场景-2跨文件知识检索">场景 2：跨文件知识检索</a></li>
+      </ul>
+    </li>
+    <li><a href="#六进阶技巧含完整优化--自动降级">六、进阶技巧（含完整优化 + 自动降级）</a>
+      <ul>
+        <li><a href="#1-定期更新索引通用">1. 定期更新索引（通用）</a></li>
+        <li><a href="#2-集成到-openclaw自动降级--token-优化">2. 集成到 OpenClaw（自动降级 + Token 优化）</a></li>
+        <li><a href="#3-性能调优分环境">3. 性能调优（分环境）</a></li>
+        <li><a href="#4-错误处理最佳实践封装检索逻辑">4. 错误处理最佳实践（封装检索逻辑）</a></li>
+      </ul>
+    </li>
+    <li><a href="#七常见问题排查">七、常见问题排查</a>
+      <ul>
+        <li><a href="#1-openclaw-check-memory-报错-unknown-command-check">1. <code>openclaw check memory</code> 报错 <code>unknown command &#39;check&#39;</code></a></li>
+        <li><a href="#2-qmd-检索不到关键内容">2. QMD 检索不到关键内容</a></li>
+        <li><a href="#3-配置生效但-token-消耗未降低">3. 配置生效但 Token 消耗未降低</a></li>
+      </ul>
+    </li>
+    <li><a href="#八总结优雅降级回归本质">八、总结：优雅降级，回归本质</a>
+      <ul>
+        <li><a href="#关键点回顾">关键点回顾</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p><strong>摘要：<strong>本文通过 <strong>OpenClaw + QMD 本地记忆检索</strong>，实现 AI 上下文从</strong>全文上传</strong>到<strong>精准检索</strong>的升级，彻底告别昂贵 Token 与超时卡顿，在无 GPU 环境也能做到毫秒级响应、零额外成本，用极简方案解决大模型落地最痛的成本与体验问题。</p>
+<h2 id="一ai-的-失忆症当模型记不住你说过的话">一、AI 的 &ldquo;失忆症&rdquo;：当模型记不住你说过的话
+</h2><p>2026 年 3 月 2 日上午，一个看似平常的问题暴露了大模型落地的致命缺陷：</p>
+<blockquote>
+<p><strong>用户</strong>：&ldquo;墨守 001 的核心铁律是什么？&rdquo;</p>
+<p><strong>AI</strong>：（沉默 60 秒，消耗 2000+ tokens 检索历史）&ldquo;抱歉，我没有找到相关信息&hellip;&rdquo;</p>
+</blockquote>
+<p>这不是 AI 变笨了，而是<strong>远程记忆检索的代价太高</strong>：</p>
+<ul>
+<li>每次对话需要加载 2000+ tokens 历史上下文，Token 成本指数级增长</li>
+<li>响应时间 60 秒 +，用户早已失去耐心，体验大打折扣</li>
+<li>网络波动、API 限流等问题，进一步放大检索失败率</li>
+<li>中小团队 / 个人开发者难以承担持续的 API 调用成本</li>
+</ul>
+<p><strong>核心痛点</strong>：AI 不是记不住，而是 &ldquo;想&rdquo; 起来太慢、太贵、太不稳定。</p>
+<hr>
+<h2 id="二性能对比远程-mcp-vs-本地-qmd含无-gpu-适配">二、性能对比：远程 MCP vs 本地 QMD（含无 GPU 适配）
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>远程 MCP 协议</th>
+          <th>本地 QMD CLI（GPU 环境）</th>
+          <th>本地 QMD CLI（无 GPU 降级）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>响应时间</strong></td>
+          <td>60 秒 +</td>
+          <td>&lt; 0.5 秒</td>
+          <td>&lt; 1 秒</td>
+      </tr>
+      <tr>
+          <td><strong>Token 消耗</strong></td>
+          <td>2000+ tokens / 次</td>
+          <td>0 tokens（本地）</td>
+          <td>0 tokens（本地）</td>
+      </tr>
+      <tr>
+          <td><strong>网络依赖</strong></td>
+          <td>需要联网</td>
+          <td>完全离线</td>
+          <td>完全离线</td>
+      </tr>
+      <tr>
+          <td><strong>硬件依赖</strong></td>
+          <td>无（云端处理）</td>
+          <td>需 NVIDIA GPU</td>
+          <td>仅 CPU 即可</td>
+      </tr>
+      <tr>
+          <td><strong>部署难度</strong></td>
+          <td>复杂（MCP 配置）</td>
+          <td>中等（需 GPU 环境）</td>
+          <td>简单（纯 CPU）</td>
+      </tr>
+      <tr>
+          <td><strong>成本</strong></td>
+          <td>高（API 调用）</td>
+          <td>零（本地执行）</td>
+          <td>零（本地执行）</td>
+      </tr>
+      <tr>
+          <td><strong>搜索精度</strong></td>
+          <td>中（全量上下文）</td>
+          <td>高（混合语义 + 关键词）</td>
+          <td>中（纯关键词）</td>
+      </tr>
+      <tr>
+          <td><strong>适用场景</strong></td>
+          <td>大规模分布式</td>
+          <td>个人 / 单机（有 GPU）</td>
+          <td>个人 / 单机（无 GPU）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="关键数据提升">关键数据提升
+</h3><ul>
+<li>性能提升：<strong>最低 60 倍</strong>（60 秒 → 1 秒），<strong>最高 120 倍</strong>（60 秒 → 0.5 秒）</li>
+<li>Token 节省：<strong>100%</strong>（2000+ → 0），按日均 500 次检索计算，年省超 1 亿 Token</li>
+<li>部署时间：30 分钟（MCP）vs 5 分钟（QMD 纯 CPU）</li>
+</ul>
+<hr>
+<h2 id="三qmd-是什么附无-gpu-适配说明">三、QMD 是什么？（附无 GPU 适配说明）
+</h2><p>QMD（Query Memory Database）是一个<strong>轻量级本地 CLI 工具</strong>，专为 AI 记忆检索场景设计，核心特点：</p>
+<ul>
+<li>原生支持 Markdown 文件解析，完美适配 OpenClaw 记忆文件格式</li>
+<li>双模式检索：语义搜索（需 GPU）+ 关键词搜索（纯 CPU），支持优雅降级</li>
+<li>零网络依赖，完全离线运行，避免远程 API 的延迟和成本</li>
+<li>增量索引更新，首次构建后仅同步新增 / 修改内容，节省资源</li>
+<li>极低的系统资源占用，低配服务器 / 个人电脑均可流畅运行</li>
+<li>深度适配 OpenClaw ≥2026.2.2 版本，可直接作为记忆后端替代默认全文检索</li>
+</ul>
+<p>官网：https://github.com/tobi/qmd<img src="https://img.softon.top/2026/03/08/2052739_GPhjGMRvho.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="无-gpu-环境的核心适配逻辑">无 GPU 环境的核心适配逻辑
+</h3><p>QMD 的语义搜索（<code>qmd vsearch</code>/<code>qmd query</code>）依赖本地 Embeddings 生成，需要 GPU 加速；当检测到无可用 GPU 时，工具会友好提示并自动降级为<strong>纯关键词搜索</strong>（<code>qmd search</code>），保证基础检索功能可用，仅牺牲部分语义理解能力，核心的 &ldquo;快速找记忆&rdquo; 需求依然满足。</p>
+<blockquote>
+<p><strong>核心设计理念</strong>：让 AI 的记忆回归本地，拒绝远程 API 的延迟和成本；让技术适配硬件，而非让硬件迁就技术。</p>
+</blockquote>
+<hr>
+<h2 id="四部署实战5-分钟完成集成含完整安装--配置--无-gpu-异常处理">四、部署实战：5 分钟完成集成（含完整安装 + 配置 + 无 GPU 异常处理）
+</h2><h3 id="步骤-1环境准备与-qmd-安装兼容所有版本">步骤 1：环境准备与 QMD 安装（兼容所有版本）
+</h3><h4 id="11-前置依赖安装">1.1 前置依赖安装
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 安装Bun（QMD核心依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># macOS/Linux</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl -fsSL https://bun.sh/install | bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Windows (PowerShell 管理员)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">powershell -c &#34;irm bun.sh/install.ps1 | iex&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 安装支持向量扩展的SQLite（≥3.40.0）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Ubuntu/Debian</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt update &amp;&amp; sudo apt install -y sqlite3</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># macOS</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew install sqlite</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 验证OpenClaw版本（需≥2026.2.2，旧版需适配配置）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw --version</span>
+</span></span></code></pre></div><h4 id="12-安装-qmd-并验证环境">1.2 安装 QMD 并验证环境
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 全局安装 QMD（推荐Bun，兼容npm）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bun install -g github:tobi/qmd</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 备用：npm安装</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npm install -g qmd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 验证安装并检查GPU环境（关键步骤）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd --version</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd status  # 会显示qmd的参数、索引情况等</span>
+</span></span></code></pre></div><p><img src="C:%5cUsers%5csos0716%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20260308231612616.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20260308231612616"
+	
+	
+></p>
+<p>无 GPU 环境提示：软路由 / 低配机器执行<code>qmd query</code>会报错<code>No CUDA GPU detected</code>，属正常现象，后续改用<code>qmd search</code>即可。</p>
+<p><img src="C:%5cUsers%5csos0716%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20260308231621254.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20260308231621254"
+	
+	
+></p>
+<h3 id="步骤-2openclaw-配置核心关联-qmd-记忆后端">步骤 2：OpenClaw 配置（核心：关联 QMD 记忆后端）
+</h3><p>编辑 OpenClaw 核心配置文件 <code>~/.openclaw/openclaw.json</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;core&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;model&#34;: &#34;gpt-3.5-turbo&#34;, // 替换为你使用的模型</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;maxTokens&#34;: 4096  // 模型上下文上限</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;memory&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;backend&#34;: &#34;qmd&#34;,  // 指定QMD作为记忆后端（核心省Token配置）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;qmd&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;topK&#34;: 3,       // 仅返回最匹配的3条内容（越小越省Token）</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;minScore&#34;: 0.7, // 仅保留匹配度≥0.7的内容（过滤低相关）</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;cacheTTL&#34;: 3600 // 缓存结果1小时（减少重复检索）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;pruning&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;enable&#34;: true,    // 自动裁剪无关历史</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;maxHistoryLen&#34;: 5 // 仅保留最近5轮对话</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;logging&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;level&#34;: &#34;info&#34;,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;showTokenUsage&#34;: true // 强制显示Token消耗日志</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p><strong>最新版的openclaw好像有些写法会报错，最简洁的正确的写法如下：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">&#34;memory&#34;: {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;backend&#34;: &#34;qmd&#34;,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;citations&#34;: &#34;auto&#34;,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;qmd&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;includeDefaultMemory&#34;: true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><h3 id="步骤-3初始化-qmd-向量库分环境执行">步骤 3：初始化 QMD 向量库（分环境执行）
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 进入 OpenClaw 工作目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd /root/.openclaw/workspace</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. 创建记忆集合，指定要检索的markdown文件范围</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd collection add memory --name daily-logs --mask &#34;**/*.md&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 初始化QMD索引（首次必做）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd init --adapter openclaw</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. GPU环境：生成Embeddings（语义搜索基础）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd embed || {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 无GPU环境：跳过嵌入生成，仅初始化关键词索引</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">echo &#34;无GPU环境，跳过Embeddings生成&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">qmd index refresh -c daily-logs</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><h3 id="步骤-4重启生效与验证配置">步骤 4：重启生效与验证配置
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 重启OpenClaw使配置生效</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw restart</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 验证QMD是否生效（通用方案，兼容所有版本）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方式1：查看日志（最直接）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw logs --follow | grep -i &#34;qmd&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✅ 成功标识：QMD memory backend initialized / Using QMD for memory retrieval</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ❌ 失败标识：Memory backend: default / QMD backend not found</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方式2：文件层面验证</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ls -lh ~/.openclaw/qmd/</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✅ 正常输出：vectors.db（向量库）、index.mmap（索引文件）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方式3：测试Token消耗</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw chat --query &#34;墨守 001 的核心铁律&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">grep -i &#34;token&#34; ~/.openclaw/logs/openclaw.log</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✅ 成功：Token消耗从2000+降至200以内</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/03/09/0040827_y02jQXGpae.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0040827_y02jQXGpae.png"
+	
+	
+></p>
+<h3 id="步骤-5测试搜索分环境适配">步骤 5：测试搜索（分环境适配）
+</h3><h4 id="场景-a有-gpu-环境最优体验">场景 A：有 GPU 环境（最优体验）
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 混合搜索（语义+关键词，最精准）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd query &#34;墨守 001 的核心铁律&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 纯语义搜索（侧重上下文理解）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd vsearch &#34;AI 记忆检索优化方案&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 关键词搜索（备用）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;OpenClaw&#34; -c daily-logs</span>
+</span></span></code></pre></div><h4 id="场景-b无-gpu-环境优雅降级">场景 B：无 GPU 环境（优雅降级）
+</h4><blockquote>
+<p>执行<code>qmd query</code>/<code>qmd vsearch</code>会报错<code>No CUDA GPU detected</code>，直接改用以下命令：</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 核心替代方案：纯关键词搜索（无GPU也能快速检索）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;免费&#34; -c daily-logs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 进阶：提升匹配精度</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;免费&#34; -c daily-logs --exact  # 精确匹配短语</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;免费&#34; -c daily-logs --limit 5  # 限制返回结果数量</span>
+</span></span></code></pre></div><p><strong>无 GPU 搜索参数说明</strong>：</p>
+<ul>
+<li>
+<p><code>--exact</code>：精确匹配关键词短语，减少无关结果</p>
+</li>
+<li>
+<p><code>--limit N</code>：控制返回的记忆片段数量（建议 3-5），提升响应速度</p>
+</li>
+<li>
+<p><code>-c daily-logs</code>：指定检索的记忆集合，缩小检索范围</p>
+</li>
+</ul>
+<p><img src="C:%5cUsers%5csos0716%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20260308231827344.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20260308231827344"
+	
+	
+></p>
+<hr>
+<h2 id="五实际效果从-失忆-到-过目不忘含无-gpu-场景">五、实际效果：从 &ldquo;失忆&rdquo; 到 &ldquo;过目不忘&rdquo;（含无 GPU 场景）
+</h2><h3 id="场景-1回忆用户偏好">场景 1：回忆用户偏好
+</h3><h4 id="之前远程-mcp">之前（远程 MCP）：
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户：我喜欢用什么编辑器？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI：（加载 2000 tokens 历史，耗时 60 秒）抱歉，我不记得了...</span>
+</span></span></code></pre></div><h4 id="现在gpu-环境--qmd">现在（GPU 环境 + QMD）：
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户：我喜欢用什么编辑器？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI：（0.5 秒内）您偏好 VS Code，曾在 3 月 1 日提到&#34;VS Code 的插件生态很强大&#34;，还在 2 月 28 日反馈过&#34;VS Code 远程开发功能超实用&#34;。</span>
+</span></span></code></pre></div><h4 id="现在无-gpu-环境--qmd">现在（无 GPU 环境 + QMD）：
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户：我喜欢用什么编辑器？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI：（1 秒内）您偏好 VS Code，曾在 3 月 1 日提到&#34;VS Code 的插件生态很强大&#34;。</span>
+</span></span></code></pre></div><h4 id="核心对比">核心对比：
+</h4><ul>
+<li>Token 消耗：2000+ → 200（仅返回相关片段）</li>
+<li>响应时间：60 秒 → 0.5-1 秒</li>
+<li>成功率：50%（远程波动）→ 100%（本地执行）</li>
+</ul>
+<h3 id="场景-2跨文件知识检索">场景 2：跨文件知识检索
+</h3><h4 id="之前">之前：
+</h4><p>需要手动翻阅多个 memory 文件，或让 AI 加载全部历史（耗时 + 耗 Token）。</p>
+<h4 id="现在通用">现在（通用）：
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># GPU环境</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd query &#34;OpenClaw 本地记忆配置&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 无GPU环境</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;OpenClaw 配置&#34; -c daily-logs --limit 3</span>
+</span></span></code></pre></div><p>自动从所有 memory 文件中提取最相关的 3-5 个片段，精准命中，无需人工翻找。</p>
+<hr>
+<h2 id="六进阶技巧含完整优化--自动降级">六、进阶技巧（含完整优化 + 自动降级）
+</h2><h3 id="1-定期更新索引通用">1. 定期更新索引（通用）
+</h3><p>创建定时脚本 <code>update-qmd-index.sh</code>，适配不同环境：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd /root/.openclaw/workspace</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 先尝试GPU环境的增量嵌入更新</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd embed || {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 无GPU时跳过嵌入更新，仅更新关键词索引</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">echo &#34;无GPU环境，跳过Embeddings更新&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">qmd index refresh -c daily-logs  # 仅刷新关键词索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 额外：优化索引性能（全环境通用）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd index optimize -c daily-logs</span>
+</span></span></code></pre></div><p>添加到定时任务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 每天凌晨 3 点更新索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">0 3 * * * /root/.openclaw/workspace/update-qmd-index.sh</span>
+</span></span></code></pre></div><h3 id="2-集成到-openclaw自动降级--token-优化">2. 集成到 OpenClaw（自动降级 + Token 优化）
+</h3><h4 id="21-配置自动降级检索">2.1 配置自动降级检索
+</h4><p>修改 <code>mcporter.json</code>，让 AI 自动根据环境选择检索方式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;mcpServers&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;qmd-auto&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;command&#34;: &#34;/bin/bash&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;args&#34;: [</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;-c&#34;,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;qmd query \&#34;{query}\&#34; || qmd search \&#34;{query}\&#34; -c daily-logs --limit 3&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><h4 id="22-极致-token-优化进阶配置">2.2 极致 Token 优化（进阶配置）
+</h4><p>在 <code>openclaw.json</code> 中新增以下配置，进一步降低 Token 消耗：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;qmd&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;chunkSize&#34;: 200,   // 把文本切成200字/段（越小越省Token）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;chunkOverlap&#34;: 20, // 段落重叠20字（避免语义断裂）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;disableFullText&#34;: true // 完全禁用全文传递（仅用检索结果）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;contextPruning&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;mode&#34;: &#34;cache-ttl&#34;,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;ttlMinutes&#34;: 5 // 自动裁剪5分钟前的非关键上下文</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;subagents&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;model&#34;: &#34;minimax/MiniMax-M2.1&#34;, // 子任务用低成本模型</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;archiveAfterMinutes&#34;: 30</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><h3 id="3-性能调优分环境">3. 性能调优（分环境）
+</h3><h4 id="gpu-环境调优">GPU 环境调优：
+</h4><ul>
+<li><code>--limit 3</code>：控制返回结果数量（默认 5，建议 3）</li>
+<li><code>--threshold 0.7</code>：调整语义相似度阈值（越高越精准）</li>
+<li><code>qmd clean --old 30</code>：清理 30 天前的旧 embeddings，释放空间</li>
+</ul>
+<h4 id="无-gpu-环境调优">无 GPU 环境调优：
+</h4><ul>
+<li><code>--exact</code>：开启精确短语匹配，提升关键词检索精度</li>
+<li><code>--ignore-case</code>：忽略大小写，避免因大小写问题漏检</li>
+<li><code>qmd index optimize -c daily-logs</code>：优化关键词索引，提升检索速度</li>
+</ul>
+<h3 id="4-错误处理最佳实践封装检索逻辑">4. 错误处理最佳实践（封装检索逻辑）
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 封装检索命令，增加容错和Token监控</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">function qmd_search_smart() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">local query</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$1&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  # 记录检索开始时间
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  start_time=$(date +%s)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  # 先尝试混合搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  qmd query &#34;$query&#34; --limit 3 &amp;&amp; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    end_time=$(date +%s)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;检索耗时：$((end_time - start_time)) 秒 | Token消耗：0（本地检索）&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    return 0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  # 失败则用关键词搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  qmd search &#34;$query&#34; -c daily-logs --limit 3 --exact &amp;&amp; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    end_time=$(date +%s)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;检索耗时：$((end_time - start_time)) 秒 | Token消耗：0（本地检索）&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    return 0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  # 最终降级提示
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  echo &#34;未找到相关记忆，但检索耗时仅 $((end_time - start_time)) 秒（无Token消耗）&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  return 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用示例</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd_search_smart &#34;墨守 001 的核心铁律&#34;</span>
+</span></span></code></pre></div><hr>
+<h2 id="七常见问题排查">七、常见问题排查
+</h2><h3 id="1-openclaw-check-memory-报错-unknown-command-check">1. <code>openclaw check memory</code> 报错 <code>unknown command 'check'</code>
+</h3><ul>
+<li>原因：OpenClaw 版本 &lt;2026.2.2，无 <code>check</code> 命令</li>
+<li>解决方案：改用日志验证（<code>openclaw logs --follow | grep qmd</code>）</li>
+</ul>
+<h3 id="2-qmd-检索不到关键内容">2. QMD 检索不到关键内容
+</h3><ul>
+<li>降低 <code>minScore/minRelevance</code>（如 0.6）、提高 <code>topK</code>（如 5）</li>
+<li>无 GPU 环境：关闭 <code>--exact</code>，扩大检索范围</li>
+<li>检查 <code>chunkSize</code> 是否过小（建议 ≥150）</li>
+</ul>
+<h3 id="3-配置生效但-token-消耗未降低">3. 配置生效但 Token 消耗未降低
+</h3><ul>
+<li>确认 <code>disableFullText: true</code> 已开启</li>
+<li>检查 <code>topK</code> 是否设置过大（建议 ≤5）</li>
+<li>验证 <code>pruning.enable: true</code> 已开启</li>
+</ul>
+<hr>
+<h2 id="八总结优雅降级回归本质">八、总结：优雅降级，回归本质
+</h2><p>我们曾经迷信远程 API 的强大，却忘了<strong>本地 CLI 的简洁与高效</strong>；我们曾经追求 &ldquo;全量语义理解&rdquo; 的完美，却忽略了 &ldquo;能用、好用、用得起&rdquo; 的落地本质。</p>
+<p>QMD 不是要取代 MCP，而是提供一种更务实的分层选择：</p>
+<ul>
+<li><strong>追求极致性能 + 精度（有 GPU）</strong> → 本地 QMD（query/vsearch）+ OpenClaw 原生配置</li>
+<li><strong>低配环境 / 无 GPU（个人使用）</strong> → 本地 QMD（search）+ 关键词索引优化</li>
+<li><strong>需要分布式协作 / 大规模部署</strong> → 远程 MCP</li>
+<li><strong>成本敏感 / 离线场景</strong> → 优先本地 QMD</li>
+</ul>
+<p><strong>核心启示</strong>：</p>
+<ol>
+<li>技术的价值不在于 &ldquo;多先进&rdquo;，而在于 &ldquo;多适配&rdquo;—— 无 GPU 时的优雅降级，比极致的语义搜索更重要；</li>
+<li>本地化是降低 AI 落地成本的关键 ——1 亿 Token 的节省，本质是 &ldquo;把钱花在刀刃上&rdquo;；</li>
+<li>简单的方案往往更持久 ——CLI 工具的轻量性，让维护成本远低于复杂的 MCP 协议；</li>
+<li>OpenClaw + QMD 的核心价值是「精准检索替代全文传递」，通过 <code>topK</code>/<code>minScore</code> 等配置可实现 Token 消耗 70%-95% 的下降。</li>
+</ol>
+<p>现在，打开你的终端：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 有GPU</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd query &#34;第一篇记忆&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 无GPU</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qmd search &#34;第一篇记忆&#34; -c daily-logs</span>
+</span></span></code></pre></div><p>感受 0.5-1 秒的检索快感，体验 &ldquo;AI 过目不忘&rdquo; 的真正落地 —— 不依赖昂贵的 API，不苛求高端的硬件，只做最适配的选择。</p>
+<h3 id="关键点回顾">关键点回顾
+</h3><ol>
+<li>核心逻辑：QMD 通过「本地语义 / 关键词检索」替代 OpenClaw 默认的「全文塞入上下文」，实现 Token 100% 本地零消耗；</li>
+<li>部署核心：安装 QMD 后修改 <code>openclaw.json</code> 指定 <code>memory.backend: qmd</code>，并根据 OpenClaw 版本适配 <code>topK</code>/<code>minScore</code> 等参数；</li>
+<li>环境适配：GPU 环境用 <code>qmd query</code> 语义检索，无 GPU 环境自动降级为 <code>qmd search</code> 关键词检索，通过脚本可实现全自动化。</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/qmd/">QMD</a>
+        
+            <a href="/tags/rag/">RAG</a>
+        
+            <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a>
+        
+            <a href="/tags/token-%E8%8A%82%E7%9C%81/">Token 节省</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E6%A3%80%E7%B4%A2/">本地检索</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 进阶：Skills 配置 &#43; Gateway 设置 &#43; 对接飞书全攻略</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-initialization-configuration-startup-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/pve-install-openclaw-lxc-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/openclaw-local-memory-qmd-token-reduction\/'; 
+        const pageTitle = 'OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 66 天 16 小时 · 10 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-09 00:41:52 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
