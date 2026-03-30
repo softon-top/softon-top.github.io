@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="详细讲解PVE虚拟机安装Windows11 LTSC全流程，解决TPM拦截、磁盘找不到、远程桌面黑屏等问题，新手可直接抄作业。">
+<title>PVE安装Windows11 LTSC实操指南（新手避坑&#43;驱动安装）</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/pve-install-windows11-ltsc-practical-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="PVE安装Windows11 LTSC实操指南（新手避坑+驱动安装）">
+<meta property='og:description' content="详细讲解PVE虚拟机安装Windows11 LTSC全流程，解决TPM拦截、磁盘找不到、远程桌面黑屏等问题，新手可直接抄作业。">
+<meta property='og:url' content='https://softon.top/tutorials/pve-install-windows11-ltsc-practical-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='PVE教程' /><meta property='article:tag' content='Windows11安装' /><meta property='article:tag' content='VirtIO驱动' /><meta property='article:tag' content='远程连接' /><meta property='article:published_time' content='2026-03-19T11:09:00&#43;08:00'/><meta property='article:modified_time' content='2026-03-19T11:09:00&#43;08:00'/>
+<meta name="twitter:title" content="PVE安装Windows11 LTSC实操指南（新手避坑+驱动安装）">
+<meta name="twitter:description" content="详细讲解PVE虚拟机安装Windows11 LTSC全流程，解决TPM拦截、磁盘找不到、远程桌面黑屏等问题，新手可直接抄作业。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一前期准备">一、前期准备</a>
+      <ul>
+        <li><a href="#1-所需文件">1. 所需文件</a></li>
+        <li><a href="#2-前提条件">2. 前提条件</a></li>
+      </ul>
+    </li>
+    <li><a href="#二虚拟机创建关键配置避免后续踩坑">二、虚拟机创建（关键配置，避免后续踩坑）</a>
+      <ul>
+        <li><a href="#1-基础配置">1. 基础配置</a></li>
+        <li><a href="#2-存储配置">2. 存储配置</a></li>
+        <li><a href="#3-硬件配置">3. 硬件配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#三windows11-ltsc系统安装含常见报错解决">三、Windows11 LTSC系统安装（含常见报错解决）</a>
+      <ul>
+        <li><a href="#1-启动虚拟机进入安装界面">1. 启动虚拟机，进入安装界面</a></li>
+        <li><a href="#2--解决找不到磁盘问题virtio磁盘驱动缺失">2.  解决「找不到磁盘」问题（VirtIO磁盘驱动缺失）</a></li>
+        <li><a href="#3-安装完成进入系统桌面">3. 安装完成，进入系统桌面</a></li>
+      </ul>
+    </li>
+    <li><a href="#四必备驱动安装virtio网卡qemu-guest-agent">四、必备驱动安装（VirtIO网卡+QEMU Guest Agent）</a>
+      <ul>
+        <li><a href="#1-安装网卡驱动netkvm解决无法联网">1. 安装网卡驱动（NetKVM，解决无法联网）</a></li>
+        <li><a href="#2-安装qemu-guest-agentpve管理虚拟机必备">2. 安装QEMU Guest Agent（PVE管理虚拟机必备）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五本地远程桌面连接解决黑屏问题">五、本地远程桌面连接（解决黑屏问题）</a>
+      <ul>
+        <li><a href="#1-开启虚拟机远程桌面功能">1. 开启虚拟机远程桌面功能</a></li>
+        <li><a href="#2-本地电脑远程连接">2. 本地电脑远程连接</a></li>
+        <li><a href="#3-解决远程桌面连接后桌面背景变黑问题">3. 解决远程桌面连接后「桌面背景变黑」问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结">六、总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/pve-install-windows11-ltsc-practical-guide/">PVE安装Windows11 LTSC实操指南（新手避坑&#43;驱动安装）</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-03-19T11:09:00&#43;08:00'>
+                    2026-03-19，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：14分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/pve-install-windows11-ltsc-practical-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一前期准备">一、前期准备</a>
+      <ul>
+        <li><a href="#1-所需文件">1. 所需文件</a></li>
+        <li><a href="#2-前提条件">2. 前提条件</a></li>
+      </ul>
+    </li>
+    <li><a href="#二虚拟机创建关键配置避免后续踩坑">二、虚拟机创建（关键配置，避免后续踩坑）</a>
+      <ul>
+        <li><a href="#1-基础配置">1. 基础配置</a></li>
+        <li><a href="#2-存储配置">2. 存储配置</a></li>
+        <li><a href="#3-硬件配置">3. 硬件配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#三windows11-ltsc系统安装含常见报错解决">三、Windows11 LTSC系统安装（含常见报错解决）</a>
+      <ul>
+        <li><a href="#1-启动虚拟机进入安装界面">1. 启动虚拟机，进入安装界面</a></li>
+        <li><a href="#2--解决找不到磁盘问题virtio磁盘驱动缺失">2.  解决「找不到磁盘」问题（VirtIO磁盘驱动缺失）</a></li>
+        <li><a href="#3-安装完成进入系统桌面">3. 安装完成，进入系统桌面</a></li>
+      </ul>
+    </li>
+    <li><a href="#四必备驱动安装virtio网卡qemu-guest-agent">四、必备驱动安装（VirtIO网卡+QEMU Guest Agent）</a>
+      <ul>
+        <li><a href="#1-安装网卡驱动netkvm解决无法联网">1. 安装网卡驱动（NetKVM，解决无法联网）</a></li>
+        <li><a href="#2-安装qemu-guest-agentpve管理虚拟机必备">2. 安装QEMU Guest Agent（PVE管理虚拟机必备）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五本地远程桌面连接解决黑屏问题">五、本地远程桌面连接（解决黑屏问题）</a>
+      <ul>
+        <li><a href="#1-开启虚拟机远程桌面功能">1. 开启虚拟机远程桌面功能</a></li>
+        <li><a href="#2-本地电脑远程连接">2. 本地电脑远程连接</a></li>
+        <li><a href="#3-解决远程桌面连接后桌面背景变黑问题">3. 解决远程桌面连接后「桌面背景变黑」问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结">六、总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>近期因需开展软件测评工作，需搭建一个稳定的Windows11测试环境，考虑到家中已有PVE平台正常运行（见前文：<a class="link" href="/tutorials/build-personal-website-with-pve-and-hugo/" >从软路由到 Hugo：我的家庭服务器搭建全记录</a>），便决定通过PVE虚拟机安装Windows11 LTSC系统——既能够灵活满足软件测评的需求，也能充分利用现有设备资源。在实际安装过程中，我遇到了虚拟机配置、磁盘识别失败、没有网络、远程桌面黑屏等多个新手易踩的问题，耗费了不少时间排查解决。为了让有同样需求（无论是软件测评、日常测试还是学习用途）的新手朋友少走弯路、直接“抄作业”，我将整个安装流程详细记录下来，从前期准备、虚拟机配置，到系统安装、驱动适配、远程连接，每一步都标注关键要点，同时针对遇到的常见问题给出具体解决方法，整理成这份完整的安装指南，希望能为大家提供实用的参考。</p>
+<h2 id="一前期准备">一、前期准备
+</h2><h3 id="1-所需文件">1. 所需文件
+</h3><ul>
+<li>Windows11 LTSC安装镜像（ISO格式）文件名：zh-cn_windows_11_enterprise_ltsc_2024_x64_dvd_cff9cd2d.iso（自行搜索下载）</li>
+</ul>
+<p><strong>Windows 11 LTSC</strong>（Long Term Servicing Channel）是微软推出的一种特殊版本，专为需要长期稳定更新支持的用户或设备而设计。相比于常规版本，LTSC 版具有更长的支持生命周期，通常为<strong>10年</strong>，并且不包含诸如应用商店和消费类应用等非必要功能，因此非常适合用于企业环境、固定功能设备或需要极简操作系统的场景。</p>
+<p>LTSC 版本共有两个主要分支：</p>
+<ul>
+<li><strong>Windows 11 企业版 LTSC</strong>：主要面向企业级用户，提供完整的企业功能和管理工具。</li>
+<li><strong>Windows 11 IoT 物联版 LTSC</strong>：专为物联网（IoT）设备设计，适用于嵌入式系统和固定功能设备。</li>
+</ul>
+<p>需要注意的是只有Windows 11 IoT 物联版 LTSC不需要 TPM（受信任平台模块），企业版还是需要的（因为我下载的是企业版，所以刚开始我配置虚拟机的时候没有添加TMP导致不能通过系统验证）。</p>
+<p><img src="https://img.softon.top/2026/03/19/0029817_UP0OK4g0aj.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0029817_UP0OK4g0aj.png"
+	
+	
+></p>
+<ul>
+<li>VirtIO驱动镜像（virtio-win.iso，用于磁盘、网卡等硬件驱动）</li>
+</ul>
+<p>这是PVE虚拟机中适配Windows系统的关键驱动包，可解决虚拟机安装时磁盘识别失败、网卡无法正常工作等问题，确保系统安装后硬件能正常运行。</p>
+<p>官网下载地址：https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/</p>
+<p><img src="https://img.softon.top/2026/03/18/2347757_MMqw7BpXql.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2347757_MMqw7BpXql.png"
+	
+	
+></p>
+<h3 id="2-前提条件">2. 前提条件
+</h3><ul>
+<li>PVE节点正常运行，已创建存储（本文以local为例），已将上述所需的iso上传到ISO镜像</li>
+</ul>
+<p><img src="https://img.softon.top/2026/03/18/2346053_nmWstmqYNm.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2346053_nmWstmqYNm.png"
+	
+	
+></p>
+<ul>
+<li>本地电脑可访问PVE网页后台，具备基本操作权限</li>
+</ul>
+<h2 id="二虚拟机创建关键配置避免后续踩坑">二、虚拟机创建（关键配置，避免后续踩坑）
+</h2><p>进入PVE网页后台，点击「创建虚拟机」，按以下配置逐一设置，不要勾选「Add to HA」。</p>
+<p><img src="https://img.softon.top/2026/03/18/2349607_eYOmta7Ltm.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2349607_eYOmta7Ltm.png"
+	
+	
+></p>
+<h3 id="1-基础配置">1. 基础配置
+</h3><ul>
+<li>操作系统：Microsoft Windows，使用ISO镜像分别挂载之前的两个iso文件：Windows11 LTSC安装镜像和virtio-win.iso驱动镜像。</li>
+<li>机型：q35</li>
+<li>BIOS：OVMF (UEFI)</li>
+<li>QEMU代理：勾选</li>
+<li>添加EFI：勾选，EFI存储：local-zfs</li>
+<li>添加TMP</li>
+<li><img src="https://img.softon.top/2026/03/18/2353202_xWLJOxqY67.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2353202_xWLJOxqY67.png"
+	
+	
+></li>
+<li><img src="https://img.softon.top/2026/03/18/2358263_xaHQ7C1gsw.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2358263_xaHQ7C1gsw.png"
+	
+	
+></li>
+</ul>
+<h3 id="2-存储配置">2. 存储配置
+</h3><ul>
+<li>总线：VirtIO Block</li>
+<li>SCSI控制器：VirtIO SCSI single</li>
+<li>存储：local-zfs，格式：raw</li>
+<li>缓存：默认（无缓存）</li>
+<li>丢弃：勾选</li>
+<li>IO thread：勾选</li>
+<li><img src="https://img.softon.top/2026/03/19/0000585_bMRDoMHYu9.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0000585_bMRDoMHYu9.png"
+	
+	
+></li>
+</ul>
+<h3 id="3-硬件配置">3. 硬件配置
+</h3><ul>
+<li>CPU：插槽1，核心2/4（根据自己的配置自定义），类别：host</li>
+<li>内存：6144 MiB（6G）（根据自己的配置自定义），Ballooning：不勾选</li>
+<li>网络：桥接vmbr0，模型：VirtIO，VLAN标签：无（留空），防火墙：不勾选，MAC地址：自动生成</li>
+<li><img src="https://img.softon.top/2026/03/19/0001184_SAZAGt38ej.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0001184_SAZAGt38ej.png"
+	
+	
+></li>
+<li><img src="https://img.softon.top/2026/03/19/0002672_JCDIBouqO6.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0002672_JCDIBouqO6.png"
+	
+	
+></li>
+<li><img src="https://img.softon.top/2026/03/19/0003463_pWO6byBPIF.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0003463_pWO6byBPIF.png"
+	
+	
+></li>
+</ul>
+<h2 id="三windows11-ltsc系统安装含常见报错解决">三、Windows11 LTSC系统安装（含常见报错解决）
+</h2><h3 id="1-启动虚拟机进入安装界面">1. 启动虚拟机，进入安装界面
+</h3><p>启动虚拟机后，迅速打开控制台，当出现提示「Press any key to boot from CD or DVD&hellip;&hellip;」，快速按任意键（如空格、回车），进入Win11安装向导。</p>
+<p>注意：若出现「BdsDxe: failed to start Boot0002&hellip;」或「&raquo;Start PXE over IPv4.」，属于正常日志，忽略即可，只要按任意键能进入安装向导即可。</p>
+<p>注意：一定要快速按任意键，要不然就会卡在启动界面，这时你点关机、重启都没反应，PVE日志会报错，因为这时系统没安装，QEMU Guest Agent没有运行，有一个办法可以解决，在控制台侧边有一个发送Ctrl+Alt+Del的键，发送后系统会重启。</p>
+<p>如果还是不能重启，使用终极大发，进入PVE终端输入命令：<strong>qm stop 228 &ndash;skiplock</strong>  其中228是你最开始自定义的id号。</p>
+<p>进入安装界面后，一路下一步。</p>
+<p><img src="https://img.softon.top/2026/03/19/0011779_gGTGL4GTKG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0011779_gGTGL4GTKG.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0015263_9MM6LWBUHk.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0015263_9MM6LWBUHk.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0014376_nf7W7BucGC.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0014376_nf7W7BucGC.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0018966_xvHYX9q7Mr.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0018966_xvHYX9q7Mr.png"
+	
+	
+></p>
+<h3 id="2--解决找不到磁盘问题virtio磁盘驱动缺失">2.  解决「找不到磁盘」问题（VirtIO磁盘驱动缺失）
+</h3><p>进入「你想将Windows安装在哪里？」界面时，若看不到创建的磁盘，需手动加载VirtIO磁盘驱动：</p>
+<ol>
+<li>点击界面下方「加载驱动程序」。</li>
+<li>在弹出的窗口中，浏览到已挂载的virtio-win.iso镜像（通常是D盘或E盘）。</li>
+<li>进入路径：viostor\w11\amd64，选中「viostor.inf」文件，点击「安装」。</li>
+<li>驱动加载完成后，即可看到创建的local-zfs磁盘，选中该磁盘，点击「下一步」，系统开始自动安装。</li>
+</ol>
+<p>注意：安装过程中若提示重启，不要按任何键，让系统自动从硬盘启动。</p>
+<p><img src="https://img.softon.top/2026/03/19/0019274_sFY9te29zz.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0019274_sFY9te29zz.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0036917_JPGwhJImrv.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0036917_JPGwhJImrv.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0036173_G34BzSLso5.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0036173_G34BzSLso5.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0037791_yI0MeLSAf3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0037791_yI0MeLSAf3.png"
+	
+	
+></p>
+<h3 id="3-安装完成进入系统桌面">3. 安装完成，进入系统桌面
+</h3><p>系统重启几次后，完成语言、用户名、密码等基础设置，即可进入Win11 LTSC桌面，此时需先安装必备驱动，否则无法联网和正常管理。</p>
+<h2 id="四必备驱动安装virtio网卡qemu-guest-agent">四、必备驱动安装（VirtIO网卡+QEMU Guest Agent）
+</h2><p>驱动安装依赖virtio-win.iso镜像（确保已挂载），进入系统桌面后，按以下步骤操作：</p>
+<h3 id="1-安装网卡驱动netkvm解决无法联网">1. 安装网卡驱动（NetKVM，解决无法联网）
+</h3><ol>
+<li>
+<p>打开「此电脑」，找到virtio-win.iso对应的光盘盘符（如D:）。</p>
+</li>
+<li>
+<p>进入文件夹：NetKVM\w11\amd64。</p>
+</li>
+<li>
+<p>找到「netkvm.inf」文件，右键点击「安装」，一路点击「允许」「下一步」，完成安装后，网卡即可正常工作，实现联网。</p>
+<p><img src="https://img.softon.top/2026/03/19/0057846_J4x3AFRAVP.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0057846_J4x3AFRAVP.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0059958_XOYgK1Lekx.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0059958_XOYgK1Lekx.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0059888_1KssC9FQRu.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0059888_1KssC9FQRu.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="2-安装qemu-guest-agentpve管理虚拟机必备">2. 安装QEMU Guest Agent（PVE管理虚拟机必备）
+</h3><ol>
+<li>
+<p>回到virtio-win.iso光盘根目录。</p>
+</li>
+<li>
+<p>找到「virtio-win-guest-tools.exe」文件，双击运行。</p>
+</li>
+<li>
+<p>一路点击「Next」「Install」「Finish」，安装完成后，重启虚拟机，PVE即可正常控制虚拟机（如关机、重启、查看IP等）。</p>
+<p><img src="https://img.softon.top/2026/03/19/0115500_dgec8JDbQu.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0115500_dgec8JDbQu.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/0117267_z1gT2Rk7pd.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0117267_z1gT2Rk7pd.png"
+	
+	
+></p>
+</li>
+</ol>
+<h2 id="五本地远程桌面连接解决黑屏问题">五、本地远程桌面连接（解决黑屏问题）
+</h2><h3 id="1-开启虚拟机远程桌面功能">1. 开启虚拟机远程桌面功能
+</h3><ol>
+<li>
+<p>在虚拟机桌面，右键「个性化」→搜索框搜索「远程桌面」→打开「远程桌面设置」。</p>
+</li>
+<li>
+<p>打开「启用远程桌面」开关。</p>
+<p><img src="https://img.softon.top/2026/03/19/1056617_xraaf0bvq6.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1056617_xraaf0bvq6.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/1058810_c3vUjdyaHo.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1058810_c3vUjdyaHo.png"
+	
+	
+></p>
+</li>
+</ol>
+<h3 id="2-本地电脑远程连接">2. 本地电脑远程连接
+</h3><p>适用于Windows本地电脑，操作如下：</p>
+<ol>
+<li>按「Win + R」，输入「mstsc」，打开远程桌面连接工具。</li>
+<li>在「计算机」栏输入虚拟机的IPv4地址，点击「连接」。</li>
+<li>输入虚拟机的用户名和密码，即可成功连接到虚拟机桌面。</li>
+</ol>
+<h3 id="3-解决远程桌面连接后桌面背景变黑问题">3. 解决远程桌面连接后「桌面背景变黑」问题
+</h3><p>若连接后桌面背景为黑色，按以下步骤逐步解决（从简单到复杂）：</p>
+<ol>
+<li>
+<p>本地远程桌面客户端设置（优先操作）：</p>
+<ol>
+<li>
+<p>打开远程桌面连接，点击「显示选项」→「显示」，颜色深度设为「最高质量（32位）」，分辨率设为1920×1080。</p>
+</li>
+<li>
+<p>点击「体验」，连接速度选「LAN（10 Mbps或更高）」，取消勾选「持久位图缓存」，勾选「桌面背景、窗口边框、菜单和窗口动画」，保存设置后重新连接。</p>
+<p><img src="https://img.softon.top/2026/03/19/1111725_EzFd8WWCoa.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1111725_EzFd8WWCoa.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/1112711_Ws3uuWDgQf.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1112711_Ws3uuWDgQf.png"
+	
+	
+></p>
+</li>
+</ol>
+</li>
+<li>
+<p>远程电脑设置：</p>
+<ol>
+<li>此电脑→鼠标右键「属性」→「系统」→「系统信息」→「高级系统设置」。</li>
+<li>找到「高级」→「性能」→「设置」→「视觉效果」→「调整为最佳外观」。</li>
+</ol>
+<p><img src="https://img.softon.top/2026/03/19/1106273_wuemBAMORk.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1106273_wuemBAMORk.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/03/19/1108769_5VI6Kx18Po.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1108769_5VI6Kx18Po.png"
+	
+	
+></p>
+</li>
+</ol>
+<h2 id="六总结">六、总结
+</h2><p>本次实操全程覆盖PVE安装Win11 LTSC的全流程，核心重点的是：虚拟机配置避免勾选HA、安装系统时要添加TPM模块、加载VirtIO驱动解决磁盘和网卡问题、远程连接时调整设置解决黑屏问题。按本文步骤操作，可避免90%以上的安装踩坑，新手也能快速完成部署，适合用于软件测评、日常办公等场景。现在远程桌面丝滑顺畅就像操作本地电脑，你可以愉快的进行软件测评了。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/pve%E6%95%99%E7%A8%8B/">PVE教程</a>
+        
+            <a href="/tags/windows11%E5%AE%89%E8%A3%85/">Windows11安装</a>
+        
+            <a href="/tags/virtio%E9%A9%B1%E5%8A%A8/">VirtIO驱动</a>
+        
+            <a href="/tags/%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/">远程连接</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/pve-install-windows11-ltsc-practical-guide\/'; 
+        const pageTitle = 'PVE安装Windows11 LTSC实操指南（新手避坑\u002b驱动安装）';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 88 天 12 小时 · 11 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-30 20:53:48 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

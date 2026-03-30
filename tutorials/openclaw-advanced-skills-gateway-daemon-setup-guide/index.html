@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="OpenClaw 高级技能：网关守护进程配置详解，包含安装、配置、故障排查等完整指南。">
+<title>OpenClaw 进阶：Skills 配置 &#43; Gateway 设置 &#43; 对接飞书全攻略</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.6c1bce1480c495d8306c86221e75dcfd81b11c889ad41a5be2bd99f3f53ee78d.css"><meta property='og:title' content="OpenClaw 进阶：Skills 配置 + Gateway 设置 + 对接飞书全攻略">
+<meta property='og:description' content="OpenClaw 高级技能：网关守护进程配置详解，包含安装、配置、故障排查等完整指南。">
+<meta property='og:url' content='https://softon.top/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='大龙虾部署' /><meta property='article:tag' content='本地AI助手' /><meta property='article:tag' content='Clawdbot' /><meta property='article:tag' content='AI Agent部署' /><meta property='article:tag' content='Skills 配置' /><meta property='article:tag' content='Gateway 设置' /><meta property='article:tag' content='飞书' /><meta property='article:tag' content='daemon 启动' /><meta property='article:published_time' content='2026-02-25T11:06:09&#43;08:00'/><meta property='article:modified_time' content='2026-02-25T11:06:09&#43;08:00'/>
+<meta name="twitter:title" content="OpenClaw 进阶：Skills 配置 + Gateway 设置 + 对接飞书全攻略">
+<meta name="twitter:description" content="OpenClaw 高级技能：网关守护进程配置详解，包含安装、配置、故障排查等完整指南。"><link rel="stylesheet" href="/css/custom.min.0ad160613a7d5f015e15e3ea0b952e49158d4fde4ca08b624f595a39ee491c66.css" integrity="sha256-CtFgYTp9XwFeFePqC5UuSRWNT95MoItiT1laOe5JHGY=">
+
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b21b5183-9a0f-4f88-a109-724810689291"></script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#进阶配置流程">进阶配置流程</a>
+      <ul>
+        <li><a href="#第一步skills配置">第一步：Skills配置</a></li>
+        <li><a href="#第二步后续配置">第二步：后续配置</a></li>
+        <li><a href="#第三步配置飞书">第三步：配置飞书</a></li>
+        <li><a href="#第四步更换大模型">第四步：更换大模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+            <a href="/tags/clawdbot/">
+                Clawdbot
+            </a>
+        
+            <a href="/tags/pve/">
+                Pve
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">
+                下载工具
+            </a>
+        
+            <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BB%BA%E7%AB%99/">
+                个人建站
+            </a>
+        
+            <a href="/tags/%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A/">
+                免费图床
+            </a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">
+                大龙虾部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">OpenClaw 进阶：Skills 配置 &#43; Gateway 设置 &#43; 对接飞书全攻略</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-25T11:06:09&#43;08:00'>
+                    2026-02-25，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：43分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#进阶配置流程">进阶配置流程</a>
+      <ul>
+        <li><a href="#第一步skills配置">第一步：Skills配置</a></li>
+        <li><a href="#第二步后续配置">第二步：后续配置</a></li>
+        <li><a href="#第三步配置飞书">第三步：配置飞书</a></li>
+        <li><a href="#第四步更换大模型">第四步：更换大模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="前言">前言
+</h2><p>在前文我们已经完成了 <a class="link" href="/tutorials/pve-install-openclaw-lxc-guide/" ><strong>OpenClaw 在 PVE 环境下的私有化部署</strong></a>，完成了<a class="link" href="/tutorials/openclaw-initialization-configuration-startup-guide/" ><strong>大模型选型、聊天通道配置以及各大平台 API Key 的申请与对接</strong></a>，实现了基础环境设置。</p>
+<p>但这仅仅是 OpenClaw 能力的起点。想要让它真正具备自动化执行、工具调用、稳定对外服务的能力，就必须进入<strong>进阶配置环节</strong>。</p>
+<p>本篇将带你深入核心实战：<strong>Skills 技能配置、Gateway 网关设置、服务持久化与后台自启</strong>，从功能扩展到生产级部署，一步步把 OpenClaw 打造成稳定、强大、可长期运行的私有化 AI 服务。</p>
+<h2 id="进阶配置流程">进阶配置流程
+</h2><h3 id="第一步skills配置">第一步：Skills配置
+</h3><p>现在终端我们来到了skills配置</p>
+<p><img src="https://img.softon.top/2026/02/24/1756982_9EUUWR75fG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1756982_9EUUWR75fG.png"
+	
+	
+></p>
+<p><strong>skills状态面部解析：</strong></p>
+<p>✅ 7 个技能可直接用，满足基础需求；</p>
+<p>⚠️ 41 个技能缺依赖，是后续配置的重点；</p>
+<p>❌ 7 个技能系统不兼容，无需浪费时间尝试；</p>
+<p>🆓 无白名单限制，所有可用技能都能自由启用。</p>
+<p><strong>直接选Yes开始配置</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1147380_T3x9DmekMw.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1147380_T3x9DmekMw.png"
+	
+	
+></p>
+<p>目前显示 OpenClaw 缺失依赖的技能安装选择界面，核心原则是<strong>按需选择，不盲目全装</strong></p>
+<p><strong>推荐勾选的技能（直接勾这些）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">技能名</th>
+          <th style="text-align: center">图标 / 标识</th>
+          <th style="text-align: center">用途（为什么选）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">gemini</td>
+          <td style="text-align: center">♊️</td>
+          <td style="text-align: center">对接 Gemini 大模型，补充你已有的通义千问 / GLM，扩展多模型调用能力</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">github</td>
+          <td style="text-align: center">🐙</td>
+          <td style="text-align: center">对接 GitHub（查仓库、提 PR、看 Issue），适合技术场景使用 OpenClaw</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">openai-whisper</td>
+          <td style="text-align: center">🎙️</td>
+          <td style="text-align: center">语音转文字（Whisper 核心能力），解锁 OpenClaw 语音交互、音频处理功能</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">summarize</td>
+          <td style="text-align: center">🧾</td>
+          <td style="text-align: center">文本摘要（核心 AI 能力），基于大模型快速总结长文本、文档，适配你的大模型使用场景</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">nano-pdf</td>
+          <td style="text-align: center">📄</td>
+          <td style="text-align: center">PDF 解析 / 处理（高频需求），让 OpenClaw 能读取、分析 PDF 文件</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">clawhub</td>
+          <td style="text-align: center">🧩</td>
+          <td style="text-align: center">OpenClaw 官方插件库，是很多技能的基础依赖，装了能避免后续兼容问题</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>现在的选择完全可以后续修改</strong></p>
+<p><strong>后续修改的具体方法</strong></p>
+<p><strong>1. 新增 / 补装技能依赖（想加某个跳过的技能）</strong></p>
+<p>登录 PVE 中部署 OpenClaw 的容器 / 虚拟机，终端执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 重新进入技能依赖安装界面（和现在的界面完全一样）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 或单独安装某个特定技能（更精准）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install github  # 举例：只装github技能</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install openai-whisper  # 举例：只装语音转文字技能</span>
+</span></span></code></pre></div><p>执行后会重新弹出技能选择列表，勾选需要新增的技能，回车即可自动安装依赖。</p>
+<p><strong>2. 卸载不需要的技能（装错 / 用不上想删掉）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 卸载单个技能（含依赖清理）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills uninstall camsnap  # 举例：卸载用不上的摄像头截图技能</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看已安装的所有技能（确认卸载/安装状态）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills list</span>
+</span></span></code></pre></div><p><strong>3. 重置所有技能配置（极端情况，比如装太多想重来）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">claw skills reset</span>
+</span></span></code></pre></div><p><strong>接下来会提示是否安装Homebrew</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1414518_AxZtFzgjAi.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1414518_AxZtFzgjAi.png"
+	
+	
+></p>
+<p>推荐选择：选 <strong>Yes</strong>（显示安装命令）</p>
+<p>Homebrew 是 <strong>macOS/Linux 系统的包管理器</strong>（类似 Ubuntu 的 <code>apt</code>、CentOS 的 <code>yum</code>），作用是一键安装软件 / 依赖，不用自己找安装包、解压缩、配置环境变量 —— 比如要装 <code>openai-whisper</code> 的语音依赖，用 Homebrew 只需 <code>brew install ffmpeg</code>，手动装则要下载源码、编译、解决各种依赖冲突，新手很容易卡壳。</p>
+<p><strong>接下来要选择Node.js 包管理器</strong></p>
+<p><strong>直接选默认的 <code>npm</code> 即可</strong>，不用切换到 pnpm 或 bun</p>
+<p><strong>选项含义通俗解读</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">选项</th>
+          <th style="text-align: center">全称</th>
+          <th style="text-align: center">核心特点</th>
+          <th style="text-align: center">适配性（OpenClaw 场景）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">npm</td>
+          <td style="text-align: center">Node Package Manager</td>
+          <td style="text-align: center">Node.js 官方默认包管理器，生态最完善、兼容性最好</td>
+          <td style="text-align: center">✅ 首选，OpenClaw 所有技能都适配</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">pnpm</td>
+          <td style="text-align: center">Performant npm</td>
+          <td style="text-align: center">安装速度快、磁盘占用少</td>
+          <td style="text-align: center">⚠️ 部分小众技能可能兼容不佳，新手易踩坑</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">bun</td>
+          <td style="text-align: center">Bun Runtime</td>
+          <td style="text-align: center">新一代工具（包管理 + 运行时），速度最快</td>
+          <td style="text-align: center">❌ 兼容性最差，OpenClaw 未做全面适配</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><img src="https://img.softon.top/2026/02/25/1421849_5syTmav28c.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1421849_5syTmav28c.png"
+	
+	
+></p>
+<h4 id="下一步报错了踩坑1"><strong>下一步报错了（踩坑1）</strong>
+</h4><p><img src="https://img.softon.top/2026/02/25/1429434_QQ7eji0gnG.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1429434_QQ7eji0gnG.png"
+	
+	
+></p>
+<p><strong>1.核心问题解读</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">失败提示</th>
+          <th style="text-align: center">原因</th>
+          <th style="text-align: center">通俗理解</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">gemini/github/whisper/summarize 安装失败</td>
+          <td style="text-align: center">brew not installed</td>
+          <td style="text-align: center">这些技能依赖的工具（gemini-cli/gh/whisper/summarize）需要 Homebrew 安装</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">nano-pdf 安装失败</td>
+          <td style="text-align: center">uv not installed</td>
+          <td style="text-align: center">nano-pdf 依赖 uv（Python 包管理器），你没装这个工具</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Set GOOGLE_PLACES_API_KEY for goplaces?</td>
+          <td style="text-align: center">无关项（你没选 goplaces 技能）</td>
+          <td style="text-align: center">询问是否配置谷歌地图 API Key，和当前失败的技能无关</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>简单说：我选的核心技能需要特定工具才能装，但这些工具没装，所以全部安装失败；最后那个 goplaces 的提示是 “顺带弹的”，不用管。</p>
+<p><strong>2.分步解决（PVE 环境适配）</strong></p>
+<p><strong>第一步：先处理最后一个提示（goplaces API Key）</strong></p>
+<p>保留默认选择 <strong>● No</strong>，回车跳过 —— 你没选 goplaces 技能，配置这个 API Key 完全没必要，跳过即可。</p>
+<p><strong>第二步：补装依赖工具（解决安装失败的核心）</strong></p>
+<p>针对 PVE（Debian/Ubuntu 系），可以选择<strong>不用 Homebrew 的替代方案</strong>（避免装额外包管理器，减少系统复杂度）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 更新系统包（必做）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt update &amp;&amp; sudo apt upgrade -y</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 安装 uv（解决 nano-pdf 依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl -LsSf https://astral.sh/uv/install.sh | sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 安装后配置环境变量（让系统识别uv命令）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">source $HOME/.cargo/env  # 或 source $HOME/.bashrc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 安装 github 工具（gh）（解决 github 技能依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt install gh -y</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 安装 openai-whisper 依赖（ffmpeg）+ whisper 本身（解决 whisper 技能依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt install ffmpeg -y</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pip install openai-whisper</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. 安装 gemini-cli（解决 gemini 技能依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pip install gemini-cli</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6. 安装 summarize 工具（解决 summarize 技能依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pip install summarize</span>
+</span></span></code></pre></div><p><strong>第三步：重新安装失败的技能</strong></p>
+<p>依赖装完后，执行以下命令<strong>单独重装每个技能</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 逐个重装（按顺序执行）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install gemini</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install github</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install nano-pdf</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install openai-whisper</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install summarize</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 验证安装状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills list  # 能看到这些技能显示 &#34;Installed&#34; 就代表成功</span>
+</span></span></code></pre></div><p><strong>3.备选方案（也可以选择直接装 Homebrew）</strong></p>
+<p>如果觉得手动装太麻烦，也可以先装 Homebrew，再重装技能（更省心）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 安装 Homebrew（Linux 版）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/bin/bash -c &#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 配置 Homebrew 环境变量（按终端提示执行，比如）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">echo &#39;eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34;&#39; &gt;&gt; $HOME/.bashrc</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">source $HOME/.bashrc</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 重装所有失败的技能</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claw skills install gemini github nano-pdf openai-whisper summarize</span>
+</span></span></code></pre></div><p>我选3再开一个终端安装Homebrew</p>
+<h4 id="再次报错踩坑2"><strong>再次报错（踩坑2）</strong>
+</h4><p><img src="https://img.softon.top/2026/02/25/1442373_wCoQnMMekI.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1442373_wCoQnMMekI.png"
+	
+	
+></p>
+<p><code>Don't run this as root!</code>：<strong>致命错误</strong> —— Homebrew 设计上不允许用 root（超级管理员）用户安装，会导致权限混乱、后续依赖安装出错。</p>
+<p><strong>解决步骤（PVE 环境下正确安装 Homebrew）</strong></p>
+<p><strong>第一步：先创建普通用户（必须，不能用 root）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 创建名为 brewuser 的普通用户（密码设为你容易记的，比如 123456）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">useradd -m brewuser</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">passwd brewuser</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 给 brewuser 赋予 sudo 权限（后续装依赖需要）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">usermod -aG sudo brewuser</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 切换到 brewuser 用户（核心：用普通用户装 Homebrew）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">su - brewuser</span>
+</span></span></code></pre></div><p><strong>第二步：重新安装 Homebrew（现在用普通用户执行）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 执行安装命令（和之前一样，但现在是 brewuser 用户）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/bin/bash -c &#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&#34;</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/1457067_EVcWs72w0w.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1457067_EVcWs72w0w.png"
+	
+	
+></p>
+<p>到这里直接回车继续</p>
+<p><img src="https://img.softon.top/2026/02/25/1501028_v5YCo0dScj.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1501028_v5YCo0dScj.png"
+	
+	
+></p>
+<p>这里表示安装成功</p>
+<p><strong>第三步：配置 Homebrew 环境变量（安装完成后）</strong></p>
+<p><strong>1. 先把 Homebrew 加入环境变量</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 执行这3行命令（直接复制粘贴）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">echo &gt;&gt; /home/brewuser/.profile</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">echo &#39;eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34;&#39; &gt;&gt; /home/brewuser/.profile</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34;</span>
+</span></span></code></pre></div><p><strong>2. 安装 build-essential 依赖（需要输入 brewuser 密码）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt-get install build-essential</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输入 brewuser 的密码（和刚才验证 sudo 时的密码一样），回车即可</span>
+</span></span></code></pre></div><p><strong>3. 验证 Homebrew 是否可用</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">brew -v</span>
+</span></span></code></pre></div><p>如果输出类似 <code>Homebrew 5.0.15</code> 这样的版本号，说明环境变量配置成功，Homebrew 能正常使用了。</p>
+<p><img src="https://img.softon.top/2026/02/25/1505150_CZGEiUnIx5.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1505150_CZGEiUnIx5.png"
+	
+	
+></p>
+<p><strong>第四步：切回 root 用户重装 OpenClaw 技能</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 退出 brewuser，回到 root 用户</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">exit</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 把 brew 环境变量写入 root 的配置文件（永久生效，重启也不会丢）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">echo &#39;eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34;&#39; &gt;&gt; /root/.bashrc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 立即加载配置（让 brew 命令马上可用）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">source /root/.bashrc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 验证 brew 是否恢复（输出版本号即成功）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew -v</span>
+</span></span></code></pre></div><p>✅ 预期输出：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Homebrew &gt;</span><span style="color:#f92672">=</span><span style="color:#e6db74">4.3.0 (shallow or no git repository)</span>
+</span></span></code></pre></div><p><strong>第五步：安装 OpenClaw 核心技能（现在能正常调用 brew 了）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 先确保 node/npm 已安装（npx 依赖）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">apt install nodejs npm -y</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 逐个安装核心技能（复制一行执行一行）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install gemini</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install github</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install nano-pdf</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install openai-whisper</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install summarize</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 验证技能安装结果</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub list</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/1707773_KW7MiJRfzQ.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1707773_KW7MiJRfzQ.png"
+	
+	
+></p>
+<p><strong>输出逐行解读（划重点）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">内容</th>
+          <th style="text-align: center">含义 &amp; 影响</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">nodejs/npm 依赖冲突</td>
+          <td style="text-align: center">系统里 nodejs 版本和 npm 有依赖冲突，但 <code>npx</code> 已能正常使用（clawhub 运行依赖的是 npx，不是系统 npm），<strong>无实际影响</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: center">✔ OK. Installed gemini/github/nano-pdf/openai-whisper</td>
+          <td style="text-align: center">这 4 个核心技能已<strong>100% 安装成功</strong>，文件已放到 <code>/root/.openclaw/workspace/skills/</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center">✖ Rate limit exceeded（summarize 安装失败）</td>
+          <td style="text-align: center">仅 <code>summarize</code> 因 GitHub API 限流失败（临时问题），其他技能不受影响</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">技能列表显示 gemini/github 等版本</td>
+          <td style="text-align: center">已安装的技能能正常被 OpenClaw 识别和使用</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>收尾方案（解决剩余问题）</strong></p>
+<h4 id="1-解决-summarize-限流问题">1. 解决 summarize 限流问题
+</h4><p>GitHub 限流是临时的（一般 1 小时后自动恢复）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1小时后重试安装 summarize</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx clawhub install summarize</span>
+</span></span></code></pre></div><p><strong>2.验证 OpenClaw 技能是否可用</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 查看 OpenClaw 加载的技能</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw skills</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 默认会列出所有技能（包括未安装、缺失依赖的），可以用 Linux 的文本过滤命令（grep/awk）筛选出「已就绪 / 已安装」的技能，只显示有用的内容</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw skills | grep -E &#34;ready&#34;</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/1721099_wVukdr9Y1c.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1721099_wVukdr9Y1c.png"
+	
+	
+></p>
+<p>可以看到输出了 <strong>13 个已就绪（ready）的技能</strong>，其中包含之前安装的 <code>gemini/github/nano-pdf/openai-whisper/summarize</code> 全部核心技能 —— 这意味着所有目标技能都已成功安装并就绪，终于完成了全部配置！</p>
+<h3 id="第二步后续配置">第二步：后续配置
+</h3><p>接着我们再回到第一个终端继续下一步</p>
+<p><img src="https://img.softon.top/2026/02/25/1728347_cK65IQeNSW.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1728347_cK65IQeNSW.png"
+	
+	
+></p>
+<p>一路回车选择默认，<strong>Enable hooks?<strong>选择</strong>Skip for now（推荐）</strong></p>
+<p>接下来，会自动安装<strong>Systemd</strong>和<strong>Gateway</strong></p>
+<p><img src="https://img.softon.top/2026/02/25/1732401_1BCQv9Hwzn.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1732401_1BCQv9Hwzn.png"
+	
+	
+></p>
+<p>可以看到已经安装成功，我们可以再开新的终端验证一下</p>
+<p><strong>验证 Gateway 服务是否正常</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 在新的终端查看服务状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">systemctl --user status openclaw-gateway</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 测试网页 UI 是否可访问（本地）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl http://127.0.0.1:18789/</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 若返回 JSON 或页面内容，说明服务正常</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/1746214_dAT1fHYYMt.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1746214_dAT1fHYYMt.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/25/1749996_TouTXtB8Wg.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1749996_TouTXtB8Wg.png"
+	
+	
+></p>
+<p>现在我们回到原终端继续下一步</p>
+<p>现在看到的 <code>How do you want to hatch your bot?</code> 是初始化机器人的关键步骤，三种选项的适配场景如下：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">选项</th>
+          <th style="text-align: center">特点</th>
+          <th style="text-align: center">推荐场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Hatch in TUI (recommended)</td>
+          <td style="text-align: center">命令行交互式配置（终端界面），引导你设置机器人的基础信息、能力、交互规则等，步骤清晰，新手友好</td>
+          <td style="text-align: center"><strong>推荐新手选择</strong>，能快速完成基础配置</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Open the Web UI</td>
+          <td style="text-align: center">打开网页版控制面板（http://127.0.0.1:18789/），通过可视化界面配置机器人</td>
+          <td style="text-align: center">习惯图形界面操作、需要精细化配置的场景</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Do this later</td>
+          <td style="text-align: center">跳过初始化，后续手动配置</td>
+          <td style="text-align: center">暂时不想配置，先熟悉环境 / 排查问题的场景</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>推荐操作（优先选 TUI）</strong></p>
+<p>如果是第一次安装，优先选择默认的 <code>Hatch in TUI</code>：</p>
+<ul>
+<li>直接按<strong>回车键</strong>确认选择（已默认选中），进入 TUI 交互式配置界面；</li>
+<li>TUI 会引导你设置：机器人名称、交互指令、关联的插件（如飞书 / 微信）、心跳间隔等核心参数；</li>
+<li>配置完成后，机器人会自动启动，可通过 <code>openclaw dashboard</code> 打开网页面板查看状态。</li>
+</ul>
+<h4 id="再次报错踩坑3"><strong>再次报错（踩坑3）</strong>
+</h4><p><img src="https://img.softon.top/2026/02/25/1800665_9XpLBA2qjy.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1800665_9XpLBA2qjy.png"
+	
+	
+></p>
+<p><strong>⚠️ Agent failed before reply: Model context window too small (4096 tokens). Minimum is 16000.</strong> <strong>这是核心报错，也是导致 bot 没法正常回消息的原因</strong>。</p>
+<p>翻译：代理在回复前就失败了：模型的上下文窗口太小了（只有 4096 个 token），但 OpenClaw 要求至少 16000 个 token 才能正常跑。</p>
+<p><strong>为什么会这样？</strong></p>
+<ul>
+<li>我现在用的模型（看起来是 <strong>moonshotai/kimi-k2.5</strong>，也就是NVIDIA主推版本）</li>
+<li><strong>moonshotai/kimi-k2.5</strong>
+<ul>
+<li>Context: <strong>256K</strong> tokens</li>
+<li>很强：多模态（图+视频+文本），agentic 能力好，推理强</li>
+<li>为什么报错，可能是我当时通过自定义 provider连上去，默认上下文长度只有 4096（没有修改）</li>
+</ul>
+</li>
+</ul>
+<p><strong>如何修改</strong></p>
+<p>手动编辑 ~/.openclaw/openclaw.json，开新的终端</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 编辑 OpenClaw 配置文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nano ~/.openclaw/openclaw.json</span>
+</span></span></code></pre></div><p>找到 <code>models.providers.nvidia-api-catalog.models</code> 段落，修改 <code>contextWindow</code> 为 16000（或更高）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">&#34;models&#34;: {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;nvidia/kimi-k2.5&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;provider&#34;: &#34;nvidia&#34;,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;model&#34;: &#34;moonshotai/kimi-k2.5&#34;,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;contextWindow&#34;: 262144,   // 模型能“记住”最多 256K token（≈ 192,000 字左右）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;maxTokens&#34;: 8192          // 一次回复最多生成 8192 token（≈ 6000 字）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/1758533_o8foJgcKbY.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1758533_o8foJgcKbY.png"
+	
+	
+></p>
+<p>保存退出（<code>Ctrl+O</code> → 回车 → <code>Ctrl+X</code>）</p>
+<p><strong>重启 Gateway 服务</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 清所有缓存（非常重要，避免旧状态干扰）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rm -rf ~/.openclaw/cache/*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 删除当前 main session 的所有残留文件（tokens 会从 0 开始）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rm -rf ~/.openclaw/workspace/agent.main/sessions/main*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 重启 gateway（让新状态生效）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw gateway restart</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 验证 gateway 是否正常启动（可选）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw status --deep</span>
+</span></span></code></pre></div><p>可以看到Gateway、Feisu都ok了<img src="https://img.softon.top/2026/02/25/2324446_Z0U6I5ML6u.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2324446_Z0U6I5ML6u.png"
+	
+	
+></p>
+<p><strong>重新进入 TUI 初始化</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw tui</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/25/2355996_gcJ8VpZ8Yg.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2355996_gcJ8VpZ8Yg.png"
+	
+	
+></p>
+<p>终于搞好了。记住每次通过Custom Provider添加新的模型，默认都是4096，都会报错，必须手工修改。我在这里卡住了，搞了大半天（巨坑）。</p>
+<h3 id="第三步配置飞书">第三步：配置飞书
+</h3><p>在前文<a class="link" href="/tutorials/openclaw-initialization-configuration-startup-guide/" >OpenClaw 从零上手：大模型选择 + 聊天通道配置+ API Key申请全攻略</a>中我实际上了配置了一些前期的基础</p>
+<p>但是现在测试发现完全无反应，我在之前创建的群里面@OpenClaw AI助手发消息后，<code>openclaw logs --follow</code> 完全没新日志，这是<strong>最明确的信号</strong>—— 飞书开放平台根本没把消息推给 OpenClaw，问题 100% 出在飞书开放平台的配置上。</p>
+<p><strong>核心结论：飞书平台「消息推送链路断了」</strong></p>
+<p>日志无输出 = 飞书的消息事件根本没到达服务器 → 机器人连 “收到消息” 都不知道，自然无法响应。</p>
+<p><strong>飞书开放平台「必做 5 步」（少一步都不行）</strong></p>
+<p>按这个顺序操作，每一步都要确认完成，这是唯一能解决 “日志无输出” 的方法：</p>
+<h4 id="步骤-1应用必须发布并审批前文已完成">步骤 1：应用必须「发布并审批」（<a class="link" href="/tutorials/openclaw-initialization-configuration-startup-guide/" >前文</a>已完成）
+</h4><ol>
+<li>登录飞书开放平台：https://open.feishu.cn/app</li>
+<li>找到你的应用 → 左侧「应用发布」</li>
+<li>选择「测试版发布」→ 填写发布说明（随便填）→ 提交</li>
+<li>让企业管理员在飞书里审批（管理员会收到审批通知）</li>
+<li>审批通过后，应用状态会变成「已发布（测试版）」（关键！）</li>
+</ol>
+<h4 id="步骤-2事件订阅必须是长连接-加对事件">步骤 2：事件订阅必须是「长连接」+ 加对事件
+</h4><ol>
+<li>
+<p>左侧「事件与回调」→ 「事件配置」→「订阅方式」：<strong>必须选「长连接」</strong>（不是 Webhook，OpenClaw 只支持长连接）</p>
+<p><img src="https://img.softon.top/2026/02/26/0011767_EFCNbaFRYT.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0011767_EFCNbaFRYT.png"
+	
+	
+>
+<img src="https://img.softon.top/2026/02/26/1047478_8i3G4E8TBO.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1047478_8i3G4E8TBO.png"
+	
+	
+></p>
+</li>
+<li>
+<p>「添加事件」→ 搜索并勾选 <strong><code>im.message.receive_v1</code>（接收消息）</strong>（这是核心事件，没有就收不到任何消息）</p>
+</li>
+<li>
+<p>在所需权限要点开，把「读取用户发给机器人的单聊消息」「接收群聊中@机器人消息事件」这两个都开通，要不然群里面@机器人会没有反应（<strong>大坑</strong>）</p>
+<p><img src="https://img.softon.top/2026/02/26/1047946_ixoUYVg5Pv.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1047946_ixoUYVg5Pv.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/26/1053148_VBKllx3Hco.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1053148_VBKllx3Hco.png"
+	
+	
+></p>
+</li>
+<li>
+<p>点击「保存」→ 会提示 “需要重新发布应用”，先记着，最后统一发布</p>
+</li>
+</ol>
+<h4 id="步骤-3必须开通并审批消息相关权限">步骤 3：必须开通并审批「消息相关权限」
+</h4><ol>
+<li>
+<p>左侧「权限管理」→ 「添加权限」，经过测试，最少需要以下4个权限，要不然会有报错：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">权限名称</th>
+          <th style="text-align: center">权限标识</th>
+          <th style="text-align: center">权限类型</th>
+          <th style="text-align: center">开通状态</th>
+          <th style="text-align: center">备注</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">获取通讯录基本信息</td>
+          <td style="text-align: center">contact:contact.base:readonly</td>
+          <td style="text-align: center">应用身份</td>
+          <td style="text-align: center">已开通</td>
+          <td style="text-align: center">与应用的可用范围一致</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">获取与发送单聊、群组消息</td>
+          <td style="text-align: center">im:message</td>
+          <td style="text-align: center">应用身份</td>
+          <td style="text-align: center">已开通</td>
+          <td style="text-align: center">覆盖消息全量操作权限</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">读取用户发给机器人的单聊消息</td>
+          <td style="text-align: center">im:message.p2p_msg:readonly</td>
+          <td style="text-align: center">应用身份</td>
+          <td style="text-align: center">已开通</td>
+          <td style="text-align: center">仅读取单聊消息（只读）</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">以应用的身份发消息</td>
+          <td style="text-align: center">im:message:send_as_bot</td>
+          <td style="text-align: center">应用身份</td>
+          <td style="text-align: center">已开通</td>
+          <td style="text-align: center">机器人核心发消息权限</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">接收群聊中@机器人消息事件</td>
+          <td style="text-align: center">im:message.group_at_msg:readonly</td>
+          <td style="text-align: center">应用身份</td>
+          <td style="text-align: center">已开通</td>
+          <td style="text-align: center">仅读取群内@单聊消息（只读）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><img src="https://img.softon.top/2026/02/26/0016771_FOeGH5iQkB.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0016771_FOeGH5iQkB.png"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/26/1057501_BIx0OXZBii.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1057501_BIx0OXZBii.png"
+	
+	
+></p>
+</li>
+<li>
+<p>点击「提交审批」→ 均为免审权限（系统自动审批后权限生效）</p>
+</li>
+</ol>
+<h4 id="步骤-4重新发布应用所有配置改完必须做">步骤 4：重新发布应用（所有配置改完必须做）
+</h4><ol>
+<li>
+<p>回到「应用发布」→ 「重新发布测试版」</p>
+</li>
+<li>
+<p>提交后因为是免审权限，自动审批通过</p>
+</li>
+<li>
+<p>发布完成后，<strong>等待 2-5 分钟</strong>（飞书配置生效有延迟）</p>
+<p><img src="https://img.softon.top/2026/02/26/0023713_RFPimwfvXf.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0023713_RFPimwfvXf.png"
+	
+	
+></p>
+</li>
+</ol>
+<h4 id="步骤-5把机器人显示在聊天列表">步骤 5：把机器人显示在聊天列表
+</h4><ol>
+<li>
+<p>「开发者小助手」会有提示「应用审批通过，已发布成功」，打开「开发者小助手」→「打开应用」</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-10-36-22-68_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-10-36-22-68_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-10-36-27-31_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-10-36-27-31_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+</li>
+<li>
+<p>这时聊天界面会出现「OpenClaw AI助手」</p>
+</li>
+<li>
+<p>打开「OpenClaw AI助手」，点击右上角「&hellip;」进入设置，复制最下面的会话ID</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-10-42-57-56_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-10-42-57-56_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+</li>
+</ol>
+<h4 id="步骤6修改openclaw配置">步骤6：修改openclaw配置
+</h4><ol>
+<li>
+<p>终端修改openclaw.json，用nano编辑器编辑</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">nano ~/.openclaw/openclaw.json</span>
+</span></span></code></pre></div></li>
+<li>
+<p>把复制的会话ID添加到「channels」部分</p>
+<p>找到这部分，把ID填入到「groupAllowFrom」这里，我这里有两个，一个是之前的群会话ID，一个是和OpenClaw AI助手对话的会话ID</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;channels&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;feishu&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;enabled&#34;: true,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;appId&#34;: &#34;cli_xxx&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;appSecret&#34;: &#34;xxx&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;domain&#34;: &#34;feishu&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;groupPolicy&#34;: &#34;allowlist&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;groupAllowFrom&#34;: [</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;oc_xxx&#34;,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;oc_xxx&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">},</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/26/1101152_pC0L2TynAc.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1101152_pC0L2TynAc.png"
+	
+	
+></p>
+</li>
+<li>
+<p>修改后按 <strong>Ctrl + O</strong>保存，再按 <strong>Ctrl + X</strong>退出。</p>
+</li>
+</ol>
+<h4 id="步骤7配对及验证操作">步骤7：配对及验证操作
+</h4><ol>
+<li>
+<p>服务器端重新启动日志跟踪：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw logs --follow</span>
+</span></span></code></pre></div></li>
+<li>
+<p>飞书端：在群里 @机器人发消息（比如 <code>@OpenClaw AI助手 你好</code>），或私聊发消息</p>
+</li>
+<li>
+<p>看日志：此时应该能看到新的日志输出（哪怕是报错，也说明消息推过来了）</p>
+</li>
+<li>
+<p>飞书应该会出现要求配对的回复</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-09-09-52-86_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-09-09-52-86_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+</li>
+<li>
+<p>在终端运行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw pairing approve feishu 4PZ4GF7L</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/02/26/0911450_OYw2v0WAIK.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="0911450_OYw2v0WAIK.png"
+	
+	
+></p>
+</li>
+<li>
+<p>出现<strong>Approved</strong>表示配对成功</p>
+</li>
+<li>
+<p>回到飞书，直接给OpenClaw AI助手发消息，等一会就有回复了</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-09-15-37-31_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-09-15-37-31_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+</li>
+<li>
+<p>同样，在群里@OpenClaw AI助手 也有回复</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-10-49-33-45_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-10-49-33-45_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p><strong>至次，大功告成！</strong></p>
+</li>
+</ol>
+<h3 id="第四步更换大模型">第四步：更换大模型
+</h3><p>在前文[<a class="link" href="/tutorials/openclaw-initialization-configuration-startup-guide/" >OpenClaw 从零上手：大模型选择 + 聊天通道配置+ API Key申请全攻略</a>]中，我们申请了NVIDIA的免费API Key，当时列出了能免费使用的大模型，我最开始选择的是moonshotai/kimi-k2.5，实际使用后发现反应很慢，后来我切换成了qwen/qwen3.5-397b-a17b，实测能够接受，毕竟还是免费白嫖。</p>
+<p>我们来看看如何添加和切换大模型。</p>
+<ol>
+<li>
+<p>直接通过openclaw config进行操作</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e">#终端输入</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw config</span>
+</span></span></code></pre></div><p>一路回车来到模型选择界面设置</p>
+<p><img src="https://img.softon.top/2026/02/26/1454247_W60cO1EWj9.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1454247_W60cO1EWj9.png"
+	
+	
+></p>
+</li>
+<li>
+<p>通过修改openclaw.json，用nano编辑器编辑，找到models部分，按如下格式直接添加，可以让AI帮助修改</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span>     <span style="color:#a6e22e">&#34;models&#34;: [</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;id&#34;: &#34;moonshotai/kimi-k2.5&#34;,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;name&#34;: &#34;moonshotai/kimi-k2.5 (Custom Provider)&#34;,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;reasoning&#34;: false,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;input&#34;: [</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">],</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;cost&#34;: {</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;input&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;output&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;cacheRead&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;cacheWrite&#34;: 0</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;contextWindow&#34;: 262144,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;maxTokens&#34;: 8192</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;id&#34;: &#34;qwen/qwen3.5-397b-a17b&#34;,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;name&#34;: &#34;qwen/qwen3.5-397b-a17b (Custom Provider)&#34;,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;reasoning&#34;: false,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;input&#34;: [</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">],</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;cost&#34;: {</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;input&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;output&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;cacheRead&#34;: 0,</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">&#34;cacheWrite&#34;: 0</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;contextWindow&#34;: 262144,</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">&#34;maxTokens&#34;: 8192</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">},</span>
+</span></span></code></pre></div></li>
+<li>
+<p>终极方法，既往上面的OpenClaw已经搞好了，完全可以让它自己完成，直接在飞书给它指令</p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-15-18-17-33_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-15-18-17-33_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p><img src="https://img.softon.top/2026/02/26/Screenshot_2026-02-26-15-18-23-81_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Screenshot_2026-02-26-15-18-23-81_31f8a70043d07079629586283eb56679.jpg"
+	
+	
+></p>
+<p>完成后可以在终端通过openclaw models list验证</p>
+<p><img src="https://img.softon.top/2026/02/26/1449552_WSFVXqhX8j.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1449552_WSFVXqhX8j.png"
+	
+	
+></p>
+</li>
+</ol>
+<h2 id="总结">总结
+</h2><p>至此，我们已经完成了 OpenClaw 从 <strong>PVE 私有化部署、基础对话，到 Skills 技能扩展、飞书单聊与群聊配置、Gateway 网关调优、大模型自由切换，再到服务持久化与后台自启</strong>的全流程进阶实战。</p>
+<p>坦白说，这个过程并不像网上许多教程描述的那样 “一键启动、小白秒会”。从权限报错、事件订阅缺失、群聊 @无响应，到技能匹配、模型兼容、免费大模型的速率与长度限制、收费模型的 token 消耗控制，再到配置文件之间的衔接、依赖版本、网络与内网环境的约束，每一步都可能遇到意想不到的问题。很多看似简单的功能，背后都藏着权限、接口、网关、日志、安全策略之间的精密配合。</p>
+<p>但也正是在不断排错、调试、理解原理的过程中，我们才能真正掌握 OpenClaw 的运行逻辑，明白 AI 助手是如何接收消息、调用技能、执行工具、访问外部服务的。这些踩过的坑、解决过的错误，反而成为最扎实的经验，让我们从 “会用” 变成 “懂原理、能排错、可优化”。</p>
+<p>最终，我们把一个仅能简单对话的模型，一步步打磨成<strong>具备自动化执行、工具调用、多通道接入、内网安全稳定、7×24 小时在线</strong>的私有化智能助理。这条路不算轻松，但每一步摸索，都是真正的成长。</p>
+<p>如果有问题可以在评论区留言。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/%E5%A4%A7%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2/">大龙虾部署</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0ai%E5%8A%A9%E6%89%8B/">本地AI助手</a>
+        
+            <a href="/tags/clawdbot/">Clawdbot</a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">AI Agent部署</a>
+        
+            <a href="/tags/skills-%E9%85%8D%E7%BD%AE/">Skills 配置</a>
+        
+            <a href="/tags/gateway-%E8%AE%BE%E7%BD%AE/">Gateway 设置</a>
+        
+            <a href="/tags/%E9%A3%9E%E4%B9%A6/">飞书</a>
+        
+            <a href="/tags/daemon-%E5%90%AF%E5%8A%A8/">Daemon 启动</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-initialization-configuration-startup-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 从零上手：大模型选择 &#43; 聊天通道配置&#43; API Key申请全攻略</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/pve-install-openclaw-lxc-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/openclaw-advanced-skills-gateway-daemon-setup-guide\/'; 
+        const pageTitle = 'OpenClaw 进阶：Skills 配置 \u002b Gateway 设置 \u002b 对接飞书全攻略';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 『<a href="https://cloud.umami.is/analytics/us/share/yqWGeNqyXELCgZqy" target="_blank" class="stats-link">访问统计</a>』
+        </p>
+
+        <p>
+            本站已稳定运行 88 天 12 小时 · 11 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-03-30 20:53:48 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
