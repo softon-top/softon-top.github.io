@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Cornell 博士生用 2000 行 C 代码实现了一个五脏俱全的操作系统，能跑在 QEMU 和真实 RISC-V 硬件上。本文拆解其三层架构、9 个课程实验，以及为什么它比 xv6 更适合入门。">
+<title>2000 行代码写一个完整操作系统：egos-2000 源码拆解</title>
+
+<link rel='canonical' href='https://softon.top/software/egos-2000-teaching-os-2000-lines/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="2000 行代码写一个完整操作系统：egos-2000 源码拆解">
+<meta property='og:description' content="Cornell 博士生用 2000 行 C 代码实现了一个五脏俱全的操作系统，能跑在 QEMU 和真实 RISC-V 硬件上。本文拆解其三层架构、9 个课程实验，以及为什么它比 xv6 更适合入门。">
+<meta property='og:url' content='https://softon.top/software/egos-2000-teaching-os-2000-lines/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='操作系统' /><meta property='article:tag' content='RISC-V' /><meta property='article:tag' content='开源' /><meta property='article:tag' content='教学' /><meta property='article:tag' content='底层' /><meta property='article:tag' content='egos-2000' /><meta property='article:published_time' content='2026-06-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="2000 行代码写一个完整操作系统：egos-2000 源码拆解">
+<meta name="twitter:description" content="Cornell 博士生用 2000 行 C 代码实现了一个五脏俱全的操作系统，能跑在 QEMU 和真实 RISC-V 硬件上。本文拆解其三层架构、9 个课程实验，以及为什么它比 xv6 更适合入门。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#操作系统课的集体创伤">操作系统课的集体创伤</a></li>
+    <li><a href="#什么是-egos-2000">什么是 egos-2000</a></li>
+    <li><a href="#三层架构earthgrassapplication">三层架构：Earth、Grass、Application</a></li>
+    <li><a href="#代码量分布每一行都有意义">代码量分布：每一行都有意义</a></li>
+    <li><a href="#9-个课程实验从-hello-world-到多核锁">9 个课程实验：从 Hello World 到多核锁</a></li>
+    <li><a href="#为什么选-risc-v">为什么选 RISC-V</a></li>
+    <li><a href="#与-xv6-的对比">与 xv6 的对比</a></li>
+    <li><a href="#动手跑起来">动手跑起来</a></li>
+    <li><a href="#适合谁">适合谁</a></li>
+    <li><a href="#延伸阅读">延伸阅读</a></li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/egos-2000-teaching-os-2000-lines/">2000 行代码写一个完整操作系统：egos-2000 源码拆解</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-29T00:00:00Z'>
+                    2026-06-29，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/egos-2000-teaching-os-2000-lines/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#操作系统课的集体创伤">操作系统课的集体创伤</a></li>
+    <li><a href="#什么是-egos-2000">什么是 egos-2000</a></li>
+    <li><a href="#三层架构earthgrassapplication">三层架构：Earth、Grass、Application</a></li>
+    <li><a href="#代码量分布每一行都有意义">代码量分布：每一行都有意义</a></li>
+    <li><a href="#9-个课程实验从-hello-world-到多核锁">9 个课程实验：从 Hello World 到多核锁</a></li>
+    <li><a href="#为什么选-risc-v">为什么选 RISC-V</a></li>
+    <li><a href="#与-xv6-的对比">与 xv6 的对比</a></li>
+    <li><a href="#动手跑起来">动手跑起来</a></li>
+    <li><a href="#适合谁">适合谁</a></li>
+    <li><a href="#延伸阅读">延伸阅读</a></li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="操作系统课的集体创伤">操作系统课的集体创伤
+</h2><p>学过操作系统的人大概都有类似的记忆：教材厚得像砖头，概念抽象得像哲学，考完试之后脑子里只剩下&quot;进程是资源分配的基本单位，线程是调度的基本单位&quot;这种八股文。</p>
+<p>至于真正的操作系统长什么样？不知道。代码在哪里？没见过。能不能自己写一个？想都不敢想。</p>
+<p>这不是你的问题，是教学方式的问题。</p>
+<p>传统操作系统课程有个致命矛盾：<strong>概念必须讲全，但代码不可能看全</strong>。Linux 内核超过 2800 万行代码，就算是精简版的 xv6 也有近 1 万行——对于一个学期的课程来说，这已经是&quot;只能挑重点讲&quot;的体量了。</p>
+<p>结果就是：学生记住了一堆名词（上下文切换、页表、中断向量），却从未完整地理解过一个操作系统是怎么从第一行代码跑到最后一行的。</p>
+<p>Cornell 大学的博士生 Yunhao Zhang 决定解决这个问题。他的方案简单粗暴：<strong>把整个操作系统压缩到 2000 行代码，让每个学生都能从头到尾读完。</strong></p>
+<p>这就是 egos-2000。</p>
+<h2 id="什么是-egos-2000">什么是 egos-2000
+</h2><p>egos-2000，全称 Earth and Grass Operating System，是一个专为教学设计的微型操作系统。它的核心代码恰好 2000 行（用 <code>cloc</code> 工具计数），主要由 C 语言编写，配合少量 RISC-V 汇编。</p>
+<p>别被&quot;2000 行&quot;这个数字骗了，以为它只是个玩具。egos-2000 实现了一个操作系统应该有的所有核心组件：</p>
+<ul>
+<li><strong>内存管理</strong>：物理内存分配、虚拟地址空间</li>
+<li><strong>进程控制</strong>：进程创建、调度、上下文切换</li>
+<li><strong>系统调用</strong>：用户态与内核态的边界</li>
+<li><strong>文件系统</strong>：inode、目录、文件读写</li>
+<li><strong>进程间通信</strong>：消息传递机制</li>
+<li><strong>Shell</strong>：命令行交互界面</li>
+</ul>
+<p>它能在 QEMU 模拟器上运行，也能烧录到真实的 RISC-V 开发板上跑起来——比如 Digilent 的 Arty A7 FPGA 板，或者 Sipeed 的 Lichee RV64 模块。</p>
+<p>更有意思的是，有人成功在 egos-2000 上跑起了 DOOM。没错，就是那个 1993 年的经典 FPS 游戏。一个 2000 行的操作系统，能撑起一个 3D 射击游戏的运行——这说明它的架构设计是认真的，不是糊弄学生的 demo。</p>
+<h2 id="三层架构earthgrassapplication">三层架构：Earth、Grass、Application
+</h2><p>egos-2000 的名字来自它的三层架构设计。这个命名很有意思：Earth（地球）在最底层，Grass（草）长在地球上，应用程序则在草上面运行。</p>
+<p><strong>Earth 层：硬件抽象</strong></p>
+<p>Earth 层负责与硬件直接打交道。它实现了四个核心接口：</p>
+<ul>
+<li><code>tty</code>：终端设备，处理键盘输入和屏幕输出</li>
+<li><code>disk</code>：磁盘设备，读写存储介质</li>
+<li><code>mmu</code>：内存管理单元，处理地址转换和页表</li>
+<li><code>timer</code>：定时器，支撑抢占式调度</li>
+</ul>
+<p>这一层的代码是硬件相关的。如果你想把 egos-2000 移植到另一种 CPU 架构，主要改动就在这里。</p>
+<p><strong>Grass 层：操作系统核心</strong></p>
+<p>Grass 层是操作系统的&quot;内核&quot;，但它不依赖具体硬件。它实现了：</p>
+<ul>
+<li><code>process</code>：进程管理，包括创建、销毁、调度</li>
+<li><code>syscall</code>：系统调用分发</li>
+<li><code>ipc</code>：进程间通信</li>
+</ul>
+<p>这一层的代码体现了操作系统的核心抽象。学生可以在这里看到&quot;进程是什么&quot;、&ldquo;系统调用怎么实现&quot;这些问题的具体答案。</p>
+<p><strong>Application 层：用户程序</strong></p>
+<p>最上层是用户态程序，包括：</p>
+<ul>
+<li>文件系统服务进程</li>
+<li>Shell 命令解释器</li>
+<li>各种用户命令（ls、cat、echo 等）</li>
+</ul>
+<p>这三层通过 <code>egos.h</code> 头文件中定义的 <code>struct earth</code> 和 <code>struct grass</code> 两个结构体连接起来。接口清晰，边界明确。</p>
+<h2 id="代码量分布每一行都有意义">代码量分布：每一行都有意义
+</h2><p>让我们看看 2000 行代码是怎么分配的：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模块</th>
+					<th>行数</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>SD 卡驱动</td>
+					<td>222</td>
+					<td>Earth 层，磁盘 I/O</td>
+			</tr>
+			<tr>
+					<td>异常处理</td>
+					<td>48</td>
+					<td>Earth 层，中断和陷阱</td>
+			</tr>
+			<tr>
+					<td>内存管理</td>
+					<td>106</td>
+					<td>Earth 层，MMU 相关</td>
+			</tr>
+			<tr>
+					<td>内核（调度+系统调用）</td>
+					<td>358</td>
+					<td>Grass 层核心</td>
+			</tr>
+			<tr>
+					<td>文件系统</td>
+					<td>339</td>
+					<td>Application 层</td>
+			</tr>
+			<tr>
+					<td>应用程序</td>
+					<td>264</td>
+					<td>Shell 和命令</td>
+			</tr>
+			<tr>
+					<td>库函数</td>
+					<td>262</td>
+					<td>基础设施</td>
+			</tr>
+			<tr>
+					<td>Makefile</td>
+					<td>54</td>
+					<td>构建系统</td>
+			</tr>
+			<tr>
+					<td>板级工具</td>
+					<td>172</td>
+					<td>硬件适配</td>
+			</tr>
+			<tr>
+					<td>其他</td>
+					<td>175</td>
+					<td>杂项</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>注意内核只有 358 行。这意味着一个下午就能读完操作系统最核心的部分——进程调度和系统调用的全部实现。</p>
+<p>对比一下：Linux 内核的调度器 <code>kernel/sched/</code> 目录下有超过 3 万行代码；xv6 的 <code>proc.c</code> 加上 <code>trap.c</code> 也有近千行。egos-2000 把同样的概念压缩到了极限，同时保持了可读性。</p>
+<h2 id="9-个课程实验从-hello-world-到多核锁">9 个课程实验：从 Hello World 到多核锁
+</h2><p>egos-2000 配套了一本在线教程《The EGOS Book》，包含 9 个循序渐进的课程实验。这套实验被 Cornell CS4411/5411 和 Northeastern CS4973/6640 等课程采用。</p>
+<p><strong>核心实验（本科级别）</strong></p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>实验</th>
+					<th>主题</th>
+					<th>你会学到</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>P0</td>
+					<td>Hello World</td>
+					<td>代码段、数据段、堆、栈</td>
+			</tr>
+			<tr>
+					<td>P1</td>
+					<td>协作式线程</td>
+					<td>线程、yield、上下文切换</td>
+			</tr>
+			<tr>
+					<td>P2</td>
+					<td>抢占式调度</td>
+					<td>中断处理、定时器、优先级</td>
+			</tr>
+			<tr>
+					<td>P3</td>
+					<td>系统调用与保护</td>
+					<td>特权级、CSR 寄存器、IPC</td>
+			</tr>
+			<tr>
+					<td>P4</td>
+					<td>虚拟内存</td>
+					<td>页表、地址空间</td>
+			</tr>
+			<tr>
+					<td>P6</td>
+					<td>文件系统</td>
+					<td>块、inode、目录</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>进阶实验（研究生级别）</strong></p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>实验</th>
+					<th>主题</th>
+					<th>你会学到</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>P5</td>
+					<td>I/O 设备驱动</td>
+					<td>内存映射 I/O、DMA</td>
+			</tr>
+			<tr>
+					<td>P7</td>
+					<td>网络栈</td>
+					<td>以太网、TCP/IP、UDP</td>
+			</tr>
+			<tr>
+					<td>P8</td>
+					<td>多核与锁</td>
+					<td>启动加载、互斥、原子操作</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>实验设计的精妙之处在于：<strong>每个实验只引入一个新的硬件概念</strong>。</p>
+<p>比如 P1 和 P2 让你玩线程和调度，但完全不涉及特权级和页表——这些复杂的东西留到后面的实验再加。这样学生可以专注于理解一个概念，而不是被多个新知识同时轰炸。</p>
+<h2 id="为什么选-risc-v">为什么选 RISC-V
+</h2><p>egos-2000 选择 RISC-V 作为目标架构，这不是随便选的。</p>
+<p><strong>指令集简洁</strong></p>
+<p>RISC-V 是一个现代的精简指令集，设计时就考虑了教学需求。它的特权级模型（M-mode、S-mode、U-mode）清晰明了，控制寄存器数量有限，比 x86 的历史包袱少太多。</p>
+<p><strong>开源生态完善</strong></p>
+<p>RISC-V 是开源的，从指令集规范到处理器实现都可以免费获取。学生不仅能理解操作系统，还能往下挖到 CPU 微架构——有人已经用 SystemVerilog 写了一个能跑 egos-2000 的简易处理器 mriscv。</p>
+<p><strong>模拟器成熟</strong></p>
+<p>QEMU 对 RISC-V 的支持非常完善。不需要买任何硬件，一台普通笔记本就能跑起来。macOS、Linux、Windows 都支持。</p>
+<p><strong>真实硬件便宜</strong></p>
+<p>如果你想在真机上跑，Sipeed 的 Lichee RV 模块只要几十美元。比买一块 x86 开发板便宜得多。</p>
+<h2 id="与-xv6-的对比">与 xv6 的对比
+</h2><p>提到教学操作系统，不得不提 MIT 的 xv6。这是目前最流行的教学 OS，被全球数百所大学采用。egos-2000 和它有什么区别？</p>
+<p><strong>代码量</strong></p>
+<ul>
+<li>xv6：约 8000-10000 行</li>
+<li>egos-2000：恰好 2000 行</li>
+</ul>
+<p>xv6 的目标是&quot;Unix 的简化版&rdquo;，功能相对完整。egos-2000 的目标是&quot;能读完的操作系统&quot;，极致精简。</p>
+<p><strong>架构</strong></p>
+<ul>
+<li>xv6：传统的单内核设计</li>
+<li>egos-2000：三层架构，接口清晰</li>
+</ul>
+<p>xv6 的代码组织更接近真实的 Unix，但边界不够清晰。egos-2000 用 struct 显式定义层间接口，更容易理解模块划分。</p>
+<p><strong>学习曲线</strong></p>
+<ul>
+<li>xv6：需要较长时间才能建立全局认知</li>
+<li>egos-2000：一个周末就能通读全部代码</li>
+</ul>
+<p>如果你的目标是&quot;理解操作系统的核心概念&quot;，egos-2000 更适合入门。如果你想深入研究某个特定子系统（比如文件系统或网络栈），xv6 提供了更丰富的实现。</p>
+<p><strong>硬件支持</strong></p>
+<ul>
+<li>xv6：x86（原版）或 RISC-V（riscv 分支）</li>
+<li>egos-2000：仅 RISC-V</li>
+</ul>
+<p>xv6 有 x86 版本，这对于理解传统 PC 架构有帮助。但 RISC-V 版本的 xv6 和 egos-2000 在硬件层面是可比的。</p>
+<h2 id="动手跑起来">动手跑起来
+</h2><p>想亲自体验 egos-2000？以下是最快的上手路径。</p>
+<p><strong>环境准备（macOS/Linux）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 安装 RISC-V 工具链</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># macOS</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew tap riscv-software-src/riscv</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew install riscv-tools qemu</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Ubuntu</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo apt install gcc-riscv64-unknown-elf qemu-system-riscv32</span>
+</span></span></code></pre></div><p><strong>获取代码</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">git clone https://github.com/yhzhang0128/egos-2000.git</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd egos-2000</span>
+</span></span></code></pre></div><p><strong>编译并运行</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">make</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">make qemu</span>
+</span></span></code></pre></div><p>如果一切顺利，你会看到一个 Shell 提示符。输入 <code>ls</code> 看看文件系统里有什么，输入 <code>cat README</code> 读一下自述文件。</p>
+<p><strong>阅读代码的建议顺序</strong></p>
+<ol>
+<li><code>egos.h</code>：理解三层架构的接口定义</li>
+<li><code>earth/earth.c</code>：看看 Earth 层怎么初始化</li>
+<li><code>grass/process.c</code>：进程管理的核心</li>
+<li><code>grass/syscall.c</code>：系统调用分发</li>
+<li><code>apps/system/sys_file.c</code>：文件系统服务</li>
+</ol>
+<p>建议配合《The EGOS Book》一起看，书里对每个实验都有详细的背景说明和代码导读。</p>
+<h2 id="适合谁">适合谁
+</h2><p>egos-2000 不是万能的，它有明确的适用场景：</p>
+<p><strong>适合：</strong></p>
+<ul>
+<li>操作系统初学者，想建立全局认知</li>
+<li>计算机专业学生，需要完成 OS 课程项目</li>
+<li>对 RISC-V 架构感兴趣的开发者</li>
+<li>想亲手写一个操作系统的极客</li>
+</ul>
+<p><strong>不适合：</strong></p>
+<ul>
+<li>已经熟悉操作系统原理，想深入研究某个子系统</li>
+<li>需要生产环境可用的嵌入式 OS</li>
+<li>想学习 Linux 内核开发</li>
+</ul>
+<p>简单说：如果你从未完整读过一个操作系统的全部代码，egos-2000 是目前最好的起点。</p>
+<h2 id="延伸阅读">延伸阅读
+</h2><ul>
+<li><strong>项目地址</strong>：https://github.com/yhzhang0128/egos-2000</li>
+<li><strong>教程书籍</strong>：https://egos.fun</li>
+<li><strong>RISC-V 特权级规范</strong>：理解 M/S/U 模式的官方文档</li>
+<li><strong>xv6-riscv</strong>：如果想进一步深入，可以看 MIT 的这个项目</li>
+</ul>
+<h2 id="写在最后">写在最后
+</h2><p>Richard Feynman 说过：&ldquo;What I cannot create, I do not understand.&rdquo;</p>
+<p>操作系统是计算机科学的基石，但大多数程序员对它的理解仅停留在概念层面。不是因为操作系统太难，而是因为传统的学习材料太臃肿。</p>
+<p>egos-2000 证明了一件事：<strong>一个完整的操作系统可以简单到让每个人都能读完</strong>。</p>
+<p>2000 行代码，9 个实验，一个周末。</p>
+<p>这可能是你第一次真正&quot;看见&quot;操作系统的全貌。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+        
+            <a href="/tags/risc-v/">RISC-V</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">开源</a>
+        
+            <a href="/tags/%E6%95%99%E5%AD%A6/">教学</a>
+        
+            <a href="/tags/%E5%BA%95%E5%B1%82/">底层</a>
+        
+            <a href="/tags/egos-2000/">Egos-2000</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/ds4-deepseek-inference-engine/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ds4：Redis 作者用 C 语言写了一个 DeepSeek 专用推理引擎</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/odysseus-codex-self-hosted-workstation/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/voxcpm2-tokenizer-free-tts-deep-dive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">VoxCPM2 深度拆解：Tokenizer-Free TTS 为什么是语音合成的新方向</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/egos-2000-teaching-os-2000-lines\/'; 
+        const pageTitle = '2000 行代码写一个完整操作系统：egos-2000 源码拆解';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

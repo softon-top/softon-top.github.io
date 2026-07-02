@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Token追踪 on softon.top</title>
+		<link>https://softon.top/tags/token%E8%BF%BD%E8%B8%AA/</link>
+		<description>Recent content in Token追踪 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 20 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/token%E8%BF%BD%E8%B8%AA/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>codeburn 实测：你的 AI 编程开销到底去哪了？</title>
+				<link>https://softon.top/software/codeburn-ai-token-cost-tracker/</link>
+				<pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/codeburn-ai-token-cost-tracker/</guid>
+				<description>&lt;p&gt;上周五下午，我对着 Claude Code 的终端等一个重构结果——第 3 次了。同样的代码库，同样的指令，AI 在同一个坑里反复打转。屏幕那头的 Token 计数器不知道跳了多少，但我知道账单会在月底准时到来。&lt;/p&gt;&#xA;&lt;p&gt;我不知道问题出在哪。&lt;/p&gt;&#xA;&lt;p&gt;我只知道，我每个月付给 Claude Max 的 200 美元，并没有给我换来「可观测性」。&lt;/p&gt;&#xA;&lt;h2 id=&#34;黑箱里的-token-账单&#34;&gt;黑箱里的 Token 账单&#xA;&lt;/h2&gt;&lt;p&gt;这是 AI 编程工具最讽刺的地方：&lt;strong&gt;一边标榜自己是生产力的放大器，一边把自己最大的成本敞口藏得严严实实。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Claude Code 自带一个 &lt;code&gt;--verbose&lt;/code&gt; 选项，可以看单次调用的 Token 数。但它没有累计视图，没有按项目分组的账单，没有&amp;quot;上周我到底在哪个任务上浪费了最多 Token&amp;quot;的总结。Cursor 的用量面板更接近一个黑箱——给你一个进度条和一个百分比，但「百分比的基数是多少」你得自己猜。&lt;/p&gt;&#xA;&lt;p&gt;我的日常工具流是 Claude Code（主力）、Cursor（偶尔）、Codex（批量任务），偶尔切一下 Gemini CLI。每个月少说几十万 Token 的消耗，分散在三四个平台、七八个项目里。月底看到信用卡账单时，我的反应永远是：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;这些钱真的是我花的吗？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;codeburn-是什么&#34;&gt;codeburn 是什么&#xA;&lt;/h2&gt;&lt;p&gt;codeburn 是一个开源的终端仪表盘工具，由 &lt;a class=&#34;link&#34; href=&#34;https://github.com/getagentseal/codeburn&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;AgentSeal&lt;/a&gt; 团队维护。它能做的事情只有一件：&lt;strong&gt;把你的 AI 编程工具的 Token 消耗可视化出来。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;不是&amp;quot;估计&amp;quot;——它直接从磁盘读取会话日志，不做网络请求，不需要注入 API Key。目前已支持 25 款以上的 AI 编程工具，包括 Claude Code、Codex（OpenAI）、Cursor、OpenCode、Gemini CLI、Codebuff/ManiCode 等主流产品。&lt;/p&gt;&#xA;&lt;p&gt;安装极其简单：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# npm&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;npm install -g codeburn&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 或者 Homebrew&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;brew install codeburn&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;装完直接在终端输入 &lt;code&gt;codeburn&lt;/code&gt;：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Codex 桌面端无法直接使用国产模型，社区给出了 EchoBird、CC Switch、Codex++ 三条解决路径。本文从架构设计、上手门槛、生态定位三个维度做横向对比，帮你找到最适合自己的那条路。">
+<title>Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex&#43;&#43; 方案对比</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex++ 方案对比">
+<meta property='og:description' content="Codex 桌面端无法直接使用国产模型，社区给出了 EchoBird、CC Switch、Codex++ 三条解决路径。本文从架构设计、上手门槛、生态定位三个维度做横向对比，帮你找到最适合自己的那条路。">
+<meta property='og:url' content='https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='EchoBird' /><meta property='article:tag' content='CC Switch' /><meta property='article:tag' content='Codex&#43;&#43;' /><meta property='article:tag' content='国产模型' /><meta property='article:tag' content='AI-Agent' /><meta property='article:tag' content='方案对比' /><meta property='article:published_time' content='2026-06-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-09T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex++ 方案对比">
+<meta name="twitter:description" content="Codex 桌面端无法直接使用国产模型，社区给出了 EchoBird、CC Switch、Codex++ 三条解决路径。本文从架构设计、上手门槛、生态定位三个维度做横向对比，帮你找到最适合自己的那条路。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#问题的本质responses-api-vs-chat-completions">问题的本质：Responses API vs Chat Completions</a></li>
+    <li><a href="#三种方案三种不同的架构切入点">三种方案，三种不同的架构切入点</a>
+      <ul>
+        <li><a href="#echobirdall-in-one-agent-管理器">EchoBird：All-in-One Agent 管理器</a></li>
+        <li><a href="#cc-switch协议切换路由器">CC Switch：协议切换路由器</a></li>
+        <li><a href="#codex桌面增强注入器">Codex++：桌面增强注入器</a></li>
+      </ul>
+    </li>
+    <li><a href="#三个方案能互相替代吗">三个方案能互相替代吗？</a></li>
+    <li><a href="#选型决策树">选型决策树</a>
+      <ul>
+        <li><a href="#场景-a刚接触-codex想体验免费模型">场景 A：刚接触 Codex，想体验免费模型</a></li>
+        <li><a href="#场景-b已经用-cc-switch-对-claude-code-做了全套路由">场景 B：已经用 CC Switch 对 Claude Code 做了全套路由</a></li>
+        <li><a href="#场景-c重度-codex-用户缺插件和会话管理">场景 C：重度 Codex 用户，缺插件和会话管理</a></li>
+        <li><a href="#场景-d多台设备或多-agent-混用">场景 D：多台设备或多 Agent 混用</a></li>
+      </ul>
+    </li>
+    <li><a href="#代价与取舍">代价与取舍</a></li>
+    <li><a href="#一些真实体验数据">一些真实体验数据</a></li>
+    <li><a href="#生态观察">生态观察</a></li>
+    <li><a href="#最后">最后</a></li>
+    <li><a href="#相关链接">相关链接</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/codex-echobird-ccswitch-codexplus-comparison/">Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex&#43;&#43; 方案对比</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-09T00:00:00Z'>
+                    2026-06-09，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#问题的本质responses-api-vs-chat-completions">问题的本质：Responses API vs Chat Completions</a></li>
+    <li><a href="#三种方案三种不同的架构切入点">三种方案，三种不同的架构切入点</a>
+      <ul>
+        <li><a href="#echobirdall-in-one-agent-管理器">EchoBird：All-in-One Agent 管理器</a></li>
+        <li><a href="#cc-switch协议切换路由器">CC Switch：协议切换路由器</a></li>
+        <li><a href="#codex桌面增强注入器">Codex++：桌面增强注入器</a></li>
+      </ul>
+    </li>
+    <li><a href="#三个方案能互相替代吗">三个方案能互相替代吗？</a></li>
+    <li><a href="#选型决策树">选型决策树</a>
+      <ul>
+        <li><a href="#场景-a刚接触-codex想体验免费模型">场景 A：刚接触 Codex，想体验免费模型</a></li>
+        <li><a href="#场景-b已经用-cc-switch-对-claude-code-做了全套路由">场景 B：已经用 CC Switch 对 Claude Code 做了全套路由</a></li>
+        <li><a href="#场景-c重度-codex-用户缺插件和会话管理">场景 C：重度 Codex 用户，缺插件和会话管理</a></li>
+        <li><a href="#场景-d多台设备或多-agent-混用">场景 D：多台设备或多 Agent 混用</a></li>
+      </ul>
+    </li>
+    <li><a href="#代价与取舍">代价与取舍</a></li>
+    <li><a href="#一些真实体验数据">一些真实体验数据</a></li>
+    <li><a href="#生态观察">生态观察</a></li>
+    <li><a href="#最后">最后</a></li>
+    <li><a href="#相关链接">相关链接</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>好马配好鞍——这句老话说的是工具的匹配。但对 Codex 桌面端的用户来说，现实是一匹好马（Codex 桌面的交互设计和插件生态确实出色，这点有一说一）配不上国产模型这口粮。OpenAI 的协议围墙把 DeepSeek、Qwen、Kimi 这些性价比高的国产模型挡在了官方客户端之外。</p>
+<p>社区当然不会坐等。过去几个月，<strong>EchoBird、CC Switch、Codex++</strong> 三个项目相继火起来，各自从不同角度解决了同一个问题。但它们不是简单的竞品，更像是同一个工具箱里的三把不同的扳手。</p>
+<p>这篇文章会拆解每个方案的架构逻辑、适用场景，以及它们之间的取舍，而不是列一份&quot;安装步骤清单&quot;——纯 How-to 教程已经被大模型一句话代替，不值当浪费墨水。</p>
+<h2 id="问题的本质responses-api-vs-chat-completions">问题的本质：Responses API vs Chat Completions
+</h2><p>先说清楚为什么代码里改一个 <code>base_url</code> 解决不了问题。</p>
+<p>Codex 桌面端（1.x 版本）的通信协议是 OpenAI 最新推出的 <strong>Responses API</strong>。这个协议跟传统的 OpenAI <strong>Chat Completions API</strong> 在消息格式、流式响应结构、工具调用参数上有本质区别。国产模型服务商（DeepSeek、阿里云百炼、智谱、Moonshot）至今只提供 Chat Completions 接口。</p>
+<p>Protocol mismatch。这不是换个 URL 能解决的。</p>
+<p>也就是说，想要在 Codex 桌面端使用国产模型，中间必须有一层<strong>协议转换器</strong>——这个转换器既要能把 Chat Completions 翻译成 Responses API 的格式，又要能处理 OAuth 登录态的绕过、模型目录的映射、参数重写。三款工具的区别，本质上就是这个协议转换层的实现位置和设计哲学的不同。</p>
+<h2 id="三种方案三种不同的架构切入点">三种方案，三种不同的架构切入点
+</h2><p>我画一个简化的分层模型，帮你看清每个工具打在哪个位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">+------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">| Codex 桌面端     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+--------+---------+</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+--------+---------+    ← Codex++ 注入层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">| 协议转换 / 路由   |    ← CC Switch 路由层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+--------+---------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">| 国产模型 API      |    ← EchoBird 管理+路由层  </span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+------------------+</span>
+</span></span></code></pre></div><h3 id="echobirdall-in-one-agent-管理器">EchoBird：All-in-One Agent 管理器
+</h3><p>EchoBird 的定位是&quot;AI Agent 管理器&quot;，意味它不仅仅是做协议转换。它提供了完整的图形界面，内置了国内主流模型供应商的配置模板（DeepSeek、Qwen、Kimi、GLM、MiniMax 等），同时管理 Claude Code、Codex、Gemini CLI 等多个 Agent 的安装和运行。</p>
+<p>从架构上看，EchoBird 把协议转换、配置管理、模型路由三个职责打包在一个桌面应用里。它的协议转换是透明且自动的——用户在图形界面选择模型和输入 API Key，EchoBird 自动处理好 Responses API 到 Chat Completions 的翻译。</p>
+<p>收益是<strong>上手门槛极低</strong>：下载安装包 → 点几下鼠标 → 选模型 → 填 Key，全程 3 分钟。不需要碰配置文件，不需要理解协议差异。对于&quot;我就想赶紧用上免费模型&quot;的用户，这是最快路径。</p>
+<p>代价是<strong>灵活性受限</strong>：你用的模型必须在 EchoBird 预设的名单里。如果要自定义一个冷门提供商的接入配置，需要等作者更新或自己动手。</p>
+<p>截至 2026 年 6 月初，EchoBird 在 GitHub 上已有 1.1k stars，说明它的定位确实切中了大量用户的需求。</p>
+<h3 id="cc-switch协议切换路由器">CC Switch：协议切换路由器
+</h3><p>CC Switch 是另一个方向的产物。它最初是为 Claude Code 设计的第三方 API 切换工具，后来扩展到 Codex 和 Gemini CLI。</p>
+<p>它的架构核心是一个<strong>本地代理服务器</strong>（默认监听 127.0.0.1:8080）。你在 CC Switch 里配置好各个模型提供商的 Endpoint 和 API Key，然后让代码 Agent 的 base_url 指向这个本地代理。CC Switch 收到请求后：</p>
+<ol>
+<li>识别请求的目标模型类型和参数</li>
+<li>根据你配置的 fallback chain 选择当前最优提供商</li>
+<li>把 Responses API 格式翻译成对应提供商的 Chat Completions 格式</li>
+<li>发送请求、拿到返回、再翻译回 Responses API 格式</li>
+<li>如果当前提供商不可用（限流、超时），自动切到下一个</li>
+</ol>
+<p>这与 EchoBird 的关键区别是：CC Switch 是一个纯<strong>路由层</strong>，它不做图形化的 Agent 安装管理，不给你塞资讯推送，它的职责边界是清晰的——处理流量，其他的不管。</p>
+<p>收益：<strong>极高的灵活性</strong>。你可以自定义 fallback chain、配置不同模型的参数映射、保留 OAuth 登录态（v3.16 新增 feature）。它的配置方式是编辑 JSON/YAML 配置文件或图形面板，需要一定的技术耐心。</p>
+<p>代价：<strong>上手门槛比 EchoBird 高</strong>。需要理解&quot;代理服务器&quot;的概念，知道 base_url、port、fallback chain 这些术语的含义。如果你只想&quot;打开就用&quot;，CC Switch 多出来的配置步骤会让你觉得累赘。</p>
+<h3 id="codex桌面增强注入器">Codex++：桌面增强注入器
+</h3><p>Codex++ 是一个更特殊的方案。它不处理协议转换，它只做一件事：<strong>给 Codex 桌面端注入增强能力</strong>。</p>
+<p>实现原理是通过 Chromium DevTools Protocol（CDP）在 Codex 启动时注入运行时脚本。安装后，Codex 顶部会多出一个&quot;Codex++&ldquo;菜单，里面包含：</p>
+<ul>
+<li><strong>插件入口增强</strong>：绕过了 Codex 对非登录用户的插件禁用限制</li>
+<li><strong>Timeline 会话管理</strong>：跨 Provider 的会话记录，切模型不丢上下文</li>
+<li><strong>多提供商同步</strong>：在 CC Switch 配置的 Provider 列表同步到 Codex 的模型目录</li>
+</ul>
+<p>注意一个关键事实：Codex++ 本身不具备协议转换能力。要接入国产模型，你仍需要 CC Switch 或其他中转工具。Codex++ 是在中转之上的一层增强。</p>
+<p>用代码类比的话：EchoBird 是一个完整的&quot;框架&rdquo;，CC Switch 是一个&quot;中间件&quot;，Codex++ 是一个&quot;补丁包&quot;。</p>
+<h2 id="三个方案能互相替代吗">三个方案能互相替代吗？
+</h2><p>这是很多人搞混的地方。我直接给出结论：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>组合</th>
+					<th style="text-align: center">能接国产模型？</th>
+					<th style="text-align: center">能免登录？</th>
+					<th style="text-align: center">能解锁插件？</th>
+					<th style="text-align: center">能管理会话？</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>只用 EchoBird</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">❌</td>
+					<td style="text-align: center">❌</td>
+			</tr>
+			<tr>
+					<td>只用 CC Switch</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">❌</td>
+					<td style="text-align: center">❌</td>
+			</tr>
+			<tr>
+					<td>CC Switch + Codex++</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+			</tr>
+			<tr>
+					<td>只用 Codex++</td>
+					<td style="text-align: center">❌</td>
+					<td style="text-align: center">❌</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+			</tr>
+			<tr>
+					<td>EchoBird + Codex++</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+					<td style="text-align: center">✅</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>EchoBird 和 CC Switch 在&quot;协议转换&quot;这个核心功能上重合，但 EchoBird 把配置和管理也打包了进来。Codex++ 完全不属于这个层面，它在更高层做增强，无法取代前两者。</p>
+<p>用比喻来理解：</p>
+<ul>
+<li>EchoBird 像一台<strong>即插即用的翻译机</strong>，从包装盒里拿出来就可以说话</li>
+<li>CC Switch 像一个<strong>可编程的交换机</strong>，需要你先连好线，但之后可以处理复杂的流量策略</li>
+<li>Codex++ 像在电脑上<strong>装一个增强外挂</strong>，它不帮你翻译语言，但能让你的办公软件多出几个原本隐藏的功能按钮</li>
+</ul>
+<h2 id="选型决策树">选型决策树
+</h2><p>根据你自己的情况，可以按下面的逻辑来判断：</p>
+<h3 id="场景-a刚接触-codex想体验免费模型">场景 A：刚接触 Codex，想体验免费模型
+</h3><p><strong>推荐：EchoBird，10 分钟搞定。</strong></p>
+<p>不需要理解任何底层概念。下载、安装、选模型、用。如果后面发现功能不够了，再叠加其他工具。</p>
+<h3 id="场景-b已经用-cc-switch-对-claude-code-做了全套路由">场景 B：已经用 CC Switch 对 Claude Code 做了全套路由
+</h3><p><strong>推荐：CC Switch + Codex++（可选）。</strong></p>
+<p>因为你的 CC Switch 已经跑起来了，配模型就是加几行配置文件的事，不需要再装一个 EchoBird 来增加混乱。再加一个 Codex++ 解锁插件和 Timeline，体验就比较完整了。</p>
+<h3 id="场景-c重度-codex-用户缺插件和会话管理">场景 C：重度 Codex 用户，缺插件和会话管理
+</h3><p><strong>推荐：Codex++ 打底，配合已有的中转方案。</strong></p>
+<p>Codex++ 的非破坏性注入设计（不修改 Codex 安装文件、补丁存在用户数据目录）保证了安全性。如果官方升级导致兼容问题，可以回滚。</p>
+<h3 id="场景-d多台设备或多-agent-混用">场景 D：多台设备或多 Agent 混用
+</h3><p><strong>推荐：CC Switch 作为中心路由，EchoBird 管理不同设备的 Agent 安装。</strong></p>
+<p>CC Switch 可以在一台设备上部署代理供局域网内其他设备使用，EchoBird 管各端 Agent 安装。</p>
+<h2 id="代价与取舍">代价与取舍
+</h2><p>没有完美的方案。每套选择都有隐藏成本：</p>
+<p><strong>EchoBird 的隐藏成本</strong>：它把自己做成了重量级工具。如果你想在 EchoBird 里用自定义模型但不在预设列表里，需要等作者更新。另外 EchoBird 做了 Agent 管理，如果你已经手动装了 Codex 和 Claude Code，可能会有路径冲突。</p>
+<p><strong>CC Switch 的隐藏成本</strong>：配置负担。加一个新提供商需要填 base_url、模型映射、参数覆写。如果 fallback chain 配错，会出现明明有可用 Key 却报错 401 的情况。调试体验对新手不太友好。</p>
+<p><strong>Codex++ 的隐藏成本</strong>：版本追踪。Codex 桌面端更新后，CDP 注入脚本可能不兼容。虽然项目会跟进，但总有一段滞后窗口。如果你正好在窗口期需要稳定工作，会有点难受。</p>
+<h2 id="一些真实体验数据">一些真实体验数据
+</h2><p>我在三台设备上分别跑了三个方案（每台只用一种），连续一周的日常使用中记录了实际体验：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>EchoBird</th>
+					<th>CC Switch（无 Codex++）</th>
+					<th>CC Switch + Codex++</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>初始配置时间</td>
+					<td>3-5 min</td>
+					<td>8-15 min</td>
+					<td>15-20 min（含 Codex++ 安装）</td>
+			</tr>
+			<tr>
+					<td>模型切换速度</td>
+					<td>即时（界面选）</td>
+					<td>即时（面板切）</td>
+					<td>即时（菜单切）</td>
+			</tr>
+			<tr>
+					<td>国产模型可用数</td>
+					<td>~8 种内置</td>
+					<td>不限（自行添加）</td>
+					<td>同 CC Switch 配置</td>
+			</tr>
+			<tr>
+					<td>插件使用体验</td>
+					<td>灰色+不可用</td>
+					<td>灰色+不可用</td>
+					<td>可用</td>
+			</tr>
+			<tr>
+					<td>遇到报错的调试难度</td>
+					<td>简单（界面有提示）</td>
+					<td>中等（看代理日志）</td>
+					<td>中等（需查 CDP 注入日志）</td>
+			</tr>
+			<tr>
+					<td>日常使用故障次数</td>
+					<td>0</td>
+					<td>1 次（fallback 链断）</td>
+					<td>0</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>一周下来，如果只是正常编码、没有特殊的插件依赖需求，三个方案的日常使用体验差别不大。选哪个更多取决于你愿意在&quot;了解原理&quot;上花多少时间。</p>
+<h2 id="生态观察">生态观察
+</h2><p>写这篇文章时，我注意到一个有趣的现象：三个项目都开源，但社区文化不同。</p>
+<p>EchoBird 的 Issue 区最常见的问题是&quot;建议支持 XX 模型&quot;——用户把它当产品来用，期待的是功能持续丰富。CC Switch 的 Issue 更多围绕 provider 配置细节和协议转换 bug——用户把它当工具来调。Codex++ 的讨论主要是 tweak 开发和版本兼容性——用户把它当平台来开发。</p>
+<p>这三个社区画像也从侧面说明了各自的定位差异。</p>
+<h2 id="最后">最后
+</h2><p>如果你读完这篇发现：我不太确定自己属于哪一类用户。<strong>那就选 EchoBird。</strong> 花 10 分钟装一个，如果一个月后你觉得不够用，再换不迟。</p>
+<p>折腾工具很有趣，但最终我们只是想写代码。工具应该隐身在任务背后，而不是站在你面前说&quot;先学会怎么配我&quot;。</p>
+<p>对比文档存粹是为了帮你少走弯路，判断清楚了，下一步就是——装完工具，关掉网页，打开编辑器。</p>
+<h2 id="相关链接">相关链接
+</h2><ul>
+<li>EchoBird：<a class="link" href="https://github.com/edison7009/EchoBird"  target="_blank" rel="noopener"
+    >https://github.com/edison7009/EchoBird</a></li>
+<li>CC Switch：<a class="link" href="https://github.com/farion1231/cc-switch"  target="_blank" rel="noopener"
+    >https://github.com/farion1231/cc-switch</a></li>
+<li>Codex++：<a class="link" href="https://github.com/b-nnett/codex-plusplus"  target="_blank" rel="noopener"
+    >https://github.com/b-nnett/codex-plusplus</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/echobird/">EchoBird</a>
+        
+            <a href="/tags/cc-switch/">CC Switch</a>
+        
+            <a href="/tags/codex&#43;&#43;/">Codex&#43;&#43;</a>
+        
+            <a href="/tags/%E5%9B%BD%E4%BA%A7%E6%A8%A1%E5%9E%8B/">国产模型</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/">方案对比</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/hermes-vs-openclaw-agent-framework-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hermes Agent 与 OpenClaw：两种 AI Agent 框架的架构哲学与选型逻辑</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-multi-agent-architecture-moshou-moke/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从单核到多核：构建默守墨客双 Agent 架构</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/codex-echobird-ccswitch-codexplus-comparison\/'; 
+        const pageTitle = 'Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex\u002b\u002b 方案对比';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

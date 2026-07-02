@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Matt Pocock 开源了 20+ 个 AI 编程 agent skills，火速拿下 GitHub 热榜第一。不是框架不是 SDK，只是 20 个 Markdown 文件。本文拆解为什么它在 vibe coding 横行的时代被 7 万+ 开发者追捧。">
+<title>Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程">
+<meta property='og:description' content="Matt Pocock 开源了 20+ 个 AI 编程 agent skills，火速拿下 GitHub 热榜第一。不是框架不是 SDK，只是 20 个 Markdown 文件。本文拆解为什么它在 vibe coding 横行的时代被 7 万+ 开发者追捧。">
+<meta property='og:url' content='https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='AI编程' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='TDD' /><meta property='article:tag' content='vibe coding' /><meta property='article:tag' content='AI工程化' /><meta property='article:published_time' content='2026-06-18T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-18T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程">
+<meta name="twitter:description" content="Matt Pocock 开源了 20+ 个 AI 编程 agent skills，火速拿下 GitHub 热榜第一。不是框架不是 SDK，只是 20 个 Markdown 文件。本文拆解为什么它在 vibe coding 横行的时代被 7 万+ 开发者追捧。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#vibe-coding-的终结">vibe coding 的终结？</a></li>
+    <li><a href="#skills-不是什么">skills 不是什么</a></li>
+    <li><a href="#五条核心-skill一条开发链">五条核心 skill，一条开发链</a>
+      <ul>
+        <li><a href="#1-grill-me--拒绝哑巴-agent">1. /grill-me — 拒绝哑巴 agent</a></li>
+        <li><a href="#2-to-prd--让-agent-自己写需求文档">2. /to-prd — 让 agent 自己写需求文档</a></li>
+        <li><a href="#3-to-issues--从-prd-到可执行的任务网格">3. /to-issues — 从 PRD 到可执行的任务网格</a></li>
+        <li><a href="#4-tdd--让-agent-先写测试">4. /tdd — 让 agent 先写测试</a></li>
+        <li><a href="#5-improve-codebase-architecture--识别架构债务">5. /improve-codebase-architecture — 识别架构债务</a></li>
+      </ul>
+    </li>
+    <li><a href="#技能包设计的底层哲学">技能包设计的底层哲学</a>
+      <ul>
+        <li><a href="#小即是美">小即是美</a></li>
+        <li><a href="#可组合性">可组合性</a></li>
+        <li><a href="#模型无关">模型无关</a></li>
+        <li><a href="#从提示词到协议">从&quot;提示词&quot;到&quot;协议&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#社区的反应与讨论">社区的反应与讨论</a></li>
+    <li><a href="#开发者还有多少价值">开发者还有多少价值？</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/matt-pocock-skills-engineering-vibe-coding/">Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-18T00:00:00Z'>
+                    2026-06-18，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：13分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#vibe-coding-的终结">vibe coding 的终结？</a></li>
+    <li><a href="#skills-不是什么">skills 不是什么</a></li>
+    <li><a href="#五条核心-skill一条开发链">五条核心 skill，一条开发链</a>
+      <ul>
+        <li><a href="#1-grill-me--拒绝哑巴-agent">1. /grill-me — 拒绝哑巴 agent</a></li>
+        <li><a href="#2-to-prd--让-agent-自己写需求文档">2. /to-prd — 让 agent 自己写需求文档</a></li>
+        <li><a href="#3-to-issues--从-prd-到可执行的任务网格">3. /to-issues — 从 PRD 到可执行的任务网格</a></li>
+        <li><a href="#4-tdd--让-agent-先写测试">4. /tdd — 让 agent 先写测试</a></li>
+        <li><a href="#5-improve-codebase-architecture--识别架构债务">5. /improve-codebase-architecture — 识别架构债务</a></li>
+      </ul>
+    </li>
+    <li><a href="#技能包设计的底层哲学">技能包设计的底层哲学</a>
+      <ul>
+        <li><a href="#小即是美">小即是美</a></li>
+        <li><a href="#可组合性">可组合性</a></li>
+        <li><a href="#模型无关">模型无关</a></li>
+        <li><a href="#从提示词到协议">从&quot;提示词&quot;到&quot;协议&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#社区的反应与讨论">社区的反应与讨论</a></li>
+    <li><a href="#开发者还有多少价值">开发者还有多少价值？</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>2026 年 4 月，一个叫 <code>mattpocock/skills</code> 的仓库悄然登顶 GitHub Trending。几周内，star 数从 1.8 万飙到 7.7 万。不是新的 LLM，不是框架，不是 SDK——只是一个文件夹，里面装着 20 多个 Markdown 文件。</p>
+<p>Matt Pocock，这位以 TypeScript 教学闻名的开发者（Total TypeScript 作者，前 Vercel 工程师），把自己每天都在用的 AI 编程 agent 配置全盘开源。每条 skill 不超过 200 行，用 YAML frontmatter 描述行为，MIT 协议，一行命令装到 Claude Code 或 Codex 里就能用。</p>
+<p>听起来像锦上添花。实际上它可能正在回答一个更根本的问题：当 AI 编程工具能写出整个仓库的代码时，开发者还剩下什么价值？</p>
+<h2 id="vibe-coding-的终结">vibe coding 的终结？
+</h2><p>2025 年的关键词是 &ldquo;vibe coding&rdquo;——靠感觉编码，把需求扔给 LLM，看它飞出一堆代码，差不多就行。Andrej Karpathy 造了这个词，一年后回头看，它更像是对一种短暂自由的深情告别。</p>
+<p>vibe coding 的问题不在代码质量——LLM 写的代码通常比初级工程师工整——而在<strong>方向</strong>。没有工程约束的 AI 编程就像没有红绿灯的城市十字路口：每辆车都能跑，但谁也到不了想去的地方。</p>
+<p>Matt Pocock 在 README 里写得很直白：</p>
+<blockquote>
+<p>&ldquo;Code isn&rsquo;t cheap. In fact, bad code is the most expensive it&rsquo;s ever been.&rdquo;</p>
+</blockquote>
+<p>这不是故作惊人之语。他用自己九年的工程经验观察到，当 AI 能快速生成大量代码时，<strong>方向性错误</strong>的代价被放大了。以前写一周的坏代码，现在 AI 一天就能写出来同样的量。</p>
+<h2 id="skills-不是什么">skills 不是什么
+</h2><p>说清楚 <code>mattpocock/skills</code> 不是什么，比说它是什么更关键。</p>
+<p><strong>不是另一个 GSD 或 BMAD。</strong> 过去一年，行业内涌现了一批试图 &ldquo;own the process&rdquo; 的框架。GSD、BMAD、Spec-Kit 这些名字听起来很酷，但它们有一个共同的问题：它们想要接管整个开发流程。一旦出了问题，开发者很难定位是流程的 bug 还是代码的 bug。</p>
+<p><strong>不是系统 prompt 大合集。</strong> 市面上有很多 &ldquo;claude-code-prompts&rdquo; 类仓库，塞一个 5000 字的 system prompt 进去，指望 AI 记住一切。但 LLM 对长 prompt 的执行并不稳定，尤其是当多个行为规则互相冲突时。</p>
+<p><strong>不是 MCP 工具。</strong> MCP（Model Context Protocol）擅长和外部系统交互：读数据库、调 API、操作文件系统。但 MCP 不擅长&quot;规定做事的方式&quot;。skills 恰好填补了这个空白——它不是让你做什么，而是规定你<strong>怎么做</strong>。</p>
+<p>每一条 skill 就是一个独立的 SKILL.md 文件，本质上是一套严格的指令集，告诉 agent 在特定场景下应该以什么流程执行任务。因为每条 skill 都很小，你可以只装需要的，也可以自己 fork 改（MIT 协议），互相之间不冲突。</p>
+<h2 id="五条核心-skill一条开发链">五条核心 skill，一条开发链
+</h2><p>在 Matt 自己的开发流程里，有五条 skill 构成了每日工作的闭环链条。</p>
+<h3 id="1-grill-me--拒绝哑巴-agent">1. /grill-me — 拒绝哑巴 agent
+</h3><p>&ldquo;AI 做的不是我想要的&rdquo;——这是工程经理们最常抱怨的一句话。Matt 的解法听起来反直觉：<strong>在 agent 开始写代码之前，先让 agent 拷问你</strong>。</p>
+<p><code>/grill-me</code> 的运作方式是：agent 会自动沿着&quot;设计决策树&quot;逐层追问，每层只问一个问题，推荐一个答案，然后从代码库中搜索可验证的信息来确认。这不是简单的&quot;你确定吗？&quot;，而是一个系统性的设计审核。它把你在编码开始前的模糊想法，变成一系列经过推敲的明确决策。</p>
+<p><code>/grill-with-docs</code> 更进一步——它会把整个探讨过程写入一个 <code>CONTEXT.md</code>，建立项目专用的<strong>共享词汇表</strong>。每个后续 session 都可以直接引用这份上下文，避免了 agent 每次重启后都要重新理解一遍项目的尴尬。</p>
+<p>这解决了 AI 编程中最隐形的成本：<strong>上下文丢失</strong>。每个新 session，agent 带着对你需求一无所知的&quot;纯洁性&quot;开始，而你重复解释的 15 分钟，乘以每天 10 次，就是每天 2.5 小时的纯浪费。</p>
+<h3 id="2-to-prd--让-agent-自己写需求文档">2. /to-prd — 让 agent 自己写需求文档
+</h3><p>&ldquo;没人确切知道自己想要什么&rdquo;——这是 Matt 在 README 里引用《程序员修炼之道》的一句话，也是九年来他最认同的经验法则。</p>
+<p><code>/to-prd</code> 会在 <code>/grill-me</code> 的结果基础上，把整个对话综合成一份结构化的 PRD，然后直接写入 GitHub issue。它做的事情其实很简单：把模糊的对话翻译成精确的需求描述。但正是这个&quot;翻译&quot;步骤，在传统开发流程里需要花掉 PM 和 tech lead 半天的时间。</p>
+<h3 id="3-to-issues--从-prd-到可执行的任务网格">3. /to-issues — 从 PRD 到可执行的任务网格
+</h3><p><code>/to-issues</code> 把一份 PRD 拆解成一系列的 vertical-slice tracer bullet issues。每个 issue 都是一个端到端的垂直切面：从前端到后端到数据层。这种切法不是随便分的——它遵循 tracer bullet 模式（来自《The Pragmatic Programmer》），每颗&quot;曳光弹&quot;都贯穿整个系统，确保进度不是来自非集成的&quot;深井&quot;。</p>
+<p>这意味着你看进度的方式变了：不是&quot;前端 80% 后端 60% 数据库 20%&quot;，而是&quot;第 3 个功能端到端走通了&quot;。</p>
+<h3 id="4-tdd--让-agent-先写测试">4. /tdd — 让 agent 先写测试
+</h3><p><code>/tdd</code> 是整个 skill 集里技术含量最高的一条。</p>
+<p>它会强制 agent 遵循红绿重构循环：先写一个会失败的测试 → 确认测试失败的原因正确 → 写最少代码让它通过 → 重构。这条规则层层加了约束：agent <strong>不允许</strong>跳过写测试的环节，<strong>不允许</strong>一次提交大量代码后再补测试，<strong>不允许</strong>不验证测试失败原因就直接写实现。</p>
+<p>如果你觉得这听起来太死板，那正是目的所在。TDD 对于人类开发者来说是一种&quot;纪律&quot;，需要长年训练才能变成肌肉记忆。但对于 AI agent——它默认没有任何纪律——<code>/tdd</code> 就是那个把工程纪律写进工作流的东西。</p>
+<p>一位在 Devtalk 论坛上使用了一周的工程师说：</p>
+<blockquote>
+<p>&ldquo;When <code>tdd</code> is active, Claude Code does not write implementation before tests — full stop.&rdquo;</p>
+</blockquote>
+<p>当 AI 能轻松绕过所有最佳实践时，唯一让这些实践不形同虚设的办法就是——<strong>直接禁止绕过</strong>。</p>
+<h3 id="5-improve-codebase-architecture--识别架构债务">5. /improve-codebase-architecture — 识别架构债务
+</h3><p>大多数 AI 编程的架构方法都是&quot;你说拆，它就拆&quot;。问题是，你怎么知道该拆哪里？</p>
+<p><code>/improve-codebase-architecture</code> 做的事情是扫描代码库，识别出&quot;太浅&quot;的模块（那些已经偏离了领域语言、但尚未严重到崩溃的 module），然后用一个固定的 8 词词汇量来描述问题。这个限制是有意为之的——更少的词汇意味着更少的歧义，对 agent 行为的可预测性是一个巨大的提升。</p>
+<p>它给你一份&quot;架构债务地图&quot;：哪些模块已经长成了你不想看到的形状，应该从哪开始重塑。</p>
+<h2 id="技能包设计的底层哲学">技能包设计的底层哲学
+</h2><p>理解 skills 为什么火，需要看到它背后的工程哲学。</p>
+<h3 id="小即是美">小即是美
+</h3><p>每条 skill 不到 200 行。你可以读完、理解、修改它。如果你觉得某个 behavior 不合适，不需要开 PR，不需要等发布——直接改自己的 fork 就行。</p>
+<p>这和 GSD 那种动辄上千行的 mega-sketch 形成鲜明对比。当一个工作流定义文件超过千行，几乎没人真的读完过，更没人改过。最后它变成了一个&quot;你不太清楚它在做什么，但去掉它又怕出事&quot;的玄学组件。</p>
+<h3 id="可组合性">可组合性
+</h3><p>skils 不互相依赖。你可以只装 <code>/tdd</code>，也可以装上全套餐，还能自己写一个新 skill 和它们配合。</p>
+<p>这种设计在传统软件里叫&quot;Unix 哲学&quot;——每个工具做好一件事，通过管道组合。Matt 把同样的思路用在了 agent 工作流定义上。</p>
+<h3 id="模型无关">模型无关
+</h3><p>这是一个经常被忽视但异常重要的点。skills 不绑定 Claude Code、不绑定 Codex、不绑定 Gemini CLI。它们只是结构化的 Markdown 文件，任何能阅读 Markdown 的 agent 都能执行。</p>
+<p>这意味着你的工作流投资不会因为换了一个 agent 工具就作废。这在 2026 年的 AI 编程市场格外重要——模型提供商每个月都在推出新工具，锁定在某一个生态里是危险的。</p>
+<h3 id="从提示词到协议">从&quot;提示词&quot;到&quot;协议&quot;
+</h3><p>这可能是 skills 最深远的影响：它把 AI 编程的<strong>行为准则</strong>从&quot;一段话&quot;变成了&quot;一组文件&quot;。提示词（prompt）是输入时的一次性指令；协议（protocol）是代码库的一部分，版本化管理，团队共享，持续演进。</p>
+<p><code>mattpocock/skills</code> 里的每条 skill 在本质上都是一条&quot;约束&quot;——它不是在告诉 AI&quot;你可以做什么&quot;，而是在说&quot;你必须这样做&quot;。对于没有内置开发纪律的 AI 来说，这些约束恰恰是良性的。</p>
+<h2 id="社区的反应与讨论">社区的反应与讨论
+</h2><p>仓库在几周内飙到 7.7 万 star，但它引发的讨论远不止数据。</p>
+<p>在 Devtalk 论坛上，一位工程师分享了一周的使用体验。他推荐优先装的是 <code>/grill-with-docs</code>——初次使用后，agent 自动生成的 <code>CONTEXT.md</code> 文件显著改善了后续每次 session 的质量。他提到的 <code>/caveman</code> 是一个堪称艺术的作品：如果你已经明确知道自己要什么，这个 skill 能把 agent 的输出压缩到极致——对，就是不废话模式。</p>
+<p>另一位用户在 Reddit 的 r/vibecoding 板块分享了更激进的用法：他每小时跑 5-7 个任务，通过 <code>/grill-me</code> + <code>/prd-to-issues</code> 的 pipeline，把每个功能请求都变成了可追踪的 issue 列表，然后逐个解决。</p>
+<p>当然也有批评声。有人指出 Claude Code 的 Auto Mode 会静默注入系统提示覆盖掉 skills 的行为。也有人质疑 TDD 在超大项目中的实用性——当测试编译就需要 5 分钟时，&ldquo;先写测试&quot;的效率增益会被稀释。</p>
+<p>不过这些讨论本身已经说明了 skills 切入的痛点有多真实。如果只是又一个 prompt 合集，不会有人愿意花一周去测试它。</p>
+<h2 id="开发者还有多少价值">开发者还有多少价值？
+</h2><p>最后一个问题回到开发者自身。</p>
+<p>当 AI 能写测试、写需求、拆任务、重构架构——开发者还做什么？</p>
+<p>Matt 给的答案是：<strong>定义过程</strong>。</p>
+<p>skills 教会我们一件事：在 AI 时代，最有价值的不再是写代码（AI 比你写得好），也不再是写 prompt（prompt 太不稳定），而是<strong>制定规则</strong>——把工程方法论编码成 agent 能理解、能执行的格式。</p>
+<p>能写下 <code>/tdd</code> 的人不需要自己盯着 AI 先写测试还是后写测试，因为规则已经在那里了。能写下 <code>/improve-codebase-architecture</code> 的人不需要每天凌晨三点做架构评审，因为 agent 每天都在扫描。</p>
+<p>这就像泰勒的科学管理应用到编程上——不是替代工匠，而是把工匠的经验提炼成可以复用的流程。</p>
+<p>因此，Matt Pocock 的 skills 还有另一层意义：它是一份开放的<strong>现代 AI 编程工程师手册</strong>。每一个想要在 AI 时代依然做&quot;真正的工程&quot;的人，都应该读一读这些 Markdown 文件——不是为了照搬它们，而是为了学习如何把自己的方法论，变成 agent 能懂的协议。</p>
+<p>当每个人都能&quot;雇佣&quot;一支由 AI agent 组成的开发团队时，真正拉开差距的，将不再是你能写多快的代码，而是你能否设计出让 agent 高效工作的流程。</p>
+<p>这也许是 skills 冲上 GitHub 热榜第一，背后最真实的原因。</p>
+<hr>
+<blockquote>
+<p><strong>项目地址</strong>: <a class="link" href="https://github.com/mattpocock/skills"  target="_blank" rel="noopener"
+    >github.com/mattpocock/skills</a>
+<strong>开发团队</strong>: Matt Pocock（Total TypeScript 作者，前 Vercel/Stately 工程师）
+<strong>开源协议</strong>: MIT
+<strong>使用条件</strong>: 需要 Claude Code、Codex、Gemini CLI、Cursor 等支持 <code>.claude/skills</code> 目录的 AI 编程工具</p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">AI编程</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/tdd/">TDD</a>
+        
+            <a href="/tags/vibe-coding/">Vibe Coding</a>
+        
+            <a href="/tags/ai%E5%B7%A5%E7%A8%8B%E5%8C%96/">AI工程化</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/kimi-k25-vs-claude-code-3-week-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kimi K2.5 vs Claude Code：一个被低估的国产平替，3 周重度实测告诉你差距在哪</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/claude-code-skills-mcp-workflow-deconstruction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-skills-mcp-workflow-deconstruction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/ai-wechat-minigame-full-flow/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/agentmemory-cross-session-memory/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI 编程助手跨会话记忆系统：agentmemory 实测与架构拆解</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/matt-pocock-skills-engineering-vibe-coding\/'; 
+        const pageTitle = 'Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

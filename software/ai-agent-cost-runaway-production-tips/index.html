@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="AI Agent 在后台偷偷烧钱？从多 Agent 架构的真实账单出发，拆解 Token 成本失控的 5 个元凶及 3 个实测有效的控制手段。">
+<title>AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道</title>
+
+<link rel='canonical' href='https://softon.top/software/ai-agent-cost-runaway-production-tips/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道">
+<meta property='og:description' content="AI Agent 在后台偷偷烧钱？从多 Agent 架构的真实账单出发，拆解 Token 成本失控的 5 个元凶及 3 个实测有效的控制手段。">
+<meta property='og:url' content='https://softon.top/software/ai-agent-cost-runaway-production-tips/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='AI编程' /><meta property='article:tag' content='Agent工程' /><meta property='article:tag' content='Token优化' /><meta property='article:tag' content='成本控制' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='生产环境' /><meta property='article:published_time' content='2026-06-30T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-30T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道">
+<meta name="twitter:description" content="AI Agent 在后台偷偷烧钱？从多 Agent 架构的真实账单出发，拆解 Token 成本失控的 5 个元凶及 3 个实测有效的控制手段。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#成本不是线性增长的它是指数跳变的">成本不是线性增长的——它是指数跳变的</a></li>
+    <li><a href="#元凶-1无限制的日志和调试输出">元凶 1：无限制的日志和调试输出</a></li>
+    <li><a href="#元凶-2循环递归agent-自己调用自己">元凶 2：循环递归——Agent 自己调用自己</a></li>
+    <li><a href="#元凶-3对话上下文肥胖症">元凶 3：对话上下文肥胖症</a></li>
+    <li><a href="#元凶-4毫无节制的重试和退火">元凶 4：毫无节制的重试和退火</a></li>
+    <li><a href="#元凶-5多-agent-间的冗余上下文广播">元凶 5：多 Agent 间的冗余上下文广播</a></li>
+    <li><a href="#实战组合拳一个可复用的成本控制飞轮">实战组合拳：一个可复用的成本控制飞轮</a>
+      <ul>
+        <li><a href="#第一步监控">第一步：监控</a></li>
+        <li><a href="#第二步分析">第二步：分析</a></li>
+        <li><a href="#第三步限制">第三步：限制</a></li>
+        <li><a href="#第四步反馈">第四步：反馈</a></li>
+      </ul>
+    </li>
+    <li><a href="#从先烧再说到预算即架构">从&quot;先烧再说&quot;到&quot;预算即架构&quot;</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/ai-agent-cost-runaway-production-tips/">AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-30T00:00:00Z'>
+                    2026-06-30，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：18分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/ai-agent-cost-runaway-production-tips/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#成本不是线性增长的它是指数跳变的">成本不是线性增长的——它是指数跳变的</a></li>
+    <li><a href="#元凶-1无限制的日志和调试输出">元凶 1：无限制的日志和调试输出</a></li>
+    <li><a href="#元凶-2循环递归agent-自己调用自己">元凶 2：循环递归——Agent 自己调用自己</a></li>
+    <li><a href="#元凶-3对话上下文肥胖症">元凶 3：对话上下文肥胖症</a></li>
+    <li><a href="#元凶-4毫无节制的重试和退火">元凶 4：毫无节制的重试和退火</a></li>
+    <li><a href="#元凶-5多-agent-间的冗余上下文广播">元凶 5：多 Agent 间的冗余上下文广播</a></li>
+    <li><a href="#实战组合拳一个可复用的成本控制飞轮">实战组合拳：一个可复用的成本控制飞轮</a>
+      <ul>
+        <li><a href="#第一步监控">第一步：监控</a></li>
+        <li><a href="#第二步分析">第二步：分析</a></li>
+        <li><a href="#第三步限制">第三步：限制</a></li>
+        <li><a href="#第四步反馈">第四步：反馈</a></li>
+      </ul>
+    </li>
+    <li><a href="#从先烧再说到预算即架构">从&quot;先烧再说&quot;到&quot;预算即架构&quot;</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>有一天我检查 Claude Code 的账单，发现一夜之间多了 120 万的输入 token。而那天晚上，我明明只是在睡觉。</p>
+<p>排查后真相大白：我写的一个定时 cron 作业触发了 Agent 自动分析日志的流程，结果日志量比预期大了 10 倍，Agent 被塞进了 80 万 token 的日志上下文，然后它&quot;认真&quot;地分析了每一行——花了大约 <strong>$4.8</strong>。</p>
+<p>不是一笔大钱，但如果这种场景每个月发生 10 次呢？如果有 5 个 Agent 同时跑呢？如果团队 20 个人都用呢？</p>
+<p>AI Agent 最大的谎言不是&quot;它们会取代程序员&quot;，而是&quot;每次调用才几分钱&quot;。</p>
+<h2 id="成本不是线性增长的它是指数跳变的">成本不是线性增长的——它是指数跳变的
+</h2><p>先给一个残酷的数字：我用一个三 Agent 架构（调度 Agent + 编码 Agent + 审查 Agent）处理日常代码维护任务，三个月的账单趋势是这样的：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>月份</th>
+					<th>Agent 调用次数</th>
+					<th>总 Token 用量（M）</th>
+					<th>费用（$）</th>
+					<th>环比增长</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>第 1 月</td>
+					<td>632</td>
+					<td>8.2</td>
+					<td>~$24</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td>第 2 月</td>
+					<td>1,847</td>
+					<td>31.5</td>
+					<td>~$95</td>
+					<td><strong>296%</strong></td>
+			</tr>
+			<tr>
+					<td>第 3 月</td>
+					<td>4,326</td>
+					<td>89.7</td>
+					<td>~$269</td>
+					<td><strong>183%</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>不是线性 3 倍，是指数跳变。第二个月增长了约 3 倍，第三个月又翻了约 2.8 倍——看数字和增长可以理解为 Agent 数量没变、调用场景没变，<strong>但每个 Agent 每轮对话的上下文越来越胖了</strong>。</p>
+<p>这就是 AI Agent 成本失控的典型模式：<strong>调用频率线性增长，但 Token 用量指数膨胀</strong>。</p>
+<p>原因很简单——Agent 是有记忆的。每次对话它都会追加历史记录，上下文窗口越来越胖。你从&quot;单个 prompt/response 对话&quot;进入了&quot;Agent 自主决策 + 多轮工具调用 + 长上下文积累&quot;的新模式，成本的数学规律完全变了。</p>
+<h2 id="元凶-1无限制的日志和调试输出">元凶 1：无限制的日志和调试输出
+</h2><p>上面我那个&quot;睡觉烧掉 $4.8&quot;的故事就是活例子。cron 作业启动 Agent 分析日志 → 日志文件 80 万 token → Agent 全部读进去分析 → Token 直接爆表。</p>
+<p><strong>为什么容易发生：</strong></p>
+<p>大多数 Agent 框架的默认行为是&quot;先理解上下文再行动&quot;。当你的日志文件、调试输出、API 响应被 Agent 捕获时，它不会说&quot;这些重复了、跳过&quot;，它会老老实实地读完每一行。</p>
+<p><strong>解决：限制输入上下文上限</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Claude Code 的 tokens 配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export CLAUDE_CODE_MAX_INPUT_TOKENS</span><span style="color:#f92672">=</span><span style="color:#e6db74">100000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 或者在项目配置中设置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claude config set max_input_tokens 100000</span>
+</span></span></code></pre></div><p>这个配置的意思是：<strong>无论 Agent 遇到多大的输入，只截取前 10 万 token 处理</strong>。配合 <code>truncate</code> 策略，10 万 token 以上的数据直接丢弃。</p>
+<p><strong>但光截取不够，更好的方案是给 Agent 装一个&quot;护栏&quot;：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Agent 的护栏规则（在 agent 配置中定义）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rules:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">input_limits:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">max_file_size_mb: 5        # 拒绝 &gt;5MB 的文件</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">max_log_lines: 500         # 只读取日志前 500 行</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">skip_generated: true       # 跳过 dist/、.next/、build/ 等目录</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">skip_binary: true          # 不读二进制文件</span>
+</span></span></code></pre></div><p>实操中用了这组规则后，那个 cron 作业的 Token 开销从 80 万降到了约 1.2 万——<strong>减少了 98.5%</strong>。</p>
+<h2 id="元凶-2循环递归agent-自己调用自己">元凶 2：循环递归——Agent 自己调用自己
+</h2><p>这是最隐蔽的成本陷阱。你写了一个 Agent A，让它去调用 Agent B，Agent B 发现问题回头找 Agent A 确认，Agent A 再派 Agent C……<strong>这就是一个递归循环，而且没有 break 条件。</strong></p>
+<p>一条真实的循环链：</p>
+<blockquote>
+<p>Agent A（调度）→ 分发给 Agent B（代码审查）→ B 发现代码问题 → 调用 A 确认规则 → A 让 B 参考 C（规则解析器）→ C 的输出又返回给 A → A 再次分发给 B → B 发现 C 的规则和之前冲突 → 再次调用 A……</p>
+</blockquote>
+<p>这条链实际跑了 <strong>47 轮对话、21.3 万 token、花费约 $0.64</strong>。最终结果？没有一个代码变更。全部是&quot;协调&quot;。</p>
+<p><strong>根因：没有限定最大协调深度。</strong></p>
+<p><strong>解决：设定协调树的最大深度</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 多 Agent 协调配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">agent_coordination:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_depth: 3                   # 协调链最多 3 层</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_rounds_per_depth: 2        # 每层最多 2 轮对话</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">escalation_mode: &#34;human&#34;       # 超出后交给人类</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">timeout_minutes: 10            # 每轮超时 10 分钟</span>
+</span></span></code></pre></div><p>加了这些限制后，类似场景的 Token 消耗从 21.3 万降到了 <strong>约 1.8 万</strong>，更重要的是——Agent 不会再无限循环下去了。</p>
+<h2 id="元凶-3对话上下文肥胖症">元凶 3：对话上下文肥胖症
+</h2><p>这是最常见但最容易被忽略的成本陷阱。看一个典型场景：</p>
+<p>你让 Agent 重构一个函数的命名。Agent 打开文件，读取了上下文，修改了 3 行代码，告诉你&quot;已完成&quot;。这个交互可能只消耗了 2,000 tokens。合理。</p>
+<p>但第二天你又让 Agent 处理同一个文件的另一个函数。此时 Agent 说：&ldquo;让我先看看项目背景&rdquo;。它读取了昨天的对话历史、项目 README、package.json、tsconfig.json……这一轮下来可能已经 8,000 tokens 起跳。</p>
+<p><strong>第三周，这个 Agent 的默认上下文已经膨胀到了 30,000+ tokens</strong>——而其中 80% 是三个星期前的对话历史。</p>
+<p><strong>这就是&quot;上下文肥胖症&quot;：Agent 的对话越长，它启动时需要携带的历史上下文就越重，然后对话又变得更长——死亡螺旋。</strong></p>
+<p>Vercel 的 AI SDK 团队在 2025 年的一个分享中提到，他们的生产环境 Agent 有 <strong>60% 的 Token 消耗来自历史上下文而非当前交互</strong>。</p>
+<p><strong>解决：对话上下文分页 + 滚动窗口</strong></p>
+<p>简单的思路是这样的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Agent 对话管理配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">conversation:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strategy: &#34;sliding_window&#34;     # 滑动窗口策略</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_context_tokens: 12000     # 最大上下文 12k tokens</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">recent_window: 4000           # 保留最近 4k tokens 的详细对话</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">summary_budget: 2000          # 之前的内容压缩成 2k tokens 摘要</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">archive_older_than: 7         # 超过 7 天的对话自动归档</span>
+</span></span></code></pre></div><p>核心思想：<strong>不保留所有历史，只保留&quot;当前窗口 + 历史摘要&quot;。</strong> 具体到实现：</p>
+<ul>
+<li>最近 N 轮对话：完整保留</li>
+<li>旧对话：Agent 自己生成摘要，压缩成原大小的 1/10</li>
+<li>天级过期：超过 T 天的对话自动归档到外部队存储</li>
+</ul>
+<p>我在 OpenClaw 的 Agent 配置中用了类似的策略，效果显著：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>优化前</th>
+					<th>优化后</th>
+					<th>变化</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>平均每轮上下文</td>
+					<td>24,800 tokens</td>
+					<td>8,300 tokens</td>
+					<td><strong>-66.5%</strong></td>
+			</tr>
+			<tr>
+					<td>对话框回复质量</td>
+					<td>正常</td>
+					<td>正常</td>
+					<td>未下降</td>
+			</tr>
+			<tr>
+					<td>旧决策召回率</td>
+					<td>100%（记忆完整）</td>
+					<td>92%（依靠摘要）</td>
+					<td>可接受</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>一个平衡点</strong>：上下文压缩到 66% 以内时，质量下降几乎不可感知；超过 80% 的压缩才会影响决策准确性。</p>
+<h2 id="元凶-4毫无节制的重试和退火">元凶 4：毫无节制的重试和退火
+</h2><p>这个模式很常见：Agent 调用 API 失败 → 自动重试 → 又失败 → 退火等待再重试 → 成功。看起来没问题。</p>
+<p>但如果&quot;失败&quot;是因为 Agent 自己的 prompt 写错了呢？</p>
+<p>我踩过这个坑：让一个代码审查 Agent 每天凌晨分析当天的代码变更并生成报告。因为逻辑复杂，Agent 偶尔会输出不完整的 JSON 导致解析失败。框架的设计是<strong>自动重试 5 次</strong>，每次退火 30-60 秒。</p>
+<p>5 次重试 × 每次消耗 8,000 tokens（重新分析）+ 60 秒退火时间 = <strong>40,000 tokens + 5 分钟延迟</strong>，最后生成了一份&quot;第 5 次重试成功&quot;的报告——和第一次的输出几乎没有区别。</p>
+<p><strong>核心问题不在于重试，而在于重试时重新分析了相同的数据。</strong></p>
+<p><strong>解决：失败缓存 + 退火上限</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Agent 重试策略</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">retry:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_attempts: 2               # 最多重试 1 次（共 2 次尝试）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">backoff_strategy: &#34;fixed&#34;     # 固定退火（不用指数，避免无意义等待）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">backoff_seconds: 5            # 5 秒</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cache_intermediate: true      # 缓存中间计算结果</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">on_parse_error: &#34;notify&#34;      # 解析错误不重试，直接通知人类</span>
+</span></span></code></pre></div><p><strong>关键变化</strong>：<code>on_parse_error: &quot;notify&quot;</code>。遇到解析错误时，不自动重试，而是给人发一个通知。这额外的好处是——你很快会注意到 Agent 的 prompt 有问题，而不是让它默默重试 5 次浪费时间和钱。</p>
+<h2 id="元凶-5多-agent-间的冗余上下文广播">元凶 5：多 Agent 间的冗余上下文广播
+</h2><p>在多 Agent 架构中，另一个常见的成本坑是&quot;信息广播&quot;。</p>
+<p>调度 Agent 从项目管理工具拉取了 50 个用户故事的详细描述，然后将这 50 个故事的上下文全部注入到每个子 Agent 的 prompt 中——即使每个子 Agent 只负责其中的 3-5 个。</p>
+<p>我亲眼见过一个场景：调度 Agent 往 3 个子 Agent 各发了 15 万 token 的&quot;项目上下文&quot;，结果子 Agent A 需要其中 1.2 万 token，B 需要 8,000 token，C 需要 2 万 token。<strong>浪费率 92%。</strong></p>
+<p><strong>解决：按需注入 + 引用策略</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 上下文分发策略</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">context_distribution:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strategy: &#34;lazy_on_demand&#34;    # 延迟按需注入</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">default_ref: &#34;path&#34;           # 默认引用方式是文件路径</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">add_full_context: false       # 不自动注入全量上下文</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">context_resolution: &#34;agent&#34;   # 子 Agent 自主决定需要什么上下文</span>
+</span></span></code></pre></div><p><strong>&ldquo;延迟按需注入&quot;的实操方式：</strong></p>
+<p>调度 Agent 不再发送全量上下文，而是发送&quot;引用&rdquo;：</p>
+<pre tabindex="0"><code>任务：重构 items.ts 中的 calcTotalPrice 函数
+上下文引用：
+  - 项目路径：src/utils/items.ts
+  - 相关类型：src/types/order.ts
+  - 依赖函数：src/utils/price.ts
+相关用户故事：US-1023, US-1025（完整描述见项目管理系统 task-1023）
+</code></pre><p>子 Agent 接收到引用后，按需读取相关文件——数据总量减少了 85-95%。</p>
+<h2 id="实战组合拳一个可复用的成本控制飞轮">实战组合拳：一个可复用的成本控制飞轮
+</h2><p>上面 5 个元凶各自有解法，但最有效的是把它们组合成一个持续运行的<strong>成本控制飞轮</strong>：</p>
+<pre tabindex="0"><code>[监控] → [分析] → [限制] → [反馈] → [优化] → [再次监控]
+</code></pre><h3 id="第一步监控">第一步：监控
+</h3><p>用机器不可靠，必须有可量化的监控指标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 关键指标（每个 Agent 实例）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">metrics_to_track:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- &#34;tokens_per_call&#34;          # 每次调用的 Token 消耗</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- &#34;calls_per_session&#34;        # 每轮对话的 API 调用次数</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- &#34;context_size_growth&#34;      # 上下文大小的增长趋势</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- &#34;retry_rate&#34;               # 重试率</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- &#34;cost_per_task&#34;            # 每个任务的实际成本</span>
+</span></span></code></pre></div><p>可以每天跑一个脚本拉取这些指标，或者用现成的工具（如 CodexBar 或 codeburn）监控。</p>
+<h3 id="第二步分析">第二步：分析
+</h3><p>设定告警阈值：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>告警线</th>
+					<th>警告</th>
+					<th>严重</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>单任务 token 消耗</td>
+					<td>&gt;50k token</td>
+					<td>黄色</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td>&gt;200k token</td>
+					<td>—</td>
+					<td>红色</td>
+			</tr>
+			<tr>
+					<td>上下文增长率</td>
+					<td>&gt;20%/轮</td>
+					<td>黄色</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td>&gt;50%/轮</td>
+					<td>—</td>
+					<td>红色</td>
+			</tr>
+			<tr>
+					<td>重试率</td>
+					<td>&gt;15%</td>
+					<td>黄色</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td>&gt;30%</td>
+					<td>—</td>
+					<td>红色</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="第三步限制">第三步：限制
+</h3><p>上面提到的所有限制策略汇总成一个&quot;护栏&quot;：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Agent 成本护栏（生产环境配置）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cost_guardrails:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 输入限制</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_input_tokens: 100000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_file_size: &#34;5MB&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_log_lines: 500</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 重试限制</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_retries: 2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">retry_backoff: &#34;fixed 5s&#34;</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 协调限制</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">agent_coordination:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">max_depth: 3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">max_rounds: 6</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 上下文管理</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">context_strategy: &#34;sliding_window&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_context_tokens: 12000</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 预算限制</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">budget_per_session: 0.50     # 每轮对话预算上限 $0.5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">budget_per_day: 5.00         # 每日预算上限 $5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">budget_alert: &#34;notify&#34;       # 超预算时通知人类</span>
+</span></span></code></pre></div><p>注意 <code>budget_per_session</code> 和 <code>budget_per_day</code>——<strong>给 Agent 设预算</strong>，这和给你的信用卡设额度一样重要。</p>
+<h3 id="第四步反馈">第四步：反馈
+</h3><p>成本数据是信号，不是噪声。每周末花 5 分钟看一下账单：</p>
+<ul>
+<li>哪些 Agent 最贵？→ 检查上下文是否在膨胀</li>
+<li>哪些任务 Token 消耗异常？→ 检查是否有循环/重试</li>
+<li>成本是否持平/下降？→ 是的话维持；增长的话排查</li>
+</ul>
+<h2 id="从先烧再说到预算即架构">从&quot;先烧再说&quot;到&quot;预算即架构&quot;
+</h2><p>这三个月的经历让我对 AI Agent 成本有了新的认识。以前的想法是&quot;先让 Agent 跑起来，成本后面再说&quot;，现在回头看，那时真是天真。没有成本意识的设计，迟早会被账单教育。</p>
+<p><strong>更本质的变化：</strong> 过去三个月里，设计 Agent 架构时最费劲的部分不是功能逻辑，而是<strong>成本预算分配</strong>。</p>
+<p>——这个 Agent 的任务平均 Token 消耗多少？会不会循环调用别的 Agent？它的上下文会膨胀到什么程度？这些问题的答案，直接决定了架构的稳定性和可维护性。</p>
+<p><strong>生产环境 AI Agent 的成熟度，不在于它多能搞定复杂问题，而在于它多大程度上是可控的。</strong> 可以大胆地假设未来，成本控制意识会成为 Agent 工程师的基本素养——就像后端工程师必须懂数据库索引和缓存策略一样。</p>
+<p>回头再看最初那个&quot;睡觉烧掉 $4.8&quot;的故事，现在当然不会发生了。但这不仅仅是省了几块钱的问题——而是<strong>当你知道成本是如何构成的，你设计 Agent 架构的思路都会不一样</strong>。</p>
+<p>你看，省钱往往是理解系统最好的开始。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">AI编程</a>
+        
+            <a href="/tags/agent%E5%B7%A5%E7%A8%8B/">Agent工程</a>
+        
+            <a href="/tags/token%E4%BC%98%E5%8C%96/">Token优化</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC%E6%8E%A7%E5%88%B6/">成本控制</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83/">生产环境</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/codeburn-ai-token-cost-tracker/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">codeburn 实测：你的 AI 编程开销到底去哪了？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/agentmemory-cross-session-memory/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI 编程助手跨会话记忆系统：agentmemory 实测与架构拆解</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/matt-pocock-skills-engineering-vibe-coding/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/kimi-k25-vs-claude-code-3-week-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kimi K2.5 vs Claude Code：一个被低估的国产平替，3 周重度实测告诉你差距在哪</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/claude-code-skills-mcp-workflow-deconstruction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/ai-agent-cost-runaway-production-tips\/'; 
+        const pageTitle = 'AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

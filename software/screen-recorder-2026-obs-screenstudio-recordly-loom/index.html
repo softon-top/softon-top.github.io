@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="免费的 OBS、付费精品 Screen Studio、开源新秀 Recordly、云协作 Loom——四家录屏工具到底该选谁？从费用、平台、生态三个维度拆,给一张能直接照着抄的决策表。">
+<title>录屏工具 4 选 1：OBS / Screen Studio / Recordly / Loom 怎么挑不踩坑</title>
+
+<link rel='canonical' href='https://softon.top/software/screen-recorder-2026-obs-screenstudio-recordly-loom/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="录屏工具 4 选 1：OBS / Screen Studio / Recordly / Loom 怎么挑不踩坑">
+<meta property='og:description' content="免费的 OBS、付费精品 Screen Studio、开源新秀 Recordly、云协作 Loom——四家录屏工具到底该选谁？从费用、平台、生态三个维度拆,给一张能直接照着抄的决策表。">
+<meta property='og:url' content='https://softon.top/software/screen-recorder-2026-obs-screenstudio-recordly-loom/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='录屏' /><meta property='article:tag' content='OBS' /><meta property='article:tag' content='Screen Studio' /><meta property='article:tag' content='Recordly' /><meta property='article:tag' content='Loom' /><meta property='article:tag' content='选型对比' /><meta property='article:published_time' content='2026-05-25T10:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-25T10:00:00&#43;08:00'/>
+<meta name="twitter:title" content="录屏工具 4 选 1：OBS / Screen Studio / Recordly / Loom 怎么挑不踩坑">
+<meta name="twitter:description" content="免费的 OBS、付费精品 Screen Studio、开源新秀 Recordly、云协作 Loom——四家录屏工具到底该选谁？从费用、平台、生态三个维度拆,给一张能直接照着抄的决策表。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一录屏工具这门玄学为什么每年都有人在问该用哪个">一、录屏工具这门玄学:为什么每年都有人在问&quot;该用哪个&quot;</a></li>
+    <li><a href="#二四家拆解不是工具评分是定位拆解">二、四家拆解:不是工具评分,是定位拆解</a>
+      <ul>
+        <li><a href="#obs-studio免费但不傻瓜">OBS Studio:免费但不傻瓜</a></li>
+        <li><a href="#screen-studiomacos-付费精品">Screen Studio:macOS 付费精品</a></li>
+        <li><a href="#recordly开源界的反-screen-studio">Recordly:开源界的&quot;反 Screen Studio&quot;</a></li>
+        <li><a href="#loom云端异步沟通">Loom:云端异步沟通</a></li>
+      </ul>
+    </li>
+    <li><a href="#三三维度对比表费用--平台--生态">三、三维度对比表:费用 / 平台 / 生态</a></li>
+    <li><a href="#四场景化决策你是哪类用户">四、场景化决策:你是哪类用户</a>
+      <ul>
+        <li><a href="#场景-a做-b-站--youtube-教程">场景 A:做 B 站 / YouTube 教程</a></li>
+        <li><a href="#场景-b做-saas-产品-demo--x-推送">场景 B:做 SaaS 产品 demo / X 推送</a></li>
+        <li><a href="#场景-c给客户讲-30-秒为什么这个改稿不对">场景 C:给客户讲 30 秒&quot;为什么这个改稿不对&quot;</a></li>
+        <li><a href="#场景-dlinux-用户开源信仰">场景 D:Linux 用户、开源信仰</a></li>
+        <li><a href="#场景-e全都要又不想付钱">场景 E:全都要、又不想付钱</a></li>
+      </ul>
+    </li>
+    <li><a href="#五几个常被问到的边角问题">五、几个常被问到的边角问题</a></li>
+    <li><a href="#六踩坑提醒四个我反复见到的弯路">六、踩坑提醒:四个我反复见到的弯路</a></li>
+    <li><a href="#七给三类典型用户的最终建议">七、给三类典型用户的最终建议</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/screen-recorder-2026-obs-screenstudio-recordly-loom/">录屏工具 4 选 1：OBS / Screen Studio / Recordly / Loom 怎么挑不踩坑</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-25T10:00:00&#43;08:00'>
+                    2026-05-25，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：15分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/screen-recorder-2026-obs-screenstudio-recordly-loom/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一录屏工具这门玄学为什么每年都有人在问该用哪个">一、录屏工具这门玄学:为什么每年都有人在问&quot;该用哪个&quot;</a></li>
+    <li><a href="#二四家拆解不是工具评分是定位拆解">二、四家拆解:不是工具评分,是定位拆解</a>
+      <ul>
+        <li><a href="#obs-studio免费但不傻瓜">OBS Studio:免费但不傻瓜</a></li>
+        <li><a href="#screen-studiomacos-付费精品">Screen Studio:macOS 付费精品</a></li>
+        <li><a href="#recordly开源界的反-screen-studio">Recordly:开源界的&quot;反 Screen Studio&quot;</a></li>
+        <li><a href="#loom云端异步沟通">Loom:云端异步沟通</a></li>
+      </ul>
+    </li>
+    <li><a href="#三三维度对比表费用--平台--生态">三、三维度对比表:费用 / 平台 / 生态</a></li>
+    <li><a href="#四场景化决策你是哪类用户">四、场景化决策:你是哪类用户</a>
+      <ul>
+        <li><a href="#场景-a做-b-站--youtube-教程">场景 A:做 B 站 / YouTube 教程</a></li>
+        <li><a href="#场景-b做-saas-产品-demo--x-推送">场景 B:做 SaaS 产品 demo / X 推送</a></li>
+        <li><a href="#场景-c给客户讲-30-秒为什么这个改稿不对">场景 C:给客户讲 30 秒&quot;为什么这个改稿不对&quot;</a></li>
+        <li><a href="#场景-dlinux-用户开源信仰">场景 D:Linux 用户、开源信仰</a></li>
+        <li><a href="#场景-e全都要又不想付钱">场景 E:全都要、又不想付钱</a></li>
+      </ul>
+    </li>
+    <li><a href="#五几个常被问到的边角问题">五、几个常被问到的边角问题</a></li>
+    <li><a href="#六踩坑提醒四个我反复见到的弯路">六、踩坑提醒:四个我反复见到的弯路</a></li>
+    <li><a href="#七给三类典型用户的最终建议">七、给三类典型用户的最终建议</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p><strong>摘要：</strong> 不会再被&quot;录屏工具大全&quot;标题党骗。本文按<strong>用户角色</strong>而不是按工具排名,把 OBS、Screen Studio、Recordly、Loom 拆给你看:<strong>自媒体看 OBS,产品经理看 Screen Studio,极客看 Recordly,远程团队看 Loom</strong>——一句话定位完毕,剩下的是细节。</p>
+<h2 id="一录屏工具这门玄学为什么每年都有人在问该用哪个">一、录屏工具这门玄学:为什么每年都有人在问&quot;该用哪个&quot;
+</h2><p>每隔三个月,朋友圈就有人发问:</p>
+<blockquote>
+<p>&ldquo;录个 5 分钟教程,该用啥?QuickTime 不够用,OBS 又太复杂,Loom 还要登录&hellip;&rdquo;</p>
+</blockquote>
+<p>这不是工具不够多。恰恰相反——<strong>录屏工具的赛道,从 2024 年开始彻底分裂了</strong>。</p>
+<p>过去录屏只有一个标准:<strong>能不能录下来</strong>。现在的标准变成了:</p>
+<ul>
+<li>录完<strong>要不要剪辑</strong>?</li>
+<li>录完<strong>鼠标点击要不要自动 zoom</strong>?</li>
+<li>录完<strong>要 mp4 还是要在线链接</strong>?</li>
+<li>录完<strong>要不要团队共享</strong>?</li>
+<li>录完<strong>给客户看还是发 B 站</strong>?</li>
+<li>录完<strong>要不要 AI 转写自动生成字幕</strong>?</li>
+<li>录完<strong>导出体积能不能压到 10MB 以内</strong>?</li>
+</ul>
+<p>每加一道问题,答案就分叉一次。<strong>没有&quot;最好&quot;的录屏工具,只有匹配你工作流的那一个</strong>。</p>
+<p>更关键的是,这几家工具的设计哲学<strong>根本不同</strong>。OBS 假设你懂视频技术,Screen Studio 假设你愿意为颜值付钱,Recordly 假设你愿意折腾,Loom 假设你和团队在不同时区。<strong>用错场景,工具反过来卡你</strong>。</p>
+<p>下面这四家,在 2026 年正好覆盖四种典型场景:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>一句话定位</th>
+					<th>适合谁</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>OBS Studio</strong></td>
+					<td>免费瑞士军刀</td>
+					<td>自媒体 / 直播主</td>
+			</tr>
+			<tr>
+					<td><strong>Screen Studio</strong></td>
+					<td>macOS 付费精品</td>
+					<td>产品经理 / SaaS Demo</td>
+			</tr>
+			<tr>
+					<td><strong>Recordly</strong></td>
+					<td>Screen Studio 的开源平替</td>
+					<td>极客 / 跨平台用户</td>
+			</tr>
+			<tr>
+					<td><strong>Loom</strong></td>
+					<td>云端异步沟通工具</td>
+					<td>远程团队 / 客户协作</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>挑哪个,先看你是哪类人,而不是看哪个工具评分高。下文按这个思路一家一家拆。</p>
+<h2 id="二四家拆解不是工具评分是定位拆解">二、四家拆解:不是工具评分,是定位拆解
+</h2><h3 id="obs-studio免费但不傻瓜">OBS Studio:免费但不傻瓜
+</h3><p>OBS 不是录屏软件,是<strong>多源视频混流引擎</strong>。摄像头、屏幕、浏览器、媒体源,全能塞进同一个画面。这个差异决定了后面所有事情:它的设计原点是&quot;直播&quot;,录屏只是顺带的能力。</p>
+<p><strong>核心优势:</strong></p>
+<ul>
+<li>免费、开源、跨平台(Win/Mac/Linux)</li>
+<li>直播 + 录制双修,直推 YouTube / Twitch / B 站</li>
+<li>插件生态硕大,场景切换、绿幕、虚拟摄像头、转场动画通通有</li>
+<li><strong>录得了任何东西</strong>:屏幕、窗口、摄像头、浏览器源、媒体文件、甚至游戏画面带 GPU 加速</li>
+</ul>
+<p><strong>核心代价:</strong></p>
+<ul>
+<li><strong>学习曲线陡</strong>——场景、源、滤镜、编码器、码率,新手第一次打开会懵 5 分钟</li>
+<li>录完是裸 mp4,<strong>没有自动 zoom、没有光标平滑、没有内置剪辑</strong>——后期要靠 PR / DaVinci 配合</li>
+<li>配置不当容易掉帧,需要懂一点编码器(x264 vs NVENC vs VAAPI vs Apple VT),否则 4K 录制 CPU 会原地起飞</li>
+<li>输出文件大——相同时长比 Screen Studio 体积大 2-3 倍,因为默认编码不激进</li>
+</ul>
+<p><strong>真实场景:</strong> B 站 UP 主录游戏、技术博主录 Vue 开发流程、播客主播做&quot;直播录课同步&quot;——这些场景 OBS 是首选,<strong>因为它一次录制能同时输出本地文件 + 直播流</strong>,而其他工具都做不到。</p>
+<p><strong>适合:</strong> 你已经会一点视频技术,要的是<strong>自由度</strong>而不是开箱即用,愿意花一两个小时把场景预设调好,之后<strong>几年不换</strong>。</p>
+<h3 id="screen-studiomacos-付费精品">Screen Studio:macOS 付费精品
+</h3><p>Screen Studio 是这两年 macOS 上最火的录屏工具,核心卖点就一个词:<strong>Auto Zoom</strong>。</p>
+<p>录制时它默默记录每一次鼠标点击,导出时自动在点击点放大、加缓动、做光标平滑——出来的视频像专业剪辑师手工 zoom 过的产品 demo,毫无颗粒感。这个体验第一次见到的人,90% 都会发&quot;我去这是怎么做的&quot;。</p>
+<p><strong>核心优势:</strong></p>
+<ul>
+<li>自动 zoom + 光标平滑,<strong>5 分钟出一条专业级 demo</strong>——同样的内容用 OBS + 后期至少 30 分钟</li>
+<li>内置剪辑器,卡时间轴拖拽就能切片头片尾、变速、加文字标签</li>
+<li>输出文件体积小(H.265 编码,默认 60fps),发推、上 X / Bluesky 不卡</li>
+<li>摄像头叠加圆形画中画,<strong>直接能套&quot;产品创始人录 demo&quot;模板</strong>,无需后期</li>
+<li>自动从录制流程中提取章节,导出时自动生成 chapter 元数据</li>
+</ul>
+<p><strong>核心代价:</strong></p>
+<ul>
+<li><strong>macOS 独占</strong>,Windows / Linux 用户直接劝退,而且官方明确表示<strong>不打算出其他平台</strong></li>
+<li><strong>付费</strong>:订阅起步约 $15/月,买断版更贵,学生折扣有但不大</li>
+<li>不适合长时间会议录制——它的设计哲学是&quot;短而精的 demo&quot;,<strong>录 1 小时直播能让你的硬盘哭</strong></li>
+<li>多显示器场景偶有 bug,在外接 4K + 内置屏的组合下偶尔会切错源</li>
+</ul>
+<p><strong>真实场景:</strong> Indie Hacker 录 ProductHunt 发布视频、SaaS 产品经理录 changelog demo、技术作家做&quot;3 分钟讲清一个工具&quot;。<strong>核心是&quot;短、快、视觉强&quot;</strong> ——你录了 30 秒别人愿意看完,而不是录了 5 分钟没人点开。</p>
+<p><strong>适合:</strong> 你是 SaaS 产品经理 / 独立开发者 / 设计师,日常要发 demo 给投资人或推特,<strong>视觉精度比成本更重要</strong>——一年订阅费 $180,换 100 条专业 demo,投资回报比远超手剪。</p>
+<h3 id="recordly开源界的反-screen-studio">Recordly:开源界的&quot;反 Screen Studio&quot;
+</h3><p>Recordly 是 2025 年出现的开源录屏工具,GitHub 上明确标注&quot;<strong>A free alternative to Screen Studio</strong>&quot;——它不藏着掖着,就是冲着抢蛋糕来的。</p>
+<p>这种开源对标商业软件的现象,在工具圈不新鲜:OBS 当年对标的是 Wirecast,Krita 对标的是 Photoshop。<strong>Recordly 出现得正是时候</strong>——Screen Studio 把价格定在 $15/月,等于在跨平台用户里画了一道线,这条线就是 Recordly 的市场。</p>
+<p><strong>核心优势:</strong></p>
+<ul>
+<li>开源免费,MIT 协议,二次开发不慌</li>
+<li><strong>跨平台</strong>(macOS / Windows / Linux),Screen Studio 啃不下的 70% 用户它接住</li>
+<li>也有 auto-zoom、光标动效、webcam 叠加,<strong>功能集追平 80% Screen Studio</strong></li>
+<li>输出格式多:mp4、gif、webm,做技术文档配图特别顺手</li>
+<li>代码托管在 GitHub,<strong>有需要可以自己 fork 改</strong>,这点商业工具永远做不到</li>
+</ul>
+<p><strong>核心代价:</strong></p>
+<ul>
+<li>项目年轻,<strong>bug 比商业软件多</strong>,边缘情况(多显示器、HiDPI、ARM Mac)需要折腾</li>
+<li>开源软件的通病:<strong>没有官方支持</strong>,出问题靠 GitHub Issues 排队等</li>
+<li>中文社区基本没有,踩坑得啃英文文档</li>
+<li>渲染速度比 Screen Studio 慢——同样长度视频,导出耗时多 30%-50%</li>
+</ul>
+<p><strong>真实场景:</strong> Linux 桌面用户做开发教程、开源项目作者录贡献者引导、不想给软件付费但又要 zoom 效果的学生群体。<strong>最大的价值是&quot;它在持续追平 Screen Studio&quot;</strong>——每个版本都缩短差距。</p>
+<p><strong>适合:</strong> 你是 Linux 用户 / 开源洁癖 / 不想付订阅费,<strong>愿意拿时间换钱</strong>;或者你是 Windows 用户但又眼馋 Screen Studio 的 zoom 效果——这是目前唯一的解。</p>
+<h3 id="loom云端异步沟通">Loom:云端异步沟通
+</h3><p>Loom 是个&quot;录屏外挂&quot;,它的杀手锏不是录,是<strong>录完直接给一条链接</strong>——对方点开就能看,不用等你压缩、上传、发文件。</p>
+<p>2023 年 Loom 被 Atlassian(就是 Jira 那家)以 9.75 亿美元收购,目的就是把它和 Confluence、Jira 打通——<strong>这家公司的产品方向已经被远程协作绑死</strong>,而不是个人创作。这点决定了 Loom 后续所有更新的优先级。</p>
+<p><strong>核心优势:</strong></p>
+<ul>
+<li>录完即得分享链接,<strong>异步沟通体验吊打邮件附件</strong>——客户点链接看,你这边录完就完事</li>
+<li>自动转写 + AI 摘要,5 分钟视频自动生成 200 字纲要,<strong>懒人福音</strong></li>
+<li>团队 workspace、评论时间戳、看完未看统计,<strong>远程团队协作神器</strong></li>
+<li>浏览器扩展 + 桌面 App 双形态,<strong>录之前不用切换工具</strong></li>
+<li>视频里嵌 emoji 反应、文字标注,接近&quot;实时聊天&quot;的丝滑</li>
+</ul>
+<p><strong>核心代价:</strong></p>
+<ul>
+<li>免费版限制:<strong>最多 25 条视频、单条不超过 5 分钟</strong>——重度使用必上付费</li>
+<li>付费版起步约 <strong>$12.50/月每用户</strong>,团队 5 人就是 $62.5/月,<strong>规模大开销不小</strong></li>
+<li>数据全在云端,<strong>对隐私敏感的项目要慎用</strong>——录到了客户敏感信息就上传给 Loom 服务器了</li>
+<li>离线场景废柴——飞机上录?不存在的,<strong>必须登录</strong></li>
+<li>国内访问偶有抽风——和 Atlassian 全家桶一个待遇,关键时刻掉链子要心理准备</li>
+</ul>
+<p><strong>真实场景:</strong> 跨时区团队 standup 替代视频会议、设计师录改稿反馈给开发、客服录&quot;问题复现&quot;给后端工程师。<strong>核心收益是&quot;省掉了一次会&quot;</strong>——10 分钟 Loom 视频 + 异步评论,等于一次 30 分钟的 Zoom + 后续 10 封邮件。</p>
+<p><strong>适合:</strong> 你是远程团队成员 / 给客户做异步反馈 / 跨部门沟通频繁,<strong>要的不是录得多漂亮,是发得多快、对方看得多顺</strong>。</p>
+<h2 id="三三维度对比表费用--平台--生态">三、三维度对比表:费用 / 平台 / 生态
+</h2><p>横屏看更清楚:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>OBS</th>
+					<th>Screen Studio</th>
+					<th>Recordly</th>
+					<th>Loom</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>价格</strong></td>
+					<td>完全免费</td>
+					<td>$15/月起</td>
+					<td>完全免费</td>
+					<td>免费有限 / $12.50/月</td>
+			</tr>
+			<tr>
+					<td><strong>平台</strong></td>
+					<td>Win / Mac / Linux</td>
+					<td><strong>仅 macOS</strong></td>
+					<td>Win / Mac / Linux</td>
+					<td>Web / Win / Mac (云端)</td>
+			</tr>
+			<tr>
+					<td><strong>学习曲线</strong></td>
+					<td>陡</td>
+					<td>平</td>
+					<td>中</td>
+					<td>平</td>
+			</tr>
+			<tr>
+					<td><strong>自动 zoom</strong></td>
+					<td>❌</td>
+					<td>✅</td>
+					<td>✅</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td><strong>直播能力</strong></td>
+					<td>✅</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td><strong>云分享</strong></td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td><strong>AI 转写</strong></td>
+					<td>❌</td>
+					<td>❌(导出后用其他)</td>
+					<td>❌</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td><strong>离线使用</strong></td>
+					<td>✅</td>
+					<td>✅</td>
+					<td>✅</td>
+					<td>❌(必须登录)</td>
+			</tr>
+			<tr>
+					<td><strong>隐私性</strong></td>
+					<td>✅ 本地</td>
+					<td>✅ 本地</td>
+					<td>✅ 本地</td>
+					<td>⚠️ 云端</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>挑工具的本质,就是<strong>在这九行里选你最在意的两三行</strong>。</p>
+<h2 id="四场景化决策你是哪类用户">四、场景化决策:你是哪类用户
+</h2><h3 id="场景-a做-b-站--youtube-教程">场景 A:做 B 站 / YouTube 教程
+</h3><p><strong>首选 OBS</strong>。直播能力、多源混流、虚拟摄像头一站到位,免费,生态硕大。学习成本投资一次,之后五年不换。</p>
+<h3 id="场景-b做-saas-产品-demo--x-推送">场景 B:做 SaaS 产品 demo / X 推送
+</h3><p><strong>首选 Screen Studio</strong>(如果你 macOS),次选 Recordly(跨平台或不愿付费)。<strong>自动 zoom 是这类视频的命门</strong>——观众没耐心看你慢慢移光标。</p>
+<h3 id="场景-c给客户讲-30-秒为什么这个改稿不对">场景 C:给客户讲 30 秒&quot;为什么这个改稿不对&quot;
+</h3><p><strong>首选 Loom</strong>。录完一条链接发过去,对方在评论区时间戳处留言,远比邮件附件清晰。</p>
+<h3 id="场景-dlinux-用户开源信仰">场景 D:Linux 用户、开源信仰
+</h3><p><strong>Recordly 是目前唯一答案</strong>。OBS 当然能用,但你想要的是 Screen Studio 那种<strong>点完就出片</strong>的体验,只有 Recordly 在做。</p>
+<h3 id="场景-e全都要又不想付钱">场景 E:全都要、又不想付钱
+</h3><p><strong>OBS + 后期手剪</strong>。用 Davinci Resolve 免费版做 zoom、加光标动效——比 Screen Studio 还精,代价是每条视频多花 20 分钟。</p>
+<h2 id="五几个常被问到的边角问题">五、几个常被问到的边角问题
+</h2><p><strong>Q1: QuickTime 不够用吗,为啥还要装?</strong>
+QuickTime 录得了基础内容,但没 zoom、没光标平滑、没剪辑、没分享链接。<strong>它解决的是&quot;能不能&quot;,这四家解决的是&quot;好不好&quot;</strong>。一句话:QuickTime 适合录给自己看的草稿,不适合给别人看的成品。</p>
+<p><strong>Q2: 国内有没有平替?</strong>
+有,比如 EV 录屏、Bandicam、Camtasia 中文版。但这些工具的设计哲学还停留在 2018 年——<strong>没有自动 zoom、没有云端协作、没有 AI 转写</strong>。功能不是不能用,是工作流落后了一代。本文不展开,<strong>核心理由就一个:它们没在 2024 年之后做过质变升级</strong>。</p>
+<p><strong>Q3: 浏览器原生 API 能不能取代这些?</strong>
+<code>navigator.mediaDevices.getDisplayMedia()</code> 这套 API 现在确实能录,但<strong>只是录出原始流</strong>,无 zoom、无剪辑、无导出选项。<strong>适合做轻量级 SaaS 集成</strong>(比如客服系统嵌入录屏反馈),不适合作为日常工具。</p>
+<p><strong>Q4: 苹果 Vision Pro / iPad 上能用吗?</strong>
+短期内别想。这四家里只有 Loom 出过 iOS App,而且是简化版。<strong>桌面级录屏的复杂度,目前 iPadOS 还撑不住</strong>。</p>
+<h2 id="六踩坑提醒四个我反复见到的弯路">六、踩坑提醒:四个我反复见到的弯路
+</h2><p><strong>坑 1:用 OBS 录 demo 给老板看</strong>——录完一看裸光标乱动、没有 zoom,观感拉胯。<strong>OBS 是直播工具,不是 demo 工具</strong>,场景错了。</p>
+<p><strong>坑 2:在 Windows / Linux 上想用 Screen Studio</strong>——它压根没出 Windows 版,以后大概率也不会出。直接看 Recordly。</p>
+<p><strong>坑 3:用 Loom 录技术深度内容</strong>——5 分钟限制 + 云端依赖,<strong>不适合录 30 分钟的代码讲解</strong>。换 OBS 或 Recordly。</p>
+<p><strong>坑 4:Recordly 当生产工具用</strong>——它还在快速迭代,<strong>重要项目录之前先短录一段做冒烟测试</strong>,别录到第 30 分钟才发现崩溃丢稿。这个建议对所有开源新工具都适用——<strong>信任度跟着版本号走</strong>,Recordly 现在还在 v0.x 阶段。</p>
+<h2 id="七给三类典型用户的最终建议">七、给三类典型用户的最终建议
+</h2><p><strong>如果你是&quot;啥都想试一下&quot;的尝鲜党:</strong>
+先装 OBS——<strong>因为它是天花板</strong>,装上之后再去看其他工具,你会很清楚它们各自帮你省了多少事。这种&quot;先看复杂版再用简化版&quot;的认知顺序,比反过来省时间。</p>
+<p><strong>如果你是&quot;我要立刻能用&quot;的实用党:</strong>
+macOS 用户直接 Screen Studio 试用版,Windows / Linux 用户直接 Recordly。<strong>不要再纠结&quot;哪个更好&quot;</strong>——你今天录的视频,明天就能产出价值,选型这事别花超过 30 分钟。</p>
+<p><strong>如果你是&quot;我要给团队配标准工具&quot;的负责人:</strong>
+Loom 团队版,加一个 OBS 作为&quot;高质量内容&quot;备选。<strong>两套工具覆盖 95% 团队场景</strong>——日常异步沟通走 Loom,正式 demo / 培训走 OBS 录完上传 Confluence。</p>
+<hr>
+<p>录屏工具这事,<strong>别迷信&quot;最强的&quot;那个</strong>。你每天花在录屏上的时间,可能就 5 分钟;但选错工具的代价,是每条视频多花 20 分钟剪辑——一年下来够看完一季《沙丘》还有富余。</p>
+<p>更深一层的逻辑是:<strong>工具是流程的延伸,不是流程的本体</strong>。你的输出节奏、目标受众、协作方式,<strong>先想清楚这三件事,再选工具</strong>——这个顺序反过来,就会陷入&quot;试遍所有工具但什么都没产出&quot;的怪圈。</p>
+<p>如果你是 macOS 重度用户,我之前写过 <a class="link" href="/tutorials/sharex-cloudflare-r2-screenshot-auto-upload/" >ShareX + Cloudflare R2 自动上传截图</a>,把&quot;录屏 + 截图 + 自动分发&quot;打通,工作流就完整了。</p>
+<p>至于今天这四家——<strong>先按场景对号入座装一个,用一周再说</strong>。试用一周比看十篇评测都准。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%BD%95%E5%B1%8F/">录屏</a>
+        
+            <a href="/tags/obs/">OBS</a>
+        
+            <a href="/tags/screen-studio/">Screen Studio</a>
+        
+            <a href="/tags/recordly/">Recordly</a>
+        
+            <a href="/tags/loom/">Loom</a>
+        
+            <a href="/tags/%E9%80%89%E5%9E%8B%E5%AF%B9%E6%AF%94/">选型对比</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/screen-recorder-2026-obs-screenstudio-recordly-loom\/'; 
+        const pageTitle = '录屏工具 4 选 1：OBS \/ Screen Studio \/ Recordly \/ Loom 怎么挑不踩坑';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

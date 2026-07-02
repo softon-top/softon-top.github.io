@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Claude Pro 一个月 $20、Cursor Pro 一个月 $20、阿里云 Coding Plan Pro 一个月 $50——单看价格阿里最贵。但当我把 90000 次请求拆开算、把 Qwen3.5-Plus / Kimi-K2.5 / GLM-5 / MiniMax-M2.5 在 Claude Code 里挨个跑了一周,账面立刻翻转。本文记录从订阅、配置 ANTHROPIC_BASE_URL、踩到 sk-sp- 那个坑、到模型实战横评的完整过程,顺便把额度逻辑和 5 小时滚动恢复机制讲清楚。">
+<title>阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</title>
+
+<link rel='canonical' href='https://softon.top/software/alibaba-cloud-coding-plan-pro-50usd-real-test/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪">
+<meta property='og:description' content="Claude Pro 一个月 $20、Cursor Pro 一个月 $20、阿里云 Coding Plan Pro 一个月 $50——单看价格阿里最贵。但当我把 90000 次请求拆开算、把 Qwen3.5-Plus / Kimi-K2.5 / GLM-5 / MiniMax-M2.5 在 Claude Code 里挨个跑了一周,账面立刻翻转。本文记录从订阅、配置 ANTHROPIC_BASE_URL、踩到 sk-sp- 那个坑、到模型实战横评的完整过程,顺便把额度逻辑和 5 小时滚动恢复机制讲清楚。">
+<meta property='og:url' content='https://softon.top/software/alibaba-cloud-coding-plan-pro-50usd-real-test/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='阿里云' /><meta property='article:tag' content='Coding Plan' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Qwen3.5' /><meta property='article:tag' content='Kimi K2.5' /><meta property='article:tag' content='AI 编程' /><meta property='article:tag' content='成本对比' /><meta property='article:published_time' content='2026-05-21T11:30:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-21T11:30:00&#43;08:00'/>
+<meta name="twitter:title" content="阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪">
+<meta name="twitter:description" content="Claude Pro 一个月 $20、Cursor Pro 一个月 $20、阿里云 Coding Plan Pro 一个月 $50——单看价格阿里最贵。但当我把 90000 次请求拆开算、把 Qwen3.5-Plus / Kimi-K2.5 / GLM-5 / MiniMax-M2.5 在 Claude Code 里挨个跑了一周,账面立刻翻转。本文记录从订阅、配置 ANTHROPIC_BASE_URL、踩到 sk-sp- 那个坑、到模型实战横评的完整过程,顺便把额度逻辑和 5 小时滚动恢复机制讲清楚。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一先把账摆清楚20-vs-20-vs-50贵的反而便宜">一、先把账摆清楚:$20 vs $20 vs $50,贵的反而便宜</a>
+      <ul>
+        <li><a href="#11-为什么这件事值得专门写一篇文章">1.1 为什么这件事值得专门写一篇文章</a></li>
+        <li><a href="#12-这一周我跑了什么真实工作量">1.2 这一周我跑了什么真实工作量</a></li>
+      </ul>
+    </li>
+    <li><a href="#二原理为什么按次计费是个反直觉但更合理的设计">二、原理:为什么「按次计费」是个反直觉但更合理的设计</a>
+      <ul>
+        <li><a href="#21-token-计费-vs-次数计费">2.1 Token 计费 vs 次数计费</a></li>
+        <li><a href="#22-为什么阿里敢这么定价">2.2 为什么阿里敢这么定价</a></li>
+        <li><a href="#23-5-小时滚动恢复一个反直觉的好设计">2.3 5 小时滚动恢复:一个反直觉的好设计</a></li>
+        <li><a href="#24-横向对比7-家国内-coding-plan-谁最值">2.4 横向对比:7 家国内 Coding Plan 谁最值</a></li>
+        <li><a href="#25-vs-海外claude-pro--cursor--github-copilot-的取舍">2.5 vs 海外:Claude Pro / Cursor / GitHub Copilot 的取舍</a></li>
+      </ul>
+    </li>
+    <li><a href="#三配置把-claude-code-接到-coding-plan只有-4-步">三、配置:把 Claude Code 接到 Coding Plan,<strong>只有 4 步</strong></a>
+      <ul>
+        <li><a href="#31-步骤一订阅-pro-套餐lite-已停售别再找">3.1 步骤一:订阅 Pro 套餐(Lite 已停售,别再找)</a></li>
+        <li><a href="#32-步骤二获取专属-api-key-和-base-url关键">3.2 步骤二:获取专属 API Key 和 Base URL(关键)</a></li>
+        <li><a href="#33-步骤三配置-claude-code-环境变量">3.3 步骤三:配置 Claude Code 环境变量</a></li>
+        <li><a href="#34-步骤四验证--切换模型">3.4 步骤四:验证 + 切换模型</a></li>
+        <li><a href="#35-给-cursor--cline--openclaw-配-openai-协议">3.5 给 Cursor / Cline / OpenClaw 配 OpenAI 协议</a></li>
+        <li><a href="#36-同一台机器同时挂-claude-pro-和-coding-plan用-direnv">3.6 同一台机器同时挂 Claude Pro 和 Coding Plan?用 direnv</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实战横评四个模型在同一份真任务上谁更能打">四、实战横评:四个模型在同一份「真任务」上谁更能打</a>
+      <ul>
+        <li><a href="#41-一个让我对-kimi-路转粉的小细节">4.1 一个让我对 Kimi 路转粉的小细节</a></li>
+        <li><a href="#411-kimi-的200k-上下文不是噱头是工作流的解放">4.1.1 Kimi 的「200k 上下文」不是噱头,是工作流的解放</a></li>
+        <li><a href="#42-一个让我对-minimax-失望的瞬间">4.2 一个让我对 MiniMax 失望的瞬间</a></li>
+        <li><a href="#43-一个-qwen3-coder-plus-让我意外的细节">4.3 一个 Qwen3-Coder-Plus 让我意外的细节</a></li>
+        <li><a href="#44-关于中文上下文的一个诚实评测">4.4 关于「中文上下文」的一个诚实评测</a></li>
+      </ul>
+    </li>
+    <li><a href="#五踩坑实录6-个让我多花了-2-小时的真实坑">五、踩坑实录:6 个让我多花了 2 小时的真实坑</a>
+      <ul>
+        <li><a href="#坑-1把-sk-sp--写成-sk-账单一直在按量扣">坑 1:把 <code>sk-sp-</code> 写成 <code>sk-</code>,账单一直在按量扣</a></li>
+        <li><a href="#坑-2base-url-区域搞错要么-ap-southeast-1-要么-cn-">坑 2:Base URL 区域搞错,要么 ap-southeast-1 要么 cn-&hellip;</a></li>
+        <li><a href="#坑-3claude-code-启动时不读环境变量只读-claudesettingsjson">坑 3:Claude Code 启动时不读环境变量,只读 <code>~/.claude/settings.json</code></a></li>
+        <li><a href="#坑-4把-sk-sp--key-拿去自动化脚本调-api被封了">坑 4:把 <code>sk-sp-</code> Key 拿去自动化脚本调 API,被封了</a></li>
+        <li><a href="#坑-55h-6000-次额度被连续工具调用吃光">坑 5:5h 6000 次额度被「连续工具调用」吃光</a></li>
+        <li><a href="#坑-6周一凌晨周额度重置时正在跑的会话会瞬间获得-45000-次">坑 6:周一凌晨周额度重置时,正在跑的会话会瞬间获得 45000 次</a></li>
+        <li><a href="#坑-7多账号互踩套餐额度共享假象">坑 7:多账号互踩,套餐额度共享假象</a></li>
+        <li><a href="#坑-8claude-code-的-skills-用了一个比官方-sonnet-慢的国产模型体感差距很大">坑 8:Claude Code 的 Skills 用了一个比官方 Sonnet 慢的国产模型,体感差距很大</a></li>
+      </ul>
+    </li>
+    <li><a href="#六什么人不适合-coding-plan">六、什么人不适合 Coding Plan</a>
+      <ul>
+        <li><a href="#51-反向场景这一周-claude-pro-还能解决什么-coding-plan-解决不了的">5.1 反向场景:这一周 Claude Pro 还能解决什么 Coding Plan 解决不了的</a></li>
+      </ul>
+    </li>
+    <li><a href="#七给打算下单的你的-5-条速记">七、给打算下单的你的 5 条速记</a></li>
+    <li><a href="#八迁移指南从-claude-pro-平滑切到-coding-plan3-步走完">八、迁移指南:从 Claude Pro 平滑切到 Coding Plan,3 步走完</a>
+      <ul>
+        <li><a href="#751-第一步零风险双-token-共存">7.5.1 第一步(零风险):双 token 共存</a></li>
+        <li><a href="#752-第二步低风险把不重要项目全切到-coding-plan">7.5.2 第二步(低风险):把不重要项目全切到 Coding Plan</a></li>
+        <li><a href="#753-第三步中风险降级-claude-pro-到-pay-as-you-go">7.5.3 第三步(中风险):降级 Claude Pro 到 Pay-as-you-go</a></li>
+      </ul>
+    </li>
+    <li><a href="#九实际工作流四个模型一天怎么轮班">九、实际工作流:四个模型一天怎么轮班</a>
+      <ul>
+        <li><a href="#81-早上-900-1200--重构--设计阶段主力-kimi-k25">8.1 早上 9:00-12:00 — 重构 / 设计阶段(主力 kimi-k2.5)</a></li>
+        <li><a href="#82-中午-1300-1700--干活阶段主力-qwen3-coder-plus">8.2 中午 13:00-17:00 — 干活阶段(主力 qwen3-coder-plus)</a></li>
+        <li><a href="#83-傍晚-1800-1900--验证--审视阶段切回-kimi-k25">8.3 傍晚 18:00-19:00 — 验证 / 审视阶段(切回 kimi-k2.5)</a></li>
+        <li><a href="#84-晚上-2100-2300--写作--文档阶段主力-qwen35-plus">8.4 晚上 21:00-23:00 — 写作 / 文档阶段(主力 qwen3.5-plus)</a></li>
+        <li><a href="#85-一天总结">8.5 一天总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#十faq订阅前你最想知道的-10-个问题">十、FAQ:订阅前你最想知道的 10 个问题</a></li>
+    <li><a href="#十一进阶3-个让-coding-plan-额度再多扛-2-倍的小技巧">十一、进阶:3 个让 Coding Plan 额度再多扛 2 倍的小技巧</a>
+      <ul>
+        <li><a href="#111-用-skill-作为代理合并多个-tool_use">11.1 用 Skill 作为「代理」,合并多个 tool_use</a></li>
+        <li><a href="#112-长会话记得-clear别让上下文一路拖到底">11.2 长会话记得 <code>/clear</code>,别让上下文一路拖到底</a></li>
+        <li><a href="#113-多模型接力不同阶段用不同模型才是价位答案">11.3 多模型接力:不同阶段用不同模型才是价位答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#十二什么场景下-coding-plan-反而不够香">十二、什么场景下 Coding Plan 反而不够香?</a>
+      <ul>
+        <li><a href="#121-你是一报到底型开发者">12.1 你是「一报到底」型开发者</a></li>
+        <li><a href="#122-你需要调-sonnet-45-的高端品味写-pr">12.2 你需要调 Sonnet 4.5 的「高端品味」写 PR</a></li>
+        <li><a href="#123-你在做需要怎么说怎么估的商业决策">12.3 你在做需要「怎么说」、「怎么估」的商业决策</a></li>
+      </ul>
+    </li>
+    <li><a href="#十三写在最后这一波coding-plan的本质是什么">十三、写在最后:这一波「Coding Plan」的本质是什么</a>
+      <ul>
+        <li><a href="#131-三句话送给还在犹豫的你">13.1 三句话送给还在犹豫的你</a></li>
+        <li><a href="#132-我之后还会写什么">13.2 我之后还会写什么</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/alibaba-cloud-coding-plan-pro-50usd-real-test/">阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-21T11:30:00&#43;08:00'>
+                    2026-05-21，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：49分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/alibaba-cloud-coding-plan-pro-50usd-real-test/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一先把账摆清楚20-vs-20-vs-50贵的反而便宜">一、先把账摆清楚:$20 vs $20 vs $50,贵的反而便宜</a>
+      <ul>
+        <li><a href="#11-为什么这件事值得专门写一篇文章">1.1 为什么这件事值得专门写一篇文章</a></li>
+        <li><a href="#12-这一周我跑了什么真实工作量">1.2 这一周我跑了什么真实工作量</a></li>
+      </ul>
+    </li>
+    <li><a href="#二原理为什么按次计费是个反直觉但更合理的设计">二、原理:为什么「按次计费」是个反直觉但更合理的设计</a>
+      <ul>
+        <li><a href="#21-token-计费-vs-次数计费">2.1 Token 计费 vs 次数计费</a></li>
+        <li><a href="#22-为什么阿里敢这么定价">2.2 为什么阿里敢这么定价</a></li>
+        <li><a href="#23-5-小时滚动恢复一个反直觉的好设计">2.3 5 小时滚动恢复:一个反直觉的好设计</a></li>
+        <li><a href="#24-横向对比7-家国内-coding-plan-谁最值">2.4 横向对比:7 家国内 Coding Plan 谁最值</a></li>
+        <li><a href="#25-vs-海外claude-pro--cursor--github-copilot-的取舍">2.5 vs 海外:Claude Pro / Cursor / GitHub Copilot 的取舍</a></li>
+      </ul>
+    </li>
+    <li><a href="#三配置把-claude-code-接到-coding-plan只有-4-步">三、配置:把 Claude Code 接到 Coding Plan,<strong>只有 4 步</strong></a>
+      <ul>
+        <li><a href="#31-步骤一订阅-pro-套餐lite-已停售别再找">3.1 步骤一:订阅 Pro 套餐(Lite 已停售,别再找)</a></li>
+        <li><a href="#32-步骤二获取专属-api-key-和-base-url关键">3.2 步骤二:获取专属 API Key 和 Base URL(关键)</a></li>
+        <li><a href="#33-步骤三配置-claude-code-环境变量">3.3 步骤三:配置 Claude Code 环境变量</a></li>
+        <li><a href="#34-步骤四验证--切换模型">3.4 步骤四:验证 + 切换模型</a></li>
+        <li><a href="#35-给-cursor--cline--openclaw-配-openai-协议">3.5 给 Cursor / Cline / OpenClaw 配 OpenAI 协议</a></li>
+        <li><a href="#36-同一台机器同时挂-claude-pro-和-coding-plan用-direnv">3.6 同一台机器同时挂 Claude Pro 和 Coding Plan?用 direnv</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实战横评四个模型在同一份真任务上谁更能打">四、实战横评:四个模型在同一份「真任务」上谁更能打</a>
+      <ul>
+        <li><a href="#41-一个让我对-kimi-路转粉的小细节">4.1 一个让我对 Kimi 路转粉的小细节</a></li>
+        <li><a href="#411-kimi-的200k-上下文不是噱头是工作流的解放">4.1.1 Kimi 的「200k 上下文」不是噱头,是工作流的解放</a></li>
+        <li><a href="#42-一个让我对-minimax-失望的瞬间">4.2 一个让我对 MiniMax 失望的瞬间</a></li>
+        <li><a href="#43-一个-qwen3-coder-plus-让我意外的细节">4.3 一个 Qwen3-Coder-Plus 让我意外的细节</a></li>
+        <li><a href="#44-关于中文上下文的一个诚实评测">4.4 关于「中文上下文」的一个诚实评测</a></li>
+      </ul>
+    </li>
+    <li><a href="#五踩坑实录6-个让我多花了-2-小时的真实坑">五、踩坑实录:6 个让我多花了 2 小时的真实坑</a>
+      <ul>
+        <li><a href="#坑-1把-sk-sp--写成-sk-账单一直在按量扣">坑 1:把 <code>sk-sp-</code> 写成 <code>sk-</code>,账单一直在按量扣</a></li>
+        <li><a href="#坑-2base-url-区域搞错要么-ap-southeast-1-要么-cn-">坑 2:Base URL 区域搞错,要么 ap-southeast-1 要么 cn-&hellip;</a></li>
+        <li><a href="#坑-3claude-code-启动时不读环境变量只读-claudesettingsjson">坑 3:Claude Code 启动时不读环境变量,只读 <code>~/.claude/settings.json</code></a></li>
+        <li><a href="#坑-4把-sk-sp--key-拿去自动化脚本调-api被封了">坑 4:把 <code>sk-sp-</code> Key 拿去自动化脚本调 API,被封了</a></li>
+        <li><a href="#坑-55h-6000-次额度被连续工具调用吃光">坑 5:5h 6000 次额度被「连续工具调用」吃光</a></li>
+        <li><a href="#坑-6周一凌晨周额度重置时正在跑的会话会瞬间获得-45000-次">坑 6:周一凌晨周额度重置时,正在跑的会话会瞬间获得 45000 次</a></li>
+        <li><a href="#坑-7多账号互踩套餐额度共享假象">坑 7:多账号互踩,套餐额度共享假象</a></li>
+        <li><a href="#坑-8claude-code-的-skills-用了一个比官方-sonnet-慢的国产模型体感差距很大">坑 8:Claude Code 的 Skills 用了一个比官方 Sonnet 慢的国产模型,体感差距很大</a></li>
+      </ul>
+    </li>
+    <li><a href="#六什么人不适合-coding-plan">六、什么人不适合 Coding Plan</a>
+      <ul>
+        <li><a href="#51-反向场景这一周-claude-pro-还能解决什么-coding-plan-解决不了的">5.1 反向场景:这一周 Claude Pro 还能解决什么 Coding Plan 解决不了的</a></li>
+      </ul>
+    </li>
+    <li><a href="#七给打算下单的你的-5-条速记">七、给打算下单的你的 5 条速记</a></li>
+    <li><a href="#八迁移指南从-claude-pro-平滑切到-coding-plan3-步走完">八、迁移指南:从 Claude Pro 平滑切到 Coding Plan,3 步走完</a>
+      <ul>
+        <li><a href="#751-第一步零风险双-token-共存">7.5.1 第一步(零风险):双 token 共存</a></li>
+        <li><a href="#752-第二步低风险把不重要项目全切到-coding-plan">7.5.2 第二步(低风险):把不重要项目全切到 Coding Plan</a></li>
+        <li><a href="#753-第三步中风险降级-claude-pro-到-pay-as-you-go">7.5.3 第三步(中风险):降级 Claude Pro 到 Pay-as-you-go</a></li>
+      </ul>
+    </li>
+    <li><a href="#九实际工作流四个模型一天怎么轮班">九、实际工作流:四个模型一天怎么轮班</a>
+      <ul>
+        <li><a href="#81-早上-900-1200--重构--设计阶段主力-kimi-k25">8.1 早上 9:00-12:00 — 重构 / 设计阶段(主力 kimi-k2.5)</a></li>
+        <li><a href="#82-中午-1300-1700--干活阶段主力-qwen3-coder-plus">8.2 中午 13:00-17:00 — 干活阶段(主力 qwen3-coder-plus)</a></li>
+        <li><a href="#83-傍晚-1800-1900--验证--审视阶段切回-kimi-k25">8.3 傍晚 18:00-19:00 — 验证 / 审视阶段(切回 kimi-k2.5)</a></li>
+        <li><a href="#84-晚上-2100-2300--写作--文档阶段主力-qwen35-plus">8.4 晚上 21:00-23:00 — 写作 / 文档阶段(主力 qwen3.5-plus)</a></li>
+        <li><a href="#85-一天总结">8.5 一天总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#十faq订阅前你最想知道的-10-个问题">十、FAQ:订阅前你最想知道的 10 个问题</a></li>
+    <li><a href="#十一进阶3-个让-coding-plan-额度再多扛-2-倍的小技巧">十一、进阶:3 个让 Coding Plan 额度再多扛 2 倍的小技巧</a>
+      <ul>
+        <li><a href="#111-用-skill-作为代理合并多个-tool_use">11.1 用 Skill 作为「代理」,合并多个 tool_use</a></li>
+        <li><a href="#112-长会话记得-clear别让上下文一路拖到底">11.2 长会话记得 <code>/clear</code>,别让上下文一路拖到底</a></li>
+        <li><a href="#113-多模型接力不同阶段用不同模型才是价位答案">11.3 多模型接力:不同阶段用不同模型才是价位答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#十二什么场景下-coding-plan-反而不够香">十二、什么场景下 Coding Plan 反而不够香?</a>
+      <ul>
+        <li><a href="#121-你是一报到底型开发者">12.1 你是「一报到底」型开发者</a></li>
+        <li><a href="#122-你需要调-sonnet-45-的高端品味写-pr">12.2 你需要调 Sonnet 4.5 的「高端品味」写 PR</a></li>
+        <li><a href="#123-你在做需要怎么说怎么估的商业决策">12.3 你在做需要「怎么说」、「怎么估」的商业决策</a></li>
+      </ul>
+    </li>
+    <li><a href="#十三写在最后这一波coding-plan的本质是什么">十三、写在最后:这一波「Coding Plan」的本质是什么</a>
+      <ul>
+        <li><a href="#131-三句话送给还在犹豫的你">13.1 三句话送给还在犹豫的你</a></li>
+        <li><a href="#132-我之后还会写什么">13.2 我之后还会写什么</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>周一中午,我的 Claude Pro 又一次在 <code>/usage</code> 里跳出红色横条:<strong>「You&rsquo;ve reached your usage limit. Try again in 4 hours 23 minutes.」</strong></p>
+<p>这是这个月第三次。我还没写完一个 PR。</p>
+<p>隔壁工位的小哥端着咖啡飘过来:「你还在用 Claude 官方订阅啊?换阿里云 Coding Plan 啊兄弟,$50 一个月,90000 次请求,Kimi、Qwen、GLM、MiniMax 随便切,5 小时一个滚动桶,我已经一个月没见到 rate limit 了。」</p>
+<p>我:「贵啊,Claude Pro 才 $20。」</p>
+<p>他:「那是你没算账。」</p>
+</blockquote>
+<p>那天下午我下单了 Pro 套餐。一周后回头看,<strong>这笔账确实算反了</strong>。本文把整个过程——订阅、配置 <code>ANTHROPIC_BASE_URL</code>、被 <code>sk-sp-</code> 那个坑卡了 40 分钟、四个模型在同一份代码任务上的真实表现、以及一个我至今觉得反直觉的「5 小时滚动恢复」机制——一次写清楚。</p>
+<p>读完你可以判断:<strong>你到底应不应该把 Claude Pro 那 $20 升级到这个 $50</strong>。</p>
+<h2 id="一先把账摆清楚20-vs-20-vs-50贵的反而便宜">一、先把账摆清楚:$20 vs $20 vs $50,贵的反而便宜
+</h2><p>绝大多数人看 Coding Plan 第一眼就劝退,理由都是「比 Claude Pro 贵一倍多」。这是典型的<strong>只看月费不看额度</strong>的误判。</p>
+<p>我把三家主流方案放在一张表里(数据截至 2026-05-20):</p>
+<p><img src="https://img.softon.top/2026/05/21/192307-948a79-alibaba-codingplan-img-01.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_01"
+	
+	
+></p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>月费</th>
+					<th>名义额度</th>
+					<th>真实可用</th>
+					<th>模型</th>
+					<th>中国可用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Claude Pro</td>
+					<td>$20</td>
+					<td>「约 45 条消息/5h」</td>
+					<td>Sonnet 平均 ~50 条消息上限,长上下文吃满后 5h 锁死</td>
+					<td>Sonnet 4.5</td>
+					<td>走代理</td>
+			</tr>
+			<tr>
+					<td>Cursor Pro</td>
+					<td>$20</td>
+					<td>500 次 fast request/月</td>
+					<td>复杂任务 1 次 prompt = 多次 fast,常 200 多就吃完</td>
+					<td>GPT-5 / Sonnet 4.5</td>
+					<td>走代理</td>
+			</tr>
+			<tr>
+					<td>阿里云 Coding Plan Pro</td>
+					<td>$50</td>
+					<td>90000 次/月,45000 次/周,6000 次/5h</td>
+					<td>单次提问消耗 5-30 次额度,日常一天 1500-3000 次足够</td>
+					<td>Qwen3.5-Plus / Kimi-K2.5 / GLM-5 / MiniMax-M2.5 + Qwen3-Coder-Plus 等</td>
+					<td><strong>直连国内骨干</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>注意第三栏「真实可用」。<strong>Claude Pro 的「45 条」不是 45 次工具调用</strong>——是「45 个用户 prompt」。在 Claude Code 里,一个 prompt 后台会跑十几次 tool call,每个 tool call 都吃 token,Sonnet 一旦上 64K 上下文,你打三五个长 prompt 就触顶。</p>
+<p>而阿里 Coding Plan 的「90000 次」是按<strong>模型调用次数</strong>算——也就是 Claude Code 后台每次发出的那一发 HTTP 请求。这两个口径完全不在一个量级。</p>
+<blockquote>
+<p><strong>关键认知:阿里 Coding Plan 一次「请求」≈ Claude Pro 一条 prompt 内部的一个 tool round。前者 90000,后者大约 45/5h。你自己除一下。</strong></p>
+</blockquote>
+<p>我自己跑了一周的实测数据(在同一台 M2 MacBook Pro 上):</p>
+<ul>
+<li>周日:重构一个 React 组件库,8 个文件,Claude Code 全程 Sonnet 4.5——<strong>消耗 482 次请求</strong></li>
+<li>周二:接一个 Postgres 迁移,带 Skill + MCP 联动,跑了一下午——<strong>消耗 1830 次请求</strong></li>
+<li>周四:写本文配套的一个长篇 markdown,边写边让 AI 验证术语——<strong>消耗 364 次请求</strong></li>
+</ul>
+<p>合计一周大约 8000 次,折算下来一个月 ~32000 次,<strong>Pro 套餐 90000 次的额度我用了 36%</strong>。换算单价:<code>$50 / 32000 ≈ $0.0016 一次请求</code>。这个数字按 Anthropic API 直接调用的话,你大概能买到 6000 次同等复杂度的调用——<strong>Coding Plan 的折算价是按量 API 的 1/5 左右</strong>。</p>
+<p>更关键的是 Claude Pro 那条「5 小时锁死」的红线消失了。中间我连续跑过 4 小时 Playwright 自动化抓取,没有触顶,也没有任何降速。</p>
+<p>如果你和我一样,日常工作流是:</p>
+<ul>
+<li>Claude Code 长会话(Skill + MCP 一堆)</li>
+<li>偶尔切一下 Cursor 写老前端</li>
+<li>项目里有大量长上下文重构</li>
+</ul>
+<p>那 Coding Plan Pro 这 $50,<strong>一个月帮你省下来的「等额度恢复」时间至少值 $200</strong>。</p>
+<h3 id="11-为什么这件事值得专门写一篇文章">1.1 为什么这件事值得专门写一篇文章
+</h3><p>你现在百度「阿里云 Coding Plan」,会刷出 50 篇标题党。<strong>90% 都是营销稿,5% 是搬运官方文档,剩下 5% 是首月 7.9 元的羊毛号召</strong>。我看完一圈,没有一篇回答了我下单前最想知道的三个问题:</p>
+<ol>
+<li><strong>每天用真实负载,$50/月到底够不够?</strong>——所有评测都在说「90000 次很多」,但没人告诉你「90000 次能扛住几小时 Playwright 自动化 + 全仓库重构 + 写文档」</li>
+<li><strong>国产四大开源模型在 Claude Code 里实战表现差多少?</strong>——所有评测都跑 SWE-Bench 那种学术数据集,但我每天写的是 React + Postgres + Fastify,不是 SWE-Bench</li>
+<li><strong>从 Claude Pro 切过来,会不会有「降级感」?</strong>——这是我最纠结的,毕竟 Sonnet 4.5 的「品味」是真的好</li>
+</ol>
+<p>这篇文章是我自掏腰包($50 + 一周时间)给这三个问题做的实测报告。<strong>没有合作、没有羊毛、没有 referral code</strong>——单纯被 Claude Pro 那个红色 rate limit 横条逼到崩溃后的迁移笔记。</p>
+<h3 id="12-这一周我跑了什么真实工作量">1.2 这一周我跑了什么真实工作量
+</h3><p>为了让数字有可比性,我列一下这一周的真实负载:</p>
+<ul>
+<li><strong>周一</strong>:Hugo 博客主题改版,2 个 layout + 4 个 partial,带响应式调试 → 643 次请求</li>
+<li><strong>周二</strong>:OpenClaw 一个新 Skill 的开发 + 测试 + 文档,含 MCP 集成 → 1830 次请求(全天最大头)</li>
+<li><strong>周三</strong>:阅读 + 改一个 1.2 万行的 Go 项目代码,debug 一个并发 bug → 920 次请求</li>
+<li><strong>周四</strong>:写本文配套素材验证 + 几篇短文章 → 364 次请求</li>
+<li><strong>周五</strong>:OAuth2 那个横评实验(详见第四节)→ 480 次请求</li>
+<li><strong>周六</strong>:NAS 上一个备份脚本调优,顺便迁移到 systemd → 215 次请求</li>
+<li><strong>周日</strong>:写两篇社交平台图文(小红书 + 公众号)→ 280 次请求</li>
+</ul>
+<p><strong>周合计 ~4732 次,折合月度 ~20000 次,Pro 套餐用掉 22%</strong>。这是「中等偏上」开发者的负载——不是 996 在跑批,但也绝不是周末玩票。</p>
+<p>顺便吐个槽:我这种负载放在 Claude Pro 上,<strong>周二那天就足够触顶 3 次以上</strong>——单单 Skill + MCP 联动那一段,Sonnet 4.5 一晚上就能耗光全天额度。</p>
+<h2 id="二原理为什么按次计费是个反直觉但更合理的设计">二、原理:为什么「按次计费」是个反直觉但更合理的设计
+</h2><p>这部分有点理论,但绕不开,因为它直接决定你<strong>会不会被坑爆额度</strong>。</p>
+<p><img src="https://img.softon.top/2026/05/21/192309-62539a-alibaba-codingplan-img-02.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_02"
+	
+	
+></p>
+<h3 id="21-token-计费-vs-次数计费">2.1 Token 计费 vs 次数计费
+</h3><p>绝大多数 AI Plan(Claude API、OpenAI API、ChatGPT Pro、Cursor)是按 <strong>Token</strong> 算钱。这意味着:</p>
+<ul>
+<li>同一个 prompt,上下文越长,扣得越多</li>
+<li>Claude Code 里一次 <code>read</code> 一份 5000 行的代码文件,瞬间烧掉 ~30k token</li>
+<li>你完全没法在事前预估「这次操作要花多少」</li>
+</ul>
+<p>阿里 Coding Plan 是按 <strong>次数</strong> 算。一次 HTTP 请求,不管你这次塞了 1k token 还是 200k token,都算一次。这听起来很「亏」(短请求亏了),但实际工作流里:</p>
+<blockquote>
+<p><strong>AI 编程的 95% 痛点是「长上下文请求」,而不是「请求数量」</strong>。</p>
+</blockquote>
+<p>举个例子。你让 AI 重构一个 component,它会:</p>
+<ol>
+<li><code>read</code> 文件 → 50k token in,1k token out</li>
+<li><code>analyze</code> 调用 → 51k token in,3k token out</li>
+<li><code>edit</code> 调用 → 53k token in,2k token out</li>
+<li><code>verify</code> 调用 → 54k token in,500 token out</li>
+</ol>
+<p>按 Token 算这是 ~210k input + 6.5k output,Claude Sonnet 4.5 价格 <code>$3/M input + $15/M output</code>,<strong>单次大约 $0.73</strong>。
+按次数算这是 4 次请求,<strong>单次大约 $0.0064 × 4 = $0.026</strong>。</p>
+<p>差距 28 倍。</p>
+<h3 id="22-为什么阿里敢这么定价">2.2 为什么阿里敢这么定价
+</h3><p>不是阿里慈善,是它的成本结构不同:</p>
+<ul>
+<li><strong>Qwen / GLM / Kimi 都是开源模型</strong>,阿里在自己的 IDC 里跑推理,边际成本远低于 Anthropic 调 Claude</li>
+<li>4 个模型互为备份,任何一家容量满了立刻调度——<strong>用户感知不到 rate limit</strong></li>
+<li>90000 次额度看着大,但<strong>绝大多数用户用不完</strong>——典型 SaaS 套餐的「均摊定价」</li>
+</ul>
+<p>阿里用「按次计费」捆绑「固定月费」,本质上是把波动的 API 成本风险<strong>自己接下来</strong>。这对不会精打细算 token 的开发者来说是巨大利好——你再也不用看着 Claude Code 的 token 计数器肉疼。</p>
+<h3 id="23-5-小时滚动恢复一个反直觉的好设计">2.3 5 小时滚动恢复:一个反直觉的好设计
+</h3><p>阿里 Pro 套餐有三层额度:</p>
+<ul>
+<li>每 5 小时:6000 次</li>
+<li>每周:45000 次</li>
+<li>每月:90000 次</li>
+</ul>
+<p>5 小时这一层是<strong>滚动恢复</strong>的——不是每 5 小时整点重置。官方文档原话:</p>
+<blockquote>
+<p><strong>每分钟自动释放 5 小时前消耗的额度。例:10:00 使用 100 次 → 15:00 恢复 100 次;10:30 使用 50 次 → 15:30 恢复 50 次。</strong></p>
+</blockquote>
+<p>这意味着你<strong>永远不会被 rate limit 卡住一动不动</strong>。Claude Pro 的「5 小时窗口」是固定 bucket,触顶就锁死 4 小时;阿里这个是<strong>漏斗</strong>,一直在自动放水。我那 4 小时 Playwright 自动化,后台显示已经用掉了 4500 次,<strong>前 1500 次额度其实已经在第 4 小时的时候开始陆续释放</strong>,所以最高峰也就跑到 4500/6000,根本没触顶。</p>
+<blockquote>
+<p><strong>这是按次数计费才能玩出来的游戏——按 token 计费根本没法做这种细粒度滚动</strong>。</p>
+</blockquote>
+<h3 id="24-横向对比7-家国内-coding-plan-谁最值">2.4 横向对比:7 家国内 Coding Plan 谁最值
+</h3><p>这一年国内 Coding Plan 卷得飞起。我顺手把主流的几家放在一起对比一下(数据截至 2026-05-20,<strong>仅看 Pro 档</strong>):</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>厂商</th>
+					<th>月费</th>
+					<th>模型</th>
+					<th>月额度</th>
+					<th>限速窗口</th>
+					<th>备注</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>阿里云百炼 Pro</td>
+					<td>$50</td>
+					<td>Qwen3.5 / Kimi / GLM / MiniMax</td>
+					<td>90000 次</td>
+					<td>5h 6000 次滚动</td>
+					<td>唯一支持四模型自由切换</td>
+			</tr>
+			<tr>
+					<td>智谱 GLM Coding Pro</td>
+					<td>¥199</td>
+					<td>仅 GLM-5 / GLM-4.7</td>
+					<td>30000 次</td>
+					<td>5h 2000 次</td>
+					<td>单模型,数学强</td>
+			</tr>
+			<tr>
+					<td>火山方舟豆包 Pro</td>
+					<td>¥328</td>
+					<td>仅豆包系列</td>
+					<td>200000 token/天</td>
+					<td>按 token 计费</td>
+					<td>字节出品,中文创作强</td>
+			</tr>
+			<tr>
+					<td>Kimi 独立 Plan</td>
+					<td>¥199</td>
+					<td>仅 Kimi-K2.5</td>
+					<td>100k token/月</td>
+					<td>按 token 计费</td>
+					<td>长上下文专精</td>
+			</tr>
+			<tr>
+					<td>腾讯混元 Pro</td>
+					<td>¥299</td>
+					<td>仅混元</td>
+					<td>50000 次</td>
+					<td>5h 4000 次</td>
+					<td>微信生态深度集成</td>
+			</tr>
+			<tr>
+					<td>百度千帆</td>
+					<td>¥499</td>
+					<td>文心 + ERNIE-X</td>
+					<td>不透明</td>
+					<td>不透明</td>
+					<td>企业向,不推荐个人</td>
+			</tr>
+			<tr>
+					<td>MiniMax Token Plan</td>
+					<td>$39</td>
+					<td>全模态(含图/音/视频)</td>
+					<td>60M token</td>
+					<td>按 token</td>
+					<td>创作向,不是编程向</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>核心差异</strong>:</p>
+<ul>
+<li><strong>阿里是唯一「一份订阅,四个模型自由切」</strong>——其他家全是单家自营</li>
+<li><strong>按次 vs 按 Token 是定价哲学之争</strong>——阿里、智谱、腾讯、混元站「次数」阵营,豆包、Kimi、MiniMax 站「token」阵营</li>
+<li><strong>模型品牌</strong>:Kimi 长上下文最强,但单家订阅 $199 ≈ ¥1450 才能买到 Kimi 一家;阿里 Pro $50 ≈ ¥360 就能用上 Kimi-K2.5,<strong>纯靠「Kimi 这一项」就回本</strong></li>
+</ul>
+<p>如果你只用一家模型,选对应官方。如果你像我一样<strong>习惯切换试错</strong>,阿里这套「四合一」是当下唯一选择。</p>
+<h3 id="25-vs-海外claude-pro--cursor--github-copilot-的取舍">2.5 vs 海外:Claude Pro / Cursor / GitHub Copilot 的取舍
+</h3><p>海外阵营这一波我一并列在这里,免得你两边来回比。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>月费</th>
+					<th>模型</th>
+					<th>名义额度</th>
+					<th>海外可用</th>
+					<th>国内体感</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Claude Pro</td>
+					<td>$20</td>
+					<td>Sonnet 4.5 + Opus(限)</td>
+					<td>「~45 条/5h」</td>
+					<td>✅</td>
+					<td>走代理 / 经常 ban 卡</td>
+			</tr>
+			<tr>
+					<td>Claude Max($100)</td>
+					<td>$100</td>
+					<td>Sonnet 4.5 + Opus</td>
+					<td>Pro 的 5x</td>
+					<td>✅</td>
+					<td>同上</td>
+			</tr>
+			<tr>
+					<td>Cursor Pro</td>
+					<td>$20</td>
+					<td>GPT-5 / Sonnet 4.5</td>
+					<td>500 次 fast/月</td>
+					<td>✅</td>
+					<td>走代理</td>
+			</tr>
+			<tr>
+					<td>Cursor Ultra</td>
+					<td>$200</td>
+					<td>同上</td>
+					<td>不限 fast</td>
+					<td>✅</td>
+					<td>走代理</td>
+			</tr>
+			<tr>
+					<td>GitHub Copilot Pro</td>
+					<td>$19</td>
+					<td>GPT-5 / Sonnet 4.5</td>
+					<td>不限补全 + 50 次 chat/天</td>
+					<td>✅</td>
+					<td>走代理</td>
+			</tr>
+			<tr>
+					<td>Gemini Code Assist</td>
+					<td>$19</td>
+					<td>Gemini 2.5 Pro</td>
+					<td>不限补全</td>
+					<td>❌ 大陆需特殊网络</td>
+					<td>不稳</td>
+			</tr>
+			<tr>
+					<td><strong>阿里云 Coding Plan Pro</strong></td>
+					<td>$50</td>
+					<td>国产四杰</td>
+					<td>90000 次/月</td>
+					<td>仅亚太</td>
+					<td><strong>国内骨干直连,无需代理</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>国内开发者最大的隐藏价值:无需代理,直连</strong>。</p>
+<p>我用 Claude Pro 那年,<strong>至少 30% 的时间在解决「连不上」</strong>——VPN 切线路、Cloudflare Worker 转发、自建代理。每次出差住酒店都要重新调网络。阿里 Coding Plan 直接走国内骨干,延迟 &lt; 50ms,在地铁里都能用。</p>
+<p>这一项「时间成本」我给它估值:<strong>$30/月</strong>——加进去 Claude Pro 实际成本应该是 $50,和阿里平价。如果再算上「被卡 rate limit 的时间」,阿里反而更便宜。</p>
+<h2 id="三配置把-claude-code-接到-coding-plan只有-4-步">三、配置:把 Claude Code 接到 Coding Plan,<strong>只有 4 步</strong>
+</h2><p>理论说完,上手实操。整个流程我跑过两次(一次没看清文档踩坑,一次照着官方做),最快 8 分钟搞定。</p>
+<p><img src="https://img.softon.top/2026/05/21/192311-d422a2-alibaba-codingplan-img-03.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_03"
+	
+	
+></p>
+<h3 id="31-步骤一订阅-pro-套餐lite-已停售别再找">3.1 步骤一:订阅 Pro 套餐(Lite 已停售,别再找)
+</h3><p>打开:<code>https://modelstudio.console.alibabacloud.com/ap-southeast-1/?tab=globalset#/efm/coding_plan</code></p>
+<p><strong>注意两个细节:</strong></p>
+<ol>
+<li>自 2026-03-20 起 <strong>Lite 套餐停止接受新订单</strong>——网上很多老教程还在推荐 Lite,别看了</li>
+<li>RAM 子账号需要主账号先授权(权限管理 → 添加用户 → 授予管理员权限),纯个人用直接主账号订阅最快</li>
+</ol>
+<p>下单完成,你会拿到一把<strong>专属 API Key</strong>。注意!!!</p>
+<h3 id="32-步骤二获取专属-api-key-和-base-url关键">3.2 步骤二:获取专属 API Key 和 Base URL(关键)
+</h3><p>这是我踩坑最深的地方。Coding Plan 的 API Key 和百炼的按量 API Key <strong>完全不通用</strong>:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>类型</th>
+					<th>API Key 前缀</th>
+					<th>Base URL</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Coding Plan 专属</td>
+					<td><code>sk-sp-xxxxx</code></td>
+					<td><code>https://coding-intl.dashscope.aliyuncs.com/...</code></td>
+			</tr>
+			<tr>
+					<td>百炼按量计费</td>
+					<td><code>sk-xxxxx</code></td>
+					<td><code>https://dashscope-intl.aliyuncs.com/...</code></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>用错了会发生什么?</strong>——按量计费正常扣钱,Coding Plan 额度纹丝不动。我第一次配错就这样,直到第二天看账单发现「我不是订阅了 $50/月吗,怎么还在按量扣 ¥27?」才反应过来。</p>
+<p>正确做法:</p>
+<ol>
+<li>进 Coding Plan 页面,顶部 tab 切到「<strong>Coding Plan 专属 Key</strong>」</li>
+<li>复制以 <code>sk-sp-</code> 开头的那一把</li>
+<li>记下 Base URL(下一步要用):
+<ul>
+<li><strong>Anthropic 兼容协议</strong>(给 Claude Code 用):<code>https://coding-intl.dashscope.aliyuncs.com/apps/anthropic</code></li>
+<li><strong>OpenAI 兼容协议</strong>(给 Cursor/Cline 用):<code>https://coding-intl.dashscope.aliyuncs.com/v1</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="33-步骤三配置-claude-code-环境变量">3.3 步骤三:配置 Claude Code 环境变量
+</h3><p>Claude Code 通过 <code>ANTHROPIC_BASE_URL</code> 和 <code>ANTHROPIC_AUTH_TOKEN</code> 两个环境变量切换上游。</p>
+<p><strong>macOS / Linux</strong>(zsh / bash 通用)在 <code>~/.zshrc</code> 或 <code>~/.bashrc</code> 末尾加:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 阿里云 Coding Plan Pro - Anthropic 协议入口</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://coding-intl.dashscope.aliyuncs.com/apps/anthropic&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_AUTH_TOKEN</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sk-sp-你的实际 Key&#34;</span>
+</span></span></code></pre></div><p>然后 <code>source ~/.zshrc</code> 或新开一个终端。</p>
+<p><strong>Windows PowerShell</strong> 在 <code>$PROFILE</code> 里加:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">$env:ANTHROPIC_BASE_URL</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://coding-intl.dashscope.aliyuncs.com/apps/anthropic&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">$env:ANTHROPIC_AUTH_TOKEN</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sk-sp-你的实际 Key&#34;</span>
+</span></span></code></pre></div><h3 id="34-步骤四验证--切换模型">3.4 步骤四:验证 + 切换模型
+</h3><p>最简单的验证方式——开 Claude Code 跑一句:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">claude --print &#34;用一句话告诉我你是谁、跑在哪个模型上&#34;</span>
+</span></span></code></pre></div><p>正常情况会返回类似:</p>
+<pre tabindex="0"><code>我是基于 Qwen3.5-Plus 的 AI 助手,通过 Anthropic Messages 协议为你服务。
+</code></pre><p>如果返回 401 / 403 → API Key 错了,大概率是没换成 <code>sk-sp-</code> 开头的那把。
+如果返回「I&rsquo;m Claude, made by Anthropic」→ 环境变量没生效,Claude Code 还在走官方 endpoint。</p>
+<p><strong>切模型</strong>——Claude Code 启动后输入 <code>/model</code>,会拉一个列表。Coding Plan 当前可见的模型(2026-05 最新):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">qwen3.5-plus              # 推荐,带视觉,中文最强</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">kimi-k2.5                 # 长上下文王者,200k 不抖</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">glm-5                     # 数学和代码逻辑稳</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MiniMax-M2.5              # 中文创作最有「灵气」</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qwen3-coder-plus          # 纯代码任务最快</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qwen3-max-2026-01-23      # 最大杯,慢但稳</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">qwen3-coder-next          # 实验版,日常别用</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">glm-4.7                   # 老版备用</span>
+</span></span></code></pre></div><p>我目前的工作流:</p>
+<ul>
+<li><strong>写代码</strong>:默认 <code>qwen3-coder-plus</code>,响应快、token 准</li>
+<li><strong>重构 / 设计</strong>:切 <code>kimi-k2.5</code>,长上下文吃整个仓库</li>
+<li><strong>写文档</strong>:<code>qwen3.5-plus</code>,中文最自然</li>
+<li><strong>当 Qwen 系列罢工</strong>:fallback 到 <code>glm-5</code></li>
+</ul>
+<h3 id="35-给-cursor--cline--openclaw-配-openai-协议">3.5 给 Cursor / Cline / OpenClaw 配 OpenAI 协议
+</h3><p>上面讲的是 Anthropic 协议(Claude Code 用)。如果你用 Cursor 或 Cline,要切到 OpenAI 兼容协议:</p>
+<p><strong>Cursor</strong>(<code>Settings → Models → Override OpenAI Base URL</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Base URL: https://coding-intl.dashscope.aliyuncs.com/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">API Key: sk-sp-你的实际 Key</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Model: qwen3-coder-plus  (手动填,Cursor 不会自动识别)</span>
+</span></span></code></pre></div><p><strong>Cline</strong>(VS Code 插件,设置里):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">API Provider: OpenAI Compatible</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Base URL: https://coding-intl.dashscope.aliyuncs.com/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">API Key: sk-sp-你的实际 Key</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Model ID: qwen3.5-plus</span>
+</span></span></code></pre></div><p><strong>OpenClaw</strong>(我自己日常用的,配置在 <code>~/.openclaw/config.toml</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[models.aliyun-coding-plan]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">provider</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;openai&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">base_url</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://coding-intl.dashscope.aliyuncs.com/v1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">api_key</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sk-sp-你的实际 Key&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">models</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">[&#34;qwen3.5-plus&#34;, &#34;kimi-k2.5&#34;, &#34;glm-5&#34;, &#34;qwen3-coder-plus&#34;]</span>
+</span></span></code></pre></div><p><strong>所有 OpenAI 兼容客户端的统一公式</strong>:</p>
+<pre tabindex="0"><code>base_url = https://coding-intl.dashscope.aliyuncs.com/v1
+api_key = sk-sp-...
+</code></pre><p>记住这两行,你就能把 Coding Plan 接到地球上 90% 的 AI 编程工具上。</p>
+<h3 id="36-同一台机器同时挂-claude-pro-和-coding-plan用-direnv">3.6 同一台机器同时挂 Claude Pro 和 Coding Plan?用 direnv
+</h3><p>我电脑上同时有两套环境——某些客户项目必须用 Anthropic 官方(NDA),日常项目用 Coding Plan。直接 export 环境变量会冲突,我用 <code>direnv</code> 按目录切:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># ~/projects/client-x/.envrc (用 Anthropic 官方)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://api.anthropic.com&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_AUTH_TOKEN</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sk-ant-xxxxx&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ~/projects/personal/.envrc (用 Coding Plan)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://coding-intl.dashscope.aliyuncs.com/apps/anthropic&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_AUTH_TOKEN</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sk-sp-xxxxx&#34;</span>
+</span></span></code></pre></div><p><code>cd</code> 到不同目录自动切环境,Claude Code 启动时自动读取。<strong>这是切多套订阅最干净的方案</strong>,不用每次 <code>source</code> 不同 rc 文件。</p>
+<h2 id="四实战横评四个模型在同一份真任务上谁更能打">四、实战横评:四个模型在同一份「真任务」上谁更能打
+</h2><p>光配置完意思不大,实战才见真章。我准备了一份<strong>真实工作场景</strong>——给一个开源项目(<code>fastify-typebox-starter</code>)加 OAuth2 登录:</p>
+<p><img src="https://img.softon.top/2026/05/21/192312-e1173b-alibaba-codingplan-img-04.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_04"
+	
+	
+></p>
+<ul>
+<li>输入:仓库根目录 + 一份 <code>requirements.md</code></li>
+<li>任务:实现 GitHub OAuth2 登录,带回调、session、单元测试</li>
+<li>评估:首发可用率(直接跑通)、代码质量(架构合理度)、token 效率(消耗 vs 完成度)</li>
+<li>工具:同一个 Claude Code,同一个 prompt,只切 <code>/model</code></li>
+</ul>
+<p>跑完结果(每个模型连跑 3 次取最佳):</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>首发可用</th>
+					<th>代码风格</th>
+					<th>错误恢复</th>
+					<th>总额度消耗</th>
+					<th>主观体感</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>qwen3.5-plus</td>
+					<td>2/3</td>
+					<td>中规中矩</td>
+					<td>强,会自己 grep 错误</td>
+					<td>~280 次</td>
+					<td>「中文老师」型,稳</td>
+			</tr>
+			<tr>
+					<td>kimi-k2.5</td>
+					<td>3/3</td>
+					<td>最优雅,会写注释</td>
+					<td>极强,200k 上下文一次抓全</td>
+					<td>~340 次</td>
+					<td>「资深架构师」型,慢但准</td>
+			</tr>
+			<tr>
+					<td>glm-5</td>
+					<td>2/3</td>
+					<td>偏冗长</td>
+					<td>一般,容易掉 step</td>
+					<td>~310 次</td>
+					<td>「认真的实习生」型,需要盯</td>
+			</tr>
+			<tr>
+					<td>MiniMax-M2.5</td>
+					<td>1/3</td>
+					<td>风格跳脱</td>
+					<td>弱,容易跑偏</td>
+					<td>~420 次</td>
+					<td>「天马行空」型,代码任务不推荐</td>
+			</tr>
+			<tr>
+					<td>qwen3-coder-plus</td>
+					<td>3/3</td>
+					<td>极简、纯代码</td>
+					<td>中等</td>
+					<td>~190 次</td>
+					<td>「闷头干活」型,首选</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我的总结:<strong>纯写代码 = qwen3-coder-plus,需要架构思考 = kimi-k2.5,中文文档 = qwen3.5-plus,MiniMax 留给写小说</strong>。</p>
+<h3 id="41-一个让我对-kimi-路转粉的小细节">4.1 一个让我对 Kimi 路转粉的小细节
+</h3><p>跑测试用例的时候,<code>qwen3-coder-plus</code> 把数据库连接的 <code>Promise&lt;void&gt;</code> 写成了 <code>Promise&lt;Db&gt;</code>,导致 jest 报错。我把 <code>/model</code> 切到 <code>kimi-k2.5</code>,只说了一句:</p>
+<pre tabindex="0"><code>跑测试报错,看下 src/db.ts 和 tests/auth.test.ts,自己 debug
+</code></pre><p>它做了三件事:</p>
+<ol>
+<li><code>read tests/auth.test.ts</code>——看测试预期</li>
+<li><code>read src/db.ts</code>——找类型定义</li>
+<li><strong>直接 grep 整个 src 目录下所有 <code>Promise&lt;</code> 出现位置,定位到第 4 处错配</strong></li>
+</ol>
+<p>并且在最终改完之后,<strong>主动加了一行注释</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#75715e">// 注意: 这里返回 Promise&lt;void&gt; 是为了和 connection pool 的 close() 签名对齐,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 不要图方便改成 Promise&lt;Db&gt;——会让 jest 的 afterAll hook 一直 hang
+</span></span></span></code></pre></div><p><strong>这种「为下一个改这段代码的人留信号」的能力</strong>,我在 Claude Sonnet 4.5 上才偶尔见到一次,但在 Kimi 上首发就出现。它的 200k 上下文不是装饰品。</p>
+<h3 id="411-kimi-的200k-上下文不是噱头是工作流的解放">4.1.1 Kimi 的「200k 上下文」不是噱头,是工作流的解放
+</h3><p>顺便补一段 Kimi-K2.5 的上下文实测。我故意造了个极端场景:</p>
+<ul>
+<li>把 OpenClaw 整个 <code>gateway/</code> 目录(~1.4M 字符,~340k token)塞给它</li>
+<li>让它「找出所有用了 deprecated 的 <code>tool.exec_legacy()</code> 接口的地方」</li>
+</ul>
+<p>结果:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>是否完成</th>
+					<th>耗时</th>
+					<th>找到的 hit</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>qwen3-coder-plus</td>
+					<td>❌ 上下文截断,只读了前 30%</td>
+					<td>12s</td>
+					<td>4/14</td>
+			</tr>
+			<tr>
+					<td>qwen3.5-plus</td>
+					<td>❌ 同上</td>
+					<td>18s</td>
+					<td>5/14</td>
+			</tr>
+			<tr>
+					<td>glm-5</td>
+					<td>❌ 同上</td>
+					<td>22s</td>
+					<td>6/14</td>
+			</tr>
+			<tr>
+					<td><strong>kimi-k2.5</strong></td>
+					<td>✅ 全量读完</td>
+					<td>47s</td>
+					<td><strong>14/14</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>Kimi 那一刻让我想起 2024 年第一次用 Claude 200k 上下文的震撼——<strong>它是真的把所有文件吃下去之后做整体推理,而不是 RAG 检索拼接</strong>。</p>
+<p>我现在的工作流改了:<strong>每次跑「全仓库分析」类任务,默认切 kimi-k2.5,跑完再切回 qwen3-coder-plus 写实现</strong>。这一招把 Coding Plan 的价值压榨到了极致。</p>
+<h3 id="42-一个让我对-minimax-失望的瞬间">4.2 一个让我对 MiniMax 失望的瞬间
+</h3><p>同一个 OAuth 任务,我让 MiniMax-M2.5 试试。它给我返回了一段:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#75715e">// 让我们用一种更优雅的方式来处理 OAuth flow ✨
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// (此处省略 200 行带 emoji 注释的代码)
+</span></span></span></code></pre></div><p>代码倒是能跑,但<strong>它把 session 写到了内存的 Map 里</strong>,完全无视我 requirements.md 里的「使用 Redis」。问它为什么,它回答:</p>
+<pre tabindex="0"><code>内存方案更适合开发阶段,Redis 我们后面再加 :)
+</code></pre><p>我:&hellip;&hellip;</p>
+<p>MiniMax 在中文创作和图像理解上很强,但<strong>写工程代码时太「文艺」</strong>。如果你要让 AI 配合严格规范干活,它不是首选。</p>
+<h3 id="43-一个-qwen3-coder-plus-让我意外的细节">4.3 一个 Qwen3-Coder-Plus 让我意外的细节
+</h3><p>这是个我没预料到的发现。我让它写一个 <code>debounce</code> 函数,要求支持 leading + trailing + maxWait,完全没说类型。它默认输出了一份<strong>带完整 TypeScript 类型的版本</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">DebounceOptions</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">leading?</span>: <span style="color:#66d9ef">boolean</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">trailing?</span>: <span style="color:#66d9ef">boolean</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">maxWait?</span>: <span style="color:#66d9ef">number</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">DebouncedFunction</span>&lt;<span style="color:#f92672">T</span> <span style="color:#a6e22e">extends</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">...args</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">any</span><span style="color:#960050;background-color:#1e0010">[])</span> <span style="color:#960050;background-color:#1e0010">=</span>&gt; <span style="color:#66d9ef">any</span><span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>  (...<span style="color:#a6e22e">args</span>: <span style="color:#66d9ef">Parameters</span>&lt;<span style="color:#f92672">T</span>&gt;)<span style="color:#f92672">:</span> <span style="color:#a6e22e">ReturnType</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cancel</span><span style="color:#f92672">:</span> () <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">void</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">flush</span><span style="color:#f92672">:</span> () <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">ReturnType</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">debounce</span>&lt;<span style="color:#f92672">T</span> <span style="color:#a6e22e">extends</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">...args</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">any</span><span style="color:#960050;background-color:#1e0010">[])</span> <span style="color:#960050;background-color:#1e0010">=</span>&gt; <span style="color:#66d9ef">any</span><span style="color:#f92672">&gt;</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fn</span>: <span style="color:#66d9ef">T</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">wait</span>: <span style="color:#66d9ef">number</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">options</span>: <span style="color:#66d9ef">DebounceOptions</span> <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">DebouncedFunction</span>&lt;<span style="color:#f92672">T</span>&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// ... 省略实现
+</span></span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>完全是 Lodash 的接口签名</strong>,没让它参考任何代码,<strong>纯粹是训练数据里见过的痕迹</strong>。这种「行业标准品味」是开源模型最被低估的能力——它见过太多生产代码了。</p>
+<p>相比之下,Claude Sonnet 4.5 这种任务通常会写一个「更优雅但不熟悉的」版本,需要你回过头说「按 lodash 接口来」才会改。<strong>Qwen3-Coder-Plus 的「随大流」反而是工程实践里最省心的特性</strong>。</p>
+<h3 id="44-关于中文上下文的一个诚实评测">4.4 关于「中文上下文」的一个诚实评测
+</h3><p>国产模型的最大优势其实不是代码,而是<strong>中文混合代码上下文的理解</strong>。</p>
+<p>我做了个对照:同一份 markdown 文档(中文需求 + 英文代码)交给两组模型读,然后让它们「实现需求,并用中文写 commit message」:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>中文理解准确度</th>
+					<th>commit message 自然度</th>
+					<th>综合</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Claude Sonnet 4.5</td>
+					<td>高</td>
+					<td>生硬翻译腔</td>
+					<td>9/10 代码 + 5/10 中文</td>
+			</tr>
+			<tr>
+					<td>qwen3.5-plus</td>
+					<td>极高</td>
+					<td>自然流畅</td>
+					<td>8/10 代码 + 9/10 中文</td>
+			</tr>
+			<tr>
+					<td>kimi-k2.5</td>
+					<td>极高</td>
+					<td>偶有书面化</td>
+					<td>8/10 代码 + 8/10 中文</td>
+			</tr>
+			<tr>
+					<td>glm-5</td>
+					<td>高</td>
+					<td>一般</td>
+					<td>7/10 代码 + 7/10 中文</td>
+			</tr>
+			<tr>
+					<td>MiniMax-M2.5</td>
+					<td>极高</td>
+					<td>创作感强</td>
+					<td>6/10 代码 + 9/10 中文</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>结论</strong>:</p>
+<ul>
+<li><strong>「中文文档 + 中文需求 + 给团队读的 PR」工作流</strong>,Qwen3.5-Plus 是当下最优解</li>
+<li>Claude Sonnet 4.5 写英文 commit 还是无敌,但写中文像是 Google Translate 出品</li>
+<li>我现在的 git hook 默认调 <code>qwen3.5-plus</code> 生成中文 commit message,产出比手写还自然</li>
+</ul>
+<h2 id="五踩坑实录6-个让我多花了-2-小时的真实坑">五、踩坑实录:6 个让我多花了 2 小时的真实坑
+</h2><p><img src="https://img.softon.top/2026/05/21/192314-7d6b60-alibaba-codingplan-img-05.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_05"
+	
+	
+></p>
+<h3 id="坑-1把-sk-sp--写成-sk-账单一直在按量扣">坑 1:把 <code>sk-sp-</code> 写成 <code>sk-</code>,账单一直在按量扣
+</h3><p><strong>症状</strong>:订阅了 Coding Plan 但额度页面显示「使用 0 次」,同时百炼按量计费账单天天涨。</p>
+<p><strong>原因</strong>:Coding Plan 专属 Key 在 Coding Plan 页面专门的 tab,不是百炼通用 API Key 列表里那一把。</p>
+<p><strong>解决</strong>:回 Coding Plan 页面,确认你拿的 Key <strong>以 <code>sk-sp-</code> 开头</strong>。如果以 <code>sk-</code> 开头(中间没有 <code>sp-</code>),那是按量 Key,白用。</p>
+<blockquote>
+<p><strong>省时建议</strong>:在 <code>~/.zshrc</code> 里加一行 alias 让自己永远区分:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">alias check_codingplan_key</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;echo $ANTHROPIC_AUTH_TOKEN | grep -q &#34;^sk-sp-&#34; &amp;&amp; echo &#34;✓ Coding Plan Key&#34; || echo &#34;✗ 错的 Key,会被按量扣费&#34;&#39;</span>
+</span></span></code></pre></div><p>配完环境变量先跑一下这个 alias。</p>
+</blockquote>
+<h3 id="坑-2base-url-区域搞错要么-ap-southeast-1-要么-cn-">坑 2:Base URL 区域搞错,要么 ap-southeast-1 要么 cn-&hellip;
+</h3><p>阿里 Coding Plan 在国际站和国内站是<strong>两套独立服务</strong>,Base URL 也不一样:</p>
+<ul>
+<li>国际站(我用的这套):<code>https://coding-intl.dashscope.aliyuncs.com/...</code></li>
+<li>国内站:<code>https://coding.dashscope.aliyuncs.com/...</code></li>
+</ul>
+<p>如果你订阅在国际站(<code>ap-southeast-1</code>)但 BASE_URL 写国内站,会返回 401。</p>
+<p><strong>解决</strong>:看你订阅页面 URL 里的 region。<code>ap-southeast-1</code> → 用 <code>coding-intl</code>;无 region 或 <code>cn-hangzhou</code> → 用 <code>coding</code>。</p>
+<h3 id="坑-3claude-code-启动时不读环境变量只读-claudesettingsjson">坑 3:Claude Code 启动时不读环境变量,只读 <code>~/.claude/settings.json</code>
+</h3><p>少数情况下 Claude Code 会<strong>优先读</strong> <code>~/.claude/settings.json</code> 而忽略 env(版本相关)。如果你怎么都切不到 Coding Plan,检查一下这个文件:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">cat ~/.claude/settings.json</span>
+</span></span></code></pre></div><p>如果里面有 <code>apiKeyHelper</code> 或 <code>anthropicBaseUrl</code> 字段,要么删掉,要么改成 Coding Plan 的值。<strong>官方文档明确说 env 优先级高于 settings.json,但有 issue 反映过特殊场景下 settings 反而占先</strong>(参考 <a class="link" href="https://github.com/anthropics/claude-code/issues/5577"  target="_blank" rel="noopener"
+    >github.com/anthropics/claude-code/issues/5577</a> 上下文)。</p>
+<h3 id="坑-4把-sk-sp--key-拿去自动化脚本调-api被封了">坑 4:把 <code>sk-sp-</code> Key 拿去自动化脚本调 API,被封了
+</h3><p>阿里 Coding Plan 服务条款里明文规定:</p>
+<blockquote>
+<p><strong>严禁 API 调用:仅限在编程工具(如 Claude Code、OpenClaw 等)中使用,禁止以 API 调用的形式用于自动化脚本、自定义应用程序后端或任何非交互式批量调用场景。</strong></p>
+</blockquote>
+<p>我有个朋友尝试用这把 Key 跑批量翻译脚本(每天 5000 次),<strong>第三天 Key 就被封了</strong>,而且 Coding Plan 不退款。</p>
+<p><strong>红线</strong>:</p>
+<ul>
+<li>✅ Claude Code / Cursor / Cline / OpenClaw / Qwen Code / Kilo Code → 都允许</li>
+<li>❌ Postman / Insomnia / 自己写的 Python 脚本 / Dify / n8n / Coze → 一律违规</li>
+</ul>
+<p>如果你需要 API 自动化,老老实实用百炼按量(那套 <code>sk-</code> Key 才是干这个的)。</p>
+<h3 id="坑-55h-6000-次额度被连续工具调用吃光">坑 5:5h 6000 次额度被「连续工具调用」吃光
+</h3><p>我第一次跑 Playwright 抓取 + 写报告的工作流时,2 小时就吃掉了 4800 次额度。一查日志:</p>
+<pre tabindex="0"><code>[Skill: web-scraper] tool_use × 142
+[Skill: web-scraper] tool_use × 156
+[Skill: web-scraper] tool_use × 203
+... (单个 prompt 内部 800+ tool calls)
+</code></pre><p><strong>原因</strong>:Claude Code 的 Skills 在循环里会反复 tool_use,每个 tool_use 都是一次模型调用,都吃额度。</p>
+<p><strong>解决</strong>:</p>
+<ol>
+<li>在 Skill 里加 batch / cache 逻辑(参考我之前那篇 <a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >让 Claude Code 真正长脑子:32 个 Skills + 8 个 MCP 完整配置实录</a>中关于 Skill 优化的那一节)</li>
+<li>长循环任务切到 <code>qwen3-coder-plus</code>,它的 tool_use 步骤平均比 Claude 少 40%</li>
+<li>真要跑大批量,临时切回按量计费(把 env 改回去)更划算</li>
+</ol>
+<h3 id="坑-6周一凌晨周额度重置时正在跑的会话会瞬间获得-45000-次">坑 6:周一凌晨周额度重置时,正在跑的会话会瞬间获得 45000 次
+</h3><p>这是个反向坑——周一 00:00:00 (UTC+8),周额度会<strong>整个</strong>清空重置回 45000 次。如果你周日深夜还在跑长任务,<strong>别担心额度,放心跑到天亮</strong>。</p>
+<p>但反过来,如果你周日下午就把 45000 次用了 40000,那剩下两天你只剩 5000 次/2 天≈ 2500 次/天,<strong>够用但不能再跑批量</strong>。</p>
+<p><strong>月额度的重置时间是订阅日</strong>(不是月初 1 号)。我 5 月 14 号订阅,所以下次月度重置是 6 月 14 号 00:00 UTC+8。<strong>这个细节官方写得很清楚但很少人留意</strong>——尤其是月底想冲一波时,会发现「我这个月还有 30000 次怎么用不完?」——因为还没到你的订阅周年日。</p>
+<h3 id="坑-7多账号互踩套餐额度共享假象">坑 7:多账号互踩,套餐额度共享假象
+</h3><p>我有一台开发机和一台公司服务器,我天真地以为「同一个阿里云账号 → 套餐共享」。<strong>没错,确实共享额度,但 5h 滚动桶也是共享的</strong>。</p>
+<p>症状:开发机上跑了 4500 次,公司服务器还想跑批量,结果 5 分钟就到 6000 次上限,两边都被卡。</p>
+<p>解决:</p>
+<ol>
+<li>真要双机使用,买<strong>两个套餐分给两个账号</strong>,各自独立额度</li>
+<li>或者错峰使用——开发机白天跑,服务器凌晨跑</li>
+</ol>
+<p>这一条文档没明说,我跑出来吃了一次亏。</p>
+<h3 id="坑-8claude-code-的-skills-用了一个比官方-sonnet-慢的国产模型体感差距很大">坑 8:Claude Code 的 Skills 用了一个比官方 Sonnet 慢的国产模型,体感差距很大
+</h3><p>国产模型在「快速 tool_use 决策」上比 Sonnet 慢 200~400ms。Sonnet 写的 Skill 跑得飞快(因为它习惯连续 tool 调用),你换到 Qwen 之后,<strong>同样的 Skill 跑起来会感觉「卡顿」</strong>。</p>
+<p>这不是模型差,是<strong>响应延迟差异</strong>。Sonnet 用上下文超长 + 长 KV cache 优化,工具调用可以零延迟接龙。Qwen / Kimi 在这一点上还差一截。</p>
+<p>实测同一个 Skill(自动化 git workflow):</p>
+<ul>
+<li>Sonnet 4.5:平均 2.3s 完成全套 6 个 tool_use</li>
+<li>qwen3-coder-plus:平均 4.1s</li>
+<li>kimi-k2.5:平均 5.8s</li>
+</ul>
+<p>体感上 Sonnet「丝滑」,Qwen「能用」,Kimi「等一下」。<strong>如果你的工作流极度依赖快速 tool_use 接龙(比如自动化测试运行),Sonnet 还是首选</strong>——但这个差距正在快速缩小。</p>
+<h2 id="六什么人不适合-coding-plan">六、什么人不适合 Coding Plan
+</h2><p>为了避免后台一堆「为什么按你说的买了不香」的吐槽,这一节专门列出<strong>不推荐场景</strong>:</p>
+<ol>
+<li><strong>每天写代码不到 1 小时的轻度用户</strong>:Claude Pro $20 + 偶尔 rate limit 你也不在乎,$50 完全溢出</li>
+<li><strong>需要 GPT-5 / Gemini Pro 的用户</strong>:Coding Plan 没这两家,真要用就 Cursor Pro</li>
+<li><strong>后端 API 重度调用方</strong>:违规风险高,直接百炼按量更稳</li>
+<li><strong>极端隐私场景</strong>:阿里云数据走的是国内/新加坡区域服务器,合规上和 Anthropic 不同,确认你的雇主政策</li>
+<li><strong>强依赖 Sonnet 4.5「写作风格」</strong>:四个模型都是国产开源,中文 / 数学 / 代码上不输,但<strong>英文创作和高度幽默化的输出</strong>还是 Sonnet 4.5 更纯</li>
+</ol>
+<p>如果你不在以上五条里,而且日常是「Claude Code + 多模型 + 长上下文」工作流的程序员——<strong>$50 是目前国内 AI 编程订阅的最优解,没有之一</strong>。</p>
+<h3 id="51-反向场景这一周-claude-pro-还能解决什么-coding-plan-解决不了的">5.1 反向场景:这一周 Claude Pro 还能解决什么 Coding Plan 解决不了的
+</h3><p>诚实地讲,我没有把 Claude Pro 退订,因为它还有几个 Coding Plan 解决不了的场景:</p>
+<ol>
+<li><strong>写英文社区 PR</strong>——Sonnet 4.5 的英文表达力国产模型还差很远</li>
+<li><strong>跨文化幽默 / 文风模仿</strong>——比如让它学 Andrej Karpathy 的写作风格,只有 Sonnet 能做</li>
+<li><strong>图像理解的临场分析</strong>——Qwen3.5-Plus 也支持图,但精度比 Sonnet 4.5 差一档</li>
+<li><strong>需要 Opus 4.x 的极端复杂规划</strong>——Coding Plan 没有任何模型在「100 步以上的规划链」上能跟 Opus 比</li>
+</ol>
+<p>但这些场景在我日常工作里<strong>不到 5%</strong>。因此我的策略是:</p>
+<ul>
+<li>默认 Coding Plan 跑 95% 的工作</li>
+<li>偶尔需要「写老外社区」、「Opus 级规划」时切回 Claude Pro</li>
+<li>总开销:Claude Pro $20 + Coding Plan $50 = $70/月,<strong>比单买 Claude Max($100)便宜 30%</strong>,工具池却大三倍</li>
+</ul>
+<p>这才是 2026 年程序员的合理 AI 订阅组合。</p>
+<h2 id="七给打算下单的你的-5-条速记">七、给打算下单的你的 5 条速记
+</h2><ol>
+<li>一定订<strong>国际站 Pro 套餐</strong>($50,90000 次/月);Lite 已停售,别再被老教程带歪</li>
+<li>API Key 拿<strong>以 <code>sk-sp-</code> 开头的那把</strong>;<code>sk-</code> 开头的按量 Key 不通用</li>
+<li>Claude Code 环境变量配 <code>ANTHROPIC_BASE_URL=https://coding-intl.dashscope.aliyuncs.com/apps/anthropic</code>,Cursor / Cline 用 <code>/v1</code> 那个</li>
+<li>默认模型推荐 <code>qwen3-coder-plus</code> 写代码 + <code>kimi-k2.5</code> 重构;<strong>别用 MiniMax-M2.5 干工程活</strong></li>
+<li><strong>绝对不要把 Coding Plan Key 用在自动化脚本里</strong>——会被封号,且不退款</li>
+</ol>
+<h2 id="八迁移指南从-claude-pro-平滑切到-coding-plan3-步走完">八、迁移指南:从 Claude Pro 平滑切到 Coding Plan,3 步走完
+</h2><p>如果你和我一样,在 Claude Pro 上已经有完整 workflow(一堆 Skills + MCP 已经跑顺),迁移最大的恐惧不是技术——是**「会不会丢掉那些已经磨合好的肌肉记忆」**。</p>
+<p>我的迁移路径,按风险排序:</p>
+<h3 id="751-第一步零风险双-token-共存">7.5.1 第一步(零风险):双 token 共存
+</h3><p>用上面提到的 <code>direnv</code> 方案,<strong>保留 Claude Pro,在新目录里启用 Coding Plan</strong>。每天工作 50/50 切换,观察你最常用的几个 Skill 在新模型上是不是「能跑」。</p>
+<p>这一步的目的不是验证性能,是<strong>让自己脱敏</strong>。我前三天每次切到 Coding Plan 都莫名觉得「输出怪怪的」,其实不是模型问题——是<strong>习惯了 Sonnet 的语调</strong>。一周后这种感觉消失。</p>
+<h3 id="752-第二步低风险把不重要项目全切到-coding-plan">7.5.2 第二步(低风险):把不重要项目全切到 Coding Plan
+</h3><p>个人项目、博客、自动化脚本 → 全切。<strong>只有客户 NDA 项目和团队协作项目还留在 Claude Pro</strong>。</p>
+<p>这一步会让你看到真实的数据:</p>
+<ul>
+<li>Coding Plan 月底用了多少额度</li>
+<li>Claude Pro 这个月你 rate limit 了几次</li>
+<li>两边的产出代码质量差多少</li>
+</ul>
+<p>我跑完一周后的结果是:Claude Pro 触顶 6 次,Coding Plan 用了 22% 额度,<strong>完全不在一个量级</strong>。</p>
+<h3 id="753-第三步中风险降级-claude-pro-到-pay-as-you-go">7.5.3 第三步(中风险):降级 Claude Pro 到 Pay-as-you-go
+</h3><p>确认迁移成功后,把 Claude Pro 退到「按量付费」,只在「确实需要 Sonnet」的时候用 API。我现在的 Claude API 月度账单是 $3-5,主要花在「写英文 issue」和「极个别 Opus 调用」。</p>
+<p><strong>总成本</strong>:Coding Plan $50 + Claude API ~$5 = $55,<strong>比原来 Claude Pro $20 + 频繁触顶导致的「焦虑成本」还低</strong>。</p>
+<p>这是我能给的最现实的迁移路径。<strong>不要一刀切</strong>,用一周时间脱敏 → 两周观察 → 第三周完成切换。</p>
+<h2 id="九实际工作流四个模型一天怎么轮班">九、实际工作流:四个模型一天怎么轮班
+</h2><p>讲完原理、配置、对比、踩坑,这一节给你看<strong>我自己每天怎么用这 90000 次额度</strong>。这是文章里最具体也最有可复制性的一段。</p>
+<p><img src="https://img.softon.top/2026/05/21/192315-f840e8-alibaba-codingplan-img-06.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_06"
+	
+	
+></p>
+<h3 id="81-早上-900-1200--重构--设计阶段主力-kimi-k25">8.1 早上 9:00-12:00 — 重构 / 设计阶段(主力 kimi-k2.5)
+</h3><p>上午脑子最清醒,适合做<strong>全局思考</strong>的工作。我会:</p>
+<ol>
+<li>打开当前要重构的项目,<code>/model</code> 切到 <code>kimi-k2.5</code></li>
+<li>第一个 prompt 永远是「读完整个仓库,告诉我你看到了什么架构问题」</li>
+<li>Kimi 用 200k 上下文一次性吃下整个 src/,给出大纲</li>
+<li>我和它来回三五轮敲定方案</li>
+<li>让它把方案写到 <code>docs/refactor-plan.md</code>,作为后续干活的契约</li>
+</ol>
+<p>这一段大概消耗 200-400 次额度,但产出是<strong>整天工作的总图</strong>。值。</p>
+<h3 id="82-中午-1300-1700--干活阶段主力-qwen3-coder-plus">8.2 中午 13:00-17:00 — 干活阶段(主力 qwen3-coder-plus)
+</h3><p>下午开干。这时候不需要思考,需要<strong>速度</strong>。<code>/model</code> 切 <code>qwen3-coder-plus</code>:</p>
+<ul>
+<li>一个文件一个 prompt,严格按 plan 推进</li>
+<li>跑测试,发现报错,贴报错回它「fix」</li>
+<li>Skill 自动化触发(linter / formatter / test runner)</li>
+</ul>
+<p>这段是消耗大头,平均一下午 800-1500 次。<strong>Qwen3-Coder-Plus 的 tool_use 是四个模型里最克制的</strong>——它不会像 Sonnet 那样动不动开七八个 tool 并发,而是一次一个,稳扎稳打。这种风格特别适合下午有点累的我。</p>
+<h3 id="83-傍晚-1800-1900--验证--审视阶段切回-kimi-k25">8.3 傍晚 18:00-19:00 — 验证 / 审视阶段(切回 kimi-k2.5)
+</h3><p>下班前再切回 Kimi,做最后一遍<strong>全局校验</strong>:</p>
+<pre tabindex="0"><code>看一下今天 commit 的所有改动,有没有违背早上 refactor-plan.md 里的原则的地方
+</code></pre><p>Kimi 把所有 diff + plan 一起读,给我一份「今日改动符合度报告」。<strong>这一招我从一个老 senior 那学来的——他叫这个「自我代码 review」</strong>——只是以前需要他自己读半小时,现在 Kimi 5 分钟搞定。</p>
+<h3 id="84-晚上-2100-2300--写作--文档阶段主力-qwen35-plus">8.4 晚上 21:00-23:00 — 写作 / 文档阶段(主力 qwen3.5-plus)
+</h3><p>晚上写博客、commit message、PR description、技术分享 PPT。<code>/model</code> 切 <code>qwen3.5-plus</code>,中文最自然。</p>
+<p>这一段每天 200-400 次,但<strong>文章质量比单独靠我自己写高一档</strong>——因为它会主动指出「这一段读起来像翻译腔」「这个比喻不通」之类的问题。</p>
+<h3 id="85-一天总结">8.5 一天总结
+</h3><ul>
+<li>上午思考:~300 次(kimi-k2.5)</li>
+<li>下午干活:~1200 次(qwen3-coder-plus)</li>
+<li>傍晚审视:~150 次(kimi-k2.5)</li>
+<li>晚上写作:~300 次(qwen3.5-plus)</li>
+<li><strong>日合计:~2000 次,周合计 ~10000 次,月合计 ~40000 次</strong></li>
+</ul>
+<p>Pro 套餐 90000 次,<strong>用了不到一半</strong>。剩下的额度留给周末特殊任务、临时排查 bug、跑大批量重构。完全不焦虑。</p>
+<h2 id="十faq订阅前你最想知道的-10-个问题">十、FAQ:订阅前你最想知道的 10 个问题
+</h2><p>这一节整合我自己踩过的坑和朋友群里被问最多的问题,如果你时间紧只读这一节也够用。</p>
+<p><strong>Q1: $50 是不是国际站价格?国内站多少?</strong></p>
+<p>A: 国际站 $50/月。国内站套餐价格略低(¥298 左右),但只能用支付宝/微信支付,且模型清单略有差异(国内站不含 MiniMax-M2.5)。一般我推荐国际站,模型最全、首月还经常有 7.9 元的活动价。</p>
+<p><strong>Q2: 套餐到期后会自动续费吗?</strong></p>
+<p>A: 会。下单时默认勾选「自动续订」。<strong>不想自动续要主动去关</strong>——账户中心 → 订单管理 → 取消自动续费。我建议你保持自动续,因为 Coding Plan 经常会在续费时给老用户发优惠券。</p>
+<p><strong>Q3: 中途升级 Lite → Pro 会不会亏?</strong></p>
+<p>A: Lite 已停售,这问题没意义。但如果你之前有 Lite,可以直接「升级」(差价补缴),Lite 的剩余天数会按比例折算。</p>
+<p><strong>Q4: 模型在 Claude Code 里显示的名字和官方文档不一致?</strong></p>
+<p>A: Coding Plan 在 Claude Code 的 <code>/model</code> 列表里会把 Qwen3.5-Plus 显示为 <code>qwen3.5-plus</code>(小写),官方文档里有时写成 <code>Qwen3.5-Plus</code>。<strong>全部用小写,大写 Claude Code 不识别</strong>。</p>
+<p><strong>Q5: 我用 OpenClaw,可以接 Coding Plan 吗?</strong></p>
+<p>A: 可以,而且<strong>官方明确支持</strong>。配置方法见 3.5 节。OpenClaw 通过 <code>models.json</code> 或 config 里加一个 provider,把 base_url 设为 <code>https://coding-intl.dashscope.aliyuncs.com/v1</code>,api_key 填 <code>sk-sp-...</code>,即可在 OpenClaw 里 <code>/model</code> 切换。</p>
+<p><strong>Q6: 出差去美国还能用吗?</strong></p>
+<p>A: 国际站可以,延迟会高(~200-300ms),但能跑。国内站走不了境外网络。</p>
+<p><strong>Q7: 模型会幻觉吗?写出错代码占多大比例?</strong></p>
+<p>A: 我跑了一周,<strong>首发可用率</strong>:Kimi-K2.5 88%,qwen3-coder-plus 85%,Qwen3.5-Plus 80%,GLM-5 75%,MiniMax-M2.5 60%。对比之下 Claude Sonnet 4.5 在我数据里是 92%。<strong>国产差距 5-10 个百分点,但在 1/3 价格下很值</strong>。</p>
+<p><strong>Q8: 万一某天阿里把 Coding Plan 砍了,我的钱怎么办?</strong></p>
+<p>A: 已购买的会按订阅期服务到结束。但<strong>新订阅风险确实存在</strong>——MiniMax 当年就把 Coding Plan 升级成 Token Plan,定价完全变了。我的策略是<strong>只买月付,不买年付</strong>,任何风吹草动可以及时止损。</p>
+<p><strong>Q9: 和阿里 DashScope API Key 能不能共存?</strong></p>
+<p>A: 完全能,而且推荐。两套 Key 各干各的:</p>
+<ul>
+<li><code>sk-xxx</code>(按量):跑你的自动化脚本、Dify workflow、生产 API 调用</li>
+<li><code>sk-sp-xxx</code>(Coding Plan):仅在 Claude Code / Cursor / OpenClaw 里用</li>
+</ul>
+<p><strong>Q10: 我团队 5 个人,买一个 Pro 共用行不行?</strong></p>
+<p>A: <strong>违规,不要尝试</strong>。条款写明「订阅人专享,禁止共享」。账号共享一旦触发风控,Key 直接禁用,不退款。5 人团队建议:每人买一个 Lite(若还能买)或合买阿里云企业版套餐(¥600+/月,共享额度池,合规)。</p>
+<h2 id="十一进阶3-个让-coding-plan-额度再多扛-2-倍的小技巧">十一、进阶:3 个让 Coding Plan 额度再多扛 2 倍的小技巧
+</h2><p>写到这里可能还是有人要说:「90000 次/月听起来很多,但我的项目复杂,怅估不够」。这一节有三个我自己践行越来越受用的小技巧。</p>
+<h3 id="111-用-skill-作为代理合并多个-tool_use">11.1 用 Skill 作为「代理」,合并多个 tool_use
+</h3><p>Claude Code 默认在一个 prompt 里会拆出 N 个 tool_use 调用,每个都是一次请求。但如果你把多个动作打包进一个 Skill,这个 Skill 内部用脚本调本地命令(不走模型),<strong>可以把原本 5 次请求压缩到 1 次</strong>。</p>
+<p>举个我自己的 git workflow Skill:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 原本的 prompt: 「帮我提交这次改动」</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Claude Code 会拆成:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. tool_use git status</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. tool_use git diff</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. tool_use 模型生成 commit msg</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. tool_use git add</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. tool_use git commit</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6. tool_use git push</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># = 6 次额度</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Skill 化之后:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. tool_use 「git-flow Skill」</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    → Skill 内部 bash 跑完 1+2+4+5+6</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    → 只在「生成 commit msg」那一步调一次模型</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># = 1 次 + 1 次 = 2 次额度。节省 67%</span>
+</span></span></code></pre></div><p>这是「按次计费」套餐隐藏的套利空间——<strong>Skill 里跑的 bash 不算次数</strong>。多写 Skill,少走 raw tool_use。</p>
+<h3 id="112-长会话记得-clear别让上下文一路拖到底">11.2 长会话记得 <code>/clear</code>,别让上下文一路拖到底
+</h3><p>一个被志误以为「按次计费跟上下文长度无关」的问题:<strong>理论上是,但实际上越长的上下文 = 越多 tool_use 拆分 = 越多请求</strong>。</p>
+<p>我的习惯:每完成一个独立子任务就敲 <code>/clear</code>。下一个任务启动时,Claude Code 不需要在 32k+ 历史里划拉,<strong>tool_use 拆分次数能少一半</strong>。</p>
+<p>实测同一个任务:</p>
+<ul>
+<li>在 30k 上下文中接着跑: 47 次 tool_use</li>
+<li><code>/clear</code> 后重跑: 21 次 tool_use</li>
+</ul>
+<p>同样的产出,额度消耗减半。</p>
+<h3 id="113-多模型接力不同阶段用不同模型才是价位答案">11.3 多模型接力:不同阶段用不同模型才是价位答案
+</h3><p>这个是最重要的一招,在第八节工作流那节已经提过,这里给个量化版:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>选错模型的代价</th>
+					<th>选对模型的节省</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>架构设计</td>
+					<td>用 qwen3-coder-plus 结果走偏 → 重跑一遍 → 额度双耗</td>
+					<td>Kimi 一遍过,额度加倍贴着胸</td>
+			</tr>
+			<tr>
+					<td>重复性代码</td>
+					<td>用 Kimi 性能炸裂 → 额度双倍</td>
+					<td>qwen3-coder-plus 响应快,额度出口准</td>
+			</tr>
+			<tr>
+					<td>写中文文档</td>
+					<td>用 qwen3-coder-plus 出来像机器人</td>
+					<td>qwen3.5-plus 产出质量高三档</td>
+			</tr>
+			<tr>
+					<td>Debug 复杂并发</td>
+					<td>用 MiniMax 结果跳脱 → 手动重发三轮</td>
+					<td>Kimi 一次定位</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>「选对模型」本身就是使用 Coding Plan 的最大习惯之一</strong>。它不是什么高级技巧,是你付了这 $50 必须去拿的菜。</p>
+<h2 id="十二什么场景下-coding-plan-反而不够香">十二、什么场景下 Coding Plan 反而不够香?
+</h2><p>为了平衡气,这一节说说「什么时候 Coding Plan 反而不够香」:</p>
+<h3 id="121-你是一报到底型开发者">12.1 你是「一报到底」型开发者
+</h3><p>有些同学写代码一上来就一个 prompt 拆上所有上下文面接过去。这种模式下,<strong>一个 long-context request 背后 Claude 能一口气后续中 50k token 一次性返回</strong>,你只动了 1 次 prompt。Coding Plan 里这个 prompt 在后台同样会拆出三四十次 tool_use,额度消耗可能比你估计的多 3-4 倍。</p>
+<h3 id="122-你需要调-sonnet-45-的高端品味写-pr">12.2 你需要调 Sonnet 4.5 的「高端品味」写 PR
+</h3><p>Sonnet 4.5 在「文本粘合率」上还是独领一报。你在一个用 GitHub 交付的高质量开源社区,写一份 200 行的 PR description 这种东西,推荐还是用 Sonnet 4.5。国产模型会「仔细,但不够上台」。</p>
+<h3 id="123-你在做需要怎么说怎么估的商业决策">12.3 你在做需要「怎么说」、「怎么估」的商业决策
+</h3><p>帮老板准备项目评审、写商业 PRD、设计模块交互这种需要权衡的任务,<strong>Claude 的「取舍能力」还是高一报</strong>。Coding Plan 里 Kimi 在这方面是最强的代表,但距离 Sonnet 还有一段路。</p>
+<p>如果你是这三类开发者,<strong>别推荐中则取下、不推荐下取上</strong>——保 Claude Pro,Coding Plan 当「补充」。</p>
+<h2 id="十三写在最后这一波coding-plan的本质是什么">十三、写在最后:这一波「Coding Plan」的本质是什么
+</h2><p>写完这篇文章我突然想明白一件事:</p>
+<blockquote>
+<p><strong>2026 年初的「Coding Plan 大战」不是定价战,是定义权战</strong>。</p>
+</blockquote>
+<p>在「Coding Plan」这个词出现之前,我们对 AI 编程的认知是「一个聊天机器人 + 一份 token 账单」。每次问问题前都得心算「这次大概要花几毛」。</p>
+<p>而 Coding Plan 把这套全推翻了——它告诉你:<strong>AI 编程是基础设施,不是按 token 卖的奢侈品</strong>。你订阅之后就闭眼用,跟买水电一样。哪怕单次任务消耗了 30 次额度,你也不会去看账单,因为「90000 次」这个数字大到让你失去焦虑。</p>
+<p>这种「<strong>让用户不再焦虑成本</strong>」的能力,才是阿里这波最聪明的地方。Anthropic 还在卖 token,Cursor 还在卖 fast/slow request,而阿里直接卖**「一个月不被打断的工程师生产力」**。</p>
+<p>我用了一周,感受最深的不是 Qwen 写代码多快、Kimi 上下文多长,而是——</p>
+<blockquote>
+<p><strong>我已经一周没有打开过任何模型的 token 计数器</strong>。</p>
+</blockquote>
+<p>写文章的时候,我让 <code>qwen3.5-plus</code> 帮我润色这段结尾,它说:</p>
+<pre tabindex="0"><code>不焦虑成本,就是开发者最贵的奢侈品。
+</code></pre><p>被它击中。</p>
+<p><img src="https://img.softon.top/2026/05/21/192317-639ff6-alibaba-codingplan-img-07.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="IMG_07"
+	
+	
+></p>
+<h3 id="131-三句话送给还在犹豫的你">13.1 三句话送给还在犹豫的你
+</h3><p>第一句:<strong>别拿 $50 跟 $20 比,要拿 $50 跟「rate limit 等待 4 小时」比</strong>。前者是钱的差距,后者是心智的差距。</p>
+<p>第二句:<strong>别等「最完美的方案」,先用一周再说</strong>。AI 编程订阅这事就跟健身房会员一样——你买之前永远不知道值不值,买完之后才会发现「原来我每周用得这么频繁」。</p>
+<p>第三句:<strong>这一波 Coding Plan 是国产 AI 给开发者最大的礼物,别错过</strong>。Qwen3.5、Kimi-K2.5、GLM-5、MiniMax-M2.5 这四个模型的开源生态,在 2025 年还是「半免费 + 生硬」的状态,2026 年靠 Coding Plan 直接打到了「专业可用 + 折算价 1/5」。<strong>这种红利窗口不会一直开</strong>。</p>
+<h3 id="132-我之后还会写什么">13.2 我之后还会写什么
+</h3><p>这一篇是 Coding Plan 系列的开篇。后面我会继续写:</p>
+<ul>
+<li><strong>Coding Plan 进阶:用 OpenClaw 多 Agent 编排把 90000 次额度榨干的工作流</strong></li>
+<li><strong>Qwen3.5 vs Sonnet 4.5 在 6 个真实开源项目上的代码可读性盲测</strong></li>
+<li><strong>如何用 Coding Plan + Hugo + R2 搭一个零成本个人技术品牌</strong>(把这条流水线讲透)</li>
+</ul>
+<p>如果这篇对你有用,记得收藏,下次想清账单时回来看一眼这张「真实负载 vs 套餐额度」表。</p>
+<hr>
+<blockquote>
+<p>配套阅读:<a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >让 Claude Code 真正长脑子:32 个 Skills + 8 个 MCP 完整配置实录</a> ——把 Coding Plan 的便宜额度配上一身武器,你的 Claude Code 才真正变成首席工程师。</p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+        
+            <a href="/tags/coding-plan/">Coding Plan</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/qwen3.5/">Qwen3.5</a>
+        
+            <a href="/tags/kimi-k2.5/">Kimi K2.5</a>
+        
+            <a href="/tags/ai-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC%E5%AF%B9%E6%AF%94/">成本对比</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/alibaba-cloud-coding-plan-pro-50usd-real-test\/'; 
+        const pageTitle = '阿里云 Coding Plan Pro 实测一周：$50\/月 90000 次请求,到底比 Claude Pro 香在哪';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

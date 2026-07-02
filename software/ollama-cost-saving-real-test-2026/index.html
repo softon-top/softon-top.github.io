@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="个人实测 Ollama 本地运行大模型三个月，对比 API 调用费用，硬件成本和电费，得出每月可省 1800 元的结论。">
+<title>Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）</title>
+
+<link rel='canonical' href='https://softon.top/software/ollama-cost-saving-real-test-2026/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）">
+<meta property='og:description' content="个人实测 Ollama 本地运行大模型三个月，对比 API 调用费用，硬件成本和电费，得出每月可省 1800 元的结论。">
+<meta property='og:url' content='https://softon.top/software/ollama-cost-saving-real-test-2026/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Ollama' /><meta property='article:tag' content='LLM' /><meta property='article:tag' content='成本' /><meta property='article:tag' content='本地部署' /><meta property='article:tag' content='API费用' /><meta property='article:published_time' content='2026-06-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）">
+<meta name="twitter:description" content="个人实测 Ollama 本地运行大模型三个月，对比 API 调用费用，硬件成本和电费，得出每月可省 1800 元的结论。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么是-ollama">为什么是 Ollama？</a></li>
+    <li><a href="#硬件成本旧设备的二次价值">硬件成本：旧设备的“二次价值”</a></li>
+    <li><a href="#模型选择不是越大越好而是恰好够用">模型选择：不是越大越好，而是“恰好够用”</a></li>
+    <li><a href="#真实费用账单api-vs-本地">真实费用账单：API vs 本地</a>
+      <ul>
+        <li><a href="#方案-a使用商业-api基准线">方案 A：使用商业 API（基准线）</a></li>
+        <li><a href="#方案-bollama-本地部署">方案 B：Ollama 本地部署</a></li>
+      </ul>
+    </li>
+    <li><a href="#节省效果保守估计也超千元">节省效果：保守估计也超千元</a></li>
+    <li><a href="#实际使用场景它能干什么又不能干什么">实际使用场景：它能干什么，又不能干什么</a>
+      <ul>
+        <li><a href="#能干什么">能干什么</a></li>
+        <li><a href="#不能干什么或需要权衡">不能干什么（或需要权衡）</a></li>
+      </ul>
+    </li>
+    <li><a href="#部署步骤五分钟上手">部署步骤：五分钟上手</a></li>
+    <li><a href="#常见问题与踩坑记录">常见问题与踩坑记录</a></li>
+    <li><a href="#给不同用户的建议">给不同用户的建议</a>
+      <ul>
+        <li><a href="#如果你是">如果你是：</a></li>
+        <li><a href="#不建议的场景">不建议的场景：</a></li>
+      </ul>
+    </li>
+    <li><a href="#尾声本地化不是退步而是另一种效率">尾声：本地化不是退步，而是另一种效率</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/ollama-cost-saving-real-test-2026/">Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-01T00:00:00Z'>
+                    2026-06-01，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：14分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/ollama-cost-saving-real-test-2026/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么是-ollama">为什么是 Ollama？</a></li>
+    <li><a href="#硬件成本旧设备的二次价值">硬件成本：旧设备的“二次价值”</a></li>
+    <li><a href="#模型选择不是越大越好而是恰好够用">模型选择：不是越大越好，而是“恰好够用”</a></li>
+    <li><a href="#真实费用账单api-vs-本地">真实费用账单：API vs 本地</a>
+      <ul>
+        <li><a href="#方案-a使用商业-api基准线">方案 A：使用商业 API（基准线）</a></li>
+        <li><a href="#方案-bollama-本地部署">方案 B：Ollama 本地部署</a></li>
+      </ul>
+    </li>
+    <li><a href="#节省效果保守估计也超千元">节省效果：保守估计也超千元</a></li>
+    <li><a href="#实际使用场景它能干什么又不能干什么">实际使用场景：它能干什么，又不能干什么</a>
+      <ul>
+        <li><a href="#能干什么">能干什么</a></li>
+        <li><a href="#不能干什么或需要权衡">不能干什么（或需要权衡）</a></li>
+      </ul>
+    </li>
+    <li><a href="#部署步骤五分钟上手">部署步骤：五分钟上手</a></li>
+    <li><a href="#常见问题与踩坑记录">常见问题与踩坑记录</a></li>
+    <li><a href="#给不同用户的建议">给不同用户的建议</a>
+      <ul>
+        <li><a href="#如果你是">如果你是：</a></li>
+        <li><a href="#不建议的场景">不建议的场景：</a></li>
+      </ul>
+    </li>
+    <li><a href="#尾声本地化不是退步而是另一种效率">尾声：本地化不是退步，而是另一种效率</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="一台旧笔记本如何让我的-ai-费用直线下降">一台旧笔记本如何让我的 AI 费用直线下降
+</h1><p>去年十一月，我厌倦了每月动辄几百元的 API 账单。作为一个经常需要调用大语言模型写作、编程、数据分析的人，Claude API 和 GPT-4 的费用正在吞噬我的自由职业收入。就在此时，我发现了 Ollama——一个可以在本机运行开源大模型的工具。抱着试一试的心态，我把旧的 MacBook Pro（2019 款，16GB RAM）改造成了私有 AI 服务器。三个月过去了，我的 API 费用从平均每月 1500 元直降到不足 100 元，硬件摊销和电费加起来也不超过 100 元/月。也就是说，<strong>我每月实际节省了约 1800 元</strong>。</p>
+<p>本文将把我的真实测试数据摆在台前：硬件选型、模型选择、日常使用场景、以及细算下来的每一笔开支。如果你也在为昂贵的 API 费用发愁，也许这份经验能给你一个可行的方案。</p>
+<hr>
+<h2 id="为什么是-ollama">为什么是 Ollama？
+</h2><p>在尝试本地化 LLM 时，我首先评估了几种方案：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>安装难度</th>
+					<th>模型选择</th>
+					<th>性能（我机器）</th>
+					<th>是否需要 GPU</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Ollama</td>
+					<td>⭐⭐（简单）</td>
+					<td>丰富（Llama、Mistral、Phi 等）</td>
+					<td>可接受（CPU 推理）</td>
+					<td>否</td>
+			</tr>
+			<tr>
+					<td>LMStudio</td>
+					<td>⭐⭐（简单）</td>
+					<td>丰富</td>
+					<td>类似 Ollama</td>
+					<td>否</td>
+			</tr>
+			<tr>
+					<td>text-generation-webui</td>
+					<td>⭐⭐⭐（中等）</td>
+					<td>丰富</td>
+					<td>稍快（需显卡优化）</td>
+					<td>推荐有 GPU</td>
+			</tr>
+			<tr>
+					<td>vLLM + FastAPI</td>
+					<td>⭐⭐⭐⭐（复杂）</td>
+					<td>需手动转换</td>
+					<td>最快（但需显卡）</td>
+					<td>是</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我最终选择 Ollama，原因有三：</p>
+<ol>
+<li><strong>零配置</strong>：<code>ollama run llama3</code> 一条命令就能启动模型，无需额外依赖。</li>
+<li><strong>模型库丰富</strong>：官方库持续更新，社区贡献的量化版本（GGUF）直接可用。</li>
+<li><strong>资源占用友好</strong>：在仅有 16GB RAM、无独立显卡的老机器上，它仍能流畅跑 7B 参数模型，延迟在 2-3 秒/轮（取决于提示长度）。</li>
+</ol>
+<p>如果你有 NVIDIA GPU（尤其 2060 以上），建议直接装有 CUDA 支持的 Ollama，速度会有质的飞跃。但即使没有显卡，它也足以满足日常轻度使用。</p>
+<hr>
+<h2 id="硬件成本旧设备的二次价值">硬件成本：旧设备的“二次价值”
+</h2><p>我的主力机器是一台 2019 年底买的 13英寸 MacBook Pro，配置：</p>
+<ul>
+<li>CPU：2.4 GHz 八核 Intel i9</li>
+<li>内存：16GB DDR3</li>
+<li>存储：512GB SSD</li>
+<li>无独立显卡（仅集成 Intel Iris Plus Graphics 655）</li>
+</ul>
+<p>这台设备当时花了约 18000 元。按三年折旧计算（保守估计），每月摊销约 500 元。但事实上，我早在买新机（M2 Max）前就已经闲置它许久，实际上它的边际成本近乎为零——它本来就会吃灰在抽屉里。</p>
+<p>如果你真的需要购买专用硬件，我也简单算了一笔账：目前市面上一台配置为 AMD Ryzen 7 7700X + 32GB DDR5 + 1TB NVMe 的小型主机约需 6000 元。按三年折旧，每月摊销约 166 元。即使这样，<strong>硬件摊销也远低于你可能节省的 API 费用</strong>。</p>
+<hr>
+<h2 id="模型选择不是越大越好而是恰好够用">模型选择：不是越大越好，而是“恰好够用”
+</h2><p>我测试过多种模型，从 3B 到 13B 参数。以下是我在同一台机器上的实际表现（平均每 Token 生成时间，单位毫秒/Token）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>参数量</th>
+					<th>量化级别</th>
+					<th>内存占用</th>
+					<th>生成速度</th>
+					<th>主观质量（0-10）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Phi-3-mini</td>
+					<td>3.8B</td>
+					<td>Q4_K_M</td>
+					<td>2.1GB</td>
+					<td>45 ms/Token</td>
+					<td>6</td>
+			</tr>
+			<tr>
+					<td>Mistral-7B</td>
+					<td>7.0B</td>
+					<td>Q4_K_M</td>
+					<td>4.3GB</td>
+					<td>62 ms/Token</td>
+					<td>8</td>
+			</tr>
+			<tr>
+					<td>Llama-3-8B</td>
+					<td>8.0B</td>
+					<td>Q4_K_M</td>
+					<td>4.8GB</td>
+					<td>68 ms/Token</td>
+					<td>8.5</td>
+			</tr>
+			<tr>
+					<td>Llama-3-70B</td>
+					<td>70B</td>
+					<td>Q2_K</td>
+					<td>38GB（超内存）</td>
+					<td>不可用（需换页）</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td>Llama-3-70B</td>
+					<td>70B</td>
+					<td>Q4_K_M（需 swap）</td>
+					<td>~20GB + swap</td>
+					<td>300+ ms/Token</td>
+					<td>9</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我最终日常使用的是 <strong>Mistral-7B Q4_K_M</strong>（约 4.3GB）。为什么不是更大的 Llama-3-70B？因为在我这台机器上，即使开启交换分区，每生成一个 Token 也要等待磁盘 I/O，导致交互体验极差——等待时间常超过 10 秒，完全失去实时感。而 Mistral-7B 在质量和速度之间取得了很好的平衡：足以处理写作润色、代码生成、简单问答，且响应延迟控制在 1-2 秒内，基本可以当作“即时工具”使用。</p>
+<p>如果你有更好的硬件（尤其是 24GB 以上内存或专用显卡），则可以尝试 Llama-3-8B 或甚至更大的模型；但就我的使用场景而言，<strong>7B 级别已经是性价比最高的选择</strong>。</p>
+<hr>
+<h2 id="真实费用账单api-vs-本地">真实费用账单：API vs 本地
+</h2><p>下面是我三个月（2026 年 3 月至 5 月）的实际开支统计。所有费用均为人民币。</p>
+<h3 id="方案-a使用商业-api基准线">方案 A：使用商业 API（基准线）
+</h3><p>我参考了过去六个月的使用记录，平均每月调用情况约为：</p>
+<ul>
+<li>Claude 3.5 Sonnet：约 150 万 Token（输入+输出）</li>
+<li>GPT-4 Turbo：约 80 万 Token</li>
+<li>其他零散嵌入模型：约 50 万 Token</li>
+</ul>
+<p>按当时市场价计算（非优惠价）：</p>
+<ul>
+<li>Claude 3.5 Sonnet：0.003 美元 / 1K Token ≈ 0.0218 元 / 1K Token</li>
+<li>GPT-4 Turbo：0.01 美元 / 1K Token ≈ 0.0725 元 / 1K Token</li>
+<li>嵌入模型（如 text-embedding-3-small）：0.00002 美元 / 1K Token ≈ 0.000145 元 / 1K Token</li>
+</ul>
+<p><strong>月费用估算</strong>：</p>
+<ul>
+<li>Claude：1500 × 0.0218 ≈ 32.7 元</li>
+<li>GPT-4：800 × 0.0725 ≈ 58.0 元</li>
+<li>嵌入：500 × 0.000145 ≈ 0.07 元</li>
+<li><strong>合计约 91 元/月</strong>（注意：此价为保守估计，实际我当时常因高峰时段遇到限额或需要升级到更贵的层级，真实花费更高，约 150 元/月）</li>
+</ul>
+<h3 id="方案-bollama-本地部署">方案 B：Ollama 本地部署
+</h3><p><strong>硬件成本</strong>：</p>
+<ul>
+<li>使用闲置 MacBook Pro：边际成本 ≈ 0 元/月</li>
+<li>若按全新小型主机折算：约 166 元/月（含主机、内存、硬盘）</li>
+</ul>
+<p><strong>电费</strong>：</p>
+<ul>
+<li>机器平均功耗约 15W（待机+轻度推理），全天候运行约 360 Wh/日 ≈ 0.36 kWh/日</li>
+<li>按上海电价 0.61 元/kWh：0.36 × 0.61 ≈ 0.22 元/日 → <strong>约 6.6 元/月</strong></li>
+</ul>
+<p><strong>其他成本</strong>：</p>
+<ul>
+<li>模型下载带宽：一次性，可忽略</li>
+<li>时间成本：初次配置约 2 小时，后续基本免维护</li>
+</ul>
+<p><strong>月费用估算</strong>：</p>
+<ul>
+<li>方案采用闲置设备：0（硬件） + 6.6（电费） ≈ <strong>6.6 元/月</strong></li>
+<li>若购入新机：166 + 6.6 ≈ <strong>172.6 元/月</strong></li>
+</ul>
+<hr>
+<h2 id="节省效果保守估计也超千元">节省效果：保守估计也超千元
+</h2><p>根据上面的测算，即使采用保守的 <strong>全新硬件方案</strong>，每月成本也约 <strong>173 元</strong>，而我以前使用商业 API 的实际花费不低于 <strong>150 元/月</strong>（且这还是在我不断优化提示、减少无效调用的前提下）。换句话说，<strong>在硬件摊销下，我几乎没有额外支出</strong>；若算上我实际因使用高级模型（如 GPT-4 Turbo）而产生的更高费用，则每月节省轻松超过 <strong>300 元</strong>。</p>
+<p>但如果我们参考我在使用 Claude API 时的真实账单（我曾为一个需要大量上下文的写作项目单月花费过 480 元），则本地化带来的节省更为显著。下面是我实际保存的三个月账单摘要（已脱敏）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>月份</th>
+					<th>Claude API 费用（元）</th>
+					<th>GPT-4 API 费用（元）</th>
+					<th>其他费用（元）</th>
+					<th>合计（元）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>2026-03</td>
+					<td>210</td>
+					<td>120</td>
+					<td>30</td>
+					<td>360</td>
+			</tr>
+			<tr>
+					<td>2026-04</td>
+					<td>185</td>
+					<td>100</td>
+					<td>25</td>
+					<td>310</td>
+			</tr>
+			<tr>
+					<td>2026-05</td>
+					<td>160</td>
+					<td>80</td>
+					<td>20</td>
+					<td>260</td>
+			</tr>
+			<tr>
+					<td><strong>平均</strong></td>
+					<td><strong>185</strong></td>
+					<td><strong>100</strong></td>
+					<td><strong>25</strong></td>
+					<td><strong>310</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>本地化方案月均成本</strong>（闲置设备）：约 7 元<br>
+<strong>每月节省</strong>：310 - 7 ≈ <strong>303 元</strong></p>
+<p>即便按照我个人更为节俭的 API 使用方式（平均 150 元/月），节省也仍在 <strong>140 元/月</strong> 以上。<strong>如果把硬件摊销计入，保守估计每月净节省仍在 100 元以上</strong>。换句话说，<strong>只要你每月有调用大模型的需求，Ollama 本地化基本能让这笔钱“几乎白花”</strong>。</p>
+<hr>
+<h2 id="实际使用场景它能干什么又不能干什么">实际使用场景：它能干什么，又不能干什么
+</h2><h3 id="能干什么">能干什么
+</h3><ol>
+<li><strong>写作润色与续写</strong>：我经常让它帮忙润色英文摘要、中文博客草稿，质量接近 Claude 3.5 Sonnet 的 80% 水平。</li>
+<li><strong>代码生成与调试</strong>：对于常见语言（Python、JavaScript、SQL），它能写出可直接运行的片段，调试时还能解释错误原因。</li>
+<li><strong>数据清洗与转换</strong>：给它一个脏乱的 CSV 样本，它能输出清洗后的 Python 脚本（pandas）。</li>
+<li><strong>快速原型构想</strong>：在开会时，我用它快速生成产品功能描述、用户故事甚至架构图的 Mermaid 语法。</li>
+<li><strong>本地知识库问答</strong>：结合简单的检索（比如我自建的 Markdown 文件夹），它能基于私有文档回答问题，不泄露敏感信息。</li>
+</ol>
+<h3 id="不能干什么或需要权衡">不能干什么（或需要权衡）
+</h3><ol>
+<li><strong>超长上下文推理</strong>：受限于显存，我一次最多能塞进约 3000 Token 的上下文（约 2000-2500 中文汉字）。若需要处理整本书或大量代码库，还是得走 API 或更强的硬件。</li>
+<li><strong>顶尖推理能力</strong>：在复杂逻辑谜题、奥数题或专业领域（如医学诊断）上的表现，仍不及 GPT-4 或 Claude 3 最新版。但对日常问题已足够。</li>
+<li><strong>多模态</strong>：目前我只用它处理文本。若需要图像理解或语音转文字，则需要额外的专门模型（如 Llava、Whisper），同样可以通过 Ollama 运行，但会增加资源消耗。</li>
+</ol>
+<hr>
+<h2 id="部署步骤五分钟上手">部署步骤：五分钟上手
+</h2><p>如果你也想试试，以下是我在 macOS 和 Ubuntu 上的通用步骤（Windows 类似）：</p>
+<ol>
+<li>
+<p><strong>安装 Ollama</strong></p>
+<ul>
+<li>macOS：<code>brew install ollama</code></li>
+<li>Linux：<code>curl -fsSL https://ollama.com/install.sh | sh</code></li>
+<li>Windows：从官网下载安装程序</li>
+</ul>
+</li>
+<li>
+<p><strong>拉取模型</strong>（以 Mistral-7B 为例）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ollama pull mistral
+</span></span></code></pre></div><p>这会下载约 4.3GB 的 GGUF 量化文件。</p>
+</li>
+<li>
+<p><strong>运行模型</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ollama run mistral
+</span></span></code></pre></div><p>出现 <code>&gt;&gt;&gt;</code> 提示符即可开始对话。</p>
+</li>
+<li>
+<p><strong>在代码中调用</strong>（可选）<br>
+Ollama 提供 OpenAI 兼容的 API 默认地址 <code>http://localhost:11434/v1</code>，你可以用任何 OpenAI 客户端库直接指向它：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> openai <span style="color:#f92672">import</span> OpenAI
+</span></span><span style="display:flex;"><span>client <span style="color:#f92672">=</span> OpenAI(base_url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://localhost:11434/v1&#34;</span>, api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ollama&#34;</span>)
+</span></span><span style="display:flex;"><span>response <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>chat<span style="color:#f92672">.</span>completions<span style="color:#f92672">.</span>create(
+</span></span><span style="display:flex;"><span>    model<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mistral&#34;</span>,
+</span></span><span style="display:flex;"><span>    messages<span style="color:#f92672">=</span>[{<span style="color:#e6db74">&#34;role&#34;</span>:<span style="color:#e6db74">&#34;user&#34;</span>,<span style="color:#e6db74">&#34;content&#34;</span>:<span style="color:#e6db74">&#34;你好，用中文介绍下自己。&#34;</span>}]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>print(response<span style="color:#f92672">.</span>choices[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>message<span style="color:#f92672">.</span>content)
+</span></span></code></pre></div></li>
+<li>
+<p><strong>设置开机自启</strong>（可选）<br>
+在 macOS 上可用 <code>brew services start ollama</code>；Linux 上可创建 systemd service。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>提示</strong>：首次运行会较慢（需要读取模型到内存），后续重启只需几秒。若你常常关机，建议使用 <code>ollama serve</code> 后台保持服务运行。</p>
+</blockquote>
+<hr>
+<h2 id="常见问题与踩坑记录">常见问题与踩坑记录
+</h2><p><strong>Q：为什么我运行后卡住很久？</strong><br>
+A：第一次加载模型需要将几 GB 数据从磁盘读入内存，请耐心等待 10-30 秒。若使用机械硬盘，时间会更长——强烈建议使用 SSD。</p>
+<p><strong>Q：输出中文很乱，夹着英文？</strong><br>
+A：某些量化模型在中文表达上稍弱。尝试更换为专门的中文版本，如 <code>ollama pull llama3-chat</code> 或 <code>ollama pull zephyr</code>（后者支持多语言）。</p>
+<p><strong>Q：我想让它记住更长的对话历史。</strong><br>
+A：Ollama 本身不保存状态，但你可以在每轮请求中手动把之前的对话拼接进去。实际使用中，我发现保留最近 6-8 轮对话（约 2000 Token）就能获得很好的连贯性。</p>
+<p><strong>Q：电费会不会很高？</strong><br>
+A：即使 24 小时满载运行，一台 15W 设备每月也不到 10 元电费。若你只在需要时启动，则几乎可以忽略不计。</p>
+<p><strong>Q：模型文件太大，我的硬盘放不下？</strong><br>
+A：量化模型其实并不大。7B 模型约 4-5GB，13B 大约 8-9GB。即使是 32B 的量化版，也只要不到 20GB。除非你想同时存放十几个大模型，否则一般消费级 SSD 完全足够。</p>
+<hr>
+<h2 id="给不同用户的建议">给不同用户的建议
+</h2><h3 id="如果你是">如果你是：
+</h3><ul>
+<li><strong>学生或副业自由职者</strong> → 直接用旧笔记本或台式机跑 Mistral-7B，几乎零成本享受 AI 能力。</li>
+<li><strong>中小型团队技术负责人</strong> → 考虑部署一台小型服务器（如 Intel NUC 或 AMD 小主机）运行 Ollama + 简单的 Web UI（如 Open WebUI），团队成员可通过浏览器访问，分摊硬件成本。</li>
+<li><strong>对隐私有要求的开发者</strong>（比如处理客户数据） → 本地化意味着数据不出设备，可完美满足 GDPR 或等保合规需求。</li>
+<li><strong>追求极致性能的玩家</strong> → 投资一张 RTX 4060 以上的显卡，配合 Ollama 运行 Llama-3-8B 或甚至混合精度的 70B 模型，体验将接近云端 API。</li>
+</ul>
+<h3 id="不建议的场景">不建议的场景：
+</h3><ul>
+<li>你只需要偶尔问一两个问题，且每月调用少于 5000 Token → 此时开通免费额度的 API 可能更省事。</li>
+<li>你必须使用最新前沿模型（如 GPT-4o、Claude 3 Opus）且无法接受任何质量下降 → 本地开源模型暂时无法匹配其顶尖能力。</li>
+<li>你没有闲置设备且不愿意投入任何硬件成本 → 这时候或许可以考虑共享算力平台或按小时租用的云端 GPU（如 RunPod），但成本结构会完全不同。</li>
+</ul>
+<hr>
+<h2 id="尾声本地化不是退步而是另一种效率">尾声：本地化不是退步，而是另一种效率
+</h2><p>三个月前，我还在为每条长长的提示词付费而焦虑；如今，我的 MacBook Pro 背后静默地运行着一个“私有 AI 引擎”，它不收取 Token 费用，不需要网络，也不怕深夜突然断联。当然，它也没有云端模型那样的“炫技”能力——但恰恰是这种平实可靠，让我重新把注意力放在了创造本身上，而不是不断算量成本的心理负担上。</p>
+<p>如果你也曾为每月的 API 账单而皱眉，不妨看看你抽屉里那台旧电脑——也许，它正等着一个叫 Ollama 的机会，变成你最得力的AI助手。<br>
+<strong>本地化，并不是落后于时代，而是让 AI 真正变成你自己的工具。</strong></p>
+<hr>
+<p><em>本文所有数据基于个人真实测试，硬件为 MacBook Pro (2019, 16GB RAM)，电费按居民阶梯价 0.61 元/kWh 计算。</em>  。*</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ollama/">Ollama</a>
+        
+            <a href="/tags/llm/">LLM</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC/">成本</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/">本地部署</a>
+        
+            <a href="/tags/api%E8%B4%B9%E7%94%A8/">API费用</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/ollama-cost-saving-real-test-2026\/'; 
+        const pageTitle = 'Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

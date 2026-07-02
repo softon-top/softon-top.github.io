@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>ESP32 on softon.top</title>
+		<link>https://softon.top/tags/esp32/</link>
+		<description>Recent content in ESP32 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/esp32/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>给 Claude Code 装一块物理仪表盘：Clawdmeter ESP32 亲手搭建指南</title>
+				<link>https://softon.top/software/clawdmeter-esp32-claude-code-usage-dashboard/</link>
+				<pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/clawdmeter-esp32-claude-code-usage-dashboard/</guid>
+				<description>&lt;p&gt;如果你每天和 Claude Code 打交道超过两小时，大概率经历过这种时刻：写着写着，突然被弹窗打断——&amp;ldquo;You&amp;rsquo;ve hit your usage limit.&amp;rdquo; 然后陷入等待、刷新、再等待的焦躁循环。&lt;/p&gt;&#xA;&lt;p&gt;这不是你的问题。Claude Code 缺少一个&lt;strong&gt;物理的、可见的、无需切换窗口的&lt;/strong&gt;用量指示器。Claude Code 的配额信息藏在终端日志里，藏在 &lt;code&gt;~/.claude/settings.json&lt;/code&gt; 的回显里，藏在 Anthropic Console 的网页里。你根本不会时刻想着去翻它。&lt;/p&gt;&#xA;&lt;p&gt;直到某天，冰岛的一位后端开发者 Hermann Björgvin 决定把这个问题物理化——他做了一个放在桌上的小屏幕，蓝牙连着电脑，实时显示 Claude Code 用量。更妙的是，上面还有一只像素风的 Clawd 小怪兽，用量越高它就越&amp;quot;忙&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;这就是 &lt;strong&gt;Clawdmeter&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;核心思路为什么要一块物理屏&#34;&gt;核心思路：为什么要一块物理屏？&#xA;&lt;/h2&gt;&lt;p&gt;在看技术细节之前，先想一个问题：Alfred 能查用量，终端能查用量，浏览器控制台也能查——为什么还需要一个&lt;strong&gt;硬件&lt;/strong&gt;？&lt;/p&gt;&#xA;&lt;p&gt;答案很简单：&lt;strong&gt;注意力的摩擦成本&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;用软件查用量，你需要经历&amp;quot;切换窗口→输入命令→看输出→切回来&amp;quot;这个流程。哪怕每次只要 10 秒，一天查 20 次也是 3 分钟，更重要的是打断了心流。你真正需要的是&lt;strong&gt;余光一扫&lt;/strong&gt;就能看到的那种体验——就像开车时的仪表盘，你不需要低头去摸手机查油量。&lt;/p&gt;&#xA;&lt;p&gt;Clawdmeter 解决了这个摩擦。它是个独立的物理设备，放在显示器底座上、键盘旁边、或者任何余光能扫到的位置。蓝色的 AMOLED 屏幕上，当前会话用量以进度条的形式实时更新，旁边还有一只像素小怪兽在跑来跑去。你不需要想它，它就在那里。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;硬件拆解30-美元的-esp32-小屏&#34;&gt;硬件拆解：30 美元的 ESP32 小屏&#xA;&lt;/h2&gt;&lt;p&gt;Clawdmeter 的核心硬件是 &lt;strong&gt;Waveshare ESP32-S3-Touch-AMOLED-2.16&lt;/strong&gt;，一块集成了 ESP32-S3 芯片和 2.16 英寸 AMOLED 触摸屏的开发板。&lt;/p&gt;&#xA;&lt;h3 id=&#34;具体参数&#34;&gt;具体参数&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;组件&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;规格&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;SoC&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;ESP32-S3R8（双核 Xtensa LX7 @ 240MHz）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;屏幕&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2.16&amp;quot; AMOLED，368×448 分辨率&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;触摸&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;电容触控（FT6336）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;无线&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wi-Fi 4 + BLE 5.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;存储&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;16MB Flash + 8MB PSRAM&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;接口&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;USB-C（供电 + 刷固件）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;尺寸&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;约 55×75mm&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;价格&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;AliExpress ~$30，Amazon ~$41&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;注意，你买的不是成品，是一块&lt;strong&gt;通用开发板&lt;/strong&gt;。你需要在上面烧录 Clawdmeter 的固件，它才会变成 Claude Code 仪表盘。当然，你也可以给这块板子刷其他固件——比如当个 MQTT 监控屏、系统资源监视器、或者智能家居控制面板。这是 ESP32 生态的优势。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

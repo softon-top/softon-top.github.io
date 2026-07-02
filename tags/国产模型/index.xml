@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>国产模型 on softon.top</title>
+		<link>https://softon.top/tags/%E5%9B%BD%E4%BA%A7%E6%A8%A1%E5%9E%8B/</link>
+		<description>Recent content in 国产模型 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 09 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%9B%BD%E4%BA%A7%E6%A8%A1%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex&#43;&#43; 方案对比</title>
+				<link>https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/</link>
+				<pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/</guid>
+				<description>&lt;p&gt;好马配好鞍——这句老话说的是工具的匹配。但对 Codex 桌面端的用户来说，现实是一匹好马（Codex 桌面的交互设计和插件生态确实出色，这点有一说一）配不上国产模型这口粮。OpenAI 的协议围墙把 DeepSeek、Qwen、Kimi 这些性价比高的国产模型挡在了官方客户端之外。&lt;/p&gt;&#xA;&lt;p&gt;社区当然不会坐等。过去几个月，&lt;strong&gt;EchoBird、CC Switch、Codex++&lt;/strong&gt; 三个项目相继火起来，各自从不同角度解决了同一个问题。但它们不是简单的竞品，更像是同一个工具箱里的三把不同的扳手。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章会拆解每个方案的架构逻辑、适用场景，以及它们之间的取舍，而不是列一份&amp;quot;安装步骤清单&amp;quot;——纯 How-to 教程已经被大模型一句话代替，不值当浪费墨水。&lt;/p&gt;&#xA;&lt;h2 id=&#34;问题的本质responses-api-vs-chat-completions&#34;&gt;问题的本质：Responses API vs Chat Completions&#xA;&lt;/h2&gt;&lt;p&gt;先说清楚为什么代码里改一个 &lt;code&gt;base_url&lt;/code&gt; 解决不了问题。&lt;/p&gt;&#xA;&lt;p&gt;Codex 桌面端（1.x 版本）的通信协议是 OpenAI 最新推出的 &lt;strong&gt;Responses API&lt;/strong&gt;。这个协议跟传统的 OpenAI &lt;strong&gt;Chat Completions API&lt;/strong&gt; 在消息格式、流式响应结构、工具调用参数上有本质区别。国产模型服务商（DeepSeek、阿里云百炼、智谱、Moonshot）至今只提供 Chat Completions 接口。&lt;/p&gt;&#xA;&lt;p&gt;Protocol mismatch。这不是换个 URL 能解决的。&lt;/p&gt;&#xA;&lt;p&gt;也就是说，想要在 Codex 桌面端使用国产模型，中间必须有一层&lt;strong&gt;协议转换器&lt;/strong&gt;——这个转换器既要能把 Chat Completions 翻译成 Responses API 的格式，又要能处理 OAuth 登录态的绕过、模型目录的映射、参数重写。三款工具的区别，本质上就是这个协议转换层的实现位置和设计哲学的不同。&lt;/p&gt;&#xA;&lt;h2 id=&#34;三种方案三种不同的架构切入点&#34;&gt;三种方案，三种不同的架构切入点&#xA;&lt;/h2&gt;&lt;p&gt;我画一个简化的分层模型，帮你看清每个工具打在哪个位置：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+------------------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| Codex 桌面端     |&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#a6e22e&#34;&gt;|&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+    ← Codex++ 注入层&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| 协议转换 / 路由   |    ← CC Switch 路由层&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| 国产模型 API      |    ← EchoBird 管理+路由层  &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+------------------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;echobirdall-in-one-agent-管理器&#34;&gt;EchoBird：All-in-One Agent 管理器&#xA;&lt;/h3&gt;&lt;p&gt;EchoBird 的定位是&amp;quot;AI Agent 管理器&amp;quot;，意味它不仅仅是做协议转换。它提供了完整的图形界面，内置了国内主流模型供应商的配置模板（DeepSeek、Qwen、Kimi、GLM、MiniMax 等），同时管理 Claude Code、Codex、Gemini CLI 等多个 Agent 的安装和运行。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

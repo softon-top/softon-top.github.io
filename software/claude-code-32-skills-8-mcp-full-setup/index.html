@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="裸装 Claude Code 只是个会写代码的实习生。装上 32 个 Skills 和 8 个 MCP 服务器，它才真正变成你的私人首席工程师——本文把整套配置流程、踩坑记录和实战场景一次讲透。">
+<title>让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</title>
+
+<link rel='canonical' href='https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="让 Claude Code 真正长脑子：32 个 Skills + 8 个 MCP 完整配置实录">
+<meta property='og:description' content="裸装 Claude Code 只是个会写代码的实习生。装上 32 个 Skills 和 8 个 MCP 服务器，它才真正变成你的私人首席工程师——本文把整套配置流程、踩坑记录和实战场景一次讲透。">
+<meta property='og:url' content='https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Skills' /><meta property='article:tag' content='MCP' /><meta property='article:tag' content='AI 编程' /><meta property='article:tag' content='效率工具' /><meta property='article:tag' content='开发环境' /><meta property='article:published_time' content='2026-05-20T09:30:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-20T09:30:00&#43;08:00'/>
+<meta name="twitter:title" content="让 Claude Code 真正长脑子：32 个 Skills + 8 个 MCP 完整配置实录">
+<meta name="twitter:description" content="裸装 Claude Code 只是个会写代码的实习生。装上 32 个 Skills 和 8 个 MCP 服务器，它才真正变成你的私人首席工程师——本文把整套配置流程、踩坑记录和实战场景一次讲透。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一为什么裸装的-claude-code不够用">一、为什么裸装的 Claude Code「不够用」</a></li>
+    <li><a href="#二skill-和-mcp-的本质差异">二、Skill 和 MCP 的本质差异</a>
+      <ul>
+        <li><a href="#21-skill一份让-claude学会一项专业的-markdown">2.1 Skill：一份让 Claude「学会一项专业」的 Markdown</a></li>
+        <li><a href="#22-mcp让-claude-拥有真外部能力的协议">2.2 MCP：让 Claude 拥有「真·外部能力」的协议</a></li>
+        <li><a href="#23-怎么选何时写-skill何时挂-mcp">2.3 怎么选：何时写 Skill，何时挂 MCP</a></li>
+      </ul>
+    </li>
+    <li><a href="#三32-个-skills我的完整清单">三、32 个 Skills：我的完整清单</a>
+      <ul>
+        <li><a href="#31-写作类10-个">3.1 写作类（10 个）</a></li>
+        <li><a href="#32-编程类11-个">3.2 编程类（11 个）</a></li>
+        <li><a href="#33-运维类7-个">3.3 运维类（7 个）</a></li>
+        <li><a href="#34-个人类4-个">3.4 个人类（4 个）</a></li>
+      </ul>
+    </li>
+    <li><a href="#四8-个-mcp-server连通你的真实世界">四、8 个 MCP Server：连通你的真实世界</a>
+      <ul>
+        <li><a href="#41-配置文件长什么样">4.1 配置文件长什么样</a></li>
+        <li><a href="#42-验证-mcp-是否生效">4.2 验证 MCP 是否生效</a></li>
+      </ul>
+    </li>
+    <li><a href="#五实战4-个真实场景串联-skill--mcp">五、实战：4 个真实场景串联 Skill + MCP</a>
+      <ul>
+        <li><a href="#场景一周一早会自动生成上周战报">场景一：周一早会，自动生成上周战报</a></li>
+        <li><a href="#场景二客户报-bug5-分钟出复现报告">场景二：客户报 Bug，5 分钟出复现报告</a></li>
+        <li><a href="#场景三博客文章自动发布">场景三：博客文章自动发布</a></li>
+        <li><a href="#场景四周五下班前自动备份">场景四：周五下班前，自动备份</a></li>
+      </ul>
+    </li>
+    <li><a href="#六踩坑实录这些坑我替你踩过了">六、踩坑实录：这些坑我替你踩过了</a>
+      <ul>
+        <li><a href="#坑-1mcp-server-启动慢导致-claude-卡死">坑 1：MCP Server 启动慢导致 Claude 卡死</a></li>
+        <li><a href="#坑-2飞书-mcp-频繁-401">坑 2：飞书 MCP 频繁 401</a></li>
+        <li><a href="#坑-3skill-描述太抽象claude-不触发">坑 3：Skill 描述太抽象，Claude 不触发</a></li>
+        <li><a href="#坑-4mcp-工具名冲突">坑 4：MCP 工具名冲突</a></li>
+        <li><a href="#坑-5上下文爆炸">坑 5：上下文爆炸</a></li>
+        <li><a href="#坑-6mcp-凭据泄露到日志">坑 6：MCP 凭据泄露到日志</a></li>
+      </ul>
+    </li>
+    <li><a href="#七写在最后skill--mcp-重塑了我对-ai-工具的认知">七、写在最后：Skill + MCP 重塑了我对 AI 工具的认知</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/ai/">
+                Ai
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/sharex/">
+                ShareX
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai-agent%E9%83%A8%E7%BD%B2/">
+                AI Agent部署
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/claude-code-32-skills-8-mcp-full-setup/">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-20T09:30:00&#43;08:00'>
+                    2026-05-20，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：17分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一为什么裸装的-claude-code不够用">一、为什么裸装的 Claude Code「不够用」</a></li>
+    <li><a href="#二skill-和-mcp-的本质差异">二、Skill 和 MCP 的本质差异</a>
+      <ul>
+        <li><a href="#21-skill一份让-claude学会一项专业的-markdown">2.1 Skill：一份让 Claude「学会一项专业」的 Markdown</a></li>
+        <li><a href="#22-mcp让-claude-拥有真外部能力的协议">2.2 MCP：让 Claude 拥有「真·外部能力」的协议</a></li>
+        <li><a href="#23-怎么选何时写-skill何时挂-mcp">2.3 怎么选：何时写 Skill，何时挂 MCP</a></li>
+      </ul>
+    </li>
+    <li><a href="#三32-个-skills我的完整清单">三、32 个 Skills：我的完整清单</a>
+      <ul>
+        <li><a href="#31-写作类10-个">3.1 写作类（10 个）</a></li>
+        <li><a href="#32-编程类11-个">3.2 编程类（11 个）</a></li>
+        <li><a href="#33-运维类7-个">3.3 运维类（7 个）</a></li>
+        <li><a href="#34-个人类4-个">3.4 个人类（4 个）</a></li>
+      </ul>
+    </li>
+    <li><a href="#四8-个-mcp-server连通你的真实世界">四、8 个 MCP Server：连通你的真实世界</a>
+      <ul>
+        <li><a href="#41-配置文件长什么样">4.1 配置文件长什么样</a></li>
+        <li><a href="#42-验证-mcp-是否生效">4.2 验证 MCP 是否生效</a></li>
+      </ul>
+    </li>
+    <li><a href="#五实战4-个真实场景串联-skill--mcp">五、实战：4 个真实场景串联 Skill + MCP</a>
+      <ul>
+        <li><a href="#场景一周一早会自动生成上周战报">场景一：周一早会，自动生成上周战报</a></li>
+        <li><a href="#场景二客户报-bug5-分钟出复现报告">场景二：客户报 Bug，5 分钟出复现报告</a></li>
+        <li><a href="#场景三博客文章自动发布">场景三：博客文章自动发布</a></li>
+        <li><a href="#场景四周五下班前自动备份">场景四：周五下班前，自动备份</a></li>
+      </ul>
+    </li>
+    <li><a href="#六踩坑实录这些坑我替你踩过了">六、踩坑实录：这些坑我替你踩过了</a>
+      <ul>
+        <li><a href="#坑-1mcp-server-启动慢导致-claude-卡死">坑 1：MCP Server 启动慢导致 Claude 卡死</a></li>
+        <li><a href="#坑-2飞书-mcp-频繁-401">坑 2：飞书 MCP 频繁 401</a></li>
+        <li><a href="#坑-3skill-描述太抽象claude-不触发">坑 3：Skill 描述太抽象，Claude 不触发</a></li>
+        <li><a href="#坑-4mcp-工具名冲突">坑 4：MCP 工具名冲突</a></li>
+        <li><a href="#坑-5上下文爆炸">坑 5：上下文爆炸</a></li>
+        <li><a href="#坑-6mcp-凭据泄露到日志">坑 6：MCP 凭据泄露到日志</a></li>
+      </ul>
+    </li>
+    <li><a href="#七写在最后skill--mcp-重塑了我对-ai-工具的认知">七、写在最后：Skill + MCP 重塑了我对 AI 工具的认知</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>上周我在公司茶水间被同事截胡：「你那个 Claude Code 是不是开了挂？我让它读飞书文档，它说不会；我让它查我数据库，它说不会；我让它跑 Playwright 截图，它还说不会。这玩意儿不就是个穿着马甲的 GPT？」</p>
+<p>我笑了笑，打开他的 <code>~/.claude/</code>，里面空空如也——一个 Skill 没装，一个 MCP 没配。</p>
+<p>这就像买了一台 ThinkPad 但只用浏览器打开 Word，怪不得他觉得不香。</p>
+</blockquote>
+<p>裸装的 Claude Code，本质上是个<strong>会写代码但什么外部世界都接触不到的实习生</strong>。它能在你当前目录里 <code>read/write/edit/exec</code>，但它读不到你的 Notion、连不上你的 Postgres、也跑不了 Playwright 自动化。</p>
+<p>而装好 <strong>32 个 Skills + 8 个 MCP</strong> 之后，它会从「写代码的助手」一路升级到「全栈数字员工」——能查文档、能跑数据库、能画 Mermaid 图、能调浏览器，甚至能直接帮你发飞书消息。</p>
+<p>这篇文章把整套配置流程、踩坑记录和实战场景一次讲透。读完你只需要复制粘贴，就能拥有一个真正长脑子的 Claude Code。</p>
+<h2 id="一为什么裸装的-claude-code不够用">一、为什么裸装的 Claude Code「不够用」
+</h2><p>先说一个反直觉的事实：<strong>Claude Code 默认能力其实很弱</strong>。</p>
+<p>它默认只有 <code>read / write / edit / exec / search</code> 这几把刀，所有「外部知识」都得从你当前的代码仓库里现读。这意味着：</p>
+<ul>
+<li>你想让它写一个调用 Stripe 的支付模块？它得先猜 API、再让你纠错。</li>
+<li>你想让它帮你查昨天的飞书会议纪要？它会礼貌地说「我没有联网能力」。</li>
+<li>你想让它跑一段 SQL 验证数据？它只能写出 SQL 让你自己去跑。</li>
+</ul>
+<p>这三个问题的解法不一样：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>问题类型</th>
+					<th>解法</th>
+					<th>关键词</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>缺少<strong>领域知识 / 操作流程</strong></td>
+					<td>Skill</td>
+					<td>写好的 Markdown 指令包</td>
+			</tr>
+			<tr>
+					<td>缺少<strong>外部系统访问</strong></td>
+					<td>MCP Server</td>
+					<td>进程化的工具协议</td>
+			</tr>
+			<tr>
+					<td>缺少<strong>长期记忆</strong></td>
+					<td>Memory + Skill</td>
+					<td>持久化文件</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>Skill 是「方法论」，MCP 是「连接器」</strong>——这是整篇文章的核心认知。搞清楚这两者的边界，你就明白了为什么我装 32 个 Skill + 8 个 MCP 而不是反过来。</p>
+<h2 id="二skill-和-mcp-的本质差异">二、Skill 和 MCP 的本质差异
+</h2><p>很多人第一次接触 Claude Code 生态会被概念绕晕：Skill、MCP、Tool、Agent 听起来都像。我用一句话给你拆开：</p>
+<blockquote>
+<p><strong>Skill 是 Claude 自己读的「员工手册」，MCP 是 Claude 调用的「外部 API」。</strong></p>
+</blockquote>
+<p><img src="https://img.softon.top/2026/05/20/152821-95a91c-claude-code-32-skills-8-mcp-full-setup-v2-IMG_02.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Skill 与 MCP 架构对比"
+	
+	
+></p>
+<h3 id="21-skill一份让-claude学会一项专业的-markdown">2.1 Skill：一份让 Claude「学会一项专业」的 Markdown
+</h3><p>一个 Skill 本质上就是一个目录，里面一定包含 <code>SKILL.md</code>，可能还有辅助脚本和模板：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">~/.claude/skills/my-skill/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── SKILL.md          # 主入口，描述触发条件和操作流程</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── templates/        # 可选：复用模板</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">└── scripts/          # 可选：辅助脚本</span>
+</span></span></code></pre></div><p><code>SKILL.md</code> 顶部的 <code>description</code> 字段是关键——Claude 会扫描所有 Skills 的 description，<strong>只在任务匹配时才加载主体内容</strong>，避免上下文爆炸。</p>
+<p>举个例子：当你说「帮我写一篇小红书图文」，Claude 看到 <code>xiaohongshu-article</code> Skill 的描述「小红书图文创作规范，包含标题模板、来源声明、合规检查」，就会主动 <code>read SKILL.md</code>，按里面的规则办事。</p>
+<p><strong>Skill 不带任何外部权限</strong>，它只是「让 Claude 读一遍说明书」。</p>
+<h3 id="22-mcp让-claude-拥有真外部能力的协议">2.2 MCP：让 Claude 拥有「真·外部能力」的协议
+</h3><p>MCP 全称 Model Context Protocol，由 Anthropic 在 2024 年底开源。简单说：</p>
+<ul>
+<li><strong>MCP Server</strong> 是一个独立进程，对外暴露 <code>tools / resources / prompts</code> 三类接口。</li>
+<li><strong>MCP Client</strong>（Claude Code 就是其一）通过 stdio 或 SSE 连接 Server。</li>
+<li>Claude 调用 MCP 工具就像调用本地函数，但执行体在 Server 进程里。</li>
+</ul>
+<p>这套设计意味着你可以<strong>让任何系统接入 Claude，而不用改 Claude 本体一行代码</strong>。Postgres、Notion、Linear、Slack、飞书……官方和社区已经写了上百个 MCP Server。</p>
+<p><strong>MCP 带真权限</strong>——你给它 token，它就能动你的真实数据。所以 MCP 配置必然涉及凭据管理。</p>
+<h3 id="23-怎么选何时写-skill何时挂-mcp">2.3 怎么选：何时写 Skill，何时挂 MCP
+</h3><p>我自己的判断标准就一句话：</p>
+<blockquote>
+<p>「这件事需要外部系统数据吗？需要 → MCP；不需要 → Skill。」</p>
+</blockquote>
+<ul>
+<li><strong>写文章风格、代码 Review 清单、命名规范、审计流程</strong> → 全是 Skill。</li>
+<li><strong>查飞书文档、读 Postgres、调浏览器、发邮件</strong> → 全是 MCP。</li>
+</ul>
+<p>混淆这两者的代价是<strong>配置膨胀</strong>——把方法论写进 MCP，每次调用都要起进程；把外部 API 塞进 Skill，Claude 只会照着 Markdown 念经。</p>
+<h2 id="三32-个-skills我的完整清单">三、32 个 Skills：我的完整清单
+</h2><p>我把 Skills 按「写作 / 开发 / 运维 / 个人」四类分组管理，目录结构长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">~/.claude/skills/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── writing/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── xiaohongshu-article/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── wechat-public-account/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── hugo-blog/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   └── ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── coding/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── code-review/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── git-workflow/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── test-driven-dev/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   └── ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── ops/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── healthcheck/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── docker-compose/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   ├── ssh-tunnel/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│   └── ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">└── personal/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">├── inbox-triage/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">├── memory-curator/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">└── ...</span>
+</span></span></code></pre></div><p><img src="https://img.softon.top/2026/05/20/152823-63ff78-claude-code-32-skills-8-mcp-full-setup-v2-IMG_03.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Skills 工具箱概念图"
+	
+	
+></p>
+<h3 id="31-写作类10-个">3.1 写作类（10 个）
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>Skill</th>
+					<th>触发场景</th>
+					<th>核心价值</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>xiaohongshu-article</code></td>
+					<td>小红书图文</td>
+					<td>标题模板 + 来源声明 + 合规自检</td>
+			</tr>
+			<tr>
+					<td><code>wechat-public-account</code></td>
+					<td>公众号长文</td>
+					<td>排版规范 + 字段头 + 互链建议</td>
+			</tr>
+			<tr>
+					<td><code>hugo-blog</code></td>
+					<td>个人站点</td>
+					<td>TOML 头 + slug 命名 + 文章互链</td>
+			</tr>
+			<tr>
+					<td><code>zhihu-answer</code></td>
+					<td>知乎回答</td>
+					<td>起手 hook + 数据引用规范</td>
+			</tr>
+			<tr>
+					<td><code>tweet-thread</code></td>
+					<td>X 长推</td>
+					<td>280 字切分 + 钩子节奏</td>
+			</tr>
+			<tr>
+					<td><code>email-formal</code></td>
+					<td>正式邮件</td>
+					<td>称谓 / 主题 / 结尾自动校准</td>
+			</tr>
+			<tr>
+					<td><code>meeting-minutes</code></td>
+					<td>会议纪要</td>
+					<td>决议 / Action / Owner 三段式</td>
+			</tr>
+			<tr>
+					<td><code>prd-template</code></td>
+					<td>产品 PRD</td>
+					<td>用户故事 + 验收标准 + 边界声明</td>
+			</tr>
+			<tr>
+					<td><code>release-notes</code></td>
+					<td>版本说明</td>
+					<td>用户视角动词开头 + 分组</td>
+			</tr>
+			<tr>
+					<td><code>daily-summary</code></td>
+					<td>日报</td>
+					<td>完成 / 遇阻 / 明日 三段</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="32-编程类11-个">3.2 编程类（11 个）
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>Skill</th>
+					<th>触发场景</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>code-review</code></td>
+					<td>用户说「review 这段代码」</td>
+			</tr>
+			<tr>
+					<td><code>git-workflow</code></td>
+					<td>提交 / 分支 / PR 操作</td>
+			</tr>
+			<tr>
+					<td><code>test-driven-dev</code></td>
+					<td>写测试先于写实现</td>
+			</tr>
+			<tr>
+					<td><code>refactor-extract</code></td>
+					<td>重构抽取函数 / 类</td>
+			</tr>
+			<tr>
+					<td><code>bug-investigate</code></td>
+					<td>复现 + 定位 + 假设三步</td>
+			</tr>
+			<tr>
+					<td><code>migration-plan</code></td>
+					<td>数据库 / API 迁移规划</td>
+			</tr>
+			<tr>
+					<td><code>monorepo-pnpm</code></td>
+					<td>pnpm workspaces 操作</td>
+			</tr>
+			<tr>
+					<td><code>python-uv</code></td>
+					<td>uv 包管理标准动作</td>
+			</tr>
+			<tr>
+					<td><code>rust-cargo</code></td>
+					<td>Cargo 工程惯例</td>
+			</tr>
+			<tr>
+					<td><code>nextjs-15</code></td>
+					<td>Next.js App Router 规范</td>
+			</tr>
+			<tr>
+					<td><code>tailwind-shadcn</code></td>
+					<td>UI 实现风格统一</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="33-运维类7-个">3.3 运维类（7 个）
+</h3><p>涵盖 <code>healthcheck</code> / <code>docker-compose</code> / <code>ssh-tunnel</code> / <code>caddy-reverse-proxy</code> / <code>cloudflare-tunnel</code> / <code>proxmox-lxc</code> / <code>nas-backup</code>。这些 Skill 主要是把「正确姿势」固化下来——比如 <code>healthcheck</code> 会强制 Claude 先查 SSH、再查防火墙、再查 cron，避免它瞎跑命令。</p>
+<h3 id="34-个人类4-个">3.4 个人类（4 个）
+</h3><p><code>inbox-triage</code>（邮件分级）、<code>memory-curator</code>（长期记忆维护）、<code>weekly-review</code>（周复盘模板）、<code>reading-notes</code>（读书笔记结构）。</p>
+<blockquote>
+<p>⚡ <strong>小贴士</strong>：Skill 不是越多越好，每多一个都意味着 Claude 启动时多扫一眼描述。建议<strong>保持在 30-40 个</strong>，触发率低的果断淘汰。</p>
+</blockquote>
+<h2 id="四8-个-mcp-server连通你的真实世界">四、8 个 MCP Server：连通你的真实世界
+</h2><p>Skills 让 Claude「知道怎么办」，MCP 才让它「真的去办」。我精挑了 8 个最常用的：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>MCP Server</th>
+					<th>功能</th>
+					<th>接入难度</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>mcp-postgres</code></td>
+					<td>直接读写本地/远程 Postgres</td>
+					<td>⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-feishu</code></td>
+					<td>读写飞书文档 / 发消息</td>
+					<td>⭐⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-playwright</code></td>
+					<td>浏览器自动化 + 截图</td>
+					<td>⭐⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-filesystem</code></td>
+					<td>跨目录文件操作（沙箱外）</td>
+					<td>⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-github</code></td>
+					<td>Issue / PR / Release</td>
+					<td>⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-linear</code></td>
+					<td>任务 / 项目状态</td>
+					<td>⭐⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-fetch</code></td>
+					<td>通用 HTTP 抓取 + Markdown 化</td>
+					<td>⭐</td>
+			</tr>
+			<tr>
+					<td><code>mcp-sequential-thinking</code></td>
+					<td>复杂规划脚手架</td>
+					<td>⭐</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="41-配置文件长什么样">4.1 配置文件长什么样
+</h3><p>Claude Code 的 MCP 配置在 <code>~/.claude.json</code> 或项目 <code>.mcp.json</code> 里，结构清晰：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">&#34;mcpServers&#34;: {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;postgres&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;command&#34;: &#34;npx&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;args&#34;: [&#34;-y&#34;, &#34;@modelcontextprotocol/server-postgres&#34;,</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#a6e22e">&#34;postgresql://user:pass@localhost:5432/mydb&#34;]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;feishu&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;command&#34;: &#34;npx&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;args&#34;: [&#34;-y&#34;, &#34;@larksuiteoapi/lark-mcp&#34;],</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;env&#34;: {</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;APP_ID&#34;: &#34;cli_xxx&#34;,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">&#34;APP_SECRET&#34;: &#34;xxx&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;playwright&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;command&#34;: &#34;npx&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;args&#34;: [&#34;-y&#34;, &#34;@playwright/mcp@latest&#34;]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#34;github&#34;: {</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;command&#34;: &#34;docker&#34;,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;args&#34;: [&#34;run&#34;, &#34;-i&#34;, &#34;--rm&#34;, &#34;-e&#34;, &#34;GITHUB_TOKEN&#34;,</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#a6e22e">&#34;ghcr.io/github/github-mcp-server&#34;],</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">&#34;env&#34;: { &#34;GITHUB_TOKEN&#34;: &#34;ghp_xxx&#34; }</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p>注意三件事：</p>
+<ol>
+<li><strong>凭据走环境变量</strong>，不要硬编码到 args 里——避免被 <code>claude --debug</code> 日志泄露。</li>
+<li><strong>本地 npx 启动慢</strong>，第一次会下包；推荐写一个本地 wrapper 脚本预热。</li>
+<li><strong>Docker 化的 MCP 启动更稳</strong>（GitHub 官方推荐用 <code>ghcr.io/github/github-mcp-server</code>），但首启需要拉镜像。</li>
+</ol>
+<h3 id="42-验证-mcp-是否生效">4.2 验证 MCP 是否生效
+</h3><p>启动 Claude Code 后，敲：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">/mcp</span>
+</span></span></code></pre></div><p>会列出所有已加载的 Server 和它们暴露的 tools。我的工作机现在显示：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">✔ postgres   (8 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ feishu     (12 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ playwright (15 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ filesystem (5 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ github     (29 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ linear     (10 tools)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ fetch      (1 tool)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">✔ sequential-thinking (1 tool)</span>
+</span></span></code></pre></div><p>如果某个 Server 启动失败，<code>/mcp</code> 会显示红色 ✗ 和错误日志，多半是 token 过期或 npm 包名拼错。</p>
+<h2 id="五实战4-个真实场景串联-skill--mcp">五、实战：4 个真实场景串联 Skill + MCP
+</h2><p>光看清单没意思，看几个我每天都在用的真实流程。</p>
+<p><img src="https://img.softon.top/2026/05/20/152824-d2a141-claude-code-32-skills-8-mcp-full-setup-v2-IMG_04.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="分布式开发协作场景"
+	
+	
+></p>
+<h3 id="场景一周一早会自动生成上周战报">场景一：周一早会，自动生成上周战报
+</h3><p>我说一句：<strong>「拉一下我上周的 Linear 已完成任务，写成日报发到 #weekly 飞书群。」</strong></p>
+<p>Claude 的执行链：</p>
+<ol>
+<li>触发 <code>weekly-review</code> Skill → 加载日报模板。</li>
+<li>调用 <code>mcp-linear</code> 的 <code>list_issues</code>，filter <code>status=Done</code> &amp; <code>updated_at&gt;=last_monday</code>。</li>
+<li>用 Skill 模板格式化为「完成 / 遇阻 / 下周计划」三段。</li>
+<li>调用 <code>mcp-feishu</code> 的 <code>send_message</code>，target 是 <code>#weekly</code> 群。</li>
+</ol>
+<p>整个过程我只敲一句话，2 分钟搞定。<strong>Skill 提供格式，MCP 提供数据，两者完美分工</strong>。</p>
+<h3 id="场景二客户报-bug5-分钟出复现报告">场景二：客户报 Bug，5 分钟出复现报告
+</h3><p>客户截图发过来：「点这个按钮没反应」。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">/skill bug-investigate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">帮我复现这个问题，使用线上环境 https://app.example.com</span>
+</span></span></code></pre></div><p>Claude 执行：</p>
+<ol>
+<li>加载 <code>bug-investigate</code> Skill → 拿到「复现 / 假设 / 验证」三步框架。</li>
+<li>调用 <code>mcp-playwright</code> 的 <code>browser_navigate</code> + <code>browser_click</code>，真去点那个按钮。</li>
+<li>出错时自动 <code>browser_screenshot</code>，保存到 <code>~/bugs/2026-05-20/</code>。</li>
+<li>调用 <code>mcp-postgres</code> 查相关数据状态。</li>
+<li>输出一份带截图 + SQL 结果的复现报告。</li>
+</ol>
+<p>以前我手工做这一套要 30 分钟，现在 5 分钟。</p>
+<h3 id="场景三博客文章自动发布">场景三：博客文章自动发布
+</h3><p>写完一篇 Hugo 文章，我说：「<strong>发出去</strong>。」</p>
+<p>Claude 执行：</p>
+<ol>
+<li>加载 <code>hugo-blog</code> Skill → 校验 TOML 头、slug、互链。</li>
+<li>调用 <code>mcp-github</code> 的 <code>create_pull_request</code>，把文章 PR 到我的博客仓库。</li>
+<li>调用 <code>mcp-feishu</code> 的 <code>send_message</code>，给我自己发条「PR 已建，等 Vercel 预览」。</li>
+</ol>
+<h3 id="场景四周五下班前自动备份">场景四：周五下班前，自动备份
+</h3><p>「<strong>今天的工作记忆 dump 到 NAS</strong>。」</p>
+<ol>
+<li>加载 <code>nas-backup</code> Skill → 拿到 SMB 路径和命名规范。</li>
+<li>调用 <code>mcp-filesystem</code> 把 <code>~/.claude/sessions/</code> 打包。</li>
+<li>调用 <code>exec</code> 跑 <code>smbclient</code> 上传到飞牛 NAS。</li>
+<li>触发 <code>memory-curator</code> Skill → 把今日对话精华抽到 <code>MEMORY.md</code>。</li>
+</ol>
+<h2 id="六踩坑实录这些坑我替你踩过了">六、踩坑实录：这些坑我替你踩过了
+</h2><p>不藏着掖着，这套配置我前后改了 7 版才稳定，几个核心坑：</p>
+<h3 id="坑-1mcp-server-启动慢导致-claude-卡死">坑 1：MCP Server 启动慢导致 Claude 卡死
+</h3><p>第一次跑会卡 30+ 秒，因为 <code>npx -y</code> 在拉包。<strong>解法</strong>：要么换 <code>bunx</code>，要么先 <code>npm i -g</code> 把 Server 装到本地，args 改成本地路径。</p>
+<h3 id="坑-2飞书-mcp-频繁-401">坑 2：飞书 MCP 频繁 401
+</h3><p><code>tenant_access_token</code> 默认有效期 2 小时。<strong>解法</strong>：用社区维护的 <code>lark-mcp</code> 自带刷新逻辑，别自己在 <code>env</code> 里塞死 token。</p>
+<h3 id="坑-3skill-描述太抽象claude-不触发">坑 3：Skill 描述太抽象，Claude 不触发
+</h3><p>写过一个 Skill 描述是「文章写作辅助」——结果 Claude 一次没主动加载。<strong>解法</strong>：description 里<strong>塞触发关键词</strong>：</p>
+<blockquote>
+<p>「触发：用户说『写公众号』『发推文』『发小红书』时启用」</p>
+</blockquote>
+<p>加上明显的关键词，触发率直接上去。</p>
+<h3 id="坑-4mcp-工具名冲突">坑 4：MCP 工具名冲突
+</h3><p>我同时挂了两个 GitHub MCP（官方和社区版），两边都有 <code>create_issue</code>。<strong>解法</strong>：手动去掉一个，或者用 <code>disabled</code> 配置屏蔽冲突 tool。</p>
+<h3 id="坑-5上下文爆炸">坑 5：上下文爆炸
+</h3><p>32 个 Skill 全启时，描述加起来约 4k token。<strong>解法</strong>：把低频 Skill 拆到 <code>~/.claude/skills/_archive/</code>，用软链按需挂载——一周用不到就归档。</p>
+<h3 id="坑-6mcp-凭据泄露到日志">坑 6：MCP 凭据泄露到日志
+</h3><p><code>claude --debug</code> 会打印 MCP 启动命令，包含 token。<strong>解法</strong>：所有 MCP 凭据走 <code>env</code>，不进 <code>args</code>；调试日志单独存到加密目录。</p>
+<p><img src="https://img.softon.top/2026/05/20/152836-7c9275-claude-code-32-skills-8-mcp-full-setup-v2-IMG_05.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="调试代码踩坑后豁然开朗"
+	
+	
+></p>
+<h2 id="七写在最后skill--mcp-重塑了我对-ai-工具的认知">七、写在最后：Skill + MCP 重塑了我对 AI 工具的认知
+</h2><p>装完这 32 + 8，我做了一件事：<strong>回看自己最近 30 天和 Claude Code 的对话日志</strong>。</p>
+<p>最直观的变化是——<strong>我不再写&quot;提示词&quot;，我写&quot;指令&quot;</strong>。</p>
+<p>以前要小心翼翼地铺垫：「假设你是一个资深前端工程师，我们要做一个……」。现在我直接说：「按 <code>code-review</code> 规范看下这个 PR」「用 <code>feishu</code> MCP 发到 #dev 群」。简洁得像在跟同事下任务。</p>
+<blockquote>
+<p>Claude 不再是一个「需要哄着干活的实习生」，而是一个<strong>有规章制度、有外部权限、有长期记忆的资深员工</strong>。</p>
+</blockquote>
+<p>Skill 给它「专业素养」，MCP 给它「工作权限」，Memory 给它「连续记忆」——这三件事拼起来，AI 才真正从「玩具」走向「生产力工具」。</p>
+<p>如果你还在用裸装的 Claude Code，相信我，配上这套你会回不去。</p>
+<p>最后留个互动：<strong>你正在用哪些 MCP？最离不开哪个 Skill？</strong> 评论区交个底，我把社区呼声最高的整理到下一篇里。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/skills/">Skills</a>
+        
+            <a href="/tags/mcp/">MCP</a>
+        
+            <a href="/tags/ai-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+        
+            <a href="/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/2026-efficiency-revolution-ai-tools/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">2026年效率革命：五款值得尝试的AI集成工具</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/2026-free-screenshot-tools-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">2026 装机必备：5 款免费截图软件深度横评，谁是你的效率神器？</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/claude-code-32-skills-8-mcp-full-setup\/'; 
+        const pageTitle = '让 Claude Code 真正长脑子：32 个 Skills \u002b 8 个 MCP 完整配置实录';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 182 天 7 小时 · 68 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-02 15:43:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

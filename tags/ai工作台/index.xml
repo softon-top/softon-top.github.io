@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI工作台 on softon.top</title>
+		<link>https://softon.top/tags/ai%E5%B7%A5%E4%BD%9C%E5%8F%B0/</link>
+		<description>Recent content in AI工作台 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 10 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai%E5%B7%A5%E4%BD%9C%E5%8F%B0/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</title>
+				<link>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</link>
+				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</guid>
+				<description>&lt;p&gt;你有没有过这种时刻——月底打开 Claude Max 账单，$200 就这么没了？&lt;/p&gt;&#xA;&lt;p&gt;或者，你盯着 ChatGPT 的对话记录，明知道那些 prompt 里有公司的敏感代码，但除了安慰自己&amp;quot;应该没事吧&amp;quot;之外别无选择？&lt;/p&gt;&#xA;&lt;p&gt;2026 年 5 月底，一个叫 Odysseus 的项目在 GitHub 上炸了。作者是 PewDiePie（没错，就是那个 YouTuber），4 天斩获 5 万星标，到现在势头不减。它不是什么新模型，而是一个&lt;strong&gt;完全自托管的 AI 工作台&lt;/strong&gt;——聊天、Agent、深度研究、文档管理、邮件、日历，全塞进一个浏览器标签页，跑在你的本地硬件上。&lt;/p&gt;&#xA;&lt;p&gt;你猜最吸引人的是什么？&lt;/p&gt;&#xA;&lt;p&gt;不是&amp;quot;自托管&amp;quot;这个 buzzword，而是它让你&lt;strong&gt;真正拥有了选择权&lt;/strong&gt;：想省钱就用本地模型 Ollama，想用顶级能力就接 API，数据全程在自己手里。&lt;/p&gt;&#xA;&lt;h2 id=&#34;到底什么是-odysseus&#34;&gt;到底什么是 Odysseus？&#xA;&lt;/h2&gt;&lt;p&gt;简单说，Odysseus 是一个开源（MIT 协议）、可自托管的 AI 工作空间。它的 UI 逻辑和 ChatGPT 类似——左侧聊天列表，中间对话区——但区别大了去了：&lt;strong&gt;一切跑在你的硬件上，数据不出门，模型随你换&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;核心能力清单：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Chat &amp;amp; Agents&lt;/strong&gt; — 多模型对话，内置 Agent 可执行文件编辑、网页浏览、邮件处理&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deep Research&lt;/strong&gt; — 自动搜索、交叉验证、生成带引用的研究报告&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文档处理&lt;/strong&gt; — 内嵌文档编辑器，支持 PDF/Office 导出&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;记忆系统&lt;/strong&gt; — 基于 ChromaDB 的向量记忆，Agent 能记住之前的对话和任务&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;邮件 &amp;amp; 日历&lt;/strong&gt; — IMAP/SMTP 接入，AI 辅助撰写和自动回复&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;MCP 支持&lt;/strong&gt; — 可接入 Model Context Protocol 工具链&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;PWA 移动端&lt;/strong&gt; — 手机浏览器也能访问&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;部署方式上，它提供了 Docker Compose 一键部署，也支持 Linux/macOS/Windows 裸机运行。默认端口 7000。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

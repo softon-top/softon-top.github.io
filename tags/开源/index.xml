@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>开源 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BC%80%E6%BA%90/</link>
+		<description>Recent content in 开源 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 29 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BC%80%E6%BA%90/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>2000 行代码写一个完整操作系统：egos-2000 源码拆解</title>
+				<link>https://softon.top/software/egos-2000-teaching-os-2000-lines/</link>
+				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/egos-2000-teaching-os-2000-lines/</guid>
+				<description>&lt;h2 id=&#34;操作系统课的集体创伤&#34;&gt;操作系统课的集体创伤&#xA;&lt;/h2&gt;&lt;p&gt;学过操作系统的人大概都有类似的记忆：教材厚得像砖头，概念抽象得像哲学，考完试之后脑子里只剩下&amp;quot;进程是资源分配的基本单位，线程是调度的基本单位&amp;quot;这种八股文。&lt;/p&gt;&#xA;&lt;p&gt;至于真正的操作系统长什么样？不知道。代码在哪里？没见过。能不能自己写一个？想都不敢想。&lt;/p&gt;&#xA;&lt;p&gt;这不是你的问题，是教学方式的问题。&lt;/p&gt;&#xA;&lt;p&gt;传统操作系统课程有个致命矛盾：&lt;strong&gt;概念必须讲全，但代码不可能看全&lt;/strong&gt;。Linux 内核超过 2800 万行代码，就算是精简版的 xv6 也有近 1 万行——对于一个学期的课程来说，这已经是&amp;quot;只能挑重点讲&amp;quot;的体量了。&lt;/p&gt;&#xA;&lt;p&gt;结果就是：学生记住了一堆名词（上下文切换、页表、中断向量），却从未完整地理解过一个操作系统是怎么从第一行代码跑到最后一行的。&lt;/p&gt;&#xA;&lt;p&gt;Cornell 大学的博士生 Yunhao Zhang 决定解决这个问题。他的方案简单粗暴：&lt;strong&gt;把整个操作系统压缩到 2000 行代码，让每个学生都能从头到尾读完。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这就是 egos-2000。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-egos-2000&#34;&gt;什么是 egos-2000&#xA;&lt;/h2&gt;&lt;p&gt;egos-2000，全称 Earth and Grass Operating System，是一个专为教学设计的微型操作系统。它的核心代码恰好 2000 行（用 &lt;code&gt;cloc&lt;/code&gt; 工具计数），主要由 C 语言编写，配合少量 RISC-V 汇编。&lt;/p&gt;&#xA;&lt;p&gt;别被&amp;quot;2000 行&amp;quot;这个数字骗了，以为它只是个玩具。egos-2000 实现了一个操作系统应该有的所有核心组件：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;内存管理&lt;/strong&gt;：物理内存分配、虚拟地址空间&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程控制&lt;/strong&gt;：进程创建、调度、上下文切换&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;系统调用&lt;/strong&gt;：用户态与内核态的边界&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件系统&lt;/strong&gt;：inode、目录、文件读写&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程间通信&lt;/strong&gt;：消息传递机制&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Shell&lt;/strong&gt;：命令行交互界面&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;它能在 QEMU 模拟器上运行，也能烧录到真实的 RISC-V 开发板上跑起来——比如 Digilent 的 Arty A7 FPGA 板，或者 Sipeed 的 Lichee RV64 模块。&lt;/p&gt;&#xA;&lt;p&gt;更有意思的是，有人成功在 egos-2000 上跑起了 DOOM。没错，就是那个 1993 年的经典 FPS 游戏。一个 2000 行的操作系统，能撑起一个 3D 射击游戏的运行——这说明它的架构设计是认真的，不是糊弄学生的 demo。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>ds4：Redis 作者用 C 语言写了一个 DeepSeek 专用推理引擎</title>
+				<link>https://softon.top/software/ds4-deepseek-inference-engine/</link>
+				<pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ds4-deepseek-inference-engine/</guid>
+				<description>&lt;p&gt;Salvatore Sanfilippo，网名 antirez，Redis 的作者，在数据库和键值存储领域耕耘了近 15 年。&lt;/p&gt;&#xA;&lt;p&gt;2025 年底，他转了个方向，开始写一个 DeepSeek 专用的大模型推理引擎。&lt;/p&gt;&#xA;&lt;p&gt;项目名叫 &lt;strong&gt;ds4&lt;/strong&gt;——有人猜是 &amp;ldquo;DeepSeek for 4-bit&amp;rdquo;，有人猜是 &amp;ldquo;DeepSeek 4&amp;rdquo;，antirez 本人没解释过命名由来。&lt;/p&gt;&#xA;&lt;p&gt;但不管叫什么，这个项目做的东西很有意思：&lt;strong&gt;它不是又一个 GGUF 运行工具，而是一个从零开始、专为 DeepSeek 模型设计的独立推理引擎&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;用 C 语言写的。Metal 和 CUDA 后端。2-bit 量化。磁盘 KV 缓存持久化。HTTP API 服务。编程智能体。&lt;/p&gt;&#xA;&lt;p&gt;开源的。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么需要一个专用推理引擎&#34;&gt;为什么需要一个&amp;quot;专用&amp;quot;推理引擎&#xA;&lt;/h2&gt;&lt;p&gt;在 ds4 出现之前，本地跑 DeepSeek 模型的主流方案是 llama.cpp / Ollama。它们支持 GGUF 格式，兼容几乎所有主流开源模型，是事实上的标准。&lt;/p&gt;&#xA;&lt;p&gt;但 GGUF 是一个通用格式——它追求的是&amp;quot;兼容一切&amp;quot;，而不是&amp;quot;在某个模型上跑得最快&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;antirez 的思路是反过来的：&lt;strong&gt;只服务 DeepSeek 模型，把 DeepSeek 的架构特性用到极致&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;DeepSeek-V4-Flash 是 DeepSeek 在 2025 年底发布的模型，架构上有几个关键特性：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;MoE（混合专家）架构，总参数量大但每次推理只激活一部分&lt;/li&gt;&#xA;&lt;li&gt;MLA（Multi-head Latent Attention）注意力机制&lt;/li&gt;&#xA;&lt;li&gt;FP8 混合精度训练&lt;/li&gt;&#xA;&lt;li&gt;支持原生 2-bit 量化&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;llama.cpp 对 MoE 和 MLA 的支持是&amp;quot;能跑就行&amp;quot;级别。而 ds4 从底层数据结构开始，&lt;strong&gt;针对这些特性做了专门优化&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</title>
+				<link>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</link>
+				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</guid>
+				<description>&lt;p&gt;你有没有过这种时刻——月底打开 Claude Max 账单，$200 就这么没了？&lt;/p&gt;&#xA;&lt;p&gt;或者，你盯着 ChatGPT 的对话记录，明知道那些 prompt 里有公司的敏感代码，但除了安慰自己&amp;quot;应该没事吧&amp;quot;之外别无选择？&lt;/p&gt;&#xA;&lt;p&gt;2026 年 5 月底，一个叫 Odysseus 的项目在 GitHub 上炸了。作者是 PewDiePie（没错，就是那个 YouTuber），4 天斩获 5 万星标，到现在势头不减。它不是什么新模型，而是一个&lt;strong&gt;完全自托管的 AI 工作台&lt;/strong&gt;——聊天、Agent、深度研究、文档管理、邮件、日历，全塞进一个浏览器标签页，跑在你的本地硬件上。&lt;/p&gt;&#xA;&lt;p&gt;你猜最吸引人的是什么？&lt;/p&gt;&#xA;&lt;p&gt;不是&amp;quot;自托管&amp;quot;这个 buzzword，而是它让你&lt;strong&gt;真正拥有了选择权&lt;/strong&gt;：想省钱就用本地模型 Ollama，想用顶级能力就接 API，数据全程在自己手里。&lt;/p&gt;&#xA;&lt;h2 id=&#34;到底什么是-odysseus&#34;&gt;到底什么是 Odysseus？&#xA;&lt;/h2&gt;&lt;p&gt;简单说，Odysseus 是一个开源（MIT 协议）、可自托管的 AI 工作空间。它的 UI 逻辑和 ChatGPT 类似——左侧聊天列表，中间对话区——但区别大了去了：&lt;strong&gt;一切跑在你的硬件上，数据不出门，模型随你换&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;核心能力清单：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Chat &amp;amp; Agents&lt;/strong&gt; — 多模型对话，内置 Agent 可执行文件编辑、网页浏览、邮件处理&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deep Research&lt;/strong&gt; — 自动搜索、交叉验证、生成带引用的研究报告&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文档处理&lt;/strong&gt; — 内嵌文档编辑器，支持 PDF/Office 导出&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;记忆系统&lt;/strong&gt; — 基于 ChromaDB 的向量记忆，Agent 能记住之前的对话和任务&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;邮件 &amp;amp; 日历&lt;/strong&gt; — IMAP/SMTP 接入，AI 辅助撰写和自动回复&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;MCP 支持&lt;/strong&gt; — 可接入 Model Context Protocol 工具链&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;PWA 移动端&lt;/strong&gt; — 手机浏览器也能访问&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;部署方式上，它提供了 Docker Compose 一键部署，也支持 Linux/macOS/Windows 裸机运行。默认端口 7000。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VoxCPM2 深度拆解：Tokenizer-Free TTS 为什么是语音合成的新方向</title>
+				<link>https://softon.top/software/voxcpm2-tokenizer-free-tts-deep-dive/</link>
+				<pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/voxcpm2-tokenizer-free-tts-deep-dive/</guid>
+				<description>&lt;p&gt;VoxCPM2 发布后，GitHub 一天涨了上千 star，社区讨论异常热烈。不是因为它是又一个 TTS 模型——市面上开源 TTS 已经不少，CosyVoice、SparkTTS、FishAudio S2 哪一个拉出来都能说话。真正让人好奇的是它的路线选择：&lt;strong&gt;Tokenizer-Free&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;传统 TTS 的逻辑是这样的：先把文本转成音素序列或离散 Token，再用一个 vocoder 或者自回归模型把 Token 变成波形。这套路线从 Tacotron 时代延续至今，几乎所有主流方案——VALL-E、CosyVoice、FishAudio、XTTS——都是这个套路。&lt;/p&gt;&#xA;&lt;p&gt;VoxCPM2 说：我不用 Tokenizer。&lt;/p&gt;&#xA;&lt;p&gt;它直接在文本和连续语音表征之间建立端到端映射，借用扩散模型接管了&amp;quot;从离散到连续&amp;quot;这个步骤。这篇文不打算复述一遍 README，而是站在开发者角度，聊清楚三个问题：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;为什么要去掉 Tokenizer？&lt;/li&gt;&#xA;&lt;li&gt;它用什么东西替代了 Tokenizer？&lt;/li&gt;&#xA;&lt;li&gt;少了 Tokenizer 之后，效果是更好还是更差？&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;tokenizer-free-到底解放了什么&#34;&gt;Tokenizer-Free 到底解放了什么？&#xA;&lt;/h2&gt;&lt;p&gt;理解 Tokenizer-Free 的价值，得先知道传统 TTS 的 Tokenizer 在干什么。&lt;/p&gt;&#xA;&lt;p&gt;一个典型的 TTS 管线是这样的：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;文本 → 前端（G2P / 音素转换） → 音素/Token 序列 → 声学模型 → 波形&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;每一步都是损失点：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;1. 信息损失。&lt;/strong&gt; &amp;ldquo;你吃饭了吗&amp;quot;这个句子，经过 G2P 转成音素时，&lt;strong&gt;语气、节奏、情感全部丢失&lt;/strong&gt;。模型拿到的是一串&amp;quot;ni3 chi1 fan4 le ma5&amp;rdquo;（或与之等价的一维 ID 序列），要从这样一个降采样过的输入还原出有情感的声音，本质上是&amp;quot;猜&amp;quot;——大语言模型猜文本的下一个 token 好歹还有上下文，TTS 猜情感近乎盲猜。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

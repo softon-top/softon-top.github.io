@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI工程化 on softon.top</title>
+		<link>https://softon.top/tags/ai%E5%B7%A5%E7%A8%8B%E5%8C%96/</link>
+		<description>Recent content in AI工程化 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 18 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai%E5%B7%A5%E7%A8%8B%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</title>
+				<link>https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/</link>
+				<pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/</guid>
+				<description>&lt;p&gt;2026 年 4 月，一个叫 &lt;code&gt;mattpocock/skills&lt;/code&gt; 的仓库悄然登顶 GitHub Trending。几周内，star 数从 1.8 万飙到 7.7 万。不是新的 LLM，不是框架，不是 SDK——只是一个文件夹，里面装着 20 多个 Markdown 文件。&lt;/p&gt;&#xA;&lt;p&gt;Matt Pocock，这位以 TypeScript 教学闻名的开发者（Total TypeScript 作者，前 Vercel 工程师），把自己每天都在用的 AI 编程 agent 配置全盘开源。每条 skill 不超过 200 行，用 YAML frontmatter 描述行为，MIT 协议，一行命令装到 Claude Code 或 Codex 里就能用。&lt;/p&gt;&#xA;&lt;p&gt;听起来像锦上添花。实际上它可能正在回答一个更根本的问题：当 AI 编程工具能写出整个仓库的代码时，开发者还剩下什么价值？&lt;/p&gt;&#xA;&lt;h2 id=&#34;vibe-coding-的终结&#34;&gt;vibe coding 的终结？&#xA;&lt;/h2&gt;&lt;p&gt;2025 年的关键词是 &amp;ldquo;vibe coding&amp;rdquo;——靠感觉编码，把需求扔给 LLM，看它飞出一堆代码，差不多就行。Andrej Karpathy 造了这个词，一年后回头看，它更像是对一种短暂自由的深情告别。&lt;/p&gt;&#xA;&lt;p&gt;vibe coding 的问题不在代码质量——LLM 写的代码通常比初级工程师工整——而在&lt;strong&gt;方向&lt;/strong&gt;。没有工程约束的 AI 编程就像没有红绿灯的城市十字路口：每辆车都能跑，但谁也到不了想去的地方。&lt;/p&gt;&#xA;&lt;p&gt;Matt Pocock 在 README 里写得很直白：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;Code isn&amp;rsquo;t cheap. In fact, bad code is the most expensive it&amp;rsquo;s ever been.&amp;rdquo;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

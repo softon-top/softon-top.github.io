@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Codex on softon.top</title>
+		<link>https://softon.top/tags/codex/</link>
+		<description>Recent content in Codex on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 18 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/codex/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</title>
+				<link>https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/</link>
+				<pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/</guid>
+				<description>&lt;p&gt;2026 年 4 月，一个叫 &lt;code&gt;mattpocock/skills&lt;/code&gt; 的仓库悄然登顶 GitHub Trending。几周内，star 数从 1.8 万飙到 7.7 万。不是新的 LLM，不是框架，不是 SDK——只是一个文件夹，里面装着 20 多个 Markdown 文件。&lt;/p&gt;&#xA;&lt;p&gt;Matt Pocock，这位以 TypeScript 教学闻名的开发者（Total TypeScript 作者，前 Vercel 工程师），把自己每天都在用的 AI 编程 agent 配置全盘开源。每条 skill 不超过 200 行，用 YAML frontmatter 描述行为，MIT 协议，一行命令装到 Claude Code 或 Codex 里就能用。&lt;/p&gt;&#xA;&lt;p&gt;听起来像锦上添花。实际上它可能正在回答一个更根本的问题：当 AI 编程工具能写出整个仓库的代码时，开发者还剩下什么价值？&lt;/p&gt;&#xA;&lt;h2 id=&#34;vibe-coding-的终结&#34;&gt;vibe coding 的终结？&#xA;&lt;/h2&gt;&lt;p&gt;2025 年的关键词是 &amp;ldquo;vibe coding&amp;rdquo;——靠感觉编码，把需求扔给 LLM，看它飞出一堆代码，差不多就行。Andrej Karpathy 造了这个词，一年后回头看，它更像是对一种短暂自由的深情告别。&lt;/p&gt;&#xA;&lt;p&gt;vibe coding 的问题不在代码质量——LLM 写的代码通常比初级工程师工整——而在&lt;strong&gt;方向&lt;/strong&gt;。没有工程约束的 AI 编程就像没有红绿灯的城市十字路口：每辆车都能跑，但谁也到不了想去的地方。&lt;/p&gt;&#xA;&lt;p&gt;Matt Pocock 在 README 里写得很直白：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;Code isn&amp;rsquo;t cheap. In fact, bad code is the most expensive it&amp;rsquo;s ever been.&amp;rdquo;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</title>
+				<link>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</link>
+				<pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/</guid>
+				<description>&lt;p&gt;你有没有过这种时刻——月底打开 Claude Max 账单，$200 就这么没了？&lt;/p&gt;&#xA;&lt;p&gt;或者，你盯着 ChatGPT 的对话记录，明知道那些 prompt 里有公司的敏感代码，但除了安慰自己&amp;quot;应该没事吧&amp;quot;之外别无选择？&lt;/p&gt;&#xA;&lt;p&gt;2026 年 5 月底，一个叫 Odysseus 的项目在 GitHub 上炸了。作者是 PewDiePie（没错，就是那个 YouTuber），4 天斩获 5 万星标，到现在势头不减。它不是什么新模型，而是一个&lt;strong&gt;完全自托管的 AI 工作台&lt;/strong&gt;——聊天、Agent、深度研究、文档管理、邮件、日历，全塞进一个浏览器标签页，跑在你的本地硬件上。&lt;/p&gt;&#xA;&lt;p&gt;你猜最吸引人的是什么？&lt;/p&gt;&#xA;&lt;p&gt;不是&amp;quot;自托管&amp;quot;这个 buzzword，而是它让你&lt;strong&gt;真正拥有了选择权&lt;/strong&gt;：想省钱就用本地模型 Ollama，想用顶级能力就接 API，数据全程在自己手里。&lt;/p&gt;&#xA;&lt;h2 id=&#34;到底什么是-odysseus&#34;&gt;到底什么是 Odysseus？&#xA;&lt;/h2&gt;&lt;p&gt;简单说，Odysseus 是一个开源（MIT 协议）、可自托管的 AI 工作空间。它的 UI 逻辑和 ChatGPT 类似——左侧聊天列表，中间对话区——但区别大了去了：&lt;strong&gt;一切跑在你的硬件上，数据不出门，模型随你换&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;核心能力清单：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Chat &amp;amp; Agents&lt;/strong&gt; — 多模型对话，内置 Agent 可执行文件编辑、网页浏览、邮件处理&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deep Research&lt;/strong&gt; — 自动搜索、交叉验证、生成带引用的研究报告&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文档处理&lt;/strong&gt; — 内嵌文档编辑器，支持 PDF/Office 导出&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;记忆系统&lt;/strong&gt; — 基于 ChromaDB 的向量记忆，Agent 能记住之前的对话和任务&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;邮件 &amp;amp; 日历&lt;/strong&gt; — IMAP/SMTP 接入，AI 辅助撰写和自动回复&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;MCP 支持&lt;/strong&gt; — 可接入 Model Context Protocol 工具链&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;PWA 移动端&lt;/strong&gt; — 手机浏览器也能访问&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;部署方式上，它提供了 Docker Compose 一键部署，也支持 Linux/macOS/Windows 裸机运行。默认端口 7000。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Codex 桌面端接入国产模型的三种姿势：EchoBird、CC Switch、Codex&#43;&#43; 方案对比</title>
+				<link>https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/</link>
+				<pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/codex-echobird-ccswitch-codexplus-comparison/</guid>
+				<description>&lt;p&gt;好马配好鞍——这句老话说的是工具的匹配。但对 Codex 桌面端的用户来说，现实是一匹好马（Codex 桌面的交互设计和插件生态确实出色，这点有一说一）配不上国产模型这口粮。OpenAI 的协议围墙把 DeepSeek、Qwen、Kimi 这些性价比高的国产模型挡在了官方客户端之外。&lt;/p&gt;&#xA;&lt;p&gt;社区当然不会坐等。过去几个月，&lt;strong&gt;EchoBird、CC Switch、Codex++&lt;/strong&gt; 三个项目相继火起来，各自从不同角度解决了同一个问题。但它们不是简单的竞品，更像是同一个工具箱里的三把不同的扳手。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章会拆解每个方案的架构逻辑、适用场景，以及它们之间的取舍，而不是列一份&amp;quot;安装步骤清单&amp;quot;——纯 How-to 教程已经被大模型一句话代替，不值当浪费墨水。&lt;/p&gt;&#xA;&lt;h2 id=&#34;问题的本质responses-api-vs-chat-completions&#34;&gt;问题的本质：Responses API vs Chat Completions&#xA;&lt;/h2&gt;&lt;p&gt;先说清楚为什么代码里改一个 &lt;code&gt;base_url&lt;/code&gt; 解决不了问题。&lt;/p&gt;&#xA;&lt;p&gt;Codex 桌面端（1.x 版本）的通信协议是 OpenAI 最新推出的 &lt;strong&gt;Responses API&lt;/strong&gt;。这个协议跟传统的 OpenAI &lt;strong&gt;Chat Completions API&lt;/strong&gt; 在消息格式、流式响应结构、工具调用参数上有本质区别。国产模型服务商（DeepSeek、阿里云百炼、智谱、Moonshot）至今只提供 Chat Completions 接口。&lt;/p&gt;&#xA;&lt;p&gt;Protocol mismatch。这不是换个 URL 能解决的。&lt;/p&gt;&#xA;&lt;p&gt;也就是说，想要在 Codex 桌面端使用国产模型，中间必须有一层&lt;strong&gt;协议转换器&lt;/strong&gt;——这个转换器既要能把 Chat Completions 翻译成 Responses API 的格式，又要能处理 OAuth 登录态的绕过、模型目录的映射、参数重写。三款工具的区别，本质上就是这个协议转换层的实现位置和设计哲学的不同。&lt;/p&gt;&#xA;&lt;h2 id=&#34;三种方案三种不同的架构切入点&#34;&gt;三种方案，三种不同的架构切入点&#xA;&lt;/h2&gt;&lt;p&gt;我画一个简化的分层模型，帮你看清每个工具打在哪个位置：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+------------------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| Codex 桌面端     |&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#a6e22e&#34;&gt;|&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+    ← Codex++ 注入层&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| 协议转换 / 路由   |    ← CC Switch 路由层&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+--------+---------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;| 国产模型 API      |    ← EchoBird 管理+路由层  &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+------------------+&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;echobirdall-in-one-agent-管理器&#34;&gt;EchoBird：All-in-One Agent 管理器&#xA;&lt;/h3&gt;&lt;p&gt;EchoBird 的定位是&amp;quot;AI Agent 管理器&amp;quot;，意味它不仅仅是做协议转换。它提供了完整的图形界面，内置了国内主流模型供应商的配置模板（DeepSeek、Qwen、Kimi、GLM、MiniMax 等），同时管理 Claude Code、Codex、Gemini CLI 等多个 Agent 的安装和运行。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

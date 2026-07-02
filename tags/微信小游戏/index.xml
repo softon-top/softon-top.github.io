@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>微信小游戏 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E6%B8%B8%E6%88%8F/</link>
+		<description>Recent content in 微信小游戏 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 04 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E6%B8%B8%E6%88%8F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>2026年 AI 开发微信小游戏全流程实录：从技术选型到上线运营</title>
+				<link>https://softon.top/tutorials/2026-ai-wechat-minigame-full-cycle/</link>
+				<pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/2026-ai-wechat-minigame-full-cycle/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;“原来做小游戏不需要会画图，不会写后端，甚至不需要懂得什么是帧率——只需要会问AI。”&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;去年双十一，我闲得蛋疼，想做一个微信小游戏发朋友圈炫耀。结果一查资料：得学微信小游戏框架（Egret/Laya），得懂TypeScript，还要处理图片资源、音效、后端排名……算了，放弃。&lt;/p&gt;&#xA;&lt;p&gt;今年年初，我突然意识到：AI 已经能写代码、画图、做策划了。于是我决定用 AI 整条链路跑一个微信小游戏，看看能不能在不写一行手代码的情况下，把游戏做出来、审核通过、还能有点流量。&lt;/p&gt;&#xA;&lt;p&gt;下面就是我的实录——从选技术栈到上线运营，记录每一步的决策、踩坑、以及最终的成本和收获。如果你也想用 AI 做点有趣的东西，这篇可能比官方文档更有用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一技术选型为什么我放弃了传统小游戏框架转而拥抱-ai-生成&#34;&gt;一、技术选型：为什么我放弃了传统小游戏框架，转而拥抱 AI 生成&#xA;&lt;/h2&gt;&lt;h3 id=&#34;11-传统路线的三座大山&#34;&gt;1.1 传统路线的三座大山&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;技术栈&lt;/strong&gt;：要学 TypeScript、微信小游戏 API、游戏循环、帧同步……门槛高。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;资源制作&lt;/strong&gt;：即使用 AI 生成图片，也得手动裁剪、打包成图集，还要处理不同分辨率适配。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;后端与运营&lt;/strong&gt;：排名存储、分享引流、防作弊……这些不是游戏核心，却占了开发时间的 60%。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;12-ai-链路的核心假设&#34;&gt;1.2 AI 链路的核心假设&#xA;&lt;/h3&gt;&lt;p&gt;如果能让 AI 直接输出：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;可运行的游戏主循环代码（含碰撞、得分、状态机）&lt;/li&gt;&#xA;&lt;li&gt;符合微信小游戏尺寸的素材（角色、背景、按钮）&lt;/li&gt;&#xA;&lt;li&gt;符合规则的游戏描述、页面文案甚至隐私政策&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;那么，人类只需负责“搭桥”和“质量门”。&lt;/p&gt;&#xA;&lt;p&gt;我最终选择的技术栈如下：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;环节&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;工具&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;为什么&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;代码生成&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Claude Code + 32 Skills&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;能理解游戏逻辑，输出完整可运行的 TypeScript 文件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;资源生成&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;DALL·E 3 + Midjourney v6（通过 API）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;生成游戏所需的 PNG 素材，支持透明背景&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;项目脚手架&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;零代码：直接使用 Claude Code 生成的项目结构&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免去手动配置游戏框架的痛苦&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;部署与审核&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;手动上传到微信开发者工具 + 提交审核&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;目前 AI 还无法直接调用微信接口&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;数据后端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;LeanCloud 免费版（后改为自建 Supabase）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;简单 KV 存储排名，后期发现免费版不够用，迁移到自建&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键点：我没有使用任何现成的小游戏框架（如 Egret、Laya），全部代码由 AI 生成，仅依赖浏览器原生 Canvas API（微信小游戏其实也是基于 Canvas 的）。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</title>
+				<link>https://softon.top/software/ai-wechat-minigame-full-flow/</link>
+				<pubDate>Wed, 27 May 2026 10:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/ai-wechat-minigame-full-flow/</guid>
+				<description>&lt;h2 id=&#34;为什么我决定用-ai-开发小游戏&#34;&gt;为什么我决定用 AI 开发小游戏&#xA;&lt;/h2&gt;&lt;p&gt;去年年底，我突然想起一个念想：做个微信小游戏。不是为了赚钱，就是想看看能不能在一个周末内从零到上线。&lt;/p&gt;&#xA;&lt;p&gt;传统路线是什么？学微信小游戏 API、配置开发环境、手写 Canvas 绘制逻辑、调试兼容性问题……这套下来没个一两周根本搞不定。但我手里有 Cursor + Claude Code，何不试试让 AI 来做这件事？&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/27/142905-277aec-ai-game-cover.jpg&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;AI开发微信小游戏&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;p&gt;结果出乎意料——&lt;strong&gt;3 天从 Prompt 到微信审核通过&lt;/strong&gt;。这篇文章就是完整的实战记录。&lt;/p&gt;&#xA;&lt;h2 id=&#34;第一步设计游戏机制最关键的-prompt&#34;&gt;第一步：设计游戏机制（最关键的 Prompt）&#xA;&lt;/h2&gt;&lt;p&gt;我没有直接甩代码需求，而是先花了半小时设计游戏。选了个简单但有趣的方向：&lt;strong&gt;2048 风格的数字合并游戏&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;为什么选这个？&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;逻辑清晰：滑动合并相同数字&lt;/li&gt;&#xA;&lt;li&gt;胜负条件明确：达到 2048 或无法继续&lt;/li&gt;&#xA;&lt;li&gt;微信小游戏友好：不需要复杂的网络交互&lt;/li&gt;&#xA;&lt;li&gt;容易扩展：后续可加排行榜、分享功能&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;然后我写了这个 Prompt（这是关键）：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;我要开发一个微信小游戏，基于 2048 的玩法。&#xA;&#xA;游戏规则：&#xA;1. 4x4 网格，每个格子可以放数字&#xA;2. 初始状态：随机两个格子出现 2 或 4&#xA;3. 玩家滑动屏幕（上下左右），相同数字向滑动方向合并，合并后数字翻倍&#xA;4. 每次滑动后，随机位置出现新的 2 或 4&#xA;5. 当无法继续滑动时游戏结束&#xA;6. 目标：达到 2048 获胜&#xA;&#xA;技术要求：&#xA;- 使用微信小游戏 Canvas API&#xA;- 支持触摸事件（上下左右滑动）&#xA;- 显示当前分数和最高分（本地存储）&#xA;- 游戏结束后显示重新开始按钮&#xA;- 适配不同屏幕尺寸&#xA;&#xA;代码结构：&#xA;- game.js：游戏逻辑（网格管理、合并算法、分数计算）&#xA;- render.js：Canvas 绘制（网格、数字、UI）&#xA;- input.js：触摸事件处理&#xA;- main.js：入口和初始化&#xA;&#xA;请生成完整的可运行代码。&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个 Prompt 的关键是：&lt;strong&gt;明确的规则 + 清晰的技术要求 + 代码结构建议&lt;/strong&gt;。Claude Code 拿到这个，直接生成了 80% 可用的代码。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
