@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Chrome on softon.top</title>
+		<link>https://softon.top/tags/chrome/</link>
+		<description>Recent content in Chrome on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 30 May 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/chrome/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>8 个 Chrome 插件让你效率翻倍（2026 实测）</title>
+				<link>https://softon.top/software/2026-top-8-chrome-extensions-productivity/</link>
+				<pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/2026-top-8-chrome-extensions-productivity/</guid>
+				<description>&lt;p&gt;我浏览器之前装了 50 多个插件，打开 Chrome 要 8 秒。后来做了一次彻底清理，只留了 8 个。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;清理后 Chrome 启动不到 2 秒&lt;/strong&gt;，而且功能上不但没缩水，反而更顺手了 —— 因为不再有多个插件抢快捷键、互相打架的情况。&lt;/p&gt;&#xA;&lt;p&gt;这篇不是&amp;quot;2026 年最好用的插件清单&amp;quot;，那是百科词条该干的事。这篇是一个真实用户的&lt;strong&gt;删选记录&lt;/strong&gt;：我装了哪些、为什么留下这 8 个、以及为什么删掉那些&amp;quot;别人都说好但我用不上&amp;quot;的。&lt;/p&gt;&#xA;&lt;h2 id=&#34;筛选标准三个月验证周期&#34;&gt;筛选标准：三个月验证周期&#xA;&lt;/h2&gt;&lt;p&gt;每个能留在浏览器的插件，都经过了至少三个月的**&amp;ldquo;试用期&amp;rdquo;**。期间我关注三件事：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;不可替代性&lt;/strong&gt;：有没有别的插件能替代它？原生功能能不能做到？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;性能影响&lt;/strong&gt;：加了多少启动时间、后台内存占多少、页面加载有没有变慢&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;更新活跃度&lt;/strong&gt;：超过一年没更新的直接淘汰，除非功能已经稳定且完美&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;按这个标准跑一轮下来，50 多个插件只剩 8 个。&lt;/p&gt;&#xA;&lt;h2 id=&#34;效率核心组4-个&#34;&gt;效率核心组（4 个）&#xA;&lt;/h2&gt;&lt;h3 id=&#34;1-tabby把标签页管理收进一个窗口&#34;&gt;1. Tabby：把标签页管理收进一个窗口&#xA;&lt;/h3&gt;&lt;p&gt;装过 OneTab、Workona、Toby 的应该都懂我在说什么。标签管理类插件有一个通病：&lt;strong&gt;功能越全就越重&lt;/strong&gt;，最终变成另一个浏览器。&lt;/p&gt;&#xA;&lt;p&gt;Tabby 是我试了一圈后留下的。它的核心思路很朴素：&lt;strong&gt;把散落的标签页聚合成&lt;/strong&gt;一个视图，用关键词就能搜到。不开几百个标签的人可能觉得无所谓，但如果你经常查资料开 30+ 标签页，这就是刚需。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;实测表现：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;占内存约 45MB（非活跃时）&lt;/li&gt;&#xA;&lt;li&gt;启动对 Chrome 无影响（延时加载）&lt;/li&gt;&#xA;&lt;li&gt;搜索比 Chrome 原生的历史记录快很多&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;替代方案对比：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;OneTab：功能类似但更新停在了 2024 年&lt;/li&gt;&#xA;&lt;li&gt;Workona：太重了，本身就像个浏览器&lt;/li&gt;&#xA;&lt;li&gt;原生 Chrome：没有聚合搜索功能&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;2-vimium键盘走天下&#34;&gt;2. Vimium：键盘走天下&#xA;&lt;/h3&gt;&lt;p&gt;这个插件可能本身效率提升不大，但&lt;strong&gt;爽感加成极高&lt;/strong&gt;。装上后你就可以用 &lt;code&gt;j/k&lt;/code&gt; 上下翻页、&lt;code&gt;f&lt;/code&gt; 打开链接、&lt;code&gt;H/L&lt;/code&gt; 后退/前进，基本告别鼠标。&lt;/p&gt;&#xA;&lt;p&gt;真正开始依赖 Vimium 是什么时候？某天我在一台没装它的电脑上查资料，手指下意识按 &lt;code&gt;j&lt;/code&gt; 想翻页 —— 发现没反应。那一刻意识到：&lt;strong&gt;它已经变成了肌肉记忆的一部分&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

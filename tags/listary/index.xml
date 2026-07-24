@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Listary on softon.top</title>
+		<link>https://softon.top/tags/listary/</link>
+		<description>Recent content in Listary on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 25 Jun 2026 10:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/listary/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Everything vs Listary vs uTools vs Fluent Search：4 款桌面搜索工具 2026 实测对比</title>
+				<link>https://softon.top/software/desktop-search-tools-comparison-2026/</link>
+				<pubDate>Thu, 25 Jun 2026 10:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/desktop-search-tools-comparison-2026/</guid>
+				<description>&lt;h2 id=&#34;痛点你找文件的时候电脑在嘲笑你&#34;&gt;痛点：你找文件的时候，电脑在嘲笑你&#xA;&lt;/h2&gt;&lt;p&gt;Windows 自带的搜索功能是什么体验？你在 C 盘搜一个文件名，进度条走到 30% 的时候你已经开始后悔为什么不直接去资源管理器里翻。&lt;/p&gt;&#xA;&lt;p&gt;这不是你的错。Windows Search 依赖内容索引器（Windows Search Service），默认只索引特定类型文件，而且索引建立过程能跑上几个小时。当你手头有几十万个小文件、或者文件名是中文的时候，这个体验就更难绷了。&lt;/p&gt;&#xA;&lt;p&gt;桌面搜索工具要解决的就是这个核心问题：&lt;strong&gt;毫秒级找到你要的文件&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;我手头这台机器有 40 万+ 文件（代码仓库 + 设计素材 + 文档），在过去一年里，四款桌面搜索工具轮流陪我过夜。今天把它们摆在一起，用数据说话。&lt;/p&gt;&#xA;&lt;h2 id=&#34;参赛选手&#34;&gt;参赛选手&#xA;&lt;/h2&gt;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;工具&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;定位&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;价格&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;数据来源&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Everything&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;纯文件名搜索标杆&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免费&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;voidtools&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Listary&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Everything 内核 + 文件管理增强&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;基础免费，Pro $24.95&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Listary&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;uTools&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;搜索 + 插件生态平台&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;基础免费，插件订阅&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;uTools&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Fluent Search&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;WinUI 设计 + 颜色过滤&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免费&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Fluent Search&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;这四款的共同点：&lt;strong&gt;都能做到毫秒级响应&lt;/strong&gt;。区别在于&amp;quot;毫秒级&amp;quot;之后的体验。&lt;/p&gt;&#xA;&lt;h2 id=&#34;实测环境&#34;&gt;实测环境&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;硬件&lt;/strong&gt;：i7-12700K / 32GB RAM / NVMe SSD（读取 7000MB/s）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件总量&lt;/strong&gt;：约 40 万个文件，分布在 C 盘和 D 盘&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;测试方法&lt;/strong&gt;：先让各工具完成索引，静置 5 分钟，然后连续 10 次搜索取平均值&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;测试关键词&lt;/strong&gt;：中文文件名、英文文件名、部分匹配、通配符&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;索引速度-everything-碾压一切&#34;&gt;索引速度： Everything 碾压一切&#xA;&lt;/h2&gt;&lt;p&gt;Everything 的优势从索引阶段就开始了。基于 NTFS USN Journal 读取文件变更，不用全盘扫描，所以索引 40 万个文件只需要约 &lt;strong&gt;18 秒&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

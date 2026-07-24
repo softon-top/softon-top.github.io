@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>代码质量 on softon.top</title>
+		<link>https://softon.top/tags/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/</link>
+		<description>Recent content in 代码质量 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 02 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我让 AI 少写点代码：ponytail 背后的反过度工程实验</title>
+				<link>https://softon.top/software/ponytail-ai-coding-less-code-overengineering/</link>
+				<pubDate>Thu, 02 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ponytail-ai-coding-less-code-overengineering/</guid>
+				<description>&lt;p&gt;我第一次看到 ponytail 的介绍时，脑子里冒出的不是“又一个 AI 编程插件”，而是一个很熟悉的画面：&lt;/p&gt;&#xA;&lt;p&gt;你让 AI 帮你加一个日期选择器。它沉思三秒，然后开始安装依赖、封装组件、写样式、处理时区、加类型、补测试，最后给你一个看起来很专业的方案。&lt;/p&gt;&#xA;&lt;p&gt;但你真正需要的，可能只是这一行：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;&amp;lt;input type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;date&amp;#34;&amp;gt;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这就是 AI 编程时代最荒诞的日常：&lt;strong&gt;我们终于有了一个不知疲倦的初级工程师，但它太勤快了。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;勤快到一个 5 行需求能变成 200 行代码。勤快到它会主动替你设计“未来可能用到”的扩展点。勤快到你看 diff 时突然怀疑：到底是它在帮我省时间，还是我在帮它做 code review？&lt;/p&gt;&#xA;&lt;p&gt;ponytail 有意思的地方就在这里。它不是教 AI 写更多代码，不是让 Agent 更强、更复杂、更自动化，而是反过来给 AI 套上一条“工程克制”的缰绳：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;别急着写。先问：这东西真的需要存在吗？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;ai-编程助手最大的问题不是不会写而是太会写&#34;&gt;AI 编程助手最大的问题，不是不会写，而是太会写&#xA;&lt;/h2&gt;&lt;p&gt;过去我们担心 AI 写不出代码。现在问题反过来了：它写得太多。&lt;/p&gt;&#xA;&lt;p&gt;尤其是 Claude Code、Cursor、Codex 这类 Agent 工具进入日常开发后，一个典型流程变成了这样：你输入需求，它读文件、搜上下文、推理方案、改代码、跑命令、再修补。表面上看，这是自动化的天堂；可落到工程里，经常会出现一种“代码通胀”。&lt;/p&gt;&#xA;&lt;p&gt;一个按钮状态，本来改一行判断就够；AI 新建了一个 hook。&lt;/p&gt;&#xA;&lt;p&gt;一个格式化逻辑，本来标准库能处理；AI 手写了一个 parser。&lt;/p&gt;&#xA;&lt;p&gt;一个简单表单，本来浏览器原生控件能解决；AI 引入组件库，再封装一层设计系统适配。&lt;/p&gt;&#xA;&lt;p&gt;它这么做不是因为坏，而是因为大模型的默认倾向就是“补全一个看起来完整的答案”。它学过太多教程、模板、最佳实践、框架样板。对它来说，“专业”常常等于“结构完整”；“结构完整”又常常变成“抽象过度”。&lt;/p&gt;&#xA;&lt;p&gt;这在人类程序员身上也常见，只是 AI 把速度拉满了。&lt;/p&gt;&#xA;&lt;p&gt;人类过度工程，可能半天写 300 行。AI 过度工程，可能 30 秒写 300 行。痛苦没有消失，只是变成了 diff。&lt;/p&gt;&#xA;&lt;h2 id=&#34;ponytail-是什么把懒得多写一行代码的老程序员塞进-agent&#34;&gt;ponytail 是什么：把“懒得多写一行代码”的老程序员塞进 Agent&#xA;&lt;/h2&gt;&lt;p&gt;ponytail 的 GitHub 项目描述很直白：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

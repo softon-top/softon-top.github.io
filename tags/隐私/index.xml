@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>隐私 on softon.top</title>
+		<link>https://softon.top/tags/%E9%9A%90%E7%A7%81/</link>
+		<description>Recent content in 隐私 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 15 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E9%9A%90%E7%A7%81/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</title>
+				<link>https://softon.top/software/optimizerduck-windows-optimization-trust-revert/</link>
+				<pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/optimizerduck-windows-optimization-trust-revert/</guid>
+				<description>&lt;p&gt;Windows 优化工具这个赛道，一直有点像电脑城门口的小广告。&lt;/p&gt;&#xA;&lt;p&gt;它们说自己能清理垃圾、释放内存、提升网速、降低延迟、让老电脑重获新生。你点下去之前，心里想的是“让机器轻一点”；点下去之后，真正发生了什么，很多时候只有注册表知道。&lt;/p&gt;&#xA;&lt;p&gt;这就是我看 &lt;code&gt;optimizerDuck&lt;/code&gt; 时最先在意的地方：它不是又一个“点我立刻加速”的神奇按钮，而是把 Windows 优化这件事尽量拆开，摆到台面上。&lt;/p&gt;&#xA;&lt;p&gt;项目地址是 &lt;code&gt;https://github.com/itsfatduck/optimizerDuck&lt;/code&gt;。我查到时，仓库已经有 &lt;code&gt;6536&lt;/code&gt; stars、&lt;code&gt;280&lt;/code&gt; forks，最新 release 是 &lt;code&gt;v2.25.2&lt;/code&gt;，发布时间为 &lt;code&gt;2026-07-14T14:01:14Z&lt;/code&gt;。项目用 C# 写，WPF 桌面应用，目标框架是 &lt;code&gt;net10.0-windows10.0.17763.0&lt;/code&gt;，定位写得很直白：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Free, open-source Windows optimization tool for performance, privacy, and simplicity.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;翻成大白话：一个免费、开源、面向性能和隐私的 Windows 优化工具。&lt;/p&gt;&#xA;&lt;p&gt;但这类工具真正的问题，从来不是“有没有优化项”。优化项网上一抓一大把，注册表路径、PowerShell 命令、组策略开关，论坛里几十年积累下来，已经像祖传偏方一样满天飞。&lt;/p&gt;&#xA;&lt;p&gt;真正的问题是：&lt;strong&gt;它改了什么？为什么改？风险多大？能不能撤回？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;optimizerDuck&lt;/code&gt; 值得写，正是因为它在试图回答这几个问题。&lt;/p&gt;&#xA;&lt;h2 id=&#34;windows-优化工具最大的问题是黑箱&#34;&gt;Windows 优化工具最大的问题，是黑箱&#xA;&lt;/h2&gt;&lt;p&gt;Windows 不是不能优化。&lt;/p&gt;&#xA;&lt;p&gt;一个全新安装的 Windows，确实会带着一堆并非每个人都需要的东西：后台服务、计划任务、预装应用、遥测、内容推荐、广告 ID、Copilot、Cortana、开始菜单 Web 搜索、各种电源策略，还有 OEM 厂商塞进来的“贴心组件”。&lt;/p&gt;&#xA;&lt;p&gt;这些东西每个单独看都不一定很重，但叠在一起，就像桌面上永远清不完的小纸屑。CPU 一点点，内存一点点，磁盘一点点，网络一点点，最后你说不上它哪里慢，但就是觉得系统不够干净。&lt;/p&gt;&#xA;&lt;p&gt;所以，优化 Windows 这件事本身不荒谬。荒谬的是很多工具把它包装成玄学。&lt;/p&gt;&#xA;&lt;p&gt;它们通常有几个共同特征：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不告诉你具体修改了哪些 registry key&lt;/li&gt;&#xA;&lt;li&gt;不区分安全项和高风险项&lt;/li&gt;&#xA;&lt;li&gt;默认全选&lt;/li&gt;&#xA;&lt;li&gt;没有回滚&lt;/li&gt;&#xA;&lt;li&gt;出问题后只能让用户“重装系统试试”&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这不是优化，这是开盲盒。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;optimizerDuck&lt;/code&gt; 的思路不一样。它把优化项分成几个明确类别：&lt;code&gt;Performance&lt;/code&gt;、&lt;code&gt;Privacy&lt;/code&gt;、&lt;code&gt;GPU&lt;/code&gt;、&lt;code&gt;Power&lt;/code&gt;、&lt;code&gt;Bloatware &amp;amp; Services&lt;/code&gt;、&lt;code&gt;User Experience&lt;/code&gt;。每一项都有说明和风险等级，源码里还能看到 &lt;code&gt;OptimizationRisk.Safe&lt;/code&gt;、&lt;code&gt;OptimizationRisk.Moderate&lt;/code&gt;、&lt;code&gt;OptimizationRisk.Risky&lt;/code&gt; 这样的标记。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

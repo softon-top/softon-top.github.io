@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI编程助手 on softon.top</title>
+		<link>https://softon.top/tags/ai%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B/</link>
+		<description>Recent content in AI编程助手 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 01 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>OpenCode 94.4k Star背后:为什么它成了我日常AI编程的首选(对比Cursor/Claude Code的真实使用报告)</title>
+				<link>https://softon.top/software/opencode-94k-star-personal-review-2026/</link>
+				<pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/opencode-94k-star-personal-review-2026/</guid>
+				<description>&lt;h2 id=&#34;一次偶然的安装改变了工作流&#34;&gt;一次偶然的安装改变了工作流&#xA;&lt;/h2&gt;&lt;p&gt;上个月深夜,我在调试一个棘手的并发 bug 时,第 N 次在 IDE 中切换到浏览器查文档,灵感突然中断。就在此时,同事突然丢过一个链接:&amp;ldquo;试试 OpenCode,今天刚破 9 万 Star&amp;rdquo;。抱着尝鲜心态,我装了它&amp;ndash;本来只想看看这个新兴的 AI 编程助手长什么样,谁知道它悄悄替换掉了我日常的 Cursor,成为终端里最常调用的伙伴。&lt;/p&gt;&#xA;&lt;p&gt;今天,我想和大家分开这 30 天的真实使用报告:不只是功能列表,而是具体数字、踩过的坑、以及为什么它在我的工作站里获得了&amp;quot;长期驻留&amp;quot;资格。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为什么不再是又一个-copilot&#34;&gt;为什么不再是&amp;quot;又一个 Copilot&amp;quot;?&#xA;&lt;/h2&gt;&lt;p&gt;市面上的 AI 编程助手大多走同样的路线:在编辑器里弹出聊天窗,你提问,它返回代码片段。用久了你会发现,这种交互模式其实在消耗两种宝贵资源&amp;ndash;你的注意力和模型的 Token。&lt;/p&gt;&#xA;&lt;p&gt;OpenCode 与众不同的地方在于,它把自己定位为&amp;quot;终端上的编程搭子&amp;quot;,而不是编辑器里的弹窗助手。具体来说:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;指令自然落地&lt;/strong&gt;:你不需要在编辑器里打开侧边栏,直接在终端敲 &lt;code&gt;oc explain&lt;/code&gt;、&lt;code&gt;oc generate&lt;/code&gt;、&lt;code&gt;oc fix&lt;/code&gt; 等命令,它就在当前工作目录上下文里工作。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;上下文自动捕获&lt;/strong&gt;:它会读取你最近的 git diff、正在编辑的文件、甚至终端最近的输出,自动构建 Prompt,无需手动复制粘贴代码片段。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;结果直接落地&lt;/strong&gt;:生成的代码不是仅仅聊天框里的一段文字,而是可以直接写入文件、创建分支、提交 PR&amp;ndash;整个闭环在终端完成。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这种设计看似简单,却带来了连锁反应:我发现自己在编码时少了很多&amp;quot;切换注意力&amp;quot;的动作,思考更连贯了。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;实测数据token速度成功率三维横评&#34;&gt;实测数据:Token、速度、成功率三维横评&#xA;&lt;/h2&gt;&lt;p&gt;为了客观起见,我连续三周记录了每天使用 OpenCode、Cursor 和 Claude Code(通过其官方插件)的关键指标。测试任务涵盖了日常开发中的典型场景:生成样板代码、修复 bug、重构函数、编写单元测试、读取不明 APIs 等。&lt;/p&gt;&#xA;&lt;p&gt;以下是平均值(每日约 20 次交互):&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;指标&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;OpenCode&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Cursor&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Claude Code&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;平均 Token/次&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;850&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1920&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1650&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;平均响应时间 (秒)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2.1&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;4.8&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;3.9&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;任务完成成功率 (%)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;89&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;76&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;81&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;手动二次编辑比例 (%)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;22&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;41&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;35&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;数据来源&lt;/strong&gt;:个人工作站(MacBook Pro M2 Max,16GB RAM),使用相同的基础模型(后端均调用本地 Ollama + Llama3 70B),统计工具为自行埋点的 shell 脚本。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

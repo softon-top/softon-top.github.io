@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>第二大脑 on softon.top</title>
+		<link>https://softon.top/tags/%E7%AC%AC%E4%BA%8C%E5%A4%A7%E8%84%91/</link>
+		<description>Recent content in 第二大脑 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 12 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%AC%AC%E4%BA%8C%E5%A4%A7%E8%84%91/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Tolaria 把 AI 记忆拉回 Markdown：为什么 Git 仓库可能比向量数据库更适合第二大脑</title>
+				<link>https://softon.top/software/tolaria-git-markdown-ai-memory/</link>
+				<pubDate>Sun, 12 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/tolaria-git-markdown-ai-memory/</guid>
+				<description>&lt;h2 id=&#34;ai-的记忆正在变成一间谁也看不懂的地下室&#34;&gt;AI 的记忆，正在变成一间谁也看不懂的地下室&#xA;&lt;/h2&gt;&lt;p&gt;这两个月我越来越强烈地感觉到一件事：&lt;strong&gt;AI Agent 的下一场战争，不在模型本身，而在记忆。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;模型越来越聪明，工具调用越来越顺，MCP 也把外部系统接得像插排一样方便。可真正用起来以后，最折磨人的问题还是那个老问题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;它到底记不记得我是谁、这个项目是什么、上次为什么这么改？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;如果不记得，每次新开会话都像重新带一个实习生。你要重新解释项目背景、目录结构、技术偏好、踩坑历史，解释到第三遍，人已经没了写代码的心气。&lt;/p&gt;&#xA;&lt;p&gt;如果记得，另一个问题又来了：&lt;strong&gt;它把这些东西记到哪里了？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;很多所谓 AI 记忆方案，本质是把对话、文档、网页切成 chunk，塞进向量数据库。需要的时候再靠相似度搜索捞出来。这个方案工程上成立，但使用体验很像把你的知识丢进一间地下室：东西确实在里面，但你看不见全貌，也很难知道它有没有记错、有没有过期、有没有把一句玩笑当成长期偏好。&lt;/p&gt;&#xA;&lt;p&gt;更可怕的是，AI 记忆不是普通缓存。它会影响后续决策。记错一次，后面可能连错十次。&lt;/p&gt;&#xA;&lt;p&gt;所以我今天看到 HelloGitHub 里推荐的 &lt;strong&gt;Tolaria&lt;/strong&gt;，第一反应不是“又一个 Markdown 笔记软件”，而是：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;这可能是 AI 记忆系统的一次路线回摆。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;从“把知识埋进向量库”，回到“把知识写成文件”；从“模型自己猜该记什么”，回到“人和 AI 共同维护一套可读、可 diff、可迁移的长期记忆”。&lt;/p&gt;&#xA;&lt;p&gt;这事值得写。&lt;/p&gt;&#xA;&lt;h2 id=&#34;tolaria-是什么不是-notion-复刻也不只是-obsidian-换皮&#34;&gt;Tolaria 是什么：不是 Notion 复刻，也不只是 Obsidian 换皮&#xA;&lt;/h2&gt;&lt;p&gt;根据项目资料，Tolaria 是一个开源桌面应用，用来管理 Markdown 知识库。官方仓库介绍它支持 macOS、Windows、Linux，技术栈是 &lt;code&gt;Tauri&lt;/code&gt;、&lt;code&gt;React&lt;/code&gt;、&lt;code&gt;TypeScript&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;它的几个关键词很朴素：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;本地优先&lt;/li&gt;&#xA;&lt;li&gt;Markdown 文件&lt;/li&gt;&#xA;&lt;li&gt;YAML frontmatter&lt;/li&gt;&#xA;&lt;li&gt;Git 版本历史&lt;/li&gt;&#xA;&lt;li&gt;内置 MCP server&lt;/li&gt;&#xA;&lt;li&gt;给 Claude Code、Codex 这类 AI 工具直接读写知识库&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果只看到前四个，你很容易把它归类为“又一个 Obsidian 替代品”。但加上 &lt;strong&gt;MCP server&lt;/strong&gt; 之后，味道就变了。&lt;/p&gt;&#xA;&lt;p&gt;传统笔记软件的核心用户是人。人打开界面，搜索、整理、链接、阅读。&lt;/p&gt;&#xA;&lt;p&gt;Tolaria 这类工具的潜在核心用户变成了两类：&lt;strong&gt;人 + AI Agent&lt;/strong&gt;。人负责判断和沉淀，AI 负责读取、整理、补全、执行。知识库不再只是“给我看的笔记”，而是“给未来的我和未来的 AI 一起用的操作系统”。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

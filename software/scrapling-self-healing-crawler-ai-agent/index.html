@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Scrapling 不是又一个 BeautifulSoup 包装器，而是在尝试解决传统选择器爬虫最痛的稳定性问题：页面一改，脚本就死。本文从自适应解析、Fetcher、Spider、MCP 接入和与 Scrapy / Playwright / BeautifulSoup 的选型差异，拆解它适合放在哪里、不适合神化到哪里。">
+<title>Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？</title>
+
+<link rel='canonical' href='https://softon.top/software/scrapling-self-healing-crawler-ai-agent/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？">
+<meta property='og:description' content="Scrapling 不是又一个 BeautifulSoup 包装器，而是在尝试解决传统选择器爬虫最痛的稳定性问题：页面一改，脚本就死。本文从自适应解析、Fetcher、Spider、MCP 接入和与 Scrapy / Playwright / BeautifulSoup 的选型差异，拆解它适合放在哪里、不适合神化到哪里。">
+<meta property='og:url' content='https://softon.top/software/scrapling-self-healing-crawler-ai-agent/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Scrapling' /><meta property='article:tag' content='Python' /><meta property='article:tag' content='爬虫' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='MCP' /><meta property='article:tag' content='Playwright' /><meta property='article:tag' content='Scrapy' /><meta property='article:published_time' content='2026-07-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-04T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？">
+<meta name="twitter:description" content="Scrapling 不是又一个 BeautifulSoup 包装器，而是在尝试解决传统选择器爬虫最痛的稳定性问题：页面一改，脚本就死。本文从自适应解析、Fetcher、Spider、MCP 接入和与 Scrapy / Playwright / BeautifulSoup 的选型差异，拆解它适合放在哪里、不适合神化到哪里。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#传统爬虫脆在哪里不是代码弱是假设太天真">传统爬虫脆在哪里：不是代码弱，是假设太天真</a></li>
+    <li><a href="#scrapling-的核心判断selector-不该只是地址还该是记忆">Scrapling 的核心判断：selector 不该只是地址，还该是记忆</a></li>
+    <li><a href="#它不是-beautifulsoup-替代品而是把抓取链路打包了">它不是 BeautifulSoup 替代品，而是把“抓取链路”打包了</a></li>
+    <li><a href="#ai-agent-为什么特别需要这种爬虫">AI Agent 为什么特别需要这种爬虫</a></li>
+    <li><a href="#反机器人能力有用但别把它当免死金牌">反机器人能力：有用，但别把它当免死金牌</a></li>
+    <li><a href="#和-scrapy--playwright--beautifulsoup-怎么选">和 Scrapy / Playwright / BeautifulSoup 怎么选</a></li>
+    <li><a href="#真正该测试的不是-hello-world而是改版后还能不能活">真正该测试的，不是 Hello World，而是“改版后还能不能活”</a></li>
+    <li><a href="#scrapling-最适合的落点agent-的数据采集层">Scrapling 最适合的落点：Agent 的数据采集层</a></li>
+    <li><a href="#我不会神化-scrapling但会把它列进观察清单">我不会神化 Scrapling，但会把它列进观察清单</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/scrapling-self-healing-crawler-ai-agent/">Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-04T00:00:00Z'>
+                    2026-07-04，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：17分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/scrapling-self-healing-crawler-ai-agent/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#传统爬虫脆在哪里不是代码弱是假设太天真">传统爬虫脆在哪里：不是代码弱，是假设太天真</a></li>
+    <li><a href="#scrapling-的核心判断selector-不该只是地址还该是记忆">Scrapling 的核心判断：selector 不该只是地址，还该是记忆</a></li>
+    <li><a href="#它不是-beautifulsoup-替代品而是把抓取链路打包了">它不是 BeautifulSoup 替代品，而是把“抓取链路”打包了</a></li>
+    <li><a href="#ai-agent-为什么特别需要这种爬虫">AI Agent 为什么特别需要这种爬虫</a></li>
+    <li><a href="#反机器人能力有用但别把它当免死金牌">反机器人能力：有用，但别把它当免死金牌</a></li>
+    <li><a href="#和-scrapy--playwright--beautifulsoup-怎么选">和 Scrapy / Playwright / BeautifulSoup 怎么选</a></li>
+    <li><a href="#真正该测试的不是-hello-world而是改版后还能不能活">真正该测试的，不是 Hello World，而是“改版后还能不能活”</a></li>
+    <li><a href="#scrapling-最适合的落点agent-的数据采集层">Scrapling 最适合的落点：Agent 的数据采集层</a></li>
+    <li><a href="#我不会神化-scrapling但会把它列进观察清单">我不会神化 Scrapling，但会把它列进观察清单</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>爬虫最烦人的地方，从来不是“第一次抓不到”。</p>
+<p>第一次抓不到，通常很好办。打开 DevTools，看 DOM，补个 header，换个 selector，最多再上 Playwright。真正让人血压升高的是：<strong>昨天还跑得好好的脚本，今天凌晨三点静悄悄地死了。</strong></p>
+<p>报错还很无辜：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">AttributeError: &#39;NoneType&#39; object has no attribute &#39;text&#39;</span>
+</span></span></code></pre></div><p>像极了一个快递员站在小区门口说：门牌号没了，我不送了。</p>
+<p>这就是传统选择器爬虫的老毛病：它把网页当成静态货架，把 CSS selector / XPath 当成货架编号。只要前端同学挪一下 DOM、改一个 class、套一层 wrapper，爬虫就像被抽走地图的机器人，站在原地发呆。</p>
+<p>所以我看到 Scrapling 这个项目时，第一反应不是“又一个 Python 爬虫库”，而是：它瞄准的不是抓取本身，而是<strong>抓取后的存活率</strong>。</p>
+<p>Scrapling 官方把自己定义为 adaptive Web Scraping framework。PyPI 当前版本是 <code>0.4.9</code>，发布时间是 2026-06-07。它的 README 里有一句很关键的话：解析器会从网站变化中学习，并在页面更新时自动重新定位元素。</p>
+<p>这句话如果放在 5 年前，大概像营销话术；但放在 AI Agent 时代，它突然变得非常现实。</p>
+<p>因为 Agent 越来越擅长“调用工具”，但工具拿不到稳定数据，Agent 就只是一个很会说话的盲人。</p>
+<h2 id="传统爬虫脆在哪里不是代码弱是假设太天真">传统爬虫脆在哪里：不是代码弱，是假设太天真
+</h2><p>写过爬虫的人都知道，最经典的组合是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">requests + BeautifulSoup + CSS selector</span>
+</span></span></code></pre></div><p>这套东西轻、快、直观。抓一个静态页面，几行代码就能把标题、价格、链接抠出来。它的问题也同样直观：<strong>它默认页面结构不会变。</strong></p>
+<p>例如你今天写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>price <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>select_one(<span style="color:#e6db74">&#39;.product .price&#39;</span>)<span style="color:#f92672">.</span>text
+</span></span></code></pre></div><p>明天网站把 <code>.price</code> 改成 <code>.amount</code>，或者中间塞一个促销组件，脚本立刻变成玻璃制品。</p>
+<p>于是工程上会慢慢长出各种补丁：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>price <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>select_one(<span style="color:#e6db74">&#39;.product .price&#39;</span>) <span style="color:#f92672">or</span> soup<span style="color:#f92672">.</span>select_one(<span style="color:#e6db74">&#39;.amount&#39;</span>) <span style="color:#f92672">or</span> soup<span style="color:#f92672">.</span>select_one(<span style="color:#e6db74">&#39;[data-price]&#39;</span>)
+</span></span></code></pre></div><p>一开始你觉得自己很聪明。三个月后，你的爬虫代码像一个塞满创可贴的急救箱：每个 selector 背后都有一次线上事故，每个 fallback 背后都有一个周末。</p>
+<p>问题不在 BeautifulSoup。它做的事情很纯粹：解析 HTML。问题在我们把“定位元素”这件事想得太静态了。</p>
+<p>网页不是 PDF。现代网页更像一座每天装修的商场：广告位会换、AB Test 会换、组件库会升级、前端会重构、SSR/CSR 会混搭。你拿一张上周的平面图去找今天的店铺，当然会迷路。</p>
+<p>Scrapling 想做的事，就是给爬虫加一点“认路能力”。</p>
+<h2 id="scrapling-的核心判断selector-不该只是地址还该是记忆">Scrapling 的核心判断：selector 不该只是地址，还该是记忆
+</h2><p>Scrapling 的示例很有意思：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scrapling.fetchers <span style="color:#f92672">import</span> Fetcher, AsyncFetcher, StealthyFetcher, DynamicFetcher
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>StealthyFetcher<span style="color:#f92672">.</span>adaptive <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> StealthyFetcher<span style="color:#f92672">.</span>fetch(<span style="color:#e6db74">&#39;https://example.com&#39;</span>, headless<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, network_idle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>products <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>css(<span style="color:#e6db74">&#39;.product&#39;</span>, auto_save<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>products <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>css(<span style="color:#e6db74">&#39;.product&#39;</span>, adaptive<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div><p>这里真正值得注意的不是 <code>p.css('.product')</code>，而是两个参数：<code>auto_save=True</code> 和 <code>adaptive=True</code>。</p>
+<p>传统 selector 像 GPS 坐标：你告诉程序“去这里”。Scrapling 的 adaptive 模式更像在记一个人的特征：这个元素以前长什么样、周围有什么上下文、文本和结构有什么相似性。等页面改版后，它不只问“原来的坐标还在不在”，还会问“有没有一个东西，看起来像我要找的那个东西”。</p>
+<p>这就是“自愈爬虫”的核心价值。</p>
+<p>当然，别把它想成魔法。它不可能在所有情况下凭空知道你想要什么。比如一个商品列表彻底变成接口分页、页面内容被登录态隔离、关键字段改成图片渲染，再聪明的相似性算法也需要新的线索。</p>
+<p>但在大量现实场景里，网页变化并没有那么彻底。多数改版只是：</p>
+<ul>
+<li>class 名变了</li>
+<li>DOM 层级多套一层</li>
+<li>卡片组件换了结构</li>
+<li>某些字段顺序调整</li>
+<li>前端框架升级后节点属性变化</li>
+</ul>
+<p>这些变化对死板 selector 是灾难，对“记住元素特征”的解析器，却可能只是一次绕路。</p>
+<p>这也是 Scrapling 最值得关注的地方：它不承诺“永不失效”，它提供的是<strong>失效后的缓冲区</strong>。</p>
+<p>对个人脚本来说，这意味着少修几次；对生产任务来说，这意味着少几个凌晨告警。</p>
+<h2 id="它不是-beautifulsoup-替代品而是把抓取链路打包了">它不是 BeautifulSoup 替代品，而是把“抓取链路”打包了
+</h2><p>很多项目会把自己包装成全能爬虫库，但实际只解决一个环节。Scrapling 比较不同的是，它试图把三个层面连起来：</p>
+<ul>
+<li>Parser：选择、定位、相似元素查找、自适应重定位</li>
+<li>Fetcher：HTTP 请求、动态页面、隐身抓取、会话管理</li>
+<li>Spider：并发、多 Session、暂停 / 恢复、代理轮换、实时统计</li>
+</ul>
+<p>这让它不太像 BeautifulSoup，也不完全像 Scrapy，更不是 Playwright 的简单封装。</p>
+<p>BeautifulSoup 解决的是“HTML 到对象”的问题。它像一把小刀，锋利、便宜、容易放进口袋。你知道页面稳定、规模不大，它仍然是最顺手的工具。</p>
+<p>Scrapy 解决的是“规模化爬取调度”的问题。它像一条流水线，有队列、pipeline、中间件、去重、扩展生态。你要跑大量站点、清晰管道、成熟工程，它仍然很强。</p>
+<p>Playwright 解决的是“浏览器自动化”的问题。它像一个真人浏览器替身，能点按钮、等渲染、处理 SPA。问题是成本重，脚本也容易被页面结构牵着鼻子走。</p>
+<p>Scrapling 的野心，是把这些能力揉成一个更现代的抓取框架：轻量页面用 Fetcher，动态页面用 DynamicFetcher，反机器人场景用 StealthyFetcher，规模化任务上 Spider，自适应定位交给 parser。</p>
+<p>这不是“谁干掉谁”的关系，而是选型重心不同。</p>
+<p>如果你的任务是抓一个结构稳定的博客列表，Scrapling 可能显得用力过猛。<code>requests + bs4</code> 更快。</p>
+<p>如果你已经有一套成熟 Scrapy 集群，带监控、队列、代理池、数据管道，Scrapling 不一定值得整体迁移。</p>
+<p>但如果你的痛点是：页面变化频繁、脚本维护成本高、又想把抓取能力暴露给 AI Agent，那么 Scrapling 的位置突然很清晰。</p>
+<p>它适合做**“不想天天修 selector 的中小型到中大型抓取系统”**。</p>
+<h2 id="ai-agent-为什么特别需要这种爬虫">AI Agent 为什么特别需要这种爬虫
+</h2><p>过去写爬虫，多半是人写脚本，人看结果，人修 bug。</p>
+<p>AI Agent 时代，流程变了：Agent 负责规划任务，调用工具，读取网页，提取信息，再生成下一步动作。这个链路里，爬虫不再是后台脚本，而是 Agent 的眼睛。</p>
+<p>眼睛不稳定，脑子越聪明越危险。</p>
+<p>例如你让 Agent 做竞品监控：</p>
+<blockquote>
+<p>每天抓 20 个 SaaS 官网价格页，提取套餐变化，发现涨价后提醒我。</p>
+</blockquote>
+<p>传统实现里，Agent 调用一个脚本。脚本如果因为 selector 失效抓不到价格，可能返回空数据。Agent 如果没有足够防护，还可能一本正经地总结：“今日无价格变化。”</p>
+<p>这比直接报错更糟。报错至少会让你知道系统坏了；静默错误会让你以为世界很平静。</p>
+<p>Scrapling 的 adaptive parser 和 MCP 服务，正好卡在这个交界处。</p>
+<p>MCP 的价值，不是“给 AI 加个花哨接口”。它真正解决的是工具边界：Agent 不应该每次都把整页 HTML 塞进上下文里，让模型用 token 硬啃。更合理的方式是：抓取工具先提取目标内容，再把干净结果交给 Agent。</p>
+<p>Scrapling README 提到，它内置 MCP server，用于 AI 辅助 Web Scraping 和数据提取，目标是在内容传给 Claude / Cursor 等 AI 之前先提取目标内容，从而减少 token 使用和操作成本。</p>
+<p>这个方向很对。</p>
+<p>因为网页不是给 LLM 吃的。网页里有导航、广告、脚本、推荐位、cookie banner、重复 footer。你把整页丢给模型，就像把一整车建筑垃圾倒进厨房，然后让厨师挑出两根葱。</p>
+<p>更好的架构是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">网页 → Scrapling 抓取/解析/自适应定位 → 结构化数据 → MCP → Agent 推理/决策</span>
+</span></span></code></pre></div><p>Agent 做判断，Scrapling 做眼睛和手。边界清楚，系统才稳。</p>
+<h2 id="反机器人能力有用但别把它当免死金牌">反机器人能力：有用，但别把它当免死金牌
+</h2><p>Scrapling 另一个显眼卖点是 Fetcher。官方 README 提到：</p>
+<ul>
+<li><code>Fetcher</code>：快速 HTTP 请求，可模拟浏览器 TLS fingerprint、headers，并使用 HTTP/3</li>
+<li><code>DynamicFetcher</code>：基于 Playwright 的 Chromium / Google Chrome 处理动态网站</li>
+<li><code>StealthyFetcher</code>：高级隐身功能和 fingerprint 伪装</li>
+<li>Session 管理：<code>FetcherSession</code>、<code>StealthySession</code>、<code>DynamicSession</code></li>
+<li>Proxy 轮换、域名屏蔽、广告屏蔽、DNS-over-HTTPS 防泄漏</li>
+<li>README 还提到可绕过 Cloudflare Turnstile / Interstitial 等场景</li>
+</ul>
+<p>这些能力对工程确实有用。现实抓取里，很多失败不是 selector 问题，而是还没看到页面就被挡在门外：TLS 指纹不对、header 太假、IP 信誉差、JS challenge、cookie 状态缺失。</p>
+<p>不过这里必须冷静一点。</p>
+<p>“能绕过某些反机器人机制”和“可以无视所有网站限制”完全不是一回事。反爬系统是对抗环境，今天可行，明天可能失效。更重要的是，抓取公开数据也要遵守网站条款、robots 约束、访问频率和法律边界。</p>
+<p>从技术选型角度看，我更愿意把 Scrapling 的 stealth 能力理解成：<strong>减少正常抓取被误伤的概率</strong>，而不是拿来硬闯别人不想让你访问的门。</p>
+<p>这也是工程心态差异。</p>
+<p>短期脚本追求“抓到”；长期系统追求“稳定、可解释、可恢复、可审计”。如果一个系统靠不断突破边界活着，它就不是系统，是火药桶。</p>
+<h2 id="和-scrapy--playwright--beautifulsoup-怎么选">和 Scrapy / Playwright / BeautifulSoup 怎么选
+</h2><p>如果把四类工具放在一张桌子上，我会这样理解。</p>
+<p>BeautifulSoup 是解剖刀。</p>
+<p>它适合结构简单、页面稳定、抓取量不大、你愿意自己处理请求和重试的场景。优点是低心智负担，缺点是工程能力几乎都要自己补。</p>
+<p>Playwright 是遥控浏览器。</p>
+<p>它适合 SPA、强 JS 渲染、需要点击/滚动/登录态的页面。优点是接近真实用户，缺点是资源重、速度慢、脚本维护仍然依赖页面结构。</p>
+<p>Scrapy 是工厂流水线。</p>
+<p>它适合大规模抓取、队列调度、去重、pipeline、成熟工程团队。优点是生态成熟，缺点是现代动态网页和自适应定位不是它的核心叙事。</p>
+<p>Scrapling 更像一个会认路的采集机器人。</p>
+<p>它试图把“抓页面”“解析内容”“适应变化”“规模化爬取”“给 AI Agent 调用”放到一个框架里。优点是链路完整，特别适合变化频繁的网站和 Agent 工作流；缺点是项目仍在快速发展期，版本号当前还在 <code>0.4.9</code>，生态成熟度、长期稳定性、团队接手成本都需要实测。</p>
+<p>我的选型建议会比较朴素：</p>
+<ul>
+<li>一次性脚本：BeautifulSoup 或 Playwright</li>
+<li>大规模传统爬虫平台：Scrapy 仍是稳妥选择</li>
+<li>动态页面交互重：Playwright 优先</li>
+<li>页面经常小改、维护 selector 很痛：重点看 Scrapling</li>
+<li>想把抓取能力接入 AI Agent / MCP：Scrapling 值得试</li>
+</ul>
+<p>不要为了新工具而新工具。爬虫系统最贵的不是写第一版，而是半年后的维护账单。</p>
+<h2 id="真正该测试的不是-hello-world而是改版后还能不能活">真正该测试的，不是 Hello World，而是“改版后还能不能活”
+</h2><p>如果我要在生产环境评估 Scrapling，不会只跑官方示例。</p>
+<p>Hello World 没意义。任何爬虫框架在文档里的第一页都很丝滑，像新买的机械键盘，打两个字就觉得自己生产力翻倍。</p>
+<p>真正的测试应该像事故演练：</p>
+<ol>
+<li>找一个商品列表或文章列表页面</li>
+<li>用 Scrapling 保存目标元素</li>
+<li>人为修改本地 HTML：改 class、调层级、换 wrapper、移动字段顺序</li>
+<li>用 <code>adaptive=True</code> 看能否重新定位</li>
+<li>记录成功率、误匹配率、耗时变化</li>
+<li>再和原始 CSS selector、XPath、Playwright locator 对比</li>
+</ol>
+<p>尤其要关注误匹配。</p>
+<p>爬虫失败不可怕，误抓才可怕。失败会报警，误抓会污染数据。自适应算法如果把“相似”理解错，把原价抓成折扣价，把库存状态抓成推荐标签，后面整个数据链路都会被带偏。</p>
+<p>所以 Scrapling 这类工具要配合校验规则使用：字段格式、数值范围、页面样本、异常阈值、历史对比，都不能省。</p>
+<p>这也是我对“自愈”这个词的保留意见。</p>
+<p>自愈不是自动痊愈，更像自动止血。它能让系统不至于小改版就倒下，但不能替你判断业务语义是否仍然正确。</p>
+<h2 id="scrapling-最适合的落点agent-的数据采集层">Scrapling 最适合的落点：Agent 的数据采集层
+</h2><p>我最看好 Scrapling 的地方，不是它能替代哪个经典工具，而是它刚好踩中了 AI Agent 工程化里的一个空位：<strong>稳定的数据采集层</strong>。</p>
+<p>Agent 框架现在很热，MCP 也很热，但很多 Demo 仍然停留在“模型调用浏览器打开网页然后总结”。这条路看起来智能，实际成本很高：慢、贵、不稳定、不可控。</p>
+<p>更好的路线是把能力拆开：</p>
+<ul>
+<li>Agent：负责目标拆解、判断、计划、总结</li>
+<li>MCP：负责工具协议和上下文边界</li>
+<li>Scrapling：负责网页抓取、解析、自适应定位</li>
+<li>数据校验层：负责判断结果是否可信</li>
+<li>日志 / flight recorder：负责复盘每次抓取过程</li>
+</ul>
+<p>这样 Agent 不必亲自“看完整网页”，而是拿到更干净、更便宜、更可控的结构化输入。</p>
+<p>这和我一直对 Agent 工程化的判断一致：模型能力很重要，但工具层更像地基。地基歪了，上面盖再聪明的楼也会裂。</p>
+<p>Scrapling 的 MCP server 让它天然可以进入这个架构。不是因为 MCP 三个字多新潮，而是因为它让爬虫从“脚本”变成了“可被 Agent 调用的服务”。</p>
+<p>这一步很关键。</p>
+<p>过去爬虫是批处理工具：定时跑，入库，报表。</p>
+<p>现在爬虫会变成 Agent 的实时感官：用户问一个问题，Agent 判断需要外部数据，于是调用抓取服务，拿回结构化结果，再继续推理。</p>
+<p>这种场景下，selector 的稳定性就不是小问题，而是 Agent 是否可靠的底层前提。</p>
+<h2 id="我不会神化-scrapling但会把它列进观察清单">我不会神化 Scrapling，但会把它列进观察清单
+</h2><p>Scrapling 现在有几个让我愿意继续观察的点：</p>
+<ul>
+<li>自适应元素定位切中了真实痛点</li>
+<li>Fetcher / DynamicFetcher / StealthyFetcher 覆盖了现代网页抓取常见层次</li>
+<li>Spider 框架提供并发、多 Session、暂停 / 恢复、代理轮换等工程能力</li>
+<li>MCP server 让它能接入 AI Agent 工作流</li>
+<li>PyPI 版本 <code>0.4.9</code> 已发布，项目仍在快速迭代</li>
+</ul>
+<p>但我不会把它描述成“爬虫终局”。</p>
+<p>原因也很简单：爬虫是典型对抗和变化环境。任何框架都逃不开三个问题：</p>
+<ul>
+<li>网站改版幅度超过算法记忆怎么办？</li>
+<li>反机器人策略升级怎么办？</li>
+<li>自适应误匹配导致脏数据怎么办？</li>
+</ul>
+<p>Scrapling 能缓解这些问题，但不能消灭这些问题。</p>
+<p>如果你现在还在用一堆手写 selector 维护网页采集，Scrapling 值得拿一个真实项目试一周。别试官网 Demo，拿你最烦、最常坏、最不想维护的页面试。</p>
+<p>如果它能让 selector 维护次数少一半，它就有价值。</p>
+<p>如果它还能通过 MCP 接入你的 Agent 工作流，让模型拿到干净、稳定、低 token 的网页数据，那它就不只是一个爬虫库，而是 Agent 工具链里一块很实用的“视觉皮层”。</p>
+<p>AI Agent 时代，大家都在讨论大脑：模型更强、上下文更长、推理更深。</p>
+<p>但真正跑过系统的人都知道，很多事故不是大脑不聪明，而是眼睛看错了、手摸错了、日志没记下。</p>
+<p>Scrapling 这种工具提醒我们：</p>
+<blockquote>
+<p>智能系统不只需要更会思考的 Agent，也需要更不容易迷路的工具。</p>
+</blockquote>
+<p>爬虫过去像一次性胶带，粘上就用，断了再补。</p>
+<p>接下来，它得更像工程系统里的传感器：会校准，会恢复，会记录，也知道什么时候该报警。</p>
+<p>Scrapling 还没证明自己能成为这个答案，但它问的问题，方向是对的。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/scrapling/">Scrapling</a>
+        
+            <a href="/tags/python/">Python</a>
+        
+            <a href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/mcp/">MCP</a>
+        
+            <a href="/tags/playwright/">Playwright</a>
+        
+            <a href="/tags/scrapy/">Scrapy</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">本地 AI 助手不该只是聊天框：Axiom 的多智能体流水线给 Windows 带来了什么</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-whatsapp-free-llm-zero-cost/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hermes Agent &#43; FreeLLMAPI：零成本搭建 WhatsApp 私人 AI 助手</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-vs-openclaw-agent-framework-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hermes Agent 与 OpenClaw：两种 AI Agent 框架的架构哲学与选型逻辑</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/claude-code-skills-mcp-workflow-deconstruction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/scrapling-self-healing-crawler-ai-agent\/'; 
+        const pageTitle = 'Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

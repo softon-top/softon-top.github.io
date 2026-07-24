@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>LLM on softon.top</title>
+		<link>https://softon.top/tags/llm/</link>
+		<description>Recent content in LLM on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 19 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI Agent 不是黑盒魔法：为什么下一代产品需要对话观测系统？</title>
+				<link>https://softon.top/ai/ai-agent-conversation-observability-greenflash/</link>
+				<pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-agent-conversation-observability-greenflash/</guid>
+				<description>&lt;p&gt;很多团队做 AI Agent，最容易掉进一个很隐蔽的坑：&lt;strong&gt;工程上看起来一切正常，用户体验却在悄悄烂掉。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;日志没有报错，API 没有超时，工具调用也返回了 200。仪表盘一片绿色，像一块擦得发亮的玻璃。可玻璃另一边，用户已经第三次问同一个问题，第四次换了个说法，第五次开始怀疑自己是不是不会用。&lt;/p&gt;&#xA;&lt;p&gt;这就是 AI 产品最麻烦的地方：它不像传统按钮。按钮点了没反应，错误很明显；Agent 回答了，但没解决问题，错误藏在语言里。&lt;/p&gt;&#xA;&lt;p&gt;最近 Hacker News 上有个 Show HN 项目叫 &lt;strong&gt;Greenflash&lt;/strong&gt;，标题很直接：&lt;code&gt;we read every conversation your AI agent has with users&lt;/code&gt;。它自己的定位也很明确：&lt;strong&gt;Product Management for AI Agents&lt;/strong&gt;，不是单纯的日志工具，也不是传统 eval 平台，而是读取真实用户对话，把“哪里卡住了、什么需求没被满足、下一步该改什么”提炼成产品决策。&lt;/p&gt;&#xA;&lt;p&gt;我不想把它写成一篇“某某工具介绍”。真正值得讨论的不是 Greenflash 本身，而是它暴露出的趋势：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;当语言成为产品界面，产品经理、工程师、运营都需要一种新的眼睛。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这双眼睛不是看 CPU、不是看 HTTP 500，也不是看 prompt 单测通过率。它要看的是：用户到底有没有拿到想要的东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;传统可观测性看不到答非所问&#34;&gt;传统可观测性看不到“答非所问”&#xA;&lt;/h2&gt;&lt;p&gt;过去做软件，监控链路比较清楚。&lt;/p&gt;&#xA;&lt;p&gt;服务器挂了，告警响；接口慢了，APM 标红；按钮转化率跌了，埋点告诉你哪一步漏了人。传统产品像一条铺好的路，用户从 A 走到 B，中间每个路口都有摄像头。&lt;/p&gt;&#xA;&lt;p&gt;AI Agent 不一样。它更像一个会说话的前台。&lt;/p&gt;&#xA;&lt;p&gt;用户不会严格按路径走。他可能先抱怨，再描述背景，然后突然问价格，再要求 Agent 做动作。一个会话里有需求、有情绪、有误解、有反复确认，还有一些连用户自己都没完全讲清楚的意图。&lt;/p&gt;&#xA;&lt;p&gt;这时候，如果你只看传统日志，容易得到一个荒谬结论：系统运行完美。&lt;/p&gt;&#xA;&lt;p&gt;因为从机器视角看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;LLM 返回了内容&lt;/li&gt;&#xA;&lt;li&gt;工具调用成功&lt;/li&gt;&#xA;&lt;li&gt;数据库查询正常&lt;/li&gt;&#xA;&lt;li&gt;对话没有崩溃&lt;/li&gt;&#xA;&lt;li&gt;用户没有触发明确错误&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;但从用户视角看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 没理解真正问题&lt;/li&gt;&#xA;&lt;li&gt;回答一直绕圈&lt;/li&gt;&#xA;&lt;li&gt;关键下一步没给&lt;/li&gt;&#xA;&lt;li&gt;该推荐升级时只解释规则&lt;/li&gt;&#xA;&lt;li&gt;该执行动作时只输出说明&lt;/li&gt;&#xA;&lt;li&gt;用户越问越急，最后关掉页面&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这类失败最烦的地方在于：&lt;strong&gt;它不是系统失败，而是体验失败。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）</title>
+				<link>https://softon.top/software/ollama-cost-saving-real-test-2026/</link>
+				<pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ollama-cost-saving-real-test-2026/</guid>
+				<description>&lt;h1 id=&#34;一台旧笔记本如何让我的-ai-费用直线下降&#34;&gt;一台旧笔记本如何让我的 AI 费用直线下降&#xA;&lt;/h1&gt;&lt;p&gt;去年十一月，我厌倦了每月动辄几百元的 API 账单。作为一个经常需要调用大语言模型写作、编程、数据分析的人，Claude API 和 GPT-4 的费用正在吞噬我的自由职业收入。就在此时，我发现了 Ollama——一个可以在本机运行开源大模型的工具。抱着试一试的心态，我把旧的 MacBook Pro（2019 款，16GB RAM）改造成了私有 AI 服务器。三个月过去了，我的 API 费用从平均每月 1500 元直降到不足 100 元，硬件摊销和电费加起来也不超过 100 元/月。也就是说，&lt;strong&gt;我每月实际节省了约 1800 元&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;本文将把我的真实测试数据摆在台前：硬件选型、模型选择、日常使用场景、以及细算下来的每一笔开支。如果你也在为昂贵的 API 费用发愁，也许这份经验能给你一个可行的方案。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为什么是-ollama&#34;&gt;为什么是 Ollama？&#xA;&lt;/h2&gt;&lt;p&gt;在尝试本地化 LLM 时，我首先评估了几种方案：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;方案&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;安装难度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;模型选择&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;性能（我机器）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;是否需要 GPU&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Ollama&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;⭐⭐（简单）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;丰富（Llama、Mistral、Phi 等）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;可接受（CPU 推理）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;否&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;LMStudio&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;⭐⭐（简单）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;丰富&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;类似 Ollama&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;否&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;text-generation-webui&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;⭐⭐⭐（中等）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;丰富&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;稍快（需显卡优化）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;推荐有 GPU&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;vLLM + FastAPI&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;⭐⭐⭐⭐（复杂）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;需手动转换&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;最快（但需显卡）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;是&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;我最终选择 Ollama，原因有三：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;零配置&lt;/strong&gt;：&lt;code&gt;ollama run llama3&lt;/code&gt; 一条命令就能启动模型，无需额外依赖。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;模型库丰富&lt;/strong&gt;：官方库持续更新，社区贡献的量化版本（GGUF）直接可用。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;资源占用友好&lt;/strong&gt;：在仅有 16GB RAM、无独立显卡的老机器上，它仍能流畅跑 7B 参数模型，延迟在 2-3 秒/轮（取决于提示长度）。&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;如果你有 NVIDIA GPU（尤其 2060 以上），建议直接装有 CUDA 支持的 Ollama，速度会有质的飞跃。但即使没有显卡，它也足以满足日常轻度使用。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

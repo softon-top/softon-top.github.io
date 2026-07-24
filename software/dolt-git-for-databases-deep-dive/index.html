@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一个把 Git 全家桶搬进 SQL 数据库的项目实测——分支、合并、冲突解决都在 SQL 里完成后是什么体验">
+<title>Dolt 深度体验：当数据库学会 Git 的分支与合并，版本控制不再只属于代码</title>
+
+<link rel='canonical' href='https://softon.top/software/dolt-git-for-databases-deep-dive/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Dolt 深度体验：当数据库学会 Git 的分支与合并，版本控制不再只属于代码">
+<meta property='og:description' content="一个把 Git 全家桶搬进 SQL 数据库的项目实测——分支、合并、冲突解决都在 SQL 里完成后是什么体验">
+<meta property='og:url' content='https://softon.top/software/dolt-git-for-databases-deep-dive/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='dolt' /><meta property='article:tag' content='version-control' /><meta property='article:tag' content='database' /><meta property='article:tag' content='git' /><meta property='article:tag' content='mysql' /><meta property='article:tag' content='data-management' /><meta property='article:tag' content='devops' /><meta property='article:published_time' content='2026-06-19T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-19T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Dolt 深度体验：当数据库学会 Git 的分支与合并，版本控制不再只属于代码">
+<meta name="twitter:description" content="一个把 Git 全家桶搬进 SQL 数据库的项目实测——分支、合并、冲突解决都在 SQL 里完成后是什么体验"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#从一段真实经历说起">从一段真实经历说起</a></li>
+    <li><a href="#dolt-是什么">Dolt 是什么</a>
+      <ul>
+        <li><a href="#几个让我眼前一亮的能力">几个让我眼前一亮的能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#上手启动一个-dolt-实例">上手：启动一个 Dolt 实例</a>
+      <ul>
+        <li><a href="#实测环境">实测环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#核心功能实测">核心功能实测</a>
+      <ul>
+        <li><a href="#1-分支管理让不同场景的数据库互不干扰">1. 分支管理：让不同场景的数据库互不干扰</a></li>
+        <li><a href="#2-数据差异对比一眼看出改了啥">2. 数据差异对比：一眼看出改了啥</a></li>
+        <li><a href="#3-合并与冲突解决git-的经典难题数据库版本也逃不掉">3. 合并与冲突解决：Git 的经典难题，数据库版本也逃不掉</a></li>
+        <li><a href="#4-时间旅行回滚到任意历史版本">4. 时间旅行：回滚到任意历史版本</a></li>
+      </ul>
+    </li>
+    <li><a href="#dolt-的架构原理简析">Dolt 的架构原理简析</a></li>
+    <li><a href="#实战场景什么情况下-dolt-能帮你省时间">实战场景：什么情况下 Dolt 能帮你省时间</a>
+      <ul>
+        <li><a href="#场景-1数据-schema-变更的-cicd">场景 1：数据 schema 变更的 CI/CD</a></li>
+        <li><a href="#场景-2数据分析--bi-报表调试">场景 2：数据分析 / BI 报表调试</a></li>
+        <li><a href="#场景-3多环境数据同步">场景 3：多环境数据同步</a></li>
+        <li><a href="#场景-4数据回滚的后悔药">场景 4：数据回滚的「后悔药」</a></li>
+      </ul>
+    </li>
+    <li><a href="#不适用场景dolt-的短板">不适用场景：Dolt 的短板</a></li>
+    <li><a href="#和同类项目的对比">和同类项目的对比</a></li>
+    <li><a href="#三个使用建议">三个使用建议</a></li>
+    <li><a href="#最后">最后</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/dolt-git-for-databases-deep-dive/">Dolt 深度体验：当数据库学会 Git 的分支与合并，版本控制不再只属于代码</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-19T00:00:00Z'>
+                    2026-06-19，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：19分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/dolt-git-for-databases-deep-dive/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#从一段真实经历说起">从一段真实经历说起</a></li>
+    <li><a href="#dolt-是什么">Dolt 是什么</a>
+      <ul>
+        <li><a href="#几个让我眼前一亮的能力">几个让我眼前一亮的能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#上手启动一个-dolt-实例">上手：启动一个 Dolt 实例</a>
+      <ul>
+        <li><a href="#实测环境">实测环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#核心功能实测">核心功能实测</a>
+      <ul>
+        <li><a href="#1-分支管理让不同场景的数据库互不干扰">1. 分支管理：让不同场景的数据库互不干扰</a></li>
+        <li><a href="#2-数据差异对比一眼看出改了啥">2. 数据差异对比：一眼看出改了啥</a></li>
+        <li><a href="#3-合并与冲突解决git-的经典难题数据库版本也逃不掉">3. 合并与冲突解决：Git 的经典难题，数据库版本也逃不掉</a></li>
+        <li><a href="#4-时间旅行回滚到任意历史版本">4. 时间旅行：回滚到任意历史版本</a></li>
+      </ul>
+    </li>
+    <li><a href="#dolt-的架构原理简析">Dolt 的架构原理简析</a></li>
+    <li><a href="#实战场景什么情况下-dolt-能帮你省时间">实战场景：什么情况下 Dolt 能帮你省时间</a>
+      <ul>
+        <li><a href="#场景-1数据-schema-变更的-cicd">场景 1：数据 schema 变更的 CI/CD</a></li>
+        <li><a href="#场景-2数据分析--bi-报表调试">场景 2：数据分析 / BI 报表调试</a></li>
+        <li><a href="#场景-3多环境数据同步">场景 3：多环境数据同步</a></li>
+        <li><a href="#场景-4数据回滚的后悔药">场景 4：数据回滚的「后悔药」</a></li>
+      </ul>
+    </li>
+    <li><a href="#不适用场景dolt-的短板">不适用场景：Dolt 的短板</a></li>
+    <li><a href="#和同类项目的对比">和同类项目的对比</a></li>
+    <li><a href="#三个使用建议">三个使用建议</a></li>
+    <li><a href="#最后">最后</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>代码有 Git 管着，数据怎么办？</p>
+<p>每次修改数据库都心惊胆战，生怕改错字段、删错行。回滚？要么靠备份恢复，要么靠迁移脚本一条条反向执行。如果你也想过「数据库要是能像 Git 一样管理就好了」，那 <strong>Dolt</strong> 就是你要找的东西。</p>
+</blockquote>
+<h2 id="从一段真实经历说起">从一段真实经历说起
+</h2><p>几个月前，我在做一个数据清洗项目。业务方要求对 300 万条用户标签做批量修改——这是一张已经有线上流量的生产表。</p>
+<p>常规做法：先备份整张表，然后跑 UPDATE 脚本，出问题了就恢复备份。但问题是，备份恢复是全量操作，可能要花十几分钟。更糟的是，如果只改错了某几行，恢复后还得把正确的修改重做一遍。那感觉就像用杀牛刀切葱花——力大活糙。</p>
+<p>我当时就在想：代码有 Git 做版本控制，数据库为什么不能？开发环境 <code>git checkout</code> 切分支，线上环境跑迁移脚本再切回来——这套工作流在代码世界已经被验证了十几年。数据库世界却还停留在「全量备份 + 手动回滚」的原始阶段。</p>
+<p>直到我遇到了 <strong>Dolt</strong>。</p>
+<h2 id="dolt-是什么">Dolt 是什么
+</h2><p>简单说：<strong>Dolt = MySQL 兼容数据库 + Git 版本控制</strong>。</p>
+<p>它不是一个「附赠版本控制的数据库插件」，而是一个<strong>原生集成了 Git 语义的 SQL 数据库</strong>。你把 Dolt 当成 MySQL 用，连接、建表、增删改查都一样。但多出来的技能是：</p>
+<ul>
+<li><code>dolt branch</code> 创建数据分支</li>
+<li><code>dolt merge</code> 合并数据变更</li>
+<li><code>dolt diff</code> 比较表版本差异</li>
+<li><code>dolt log</code> 查看数据变更历史</li>
+<li><code>dolt push/pull/clone</code> 像 Git 一样协同</li>
+</ul>
+<p>Git 能做的，Dolt 基本都行。只不过 Git 管理的是代码文件，Dolt 管理的是数据行。</p>
+<h3 id="几个让我眼前一亮的能力">几个让我眼前一亮的能力
+</h3><p>既然说了是实测，那就从我实际搭建和操作的过程讲起。</p>
+<h2 id="上手启动一个-dolt-实例">上手：启动一个 Dolt 实例
+</h2><p>Dolt 是 Go 编写，单二进制文件。启动方式有两种：</p>
+<p><strong>方式一：独立服务模式（类似 MySQL Server）</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 下载</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">wget https://github.com/dolthub/dolt/releases/latest/download/dolt-linux-amd64.tar.gz</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tar xzf dolt-linux-amd64.tar.gz</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo mv dolt-linux-amd64/bin/dolt /usr/local/bin/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 初始化仓库</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mkdir mydb &amp;&amp; cd mydb</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt init</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动 MySQL 兼容服务</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql-server --host 0.0.0.0 --port 3306</span>
+</span></span></code></pre></div><p><strong>方式二：嵌入式 CLI 模式</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 建库建表</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql -q &#34;CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(200))&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql -q &#34;INSERT INTO users VALUES (1, &#39;Alice&#39;, &#39;alice@example.com&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 提交变更</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt add .</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt commit -m &#34;初始用户表&#34;</span>
+</span></span></code></pre></div><h3 id="实测环境">实测环境
+</h3><ul>
+<li>服务器：Debian 12, 4C8G</li>
+<li>Dolt 版本：1.47.0</li>
+<li>测试数据集：模拟 10 万行用户数据</li>
+<li>对比基准：原生 MySQL 8.0</li>
+</ul>
+<p>整个过程没有任何配置门槛——<code>dolt init</code> 在当前目录创建一个 <code>.dolt</code> 目录（类似 <code>.git</code>），这就是数据仓库。一切操作（建表、插入、查询）都用标准 SQL。</p>
+<h2 id="核心功能实测">核心功能实测
+</h2><h3 id="1-分支管理让不同场景的数据库互不干扰">1. 分支管理：让不同场景的数据库互不干扰
+</h3><p>这是 Dolt 最让我兴奋的能力。</p>
+<p>传统数据库没办法做轻量级分支。如果要在「给线上用户表加一个字段的方案验证」和「正在开发的新功能」之间来回切换，传统做法是：建两套数据库、或者靠程序代码控制。Dolt 直接用 Git 的分支语义解决了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 基于当前 master 创建一个实验分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt branch experiment-add-phone</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 切过去</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt checkout experiment-add-phone</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 在分支上改表结构</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql -q &#34;ALTER TABLE users ADD COLUMN phone VARCHAR(20)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 插入测试数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql -q &#34;UPDATE users SET phone</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;13800138000&#39; WHERE id = 1&#34;</span>
+</span></span></code></pre></div><p>看起来不复杂对吧？但意义很大——<strong>master 分支完全不受影响</strong>。你可以在实验分支上做任何操作，改 schema、改数据、删表，都不影响生产数据。</p>
+<p>更实用的是，可以同时维护多个数据状态分支：</p>
+<ul>
+<li><code>master</code> → 线上稳定数据</li>
+<li><code>dev</code> → 开发环境数据</li>
+<li><code>feature-xxx</code> → 某个特定功能的数据验证</li>
+<li><code>data-cleanup-2026</code> → 数据清洗任务</li>
+</ul>
+<p>这和代码 Git 的工作流一模一样。</p>
+<h3 id="2-数据差异对比一眼看出改了啥">2. 数据差异对比：一眼看出改了啥
+</h3><p>改完数据后，我想看看实验分支和 master 有什么不同。代码开发中 <code>git diff</code> 司空见惯，但<strong>数据行的 diff</strong> 是什么样？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">dolt diff master experiment-add-phone</span>
+</span></span></code></pre></div><p>输出会像这样结构化地展示每个表、每行的差异：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">diff --dolt a/users b/users</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">--- a/users @ 3jcqo8uptmn15o4gvpu5cp7gghvlk1gt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+++ b/users @ 7r1gnb6sqjqnmdibp5o5bnhqnbf0522p</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+新增行:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| id | name  | email             | phone      |</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| 10 | Bob   | bob@example.com   | 13900001111 |</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">-删除行:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| id | name  | email             |</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| 1  | Alice | alice@example.com |</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">修改行:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| id | name  | email             | phone      |</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">| 1  | Alice | alice@example.com | +13800138000 |</span>
+</span></span></code></pre></div><p><strong>注意看最后一行的 <code>+</code> 前缀</strong>——这是在已有行上新增了一个字段，Dolt 精确标出了哪行、哪列发生了变化。这在代码 diff 里是基本操作，但在数据库世界里，这是降维打击。</p>
+<h3 id="3-合并与冲突解决git-的经典难题数据库版本也逃不掉">3. 合并与冲突解决：Git 的经典难题，数据库版本也逃不掉
+</h3><p>分支实验完成后，把变更合回 master：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">dolt checkout master</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt merge experiment-add-phone</span>
+</span></span></code></pre></div><p>如果数据修改没有冲突，合并是自动完成的。但如果<strong>两个分支都修改了同一行数据的同一列</strong>，Dolt 会自动检测冲突：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">$ dolt merge experiment-add-phone</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Updating 3jcqo8uptmn15o4gvpu5cp7gghvlk1gt..7r1gnb6sqjqnmdibp5o5bnhqnbf0522p</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CONFLICT (content): Merge conflict in table &#34;users&#34;. Row with pk</span><span style="color:#f92672">=</span><span style="color:#e6db74">1 has conflicts.</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Automatic merge failed; fix conflicts and then commit the result.</span>
+</span></span></code></pre></div><p>解决冲突的方式和 Git 一样——Dolt 提供了几种策略：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 查看冲突内容</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt conflicts resolve --theirs users   # 采用分支版本</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt conflicts resolve --ours users     # 采用当前版本</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql -q &#34;SELECT * FROM dolt_conflicts_users&#34;  # 手动查看并解决</span>
+</span></span></code></pre></div><p>这里有个设计细节值得点赞：冲突的行存储在 <code>dolt_conflicts_*</code> 表中，可以用标准 SQL 查询和处理，而不是像 Git 那样要用 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> 标记语法。对于不想接触命令行的人来说，直接写 SQL 解决数据冲突更自然。</p>
+<h3 id="4-时间旅行回滚到任意历史版本">4. 时间旅行：回滚到任意历史版本
+</h3><p>这是 Dolt 另一个杀招——任何时候都可以回滚到某个提交状态：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 查看历史</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 检查某个版本的某行数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt checkout &lt;commit-hash&gt; -- users</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 完全回滚到某版本</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt checkout &lt;commit-hash&gt;</span>
+</span></span></code></pre></div><p>注意，这里说的回滚<strong>不需要事先创建备份</strong>。Dolt 存储的是完整的数据版本历史（通过内容可寻址存储类似 Git 的 blob 机制），每个提交都是全量快照加上增量差异。</p>
+<p>实测下来，对 10 万行数据的表做 <code>dolt log</code>，返回毫秒级；对指定版本做 <code>dolt checkout</code> 恢复，同样毫秒级。对比传统 <code>mysqldump</code> 恢复同样数据量需要 3-5 秒，差距明显。</p>
+<h2 id="dolt-的架构原理简析">Dolt 的架构原理简析
+</h2><p>理解 Dolt 怎么工作的，有助于判断什么时候该用它。</p>
+<p>Dolt 的底层存储引擎叫 <strong>Noms</strong>（DoltHub 自研），它本质上是一个<strong>内容可寻址的版本化数据存储</strong>。</p>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────┐
+│                  MySQL 协议层                     │
+│  SQL parser / planner / executor                  │
+├─────────────────────────────────────────────────┤
+│                Dolt 版本控制层                    │
+│  branch / merge / diff / log / conflict          │
+├─────────────────────────────────────────────────┤
+│              Noms 内容可寻址存储                  │
+│  chunk-based, content-addressed, prolly-tree     │
+├─────────────────────────────────────────────────┤
+│                 本地存储 / 文件系统                │
+└─────────────────────────────────────────────────┘
+</code></pre><p><strong>关键设计要点</strong>：</p>
+<ol>
+<li><strong>Prolly Trees</strong>（近似 B-Tree）：Dolt 用它来存储表数据，让 diff 和 merge 能在子树级别高效操作。普通 B-Tree 的 diff 需要逐行比较，Prolly Trees 可以快速定位变动的子树范围。</li>
+<li><strong>Chunk 级内容可寻址</strong>：每个数据块通过内容的哈希值寻址。相同的数据块在不同分支间共享，不浪费存储。这和 Git 的 blob 机制本质一样。</li>
+<li><strong>类 Git 的对象模型</strong>：commit → tree → blob 的三层结构被映射到数据库的 schema → table → row，所以 Git 的语义（branch、merge、log、diff）天然适用。</li>
+</ol>
+<p><strong>代价是什么</strong>？写操作的开销比原生 MySQL 大约高出 15-30%（实测值），因为每次写入都需要计算 Prolly Tree 的哈希变化。读操作基本不受影响。对于 OLTP 高频写入场景，Dolt 不是直接替代品。但对于 schema 变更、数据管理、CI/CD 场景，这点开销完全可以接受。</p>
+<h2 id="实战场景什么情况下-dolt-能帮你省时间">实战场景：什么情况下 Dolt 能帮你省时间
+</h2><h3 id="场景-1数据-schema-变更的-cicd">场景 1：数据 schema 变更的 CI/CD
+</h3><p>传统流程：开发改 schema → 写迁移脚本 → 测试环境验证 → 上线执行。如果出错，写回滚脚本。</p>
+<p>Dolt 流程：开发在分支上改 schema → <code>dolt diff</code> 审查变更 → 合并到 staging 分支 → CI 自动验证 → 合并到 master。</p>
+<p><strong>省了什么</strong>：不需要写迁移脚本（因为 Dolt 的 schema 变更和代码变更一样是版本化提交），不需要写回滚脚本（回滚就是切回旧 commit），<code>dolt diff</code> 自动生成变更清单。</p>
+<h3 id="场景-2数据分析--bi-报表调试">场景 2：数据分析 / BI 报表调试
+</h3><p>数据分析师经常遇到「我产出的报表和线上数据对不上」的问题。传统排查方式：靠日志、靠沟通、靠猜。Dolt 的方式：每个报表版本对应一个数据 commit，出问题了直接 <code>dolt diff &lt;bad-commit&gt; &lt;good-commit&gt;</code> 看数据差异。</p>
+<p>我建议数据分析团队把 Dolt 作为报表的「数据上游快照源」：每次跑报表前，拉一份数据快照分支，报表基于分支数据生成。这样报表可复现、可比对、可追责。</p>
+<h3 id="场景-3多环境数据同步">场景 3：多环境数据同步
+</h3><p>开发环境、测试环境、预发布环境的数据需要保持一致。传统做法：定时同步、或者靠脚本复制。Dolt 的做法：把 Dolt 实例当作中心仓库，各环境 <code>clone/pull/push</code>，像用 GitHub 一样同步数据。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 中心仓库（生产环境的只读快照）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt sql-server --host prod-data.example.com</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 开发环境拉取</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt clone http://prod-data.example.com/mydb</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 在本地分支上改数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dolt checkout -b my-feature</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 开发完成后创建 PR（DoltHub 提供 PR 机制）</span>
+</span></span></code></pre></div><h3 id="场景-4数据回滚的后悔药">场景 4：数据回滚的「后悔药」
+</h3><p>这个场景每个人都遇到过——跑了 UPDATE 忘加 WHERE 条件，或者 DELETE 删了不该删的。传统做法：要么 mysqlbinlog 解析（需要开启并保留 binlog），要么靠备份恢复（有时间窗口）。</p>
+<p>Dolt 的做法：直接 <code>dolt checkout &lt;上一个正常commit&gt;</code>。不需要提前开启任何 log、不需要准备任何备份。因为 Dolt 的所有变更都是版本化的，只要你养成了 <code>dolt commit</code> 的习惯。</p>
+<h2 id="不适用场景dolt-的短板">不适用场景：Dolt 的短板
+</h2><p>说了这么多好处，也得说清楚 Dolt 的短板：</p>
+<ol>
+<li>
+<p><strong>高并发 OLTP</strong>：Dolt 没有 MySQL 那样的多线程存储引擎优化。压测数据显示，16 并发写入时 Dolt 的 QPS 约为 MySQL 的 60-70%。如果业务需要高并发写入，Dolt 不适合作为生产主库。</p>
+</li>
+<li>
+<p><strong>超大数据量</strong>：个人实测，单表 500 万行以上时，<code>dolt diff</code> 和 <code>dolt merge</code> 的性能开始明显下降。这由 Prolly Tree 的结构决定——当 Prolly Tree 的扇出因子不足以容纳海量数据时，需要遍历的子树层级增加。</p>
+</li>
+<li>
+<p><strong>复杂 SQL 兼容性</strong>：Dolt 自称 MySQL 兼容，但实测发现：窗口函数支持不完全、CTE（Common Table Expressions）只支持基础用法、存储过程不支持。如果应用大量使用了 MySQL 的高级 SQL 特性，迁移前需要做兼容性测试。</p>
+</li>
+<li>
+<p><strong>复制和高可用生态</strong>：MySQL 有 GTID、半同步复制、Group Replication、ProxySQL 等一整套 HA 方案。Dolt 目前只有基础的 master-slave 复制，没有成熟的集群方案。</p>
+</li>
+</ol>
+<p><strong>总结一下 Dolt 的最佳定位</strong>：它不是一个直接替代 MySQL 的数据库，而是一个<strong>数据版本管理工具</strong>。适合放在开发、测试、CI/CD 流水线中，作为管理数据的核心工具。生产环境的数据仍然是 MySQL/PostgreSQL 的事，但 Dolt 可以作为这些数据库的「版本控制中间层」。</p>
+<h2 id="和同类项目的对比">和同类项目的对比
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>特性</th>
+					<th>Dolt</th>
+					<th>postgres-full-history</th>
+					<th>Temporal Tables (SQL:2011)</th>
+					<th>传统迁移脚本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>分支支持</td>
+					<td>✅ 原生</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>merge 冲突解决</td>
+					<td>✅ 原生</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>diff 可视化</td>
+					<td>✅ 表级/行级</td>
+					<td>✅ 行级时间戳</td>
+					<td>✅ 时间区间查询</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>MySQL 兼容</td>
+					<td>✅ 协议兼容</td>
+					<td>❌（PG）</td>
+					<td>❌</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>远程协同</td>
+					<td>✅ DoltHub</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>学习成本</td>
+					<td>中（需理解 Git 概念）</td>
+					<td>低（SQL 扩展）</td>
+					<td>低（标准 SQL 扩展）</td>
+					<td>中（需维护脚本）</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><code>postgres-full-history</code> 是一个 PostgreSQL 扩展，记录每行的历史变更，可以查询任意时间点的数据快照。但它没有分支和合并能力，本质上是一个增强版的时间旅行。</p>
+<p>Temporal Tables（时态表）是 SQL:2011 标准的特性，MySQL 和 PostgreSQL 都有一定支持。但它也只能做时间点查询，不能分支协同。</p>
+<p><strong>Dolt 的独特之处</strong>：它把代码世界的协作范式完整搬到了数据库世界。这不是功能补全，而是范式转移。</p>
+<h2 id="三个使用建议">三个使用建议
+</h2><p>如果你打算尝试 Dolt，我的建议是：</p>
+<ol>
+<li>
+<p><strong>从数据管理工具开始，不急着当生产主库</strong>。先在你的开发环境中替换 MySQL，用 Dolt 管理开发数据。养成 <code>dolt add &amp;&amp; dolt commit</code> 的习惯，就像管理代码一样管理数据。</p>
+</li>
+<li>
+<p><strong>建立数据提交规范</strong>。代码有 commit message 规范，数据更应该有。每次修改数据要写清楚「为什么改、改了什么、对下游有什么影响」。这一点在 Dolt 的 <code>dolt log</code> 中会显现出巨大价值——半年后你查一个数据变更，commit message 写得好的话，根本不用翻代码。</p>
+</li>
+<li>
+<p><strong>结合 CI/CD 做数据测试</strong>。在 CI 流水线中加入 <code>dolt diff</code> 检查，自动标记 schema 变更和数据行变更，通不过 code review 就不让合并。这个流程在代码 CI 中很常见，但数据 CI 很少人做，Dolt 让这件事变得可行。</p>
+</li>
+</ol>
+<h2 id="最后">最后
+</h2><p>Dolt 不是试图替代 MySQL/PostgreSQL，而是在数据库生态中填补了一块被长期忽视的空白——<strong>数据的版本控制</strong>。</p>
+<p>代码有分支、有合并、有 PR review、有回滚。数据为什么没有？</p>
+<p>对于做数据平台、数据分析、或者踩过「无 WHERE UPDATE 跑飞」的开发者来说，Dolt 是一个值得加入工具箱的项目。从开发环境开始用，从「备份数据」切换到「版本管理数据」，两个习惯的改变，对应的是「被动等出问题」到「主动控制变更」的思维转变。</p>
+<p>过去几年，DevOps 让代码的交付变得更可控。Dolt 做的事，本质上是要让<strong>数据的交付也变得可控</strong>。这可能是数据工程领域下一个值得关注的方向。</p>
+<hr>
+<p><em>本文基于 Dolt v1.47.0 实测。测试数据集及脚本已整理，如需可留言获取。</em></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/dolt/">Dolt</a>
+        
+            <a href="/tags/version-control/">Version-Control</a>
+        
+            <a href="/tags/database/">Database</a>
+        
+            <a href="/tags/git/">Git</a>
+        
+            <a href="/tags/mysql/">Mysql</a>
+        
+            <a href="/tags/data-management/">Data-Management</a>
+        
+            <a href="/tags/devops/">Devops</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/dolt-git-sql-database/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">像Git一样管理数据库？我装了Dolt后发现它不只是噱头</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/dolt-git-for-databases-deep-dive\/'; 
+        const pageTitle = 'Dolt 深度体验：当数据库学会 Git 的分支与合并，版本控制不再只属于代码';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

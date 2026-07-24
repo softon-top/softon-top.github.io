@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从 Standing Orders 到 Dreaming，从 Specialist Lanes 到 Compaction，6 个深藏在 OpenClaw 官方文档里的硬核进阶技巧。每一个都对应一个真实的 AI 自主化痛点，每一个都附带完整配置代码与踩坑记录。">
+<title>解锁 OpenClaw 真实力：6 个把 AI 从聊天机器人升级为数字员工的进阶玩法</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="解锁 OpenClaw 真实力：6 个把 AI 从聊天机器人升级为数字员工的进阶玩法">
+<meta property='og:description' content="从 Standing Orders 到 Dreaming，从 Specialist Lanes 到 Compaction，6 个深藏在 OpenClaw 官方文档里的硬核进阶技巧。每一个都对应一个真实的 AI 自主化痛点，每一个都附带完整配置代码与踩坑记录。">
+<meta property='og:url' content='https://softon.top/tutorials/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Standing Orders' /><meta property='article:tag' content='Hooks' /><meta property='article:tag' content='Dreaming' /><meta property='article:tag' content='Specialist Lanes' /><meta property='article:tag' content='自动化' /><meta property='article:tag' content='记忆系统' /><meta property='article:published_time' content='2026-05-19T17:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-19T17:00:00&#43;08:00'/>
+<meta name="twitter:title" content="解锁 OpenClaw 真实力：6 个把 AI 从聊天机器人升级为数字员工的进阶玩法">
+<meta name="twitter:description" content="从 Standing Orders 到 Dreaming，从 Specialist Lanes 到 Compaction，6 个深藏在 OpenClaw 官方文档里的硬核进阶技巧。每一个都对应一个真实的 AI 自主化痛点，每一个都附带完整配置代码与踩坑记录。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一ai-没在偷懒是你没给它工作合同">一、AI 没在偷懒，是你没给它&quot;工作合同&quot;</a></li>
+    <li><a href="#二standing-orders--cron给-ai-一份永久授权书">二、Standing Orders + Cron：给 AI 一份永久授权书</a>
+      <ul>
+        <li><a href="#21-痛点每次都要现场布置ai-永远在等指令">2.1 痛点：每次都要&quot;现场布置&quot;，AI 永远在等指令</a></li>
+        <li><a href="#22-原理standing-orders-是-ai-的工作合同">2.2 原理：Standing Orders 是 AI 的&quot;工作合同&quot;</a></li>
+        <li><a href="#23-配置完整的-program-模板">2.3 配置：完整的 Program 模板</a></li>
+        <li><a href="#24-黄金搭档standing-orders-定义-whatcron-定义-when">2.4 黄金搭档：Standing Orders 定义 What，Cron 定义 When</a></li>
+        <li><a href="#25-铁律execute-verify-report-三步走">2.5 铁律：Execute-Verify-Report 三步走</a></li>
+        <li><a href="#26-多-program-架构一个-agent-管多块业务">2.6 多 Program 架构：一个 Agent 管多块业务</a></li>
+        <li><a href="#27-踩坑我犯过的两个错">2.7 踩坑：我犯过的两个错</a></li>
+      </ul>
+    </li>
+    <li><a href="#三hooks在-gateway-心跳里植入自定义大脑">三、Hooks：在 Gateway 心跳里植入自定义大脑</a>
+      <ul>
+        <li><a href="#31-痛点默认行为不够用又不想-fork-源码">3.1 痛点：默认行为不够用，又不想 fork 源码</a></li>
+        <li><a href="#32-原理14-个生命周期事件--你的-handlerts">3.2 原理：14 个生命周期事件 × 你的 handler.ts</a></li>
+        <li><a href="#33-配置hook-长什么样">3.3 配置：Hook 长什么样</a></li>
+        <li><a href="#34-实战5-个开箱即用的-bundled-hooks">3.4 实战：5 个开箱即用的 bundled hooks</a></li>
+        <li><a href="#35-配置文件精细控制每个-hook">3.5 配置文件：精细控制每个 hook</a></li>
+        <li><a href="#36-hook-的发现优先级避免覆盖坑">3.6 Hook 的发现优先级（避免覆盖坑）</a></li>
+        <li><a href="#37-踩坑handler-里别干重活">3.7 踩坑：handler 里别干重活</a></li>
+        <li><a href="#38-排查hook-没生效怎么办">3.8 排查：Hook 没生效怎么办</a></li>
+      </ul>
+    </li>
+    <li><a href="#四dreaming让-ai-像人一样睡觉做梦整理记忆">四、Dreaming：让 AI 像人一样睡觉做梦整理记忆</a>
+      <ul>
+        <li><a href="#41-痛点ai-的记忆系统是个永远在升迁不公平的小公司">4.1 痛点：AI 的记忆系统是个永远在升迁不公平的小公司</a></li>
+        <li><a href="#42-原理模拟人脑三阶段睡眠">4.2 原理：模拟人脑三阶段睡眠</a></li>
+        <li><a href="#43-deep-阶段的评分公式">4.3 Deep 阶段的评分公式</a></li>
+        <li><a href="#44-启用一行配置打开">4.4 启用：一行配置打开</a></li>
+        <li><a href="#45-文件分工dreamsmd-vs-memorymd">4.5 文件分工：DREAMS.md vs MEMORY.md</a></li>
+        <li><a href="#46-dream-diaryai-自己写日记">4.6 Dream Diary：AI 自己写&quot;日记&quot;</a></li>
+        <li><a href="#47-cli-工作流手动-promote--解释--预览">4.7 CLI 工作流：手动 promote / 解释 / 预览</a></li>
+        <li><a href="#48-slash-命令聊天里直接控制">4.8 Slash 命令：聊天里直接控制</a></li>
+        <li><a href="#49-踩坑blocked-状态怎么排查">4.9 踩坑：blocked 状态怎么排查</a></li>
+      </ul>
+    </li>
+    <li><a href="#五specialist-lanes多-agent-不是多开几个是分摊瓶颈">五、Specialist Lanes：多 Agent 不是&quot;多开几个&quot;，是&quot;分摊瓶颈&quot;</a>
+      <ul>
+        <li><a href="#51-痛点一个-agent-啥都管--啥都管不好">5.1 痛点：一个 Agent 啥都管 = 啥都管不好</a></li>
+        <li><a href="#52-first-principles5-个真实瓶颈">5.2 First Principles：5 个真实瓶颈</a></li>
+        <li><a href="#53-推荐-3-阶段渐进-rollout">5.3 推荐 3 阶段渐进 rollout</a></li>
+        <li><a href="#54-实战我的-4-agent-配置">5.4 实战：我的 4-Agent 配置</a></li>
+        <li><a href="#55-踩坑auth-profile-不会跨-agent-自动同步">5.5 踩坑：auth profile 不会跨 Agent 自动同步</a></li>
+      </ul>
+    </li>
+    <li><a href="#六queue-steering让-ai-边干活边听你叨叨">六、Queue Steering：让 AI 边干活边听你&quot;叨叨&quot;</a>
+      <ul>
+        <li><a href="#61-痛点ai-跑长工具链时无法纠偏">6.1 痛点：AI 跑长工具链时无法纠偏</a></li>
+        <li><a href="#62-原理runtime-boundary-注入">6.2 原理：Runtime Boundary 注入</a></li>
+        <li><a href="#63-6-种模式对比">6.3 6 种模式对比</a></li>
+        <li><a href="#64-实战场景什么时候用哪个">6.4 实战场景：什么时候用哪个？</a></li>
+        <li><a href="#65-配置debounce-怎么调">6.5 配置：debounce 怎么调</a></li>
+        <li><a href="#66-burst-例子4-条消息同时进来">6.6 burst 例子：4 条消息同时进来</a></li>
+        <li><a href="#67-限制与边界">6.7 限制与边界</a></li>
+        <li><a href="#68-steer-命令显式插话">6.8 <code>/steer</code> 命令：显式插话</a></li>
+      </ul>
+    </li>
+    <li><a href="#七compaction长会话的换气机制">七、Compaction：长会话的&quot;换气&quot;机制</a>
+      <ul>
+        <li><a href="#71-痛点会话越跑越蠢">7.1 痛点：会话越跑越蠢</a></li>
+        <li><a href="#72-触发时机">7.2 触发时机</a></li>
+        <li><a href="#73-救命-hook在压缩前-dump-关键决策">7.3 救命 Hook：在压缩前 dump 关键决策</a></li>
+        <li><a href="#74-compaction-notifier让用户知道-ai-在换气">7.4 compaction-notifier：让用户知道 AI 在&quot;换气&quot;</a></li>
+        <li><a href="#75-关于-commandstop-与-before_agent_finalize-的差异">7.5 关于 <code>command:stop</code> 与 <code>before_agent_finalize</code> 的差异</a></li>
+        <li><a href="#76-gateway-重启与-session_end">7.6 Gateway 重启与 session_end</a></li>
+      </ul>
+    </li>
+    <li><a href="#八putting-it-all-together完整工作流示例">八、Putting It All Together：完整工作流示例</a></li>
+    <li><a href="#九写在最后你的-ai-是临时工还是数字员工">九、写在最后：你的 AI 是临时工还是数字员工？</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee/">解锁 OpenClaw 真实力：6 个把 AI 从聊天机器人升级为数字员工的进阶玩法</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-19T17:00:00&#43;08:00'>
+                    2026-05-19，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：47分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一ai-没在偷懒是你没给它工作合同">一、AI 没在偷懒，是你没给它&quot;工作合同&quot;</a></li>
+    <li><a href="#二standing-orders--cron给-ai-一份永久授权书">二、Standing Orders + Cron：给 AI 一份永久授权书</a>
+      <ul>
+        <li><a href="#21-痛点每次都要现场布置ai-永远在等指令">2.1 痛点：每次都要&quot;现场布置&quot;，AI 永远在等指令</a></li>
+        <li><a href="#22-原理standing-orders-是-ai-的工作合同">2.2 原理：Standing Orders 是 AI 的&quot;工作合同&quot;</a></li>
+        <li><a href="#23-配置完整的-program-模板">2.3 配置：完整的 Program 模板</a></li>
+        <li><a href="#24-黄金搭档standing-orders-定义-whatcron-定义-when">2.4 黄金搭档：Standing Orders 定义 What，Cron 定义 When</a></li>
+        <li><a href="#25-铁律execute-verify-report-三步走">2.5 铁律：Execute-Verify-Report 三步走</a></li>
+        <li><a href="#26-多-program-架构一个-agent-管多块业务">2.6 多 Program 架构：一个 Agent 管多块业务</a></li>
+        <li><a href="#27-踩坑我犯过的两个错">2.7 踩坑：我犯过的两个错</a></li>
+      </ul>
+    </li>
+    <li><a href="#三hooks在-gateway-心跳里植入自定义大脑">三、Hooks：在 Gateway 心跳里植入自定义大脑</a>
+      <ul>
+        <li><a href="#31-痛点默认行为不够用又不想-fork-源码">3.1 痛点：默认行为不够用，又不想 fork 源码</a></li>
+        <li><a href="#32-原理14-个生命周期事件--你的-handlerts">3.2 原理：14 个生命周期事件 × 你的 handler.ts</a></li>
+        <li><a href="#33-配置hook-长什么样">3.3 配置：Hook 长什么样</a></li>
+        <li><a href="#34-实战5-个开箱即用的-bundled-hooks">3.4 实战：5 个开箱即用的 bundled hooks</a></li>
+        <li><a href="#35-配置文件精细控制每个-hook">3.5 配置文件：精细控制每个 hook</a></li>
+        <li><a href="#36-hook-的发现优先级避免覆盖坑">3.6 Hook 的发现优先级（避免覆盖坑）</a></li>
+        <li><a href="#37-踩坑handler-里别干重活">3.7 踩坑：handler 里别干重活</a></li>
+        <li><a href="#38-排查hook-没生效怎么办">3.8 排查：Hook 没生效怎么办</a></li>
+      </ul>
+    </li>
+    <li><a href="#四dreaming让-ai-像人一样睡觉做梦整理记忆">四、Dreaming：让 AI 像人一样睡觉做梦整理记忆</a>
+      <ul>
+        <li><a href="#41-痛点ai-的记忆系统是个永远在升迁不公平的小公司">4.1 痛点：AI 的记忆系统是个永远在升迁不公平的小公司</a></li>
+        <li><a href="#42-原理模拟人脑三阶段睡眠">4.2 原理：模拟人脑三阶段睡眠</a></li>
+        <li><a href="#43-deep-阶段的评分公式">4.3 Deep 阶段的评分公式</a></li>
+        <li><a href="#44-启用一行配置打开">4.4 启用：一行配置打开</a></li>
+        <li><a href="#45-文件分工dreamsmd-vs-memorymd">4.5 文件分工：DREAMS.md vs MEMORY.md</a></li>
+        <li><a href="#46-dream-diaryai-自己写日记">4.6 Dream Diary：AI 自己写&quot;日记&quot;</a></li>
+        <li><a href="#47-cli-工作流手动-promote--解释--预览">4.7 CLI 工作流：手动 promote / 解释 / 预览</a></li>
+        <li><a href="#48-slash-命令聊天里直接控制">4.8 Slash 命令：聊天里直接控制</a></li>
+        <li><a href="#49-踩坑blocked-状态怎么排查">4.9 踩坑：blocked 状态怎么排查</a></li>
+      </ul>
+    </li>
+    <li><a href="#五specialist-lanes多-agent-不是多开几个是分摊瓶颈">五、Specialist Lanes：多 Agent 不是&quot;多开几个&quot;，是&quot;分摊瓶颈&quot;</a>
+      <ul>
+        <li><a href="#51-痛点一个-agent-啥都管--啥都管不好">5.1 痛点：一个 Agent 啥都管 = 啥都管不好</a></li>
+        <li><a href="#52-first-principles5-个真实瓶颈">5.2 First Principles：5 个真实瓶颈</a></li>
+        <li><a href="#53-推荐-3-阶段渐进-rollout">5.3 推荐 3 阶段渐进 rollout</a></li>
+        <li><a href="#54-实战我的-4-agent-配置">5.4 实战：我的 4-Agent 配置</a></li>
+        <li><a href="#55-踩坑auth-profile-不会跨-agent-自动同步">5.5 踩坑：auth profile 不会跨 Agent 自动同步</a></li>
+      </ul>
+    </li>
+    <li><a href="#六queue-steering让-ai-边干活边听你叨叨">六、Queue Steering：让 AI 边干活边听你&quot;叨叨&quot;</a>
+      <ul>
+        <li><a href="#61-痛点ai-跑长工具链时无法纠偏">6.1 痛点：AI 跑长工具链时无法纠偏</a></li>
+        <li><a href="#62-原理runtime-boundary-注入">6.2 原理：Runtime Boundary 注入</a></li>
+        <li><a href="#63-6-种模式对比">6.3 6 种模式对比</a></li>
+        <li><a href="#64-实战场景什么时候用哪个">6.4 实战场景：什么时候用哪个？</a></li>
+        <li><a href="#65-配置debounce-怎么调">6.5 配置：debounce 怎么调</a></li>
+        <li><a href="#66-burst-例子4-条消息同时进来">6.6 burst 例子：4 条消息同时进来</a></li>
+        <li><a href="#67-限制与边界">6.7 限制与边界</a></li>
+        <li><a href="#68-steer-命令显式插话">6.8 <code>/steer</code> 命令：显式插话</a></li>
+      </ul>
+    </li>
+    <li><a href="#七compaction长会话的换气机制">七、Compaction：长会话的&quot;换气&quot;机制</a>
+      <ul>
+        <li><a href="#71-痛点会话越跑越蠢">7.1 痛点：会话越跑越蠢</a></li>
+        <li><a href="#72-触发时机">7.2 触发时机</a></li>
+        <li><a href="#73-救命-hook在压缩前-dump-关键决策">7.3 救命 Hook：在压缩前 dump 关键决策</a></li>
+        <li><a href="#74-compaction-notifier让用户知道-ai-在换气">7.4 compaction-notifier：让用户知道 AI 在&quot;换气&quot;</a></li>
+        <li><a href="#75-关于-commandstop-与-before_agent_finalize-的差异">7.5 关于 <code>command:stop</code> 与 <code>before_agent_finalize</code> 的差异</a></li>
+        <li><a href="#76-gateway-重启与-session_end">7.6 Gateway 重启与 session_end</a></li>
+      </ul>
+    </li>
+    <li><a href="#八putting-it-all-together完整工作流示例">八、Putting It All Together：完整工作流示例</a></li>
+    <li><a href="#九写在最后你的-ai-是临时工还是数字员工">九、写在最后：你的 AI 是临时工还是数字员工？</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p><strong>摘要</strong>：本文通过 OpenClaw 官方文档（<code>/usr/local/lib/node_modules/openclaw/docs/</code>）与本地实测，拆解 6 个让 AI 从被动聊天机器人升级为主动数字员工的进阶技巧：<strong>Standing Orders 写工作合同、Hooks 植入自定义大脑、Dreaming 模拟睡眠整理记忆、Specialist Lanes 多智能体分工、Queue Steering 边干边接指令、Compaction 长会话生存术</strong>。每一节都包含原理、完整配置、实战代码与踩坑复盘。</p>
+<blockquote>
+<p><strong>前置阅读</strong>：本篇所有技巧默认你已完成 <a class="link" href="/tutorials/pve-install-openclaw-lxc-guide/" ><strong>OpenClaw 在 PVE 环境下的私有化部署</strong></a> 与 <a class="link" href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/" ><strong>初始化配置与 Skills/Gateway 设置</strong></a>，建议先把基础环境跑通再来啃这篇。</p>
+</blockquote>
+<h2 id="一ai-没在偷懒是你没给它工作合同">一、AI 没在偷懒，是你没给它&quot;工作合同&quot;
+</h2><p>2026 年我自己用 OpenClaw 这半年，踩过最深的一个坑不是装不上、不是连不通，而是<strong>装好了之后不知道怎么&quot;用&quot;它</strong>。</p>
+<blockquote>
+<p><em>用户</em>：&ldquo;你能不能每天早上 8 点帮我看一下邮件，把重要的挑出来？&rdquo;</p>
+<p><em>AI</em>：（沉默 60 秒后）&ldquo;好的，请告诉我邮件账号是哪一个，需要看哪些标签，重要的标准是什么，要不要回复，回复了要不要发出去……&rdquo;</p>
+</blockquote>
+<p>每问一次，重新交代一次。AI 像个<strong>永远在试用期的实习生</strong>，离开屏幕就忘了自己是谁。</p>
+<p>后来翻 OpenClaw 文档才发现：这套系统从设计之初就预备了让 AI <strong>真正&quot;上班&quot;</strong> 的完整机制，只是大多数人压根没翻到那几页。本文要讲的 6 个技巧，每一个都对应一个把 AI 从&quot;聊天机器人&quot;升级为&quot;数字员工&quot;的能力维度：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">技巧</th>
+					<th style="text-align: center">解决的核心问题</th>
+					<th style="text-align: center">关键文档路径</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><strong>Standing Orders</strong></td>
+					<td style="text-align: center">AI 不知道&quot;自己负责什么&quot;</td>
+					<td style="text-align: center"><code>automation/standing-orders.md</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Hooks</strong></td>
+					<td style="text-align: center">Gateway 默认行为无法定制</td>
+					<td style="text-align: center"><code>automation/hooks.md</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Dreaming</strong></td>
+					<td style="text-align: center">短期记忆没人帮你晋升到长期</td>
+					<td style="text-align: center"><code>concepts/dreaming.md</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Specialist Lanes</strong></td>
+					<td style="text-align: center">多个 Agent 抢资源、抢话语权</td>
+					<td style="text-align: center"><code>concepts/parallel-specialist-lanes.md</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Queue Steering</strong></td>
+					<td style="text-align: center">AI 在跑工具链时无法被纠偏</td>
+					<td style="text-align: center"><code>concepts/queue-steering.md</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Compaction</strong></td>
+					<td style="text-align: center">长对话越跑越慢、越跑越蠢</td>
+					<td style="text-align: center"><code>concepts/compaction.md</code></td>
+			</tr>
+	</tbody>
+</table></div>
+<blockquote>
+<p>提示：文档藏在你本机 npm 全局模块里，路径 <code>/usr/local/lib/node_modules/openclaw/docs/</code>。<code>cat</code> 一下比百度搜一下管用一万倍。</p>
+</blockquote>
+<p>下面分章节深扒。每一节都遵循 <strong>痛点 → 原理 → 配置 → 实战 → 踩坑</strong> 五段式。能用代码块说清楚的绝不废话。</p>
+<hr>
+<h2 id="二standing-orders--cron给-ai-一份永久授权书">二、Standing Orders + Cron：给 AI 一份永久授权书
+</h2><h3 id="21-痛点每次都要现场布置ai-永远在等指令">2.1 痛点：每次都要&quot;现场布置&quot;，AI 永远在等指令
+</h3><p>不开 Standing Orders 之前，OpenClaw 的工作模式是这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>你：早上把邮件整理一下
+</span></span><span style="display:flex;"><span>AI：好的，你想怎么整理？
+</span></span><span style="display:flex;"><span>你：分类、挑重点、起草回复但别发
+</span></span><span style="display:flex;"><span>AI：好的，邮件账号是？
+</span></span><span style="display:flex;"><span>你：…………
+</span></span></code></pre></div><p>每天重新交代一次，AI 永远在等你&quot;按按钮&quot;。这是<strong>临时工模式</strong>：你才是那个 24×7 在岗的人，AI 只是个昂贵的查字典工具。</p>
+<h3 id="22-原理standing-orders-是-ai-的工作合同">2.2 原理：Standing Orders 是 AI 的&quot;工作合同&quot;
+</h3><p>OpenClaw 给出的解法叫 <strong>Standing Orders（常驻指令）</strong>——直译过来就是&quot;长期生效的命令&quot;。本质是把&quot;工作合同&quot;写在 <code>AGENTS.md</code> 里，每次会话启动时自动注入到上下文，让 AI 永远记得自己有哪些 <strong>永久授权</strong>。</p>
+<p>合同必须包含 4 个要素，缺一不可：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">要素</th>
+					<th style="text-align: center">说明</th>
+					<th style="text-align: center">例子</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><strong>Authority（授权）</strong></td>
+					<td style="text-align: center">AI 可以独立做什么</td>
+					<td style="text-align: center">读邮件、分类、起草回复</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Trigger（触发）</strong></td>
+					<td style="text-align: center">什么时候执行</td>
+					<td style="text-align: center">每天 8 AM cron 触发</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Approval gate（审批门）</strong></td>
+					<td style="text-align: center">哪些动作必须找你点确认</td>
+					<td style="text-align: center">任何外发邮件</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Escalation（升级规则）</strong></td>
+					<td style="text-align: center">什么情况停下来求助</td>
+					<td style="text-align: center">收到 boss/legal 邮件立即 ping</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="23-配置完整的-program-模板">2.3 配置：完整的 Program 模板
+</h3><p>直接抄官方文档里&quot;周报&quot;那个例子，然后改造成你的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">## Program: Weekly Status Report
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">**Authority:**</span> Compile data, generate report, deliver to stakeholders
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">**Trigger:**</span> Every Friday at 4 PM (enforced via cron job)
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">**Approval gate:**</span> None for standard reports. Flag anomalies for human review.
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">**Escalation:**</span> If data source is unavailable or metrics look unusual (&gt;2σ from norm)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### Execution steps
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> Pull metrics from configured sources
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> Compare to prior week and targets
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">3.</span> Generate report in Reports/weekly/YYYY-MM-DD.md
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">4.</span> Deliver summary via configured channel
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">5.</span> Log completion to Agent/Logs/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### What NOT to do
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Do not send reports to external parties
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Do not modify source data
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Do not skip delivery if metrics look bad - report accurately
+</span></span></code></pre></div><p>注意最后那个 <strong>What NOT to do</strong> 块。这是新手最容易跳过、但工程上<strong>最重要</strong>的一段。AI 的能力边界往往不是&quot;它能做什么&quot;决定的，而是&quot;它绝对不会做什么&quot;决定的。</p>
+<h3 id="24-黄金搭档standing-orders-定义-whatcron-定义-when">2.4 黄金搭档：Standing Orders 定义 What，Cron 定义 When
+</h3><p>Standing Orders 单独存在是没用的——AI 不会&quot;自己想起来&quot;该干活。必须配合 Cron 才能真正自治：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Standing Order: &#34;你负责每日邮件整理&#34;
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>Cron Job (8 AM daily): &#34;执行邮件整理 per standing orders&#34;
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>Agent: 读取 standing orders → 执行步骤 → 报告结果
+</span></span></code></pre></div><p>注意 cron 命令里<strong>不要重复写 Standing Order 的内容</strong>，应该只是触发词：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw cron add \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--name daily-inbox-triage \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--cron &#34;0 8 * * 1-5&#34; \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--tz Asia/Shanghai \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--timeout-seconds 300 \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--announce \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--channel feishu \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--to &#34;user:ou_xxx&#34; \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--message &#34;Execute daily inbox triage per standing orders. Check mail for new alerts. Parse, categorize, and persist each item. Report summary to owner. Escalate unknowns.&#34;</span>
+</span></span></code></pre></div><p>这种写法的好处是：<strong>改 Standing Order 不需要改 cron</strong>。需求变了改一处即可，不用满世界 grep cron 命令。</p>
+<h3 id="25-铁律execute-verify-report-三步走">2.5 铁律：Execute-Verify-Report 三步走
+</h3><p>光有 Standing Orders 还不够，必须配合 OpenClaw 推荐的 <strong>执行纪律</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">### Execution rules
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Every task follows Execute-Verify-Report. No exceptions.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> &#34;I&#39;ll do that&#34; is not execution. Do it, then report.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> &#34;Done&#34; without verification is not acceptable. Prove it.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> If execution fails: retry once with adjusted approach.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> If still fails: report failure with diagnosis. Never silently fail.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Never retry indefinitely - 3 attempts max, then escalate.
+</span></span></code></pre></div><p>这 6 行字翻译成人话：</p>
+<ol>
+<li><strong>Execute</strong>：真去干，不是嘴上说&quot;好的&quot;</li>
+<li><strong>Verify</strong>：干完要验证（文件存在？消息送达？数据解析？）</li>
+<li><strong>Report</strong>：把&quot;干了什么、验证了什么&quot;汇报给我</li>
+</ol>
+<p>加上这 6 行，AI 的&quot;假装干完&quot;故障率（这是 LLM Agent 最常见的失败模式）下降一个数量级。</p>
+<h3 id="26-多-program-架构一个-agent-管多块业务">2.6 多 Program 架构：一个 Agent 管多块业务
+</h3><p>如果你的 AI 同时负责好几摊事，<strong>一个 Program 一摊</strong>，互相不打架：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">## Program 1: Content &amp; Social Media (Weekly)
+</span></span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Program 2: Financial Processing (Event-driven)
+</span></span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Program 3: System Monitoring (Continuous)
+</span></span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Escalation Rules (All Programs)
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 任何 production 写操作都必须我审批
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 连续 3 次失败立即停止 + 飞书通知
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 检测到 secret/token 泄露立即 abort
+</span></span></code></pre></div><p>每个 Program 有自己的 trigger 节奏（weekly / event / continuous）、自己的审批门、自己的边界。共用的只有最底层的 escalation rules。</p>
+<h3 id="27-踩坑我犯过的两个错">2.7 踩坑：我犯过的两个错
+</h3><p><strong>踩坑 1：忘记写 What NOT to do</strong></p>
+<p>第一次配 Standing Order 时我只写了 Authority 和 Trigger，结果 AI 把&quot;周报&quot;发到了客户邮箱（因为 client 的邮箱地址也在通讯录里）。</p>
+<p>✅ 修复：永远把&quot;禁止事项&quot;写在最显眼的位置，越具体越好（&ldquo;不要发到 @example-client.com&quot;比&quot;不要发给外部&quot;管用十倍）。</p>
+<p><strong>踩坑 2：Standing Order 漂亮但没配 Cron</strong></p>
+<p>写了一份漂亮的 daily inbox triage 文档，AI 看了一遍说&quot;明白&rdquo;。然后第二天我等到下午 5 点，邮件没整理。</p>
+<blockquote>
+<p>Standing Orders without triggers become suggestions.</p>
+</blockquote>
+<p>没有 cron 触发的 Standing Order，<strong>就是建议而已</strong>，AI 不会主动执行。</p>
+<hr>
+<h2 id="三hooks在-gateway-心跳里植入自定义大脑">三、Hooks：在 Gateway 心跳里植入自定义大脑
+</h2><h3 id="31-痛点默认行为不够用又不想-fork-源码">3.1 痛点：默认行为不够用，又不想 fork 源码
+</h3><p>OpenClaw 默认行为很多，但总有不爽的时刻：</p>
+<ul>
+<li>我希望 <code>/new</code> 之前自动备份当前会话最关键的 3 条决策到 <code>MEMORY.md</code></li>
+<li>我希望飞书消息进来时先做一道 PII 清洗</li>
+<li>我希望会话压缩前把不能丢的信息 dump 出来</li>
+<li>我希望 Gateway 重启完自动 ping 我一下&quot;我又活了&quot;</li>
+</ul>
+<p>这些都是合理需求。如果每个都得 fork 源码改一遍，等下次 OpenClaw 升级直接哭。</p>
+<p><strong>Hooks</strong> 就是为这个场景设计的：让你在 Gateway 关键事件上挂自己的脚本，不动源码、不挂主流程。</p>
+<h3 id="32-原理14-个生命周期事件--你的-handlerts">3.2 原理：14 个生命周期事件 × 你的 handler.ts
+</h3><p>OpenClaw 暴露了 14 种内部事件，每一种都可以挂多个 handler：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">事件类型</th>
+					<th style="text-align: center">触发时机</th>
+					<th style="text-align: center">典型用途</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><code>command:new</code></td>
+					<td style="text-align: center"><code>/new</code> 命令被发出</td>
+					<td style="text-align: center">新会话前清理 + 备份</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>command:reset</code></td>
+					<td style="text-align: center"><code>/reset</code> 命令被发出</td>
+					<td style="text-align: center">重置前归档</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>command:stop</code></td>
+					<td style="text-align: center"><code>/stop</code> 命令被发出</td>
+					<td style="text-align: center">优雅停机</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>command</code></td>
+					<td style="text-align: center">任何命令（通用监听器）</td>
+					<td style="text-align: center">全局命令日志</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>session:compact:before</code></td>
+					<td style="text-align: center">压缩前</td>
+					<td style="text-align: center"><strong>救命用：dump 关键决策</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>session:compact:after</code></td>
+					<td style="text-align: center">压缩完成</td>
+					<td style="text-align: center">通知用户 + 写日志</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>session:patch</code></td>
+					<td style="text-align: center">会话属性被修改</td>
+					<td style="text-align: center">审计</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>agent:bootstrap</code></td>
+					<td style="text-align: center">workspace bootstrap 文件注入前</td>
+					<td style="text-align: center">注入额外文件</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>gateway:startup</code></td>
+					<td style="text-align: center">网关启动后</td>
+					<td style="text-align: center">&ldquo;我活了&rdquo; 通知</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>gateway:shutdown</code></td>
+					<td style="text-align: center">网关停机开始</td>
+					<td style="text-align: center">清理 + 持久化</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>gateway:pre-restart</code></td>
+					<td style="text-align: center">计划内重启前</td>
+					<td style="text-align: center">软迁移</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>message:received</code></td>
+					<td style="text-align: center">任意通道收到消息</td>
+					<td style="text-align: center">PII 清洗 / 路由</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>message:transcribed</code></td>
+					<td style="text-align: center">音频转文本完成</td>
+					<td style="text-align: center">触发后续处理</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>message:preprocessed</code></td>
+					<td style="text-align: center">媒体/链接预处理完成</td>
+					<td style="text-align: center">上下文增强</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>message:sent</code></td>
+					<td style="text-align: center">出站消息送达</td>
+					<td style="text-align: center">送达回执</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="33-配置hook-长什么样">3.3 配置：Hook 长什么样
+</h3><p>每个 Hook 就是一个目录，两个文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>my-hook/
+</span></span><span style="display:flex;"><span>├── HOOK.md          # 元数据 + 文档
+</span></span><span style="display:flex;"><span>└── handler.ts       # 实现代码
+</span></span></code></pre></div><p><strong>HOOK.md</strong> 模板：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>name: pre-compact-dump
+</span></span><span style="display:flex;"><span>description: &#34;压缩前把关键决策 dump 到 MEMORY.md&#34;
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    &#34;openclaw&#34;: {
+</span></span><span style="display:flex;"><span>      &#34;emoji&#34;: &#34;💾&#34;,
+</span></span><span style="display:flex;"><span>      &#34;events&#34;: [&#34;session:compact:before&#34;],
+</span></span><span style="display:flex;"><span>      &#34;requires&#34;: { &#34;bins&#34;: [&#34;node&#34;] }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Pre-Compact Dump
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>会话压缩前自动从最近 30 条消息里提取&#34;决策类&#34;语句，追加到 MEMORY.md。
+</span></span></code></pre></div><p><strong>handler.ts</strong> 模板：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">handler</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">event</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">event</span>.<span style="color:#66d9ef">type</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;session&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">action</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;compact:before&#34;</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">messageCount</span>, <span style="color:#a6e22e">tokenCount</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">context</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`[pre-compact-dump] </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">messageCount</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> messages, </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">tokenCount</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> tokens`</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 你的逻辑：扫消息历史、提取决策、追加到 MEMORY.md
+</span></span></span><span style="display:flex;"><span>  <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 推消息回用户（可选）
+</span></span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">push</span>(<span style="color:#e6db74">`✅ 压缩前已备份 </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">messageCount</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> 条消息的关键决策`</span>);
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#a6e22e">handler</span>;
+</span></span></code></pre></div><p>每个 event 都带这些字段：<code>type</code>、<code>action</code>、<code>sessionKey</code>、<code>timestamp</code>、<code>messages</code>（可推送给用户）、<code>context</code>（事件特定数据）。</p>
+<h3 id="34-实战5-个开箱即用的-bundled-hooks">3.4 实战：5 个开箱即用的 bundled hooks
+</h3><p>OpenClaw 自带 5 个 hook，启用即用：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">Hook 名</th>
+					<th style="text-align: center">监听事件</th>
+					<th style="text-align: center">功能</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><code>session-memory</code></td>
+					<td style="text-align: center"><code>command:new</code>, <code>command:reset</code></td>
+					<td style="text-align: center">把最近 15 条消息存到 <code>&lt;workspace&gt;/memory/</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>bootstrap-extra-files</code></td>
+					<td style="text-align: center"><code>agent:bootstrap</code></td>
+					<td style="text-align: center">注入 glob 匹配的额外 bootstrap 文件</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>command-logger</code></td>
+					<td style="text-align: center"><code>command</code></td>
+					<td style="text-align: center">所有 slash 命令记录到 <code>~/.openclaw/logs/commands.log</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>compaction-notifier</code></td>
+					<td style="text-align: center"><code>session:compact:before/after</code></td>
+					<td style="text-align: center">压缩开始/结束发可见聊天提醒</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>boot-md</code></td>
+					<td style="text-align: center"><code>gateway:startup</code></td>
+					<td style="text-align: center">启动时执行 workspace 里的 <code>BOOT.md</code></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>启用任何一个：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks list             # 查看</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks enable session-memory</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks check            # 验证可用性</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks info session-memory   # 看详情</span>
+</span></span></code></pre></div><h3 id="35-配置文件精细控制每个-hook">3.5 配置文件：精细控制每个 hook
+</h3><p><code>~/.openclaw/openclaw.json</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;hooks&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;internal&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;entries&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;session-memory&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;llmSlug&#34;</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;command-logger&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;my-hook&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;env&#34;</span>: { <span style="color:#f92672">&#34;MY_CUSTOM_VAR&#34;</span>: <span style="color:#e6db74">&#34;value&#34;</span> }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;load&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;extraDirs&#34;</span>: [<span style="color:#e6db74">&#34;/path/to/more/hooks&#34;</span>]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>session-memory</code> 的 <code>llmSlug: true</code> 会调用模型生成&quot;描述性文件名&quot;，比纯时间戳好用得多。</p>
+<h3 id="36-hook-的发现优先级避免覆盖坑">3.6 Hook 的发现优先级（避免覆盖坑）
+</h3><p>按优先级从低到高：</p>
+<ol>
+<li><strong>Bundled hooks</strong>：随 OpenClaw 一起发的</li>
+<li><strong>Plugin hooks</strong>：插件自带的</li>
+<li><strong>Managed hooks</strong>：<code>~/.openclaw/hooks/</code>（用户级，跨 workspace 共享）</li>
+<li><strong>Workspace hooks</strong>：<code>&lt;workspace&gt;/hooks/</code>（每个 agent 独立）</li>
+</ol>
+<p><strong>关键规则</strong>：Workspace hooks 可以<strong>新增</strong>同名 hook，但<strong>不能覆盖</strong>前 3 类同名 hook。如果你想覆写 bundled 的 <code>session-memory</code>，方法是先 <code>disable session-memory</code>，再写自己的（用不同名字）。</p>
+<h3 id="37-踩坑handler-里别干重活">3.7 踩坑：handler 里别干重活
+</h3><blockquote>
+<p><strong>Best practice：Keep handlers fast.</strong>
+Hooks run during command processing. Fire-and-forget heavy work with <code>void processInBackground(event)</code>.</p>
+</blockquote>
+<p>我第一次写 hook 时把&quot;扫描会话历史 + 调 LLM 生成 slug&quot;全塞 handler 里，结果每次 <code>/new</code> 都卡 3 秒。修复办法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">handler</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">event</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 立即返回，重活丢后台
+</span></span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">void</span> (<span style="color:#66d9ef">async</span> () <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">heavyWork</span>(<span style="color:#a6e22e">event</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#e6db74">&#34;[my-hook] background work failed&#34;</span>, <span style="color:#a6e22e">e</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  })();
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p><strong>记住</strong>：handler 里 <code>try/catch</code> 永远要有，否则一个 hook 抛异常会影响后续 hook 执行。</p>
+<h3 id="38-排查hook-没生效怎么办">3.8 排查：Hook 没生效怎么办
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 确认目录结构对</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ls -la ~/.openclaw/hooks/my-hook/</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 应看到 HOOK.md, handler.ts</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 确认被发现</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks list</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 确认 eligible（依赖、平台、env 都满足）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks info my-hook</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 确认启用</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks check</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. 重启 gateway 让 hook 重载</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw gateway restart</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6. 看日志</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tail -f ~/.openclaw/logs/commands.log</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">./scripts/clawlog.sh | grep hook</span>
+</span></span></code></pre></div><hr>
+<h2 id="四dreaming让-ai-像人一样睡觉做梦整理记忆">四、Dreaming：让 AI 像人一样睡觉做梦整理记忆
+</h2><h3 id="41-痛点ai-的记忆系统是个永远在升迁不公平的小公司">4.1 痛点：AI 的记忆系统是个永远在升迁不公平的小公司
+</h3><p>OpenClaw 默认的记忆策略很简单粗暴：</p>
+<ul>
+<li>短期：当前会话上下文</li>
+<li>长期：你<strong>手动</strong>写到 <code>MEMORY.md</code> 的内容</li>
+</ul>
+<p>这意味着两件事：</p>
+<ol>
+<li>AI 自己不会主动把&quot;今天学到的重要东西&quot;晋升到长期记忆</li>
+<li>你<strong>写了一堆无关琐事</strong>到 MEMORY.md 之后，AI 找东西就跟翻杂物间一样</li>
+</ol>
+<blockquote>
+<p>关于本地记忆引擎 QMD 如何让搜索质量飞跃，请看前作 <a class="link" href="/tutorials/openclaw-local-memory-qmd-token-reduction/" ><strong>OpenClaw 本地记忆神器：QMD 实现零 Token、毫秒级响应</strong></a>。本节讨论的 Dreaming 是 QMD 之上的&quot;记忆晋升机制&quot;。</p>
+</blockquote>
+<h3 id="42-原理模拟人脑三阶段睡眠">4.2 原理：模拟人脑三阶段睡眠
+</h3><p>OpenClaw 的 <strong>Dreaming</strong> 系统直接抄了人脑的睡眠周期，分 3 个阶段：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">阶段</th>
+					<th style="text-align: center">干啥</th>
+					<th style="text-align: center">写不写 MEMORY.md</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><strong>Light（浅睡）</strong></td>
+					<td style="text-align: center">收最近的短期记忆，去重，预筛候选</td>
+					<td style="text-align: center">不写</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Deep（深睡）</strong></td>
+					<td style="text-align: center">评分排序，决定哪些晋升长期</td>
+					<td style="text-align: center"><strong>写</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>REM（快速眼动）</strong></td>
+					<td style="text-align: center">提炼主题模式、做反思</td>
+					<td style="text-align: center">不写</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>每次 sweep 按 Light → REM → Deep 顺序跑一遍。<strong>只有 Deep 阶段会真的写 MEMORY.md</strong>，Light 和 REM 只产出 <code>## Light Sleep</code> / <code>## REM Sleep</code> 块到 <code>DREAMS.md</code> 里供你审阅。</p>
+<h3 id="43-deep-阶段的评分公式">4.3 Deep 阶段的评分公式
+</h3><p>这是整个系统最值得拿出来讲的硬核部分。Deep 阶段决定一条短期记忆能不能晋升，靠的是 6 个加权信号：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">信号</th>
+					<th style="text-align: center">权重</th>
+					<th style="text-align: center">含义</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><strong>Frequency（频次）</strong></td>
+					<td style="text-align: center">0.24</td>
+					<td style="text-align: center">这条短期记忆被强化了多少次</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Relevance（相关性）</strong></td>
+					<td style="text-align: center">0.30</td>
+					<td style="text-align: center">平均检索质量分</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Query diversity（查询多样性）</strong></td>
+					<td style="text-align: center">0.15</td>
+					<td style="text-align: center">多少个不同 query/天上下文召回过它</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Recency（新鲜度）</strong></td>
+					<td style="text-align: center">0.15</td>
+					<td style="text-align: center">时间衰减分</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Consolidation（巩固度）</strong></td>
+					<td style="text-align: center">0.10</td>
+					<td style="text-align: center">跨多日的复发强度</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Conceptual richness（概念丰富度）</strong></td>
+					<td style="text-align: center">0.06</td>
+					<td style="text-align: center">概念标签密度</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>权重最重的是 <strong>Relevance（0.30）</strong>，意思是&quot;被精准召回过&quot;比&quot;被重复提及&quot;更重要。这反 LLM 圈普遍迷信&quot;重复=重要&quot;的直觉，但跟人脑认知科学完全一致。</p>
+<p>晋升还要过三道阈值门：<code>minScore</code>、<code>minRecallCount</code>、<code>minUniqueQueries</code>。任何一个没过，就算评分高也不晋升。</p>
+<h3 id="44-启用一行配置打开">4.4 启用：一行配置打开
+</h3><p><code>~/.openclaw/openclaw.json</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;plugins&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;entries&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;memory-core&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;config&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;dreaming&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;timezone&#34;</span>: <span style="color:#e6db74">&#34;Asia/Shanghai&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;frequency&#34;</span>: <span style="color:#e6db74">&#34;0 3 * * *&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>默认凌晨 3 点跑一次 sweep（人类睡觉 AI 干活，浪漫得很）。如果你想更密集：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;frequency&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#e6db74">&#34;0 */6 * * *&#34;</span>   <span style="color:#75715e">// 每 6 小时一次
+</span></span></span></code></pre></div><h3 id="45-文件分工dreamsmd-vs-memorymd">4.5 文件分工：DREAMS.md vs MEMORY.md
+</h3><p>启用后 workspace 里会出现一组新文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>memory/
+</span></span><span style="display:flex;"><span>├── .dreams/
+</span></span><span style="display:flex;"><span>│   ├── recall-store.json     # 短期召回库
+</span></span><span style="display:flex;"><span>│   ├── phase-signals.json    # 阶段强化信号
+</span></span><span style="display:flex;"><span>│   └── ingestion-checkpoint  # 摄入进度
+</span></span><span style="display:flex;"><span>├── dreaming/
+</span></span><span style="display:flex;"><span>│   ├── light/2026-05-19.md   # Light 阶段日报
+</span></span><span style="display:flex;"><span>│   ├── deep/2026-05-19.md    # Deep 阶段日报（含晋升详情）
+</span></span><span style="display:flex;"><span>│   └── rem/2026-05-19.md     # REM 阶段反思
+</span></span><span style="display:flex;"><span>DREAMS.md                       # 人类阅读用的&#34;梦境日记&#34;
+</span></span><span style="display:flex;"><span>MEMORY.md                       # 真正的长期记忆（只 Deep 阶段写）
+</span></span></code></pre></div><h3 id="46-dream-diaryai-自己写日记">4.6 Dream Diary：AI 自己写&quot;日记&quot;
+</h3><p>最骚的功能。Dreaming 完成后会调一次 background subagent，让模型用<strong>自然语言</strong>写一段&quot;梦境日记&quot;追加到 <code>DREAMS.md</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">## Deep Sleep · 2026-05-19 03:00
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>今晚回顾了过去一周的对话。最反复出现的主题是用户在配置 Cloudflare R2 时遇到的
+</span></span><span style="display:flex;"><span>&#34;endpoint URL invalid&#34; 错误——这条信息在 5 天里被召回 8 次，跨了 3 个不同的
+</span></span><span style="display:flex;"><span>session，符合 Frequency × Recall × Diversity 的晋升标准，已写入 MEMORY.md。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>另外有一条&#34;用户偏好用 ini 而非 bash 标识 shell 代码块&#34;的偏好被强化 4 次，
+</span></span><span style="display:flex;"><span>但跨 session 数不够（只有 1 个 session），暂列 candidate 池继续观察。
+</span></span></code></pre></div><p>第一次读自己 AI 的&quot;梦&quot;是种很奇妙的体验——它真的有种&quot;在反思&quot;的感觉。</p>
+<blockquote>
+<p><strong>注意</strong>：Dream Diary 是给人看的，<strong>不是晋升源</strong>。只有&quot;grounded memory snippets&quot;才能进 MEMORY.md，AI 自己幻觉出的内容不会污染长期记忆。</p>
+</blockquote>
+<h3 id="47-cli-工作流手动-promote--解释--预览">4.7 CLI 工作流：手动 promote / 解释 / 预览
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 预览有哪些 candidate（不写）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory promote</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory promote --limit 5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 真写</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory promote --apply</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 看 Deep 阶段状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory status --deep</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解释为什么某条没晋升</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory promote-explain &#34;router vlan&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory promote-explain &#34;router vlan&#34; --json</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 预览 REM 阶段产出（reflections + truths）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory rem-harness</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory rem-harness --json</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 历史回填（grounded backfill，从老 YYYY-MM-DD.md 反向重建）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory rem-backfill --path ./memory</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory rem-backfill --rollback   # 不喜欢就回滚</span>
+</span></span></code></pre></div><p><code>promote-explain</code> 这个命令是真神器。每次你觉得&quot;这条明明很重要为啥没晋升&quot;，跑一下就告诉你具体卡在哪个分数 / 哪个阈值。</p>
+<h3 id="48-slash-命令聊天里直接控制">4.8 Slash 命令：聊天里直接控制
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/dreaming status
+</span></span><span style="display:flex;"><span>/dreaming on
+</span></span><span style="display:flex;"><span>/dreaming off
+</span></span><span style="display:flex;"><span>/dreaming help
+</span></span></code></pre></div><h3 id="49-踩坑blocked-状态怎么排查">4.9 踩坑：blocked 状态怎么排查
+</h3><p>跑一下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw memory status</span>
+</span></span></code></pre></div><p>如果输出 <code>Dreaming status: blocked</code>，意思是 <strong>managed cron 已建好但默认 agent 的 heartbeat 没在转</strong>。</p>
+<p>修法：</p>
+<ol>
+<li>确认 default agent 启用了 heartbeat</li>
+<li>确认 heartbeat 的 target 不是 <code>none</code></li>
+<li>等下一个 heartbeat 周期之后再跑 <code>openclaw memory status --deep</code></li>
+</ol>
+<p>我自己第一次启用就栽这坑里——以为 cron 自动跑就行，没意识到 cron 只是触发器，真正的 sweep 必须搭在 heartbeat 上才能跑完。</p>
+<h2 id="五specialist-lanes多-agent-不是多开几个是分摊瓶颈">五、Specialist Lanes：多 Agent 不是&quot;多开几个&quot;，是&quot;分摊瓶颈&quot;
+</h2><h3 id="51-痛点一个-agent-啥都管--啥都管不好">5.1 痛点：一个 Agent 啥都管 = 啥都管不好
+</h3><p>我自己工作流目前有 4 个 Agent：</p>
+<ul>
+<li><strong>墨守 001</strong>：大总管，安全兜底、原始素材投递</li>
+<li><strong>墨客 002</strong>：写作（你正在读的这篇就是它写的）</li>
+<li><strong>墨盒 003</strong>：文件搬运、NAS 同步</li>
+<li><strong>墨攻 004</strong>：GitHub Pages 部署（规划中）</li>
+</ul>
+<p>第一次配多 Agent 时我以为&quot;多开几个不就完事&quot;。结果连续翻车：</p>
+<ul>
+<li>墨客在写长文，墨守想响应飞书新消息——卡住，因为模型 API 全局限流被吃满</li>
+<li>墨盒在 scp 大文件，墨攻想跑 hugo build——卡住，因为 shell 容量被吃满</li>
+<li>两个 Agent 都觉得&quot;我应该处理这条消息&quot;——双倍浪费 + 输出冲突</li>
+</ul>
+<p>这才发现 OpenClaw 文档把这事讲得清清楚楚：<strong>多 Agent 的真正瓶颈不是&quot;开了几个 Agent&quot;，而是它们在抢什么资源</strong>。</p>
+<h3 id="52-first-principles5-个真实瓶颈">5.2 First Principles：5 个真实瓶颈
+</h3><p>OpenClaw 文档原话：</p>
+<blockquote>
+<p>A specialist lane only improves throughput when it reduces contention for the real bottlenecks.</p>
+</blockquote>
+<p>5 个真实瓶颈：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">瓶颈</th>
+					<th style="text-align: center">含义</th>
+					<th style="text-align: center">表现</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><strong>Session locks</strong></td>
+					<td style="text-align: center">单个 session 同时只允许一个 run 写</td>
+					<td style="text-align: center">你发第二条消息时第一条还没结束，被排队</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Global model capacity</strong></td>
+					<td style="text-align: center">所有 visible chat 共享 provider 限流</td>
+					<td style="text-align: center">一个 Agent 跑长任务，其他 Agent 全部 429</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Tool capacity</strong></td>
+					<td style="text-align: center">shell / browser / network / repo 操作经常比模型推理还慢</td>
+					<td style="text-align: center">大文件 scp 把整个 Gateway 拖死</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Context budget</strong></td>
+					<td style="text-align: center">长 transcript 让每个未来 turn 变慢变蠢</td>
+					<td style="text-align: center">跑了一周的 session 比新开的慢 5 倍</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><strong>Ownership ambiguity</strong></td>
+					<td style="text-align: center">两个 Agent 抢同一个活 = 双倍浪费</td>
+					<td style="text-align: center">一条飞书消息，俩 Agent 都回</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>OpenClaw 默认已经做了两件事：</p>
+<ul>
+<li><strong>session 级串行</strong>：一个 session 同时只允许一个 run mutate</li>
+<li><strong>全局并发上限</strong>：通过 <a class="link" href="/concepts/queue" >command queue</a> 限流</li>
+</ul>
+<p>Specialist Lanes 的本质是在这两条之上<strong>叠加 policy</strong>：哪个 Agent 拥有哪类工作？哪些活留在聊天里？哪些活必须丢后台？</p>
+<h3 id="53-推荐-3-阶段渐进-rollout">5.3 推荐 3 阶段渐进 rollout
+</h3><h4 id="phase-1lane-contracts--background-heavy-work最便宜最有效">Phase 1：Lane Contracts + Background Heavy Work（最便宜，最有效）
+</h4><p>每个 Agent 在自己的 <code>AGENTS.md</code> 里写一份<strong>契约</strong>，包含 5 个要素：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Lane Contract
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Owns（我负责什么）
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 写作（草稿、长文、社交平台改写）
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 选题筛选
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Does Not Own（我不碰的事）
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 文件同步 → 转交墨盒 003
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 网站部署 → 转交墨攻 004
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 飞书消息路由 → 转交墨守 001
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Chat Budget（聊天里的应答策略）
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 简单问题直接答
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 多步、慢、重 tool 的活：先简短 ack，然后丢后台 sub-agent
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 用户问&#34;进度&#34;时立即报告状态，不留白
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Handoff（转交时的格式）
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>转交时必须包含：
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 目标 lane（墨盒 003 / 墨攻 004 / ...）
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 任务目标
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 已完成的上下文摘要
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 下一步精确动作
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Tool Posture（工具姿态）
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 写作 lane 只用最小工具集（read / write / web_fetch）
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 严禁广撒网式 shell 操作
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 任何写盘动作前先 path validate
+</span></span></code></pre></div><blockquote>
+<p><strong>关键点</strong>：契约里 <strong>Does Not Own</strong> 比 Owns 重要。明确&quot;不接哪些活&quot;，比明确&quot;接哪些活&quot;更能避免 ownership ambiguity。</p>
+</blockquote>
+<h4 id="phase-2priority--concurrency-控制">Phase 2：Priority + Concurrency 控制
+</h4><p>调 queue 和模型容量，给重要 lane 留资源：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json5" data-lang="json5"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">agents:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">defaults:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">maxConcurrent:</span> <span style="color:#960050;background-color:#1e0010">4,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">subagents:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">maxConcurrent:</span> <span style="color:#960050;background-color:#1e0010">8,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">delegationMode:</span> <span style="color:#f92672">&#34;prefer&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">messages:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">queue:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">mode:</span> <span style="color:#f92672">&#34;collect&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">debounceMs:</span> <span style="color:#960050;background-color:#1e0010">1000,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">cap:</span> <span style="color:#960050;background-color:#1e0010">20,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">drop:</span> <span style="color:#f92672">&#34;summarize&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><ul>
+<li>直接对话 / 生产监控用高优先级 lane（low maxConcurrent，独占资源）</li>
+<li>研究 / 草稿 / 批量 coding 用 lower 优先级，跑后台</li>
+<li><code>messages.queue.mode: &quot;collect&quot;</code> 让 burst 消息合并成一个 followup turn（详见第六节）</li>
+</ul>
+<h4 id="phase-3coordinator--traffic-controller">Phase 3：Coordinator / Traffic Controller
+</h4><p>只有当多个 lane 都活跃了再上：</p>
+<ul>
+<li>跟踪每个 lane 当前的活</li>
+<li>检测跨群重复请求（同一句话被两个 group 转发到同一个 lane）</li>
+<li>lane 之间路由 handoff summary</li>
+<li>给 owner 只看 blockers / 完成结果 / 必须人审的决策</li>
+</ul>
+<blockquote>
+<p><strong>不要从 Phase 3 开始</strong>。&ldquo;A coordinator without lane contracts just coordinates chaos.&rdquo; 没有契约的 coordinator 协调的只是混乱。</p>
+</blockquote>
+<h3 id="54-实战我的-4-agent-配置">5.4 实战：我的 4-Agent 配置
+</h3><p><code>~/.openclaw/openclaw.json</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json5" data-lang="json5"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">agents:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">defaults:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">maxConcurrent:</span> <span style="color:#960050;background-color:#1e0010">4,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">subagents:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">maxConcurrent:</span> <span style="color:#960050;background-color:#1e0010">8,</span> <span style="color:#960050;background-color:#1e0010">delegationMode:</span> <span style="color:#f92672">&#34;prefer&#34;</span> }
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">list:</span> [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentId:</span> <span style="color:#f92672">&#34;001-moshou&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentDir:</span> <span style="color:#f92672">&#34;~/.openclaw/agents/001-moshou/agent&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 大总管：所有飞书消息先到这里
+</span></span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentId:</span> <span style="color:#f92672">&#34;002-moke&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentDir:</span> <span style="color:#f92672">&#34;~/.openclaw/agents/002-moke/agent&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 写作 lane
+</span></span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentId:</span> <span style="color:#f92672">&#34;003-inkbox&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentDir:</span> <span style="color:#f92672">&#34;~/.openclaw/agents/003-inkbox/agent&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 同步 lane
+</span></span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentId:</span> <span style="color:#f92672">&#34;004-mogong&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">agentDir:</span> <span style="color:#f92672">&#34;~/.openclaw/agents/004-mogong/agent&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 部署 lane（规划中）
+</span></span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><p>每个 Agent 有自己的 workspace、自己的 <code>AGENTS.md</code>/<code>SOUL.md</code>/<code>MEMORY.md</code>、自己的 auth profiles、自己的 session 历史。<strong>完全隔离</strong>。</p>
+<h3 id="55-踩坑auth-profile-不会跨-agent-自动同步">5.5 踩坑：auth profile 不会跨 Agent 自动同步
+</h3><p>这是文档里写得很明确但容易忽略的红线：</p>
+<blockquote>
+<p>Never reuse <code>agentDir</code> across agents (it causes auth/session collisions).</p>
+<p>Agents can read through to the default/main agent&rsquo;s auth profiles when they do not have a local profile, but <strong>OpenClaw does not clone OAuth refresh tokens into the secondary agent store</strong>.</p>
+</blockquote>
+<p>意思是：</p>
+<ul>
+<li>❌ 多个 Agent 共用一个 <code>agentDir</code> → auth/session 冲突，惨案现场</li>
+<li>✅ secondary agent 没有自己的 auth profile 时，<strong>只能读</strong> main agent 的 static <code>api_key</code>/<code>token</code>，<strong>不能用</strong> OAuth refresh token</li>
+</ul>
+<p>如果要让多个 Agent 用同一个 OAuth 账号，每个 Agent 都得<strong>自己登录一次</strong>。手动复制 OAuth credential 几乎必败。</p>
+<hr>
+<h2 id="六queue-steering让-ai-边干活边听你叨叨">六、Queue Steering：让 AI 边干活边听你&quot;叨叨&quot;
+</h2><h3 id="61-痛点ai-跑长工具链时无法纠偏">6.1 痛点：AI 跑长工具链时无法纠偏
+</h3><p>Agent 时代最反人类的体验之一：</p>
+<blockquote>
+<p>你：帮我把这 50 篇文章批量改一下标题</p>
+<p>AI：好，开始跑了…</p>
+<p>（5 秒后）</p>
+<p>你：等一下，标题里&quot;2025&quot;要改成&quot;2026&quot;</p>
+<p>AI：（无视，继续跑原计划）……</p>
+</blockquote>
+<p>等 AI 跑完 5 分钟才理你的修正。这个体验让人抓狂。</p>
+<p>OpenClaw 默认开启的 <strong>Steering Queue</strong> 把这事彻底解决了。</p>
+<h3 id="62-原理runtime-boundary-注入">6.2 原理：Runtime Boundary 注入
+</h3><p>Steering 的设计哲学是：<strong>绝不打断正在跑的 tool call</strong>，但在模型边界上<strong>插入用户最新消息</strong>。</p>
+<p>具体顺序（Pi 运行时）：</p>
+<ol>
+<li>assistant 发起 tool calls</li>
+<li>Pi 执行当前 assistant message 的 tool-call batch</li>
+<li>Pi 触发 turn end 事件</li>
+<li><strong>Pi drains queued steering messages</strong>（关键步骤）</li>
+<li>Pi 把这些消息当 user messages 拼到下一次 LLM 调用之前</li>
+</ol>
+<p>这样既不破坏 tool result 与 assistant message 的配对（避免幻觉错乱），又能让下一次模型推理看到用户最新意图。</p>
+<h3 id="63-6-种模式对比">6.3 6 种模式对比
+</h3><p>OpenClaw 给了 6 种 steering 模式，应付不同场景：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">模式</th>
+					<th style="text-align: center">当前 run 行为</th>
+					<th style="text-align: center">后续 followup</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center"><code>steer</code>（默认）</td>
+					<td style="text-align: center">在下一个 runtime boundary <strong>批量注入</strong>所有排队消息</td>
+					<td style="text-align: center">仅当 steering 不可用时 fallback</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>queue</code></td>
+					<td style="text-align: center">经典串行：每次 boundary 注入<strong>一条</strong></td>
+					<td style="text-align: center">仅 fallback</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>steer-backlog</code></td>
+					<td style="text-align: center">同 <code>steer</code></td>
+					<td style="text-align: center"><strong>额外</strong>保留消息给后续 followup turn</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>followup</code></td>
+					<td style="text-align: center"><strong>不</strong> steer 当前 run</td>
+					<td style="text-align: center">排队结束后单独跑一个 turn</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>collect</code></td>
+					<td style="text-align: center"><strong>不</strong>打断当前 run</td>
+					<td style="text-align: center">在 debounce 窗口后<strong>合并</strong>兼容消息成一个 followup</td>
+			</tr>
+			<tr>
+					<td style="text-align: center"><code>interrupt</code></td>
+					<td style="text-align: center"><strong>直接 abort 当前 run</strong>，跑最新消息</td>
+					<td style="text-align: center">无</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="64-实战场景什么时候用哪个">6.4 实战场景：什么时候用哪个？
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">场景</th>
+					<th style="text-align: center">推荐模式</th>
+					<th style="text-align: center">理由</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center">单用户对单 Agent，需要随时纠偏</td>
+					<td style="text-align: center"><code>steer</code></td>
+					<td style="text-align: center">默认值，最自然</td>
+			</tr>
+			<tr>
+					<td style="text-align: center">多用户群聊，4 个人同时叨叨</td>
+					<td style="text-align: center"><code>steer</code></td>
+					<td style="text-align: center">批量注入，AI 一次性看到所有人的消息</td>
+			</tr>
+			<tr>
+					<td style="text-align: center">老式串行，一条一条处理</td>
+					<td style="text-align: center"><code>queue</code></td>
+					<td style="text-align: center">兼容性</td>
+			</tr>
+			<tr>
+					<td style="text-align: center">用户想&quot;打断 AI 的话&quot;但又怕错乱</td>
+					<td style="text-align: center"><code>collect</code></td>
+					<td style="text-align: center">最礼貌，等 AI 自然结束再合并新指令</td>
+			</tr>
+			<tr>
+					<td style="text-align: center">AI 跑跑跑跑跑死循环了</td>
+					<td style="text-align: center"><code>interrupt</code></td>
+					<td style="text-align: center"><strong>核选项</strong>，慎用</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="65-配置debounce-怎么调">6.5 配置：debounce 怎么调
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json5" data-lang="json5"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">messages:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">queue:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">mode:</span> <span style="color:#f92672">&#34;collect&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">debounceMs:</span> <span style="color:#960050;background-color:#1e0010">1000,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">cap:</span> <span style="color:#960050;background-color:#1e0010">20,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">drop:</span> <span style="color:#f92672">&#34;summarize&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><p>参数解释：</p>
+<ul>
+<li><strong>mode</strong>: 上面 6 种之一</li>
+<li><strong>debounceMs</strong>: 静默窗口。<code>collect</code> / <code>followup</code> / <code>steer-backlog</code> / <code>steer</code> fallback 用得到</li>
+<li><strong>cap</strong>: 最多排队多少条消息</li>
+<li><strong>drop</strong>: 超过 cap 怎么办（<code>summarize</code> 把多条合并、<code>oldest</code> 丢老的、<code>newest</code> 丢新的）</li>
+</ul>
+<h3 id="66-burst-例子4-条消息同时进来">6.6 burst 例子：4 条消息同时进来
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>T0: AI 开始执行 tool call A
+</span></span><span style="display:flex;"><span>T1: 用户 1 发来 &#34;等等，把日期改成 2026&#34;
+</span></span><span style="display:flex;"><span>T2: 用户 2 发来 &#34;顺便把 author 也改了&#34;
+</span></span><span style="display:flex;"><span>T3: 用户 3 发来 &#34;对了，标题去掉感叹号&#34;
+</span></span><span style="display:flex;"><span>T4: 用户 4 发来 &#34;如果耗时超过 5 分钟就停&#34;
+</span></span><span style="display:flex;"><span>T5: AI tool call A 完成
+</span></span></code></pre></div><p>不同模式的行为：</p>
+<ul>
+<li><strong>steer</strong>：T5 时刻，AI 在下一次模型调用前看到 T1-T4 全部 4 条按到达顺序拼成的 user messages，<strong>一次性消化</strong></li>
+<li><strong>queue</strong>：T5 看到 T1，处理；T6 看到 T2，处理；T7 看到 T3……串行 4 轮</li>
+<li><strong>collect</strong>：T5 等 debounce 1 秒，把 T1-T4 合并成一个新 followup turn 跑</li>
+</ul>
+<p><code>steer</code> 显然最像人类对话——你在地铁上跟同事讨论方案，对方边回边补充几条，你最终一起回应。<code>queue</code> 像古早 IRC，串行处理。</p>
+<h3 id="67-限制与边界">6.7 限制与边界
+</h3><p>文档里几个关键限制：</p>
+<blockquote>
+<p>Codex review and manual compaction turns reject same-turn steering.</p>
+</blockquote>
+<ul>
+<li>Codex 的 review turn 和手动 compaction turn <strong>拒绝 same-turn steering</strong>。这两种 turn 不能被打断/插队，所以会回退到 followup 队列。</li>
+<li>Steering 总是针对<strong>当前活跃 session</strong>，不会创建新 session、不会改 tool policy、不会按 sender 拆分消息。</li>
+</ul>
+<blockquote>
+<p>在多用户群聊里，inbound prompts 已经包含 sender 和路由上下文，所以下一次模型调用能看到&quot;谁说了哪条&quot;。</p>
+</blockquote>
+<h3 id="68-steer-命令显式插话">6.8 <code>/steer</code> 命令：显式插话
+</h3><p>除了被动的 queue steering，还有主动的 <code>/steer &lt;message&gt;</code> 命令，立即插一条进队列：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/steer 注意只改 markdown 文件，不要碰 yaml
+</span></span></code></pre></div><p>用于&quot;我不想等 AI 走到下一个 boundary，但我也不想 abort 当前 run&quot;的中间地带。</p>
+<hr>
+<h2 id="七compaction长会话的换气机制">七、Compaction：长会话的&quot;换气&quot;机制
+</h2><h3 id="71-痛点会话越跑越蠢">7.1 痛点：会话越跑越蠢
+</h3><p>LLM 最反直觉的特性之一：<strong>上下文越长，模型越蠢</strong>。</p>
+<ul>
+<li>Token 越多，注意力越分散</li>
+<li>每次 turn 都要重新读全部历史</li>
+<li>重要决策淹没在闲聊里</li>
+</ul>
+<p>跑了一周的 session，AI 有一半时间在&quot;努力回忆我们 3 天前讨论了什么&quot;，剩下一半时间在重复犯同一个错误。</p>
+<p>OpenClaw 的解法叫 <strong>Compaction（会话压缩）</strong>：当 session 接近模型上下文上限时，<strong>自动把老对话浓缩成摘要</strong>，腾出空间给新对话。</p>
+<h3 id="72-触发时机">7.2 触发时机
+</h3><p>Compaction 不是定时跑的，是<strong>按需触发</strong>。触发条件包括：</p>
+<ul>
+<li>token 预算逼近上限（一般是 70-80%）</li>
+<li>用户显式触发 <code>/compact</code></li>
+<li>某些 hook 主动调用</li>
+</ul>
+<p>触发后会经过 <code>session:compact:before</code> → 实际压缩 → <code>session:compact:after</code> 三个生命周期事件，每个都可以挂 hook（见第三节）。</p>
+<h3 id="73-救命-hook在压缩前-dump-关键决策">7.3 救命 Hook：在压缩前 dump 关键决策
+</h3><p>这是 Compaction 最值得抢救的一刻。如果不主动备份，那些&quot;已经沉到下方但未来可能很重要&quot;的对话就被压成几句话的摘要了，细节永远丢失。</p>
+<p>写一个 <code>pre-compact-dump</code> hook：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">handler</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">event</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">event</span>.<span style="color:#66d9ef">type</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;session&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">action</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;compact:before&#34;</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">messageCount</span>, <span style="color:#a6e22e">tokenCount</span>, <span style="color:#a6e22e">sessionKey</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">context</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 1. 抓最近 N 条消息
+</span></span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">recent</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">fetchRecentMessages</span>(<span style="color:#a6e22e">sessionKey</span>, <span style="color:#ae81ff">50</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 2. 用规则筛&#34;决策类&#34;语句
+</span></span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">decisions</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">recent</span>.<span style="color:#a6e22e">filter</span>(<span style="color:#a6e22e">m</span> <span style="color:#f92672">=&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/决定|采用|放弃|改用|约定|不要再/</span>.<span style="color:#a6e22e">test</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">content</span>)
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 3. 追加到 MEMORY.md
+</span></span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">stamp</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date().<span style="color:#a6e22e">toISOString</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">appendToMemory</span>(<span style="color:#e6db74">`</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#e6db74">n## Pre-compact dump @ </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">stamp</span><span style="color:#e6db74">}</span><span style="color:#960050;background-color:#1e0010">\</span><span style="color:#e6db74">n`</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">decisions</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">d</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">`- </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">content</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>).<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34;\n&#34;</span>)
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">messages</span>.<span style="color:#a6e22e">push</span>(<span style="color:#e6db74">`💾 已备份 </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">decisions</span>.<span style="color:#a6e22e">length</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> 条决策到 MEMORY.md`</span>);
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#a6e22e">handler</span>;
+</span></span></code></pre></div><p>启用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">mkdir -p ~/.openclaw/hooks/pre-compact-dump</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 写 HOOK.md + handler.ts</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks enable pre-compact-dump</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openclaw gateway restart</span>
+</span></span></code></pre></div><h3 id="74-compaction-notifier让用户知道-ai-在换气">7.4 compaction-notifier：让用户知道 AI 在&quot;换气&quot;
+</h3><p>OpenClaw 自带 hook：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">openclaw hooks enable compaction-notifier</span>
+</span></span></code></pre></div><p>启用后，会话压缩开始/结束时聊天里会出现明显提示：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>🤖 OpenClaw is compacting the session transcript...
+</span></span><span style="display:flex;"><span>   (this might take a few seconds)
+</span></span><span style="display:flex;"><span>🤖 Compaction complete: 142 messages → 8.5k summary
+</span></span></code></pre></div><p>体验上巨大改进——之前 AI 在那卡 10 秒不响应你不知道在干啥，现在你知道&quot;它在换气&quot;。</p>
+<h3 id="75-关于-commandstop-与-before_agent_finalize-的差异">7.5 关于 <code>command:stop</code> 与 <code>before_agent_finalize</code> 的差异
+</h3><p>文档里有一段容易踩坑的话：</p>
+<blockquote>
+<p><code>command:stop</code> observes the user issuing <code>/stop</code>; it is cancellation/command lifecycle, <strong>not an agent-finalization gate</strong>.</p>
+<p>Plugins that need to inspect a natural final answer and ask the agent for one more pass should use the typed plugin hook <strong><code>before_agent_finalize</code></strong> instead.</p>
+</blockquote>
+<p>翻译：</p>
+<ul>
+<li><code>command:stop</code> 是用户<strong>主动</strong>按下停止键，跟&quot;AI 自然完成&quot;不是一回事</li>
+<li>想在 AI 自然结束前介入（比如最后再 review 一遍），必须用 plugin hook <code>before_agent_finalize</code></li>
+</ul>
+<p>我第一次写&quot;提交前 review&quot;插件时把它挂在 <code>command:stop</code> 上，结果只有用户按 stop 才触发，AI 正常完成的情况下根本不跑。换 <code>before_agent_finalize</code> 立马解决。</p>
+<h3 id="76-gateway-重启与-session_end">7.6 Gateway 重启与 session_end
+</h3><p>文档另一段重要约定：</p>
+<blockquote>
+<p>Between the <code>gateway:shutdown</code> (or <code>gateway:pre-restart</code>) event and the rest of the shutdown sequence, the gateway also fires a typed <code>session_end</code> plugin hook for <strong>every session that was still active when the process stopped</strong>.</p>
+</blockquote>
+<p>这意味着：</p>
+<ul>
+<li>Gateway 重启前，每个还活着的 session 都会收到 <code>session_end</code> 事件</li>
+<li>你可以在这里做最后的清理（持久化、归档、通知）</li>
+<li>但<strong>这个 drain 是有时限的</strong>，handler 卡住不会阻塞进程退出</li>
+<li>已经被 replace/reset/delete/compaction 终结的 session 不会重复触发</li>
+</ul>
+<p>如果你的工作流依赖&quot;session 一定要优雅结束&quot;，必须自己实现 idempotent 处理。指望 hook 兜底是不够的。</p>
+<hr>
+<h2 id="八putting-it-all-together完整工作流示例">八、Putting It All Together：完整工作流示例
+</h2><p>把这 6 个技巧拼成一个真实工作流，看怎么互相加成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                  ┌────────────────┐
+</span></span><span style="display:flex;"><span>                  │  飞书消息进入   │
+</span></span><span style="display:flex;"><span>                  └───────┬────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>                ┌─────────▼──────────┐
+</span></span><span style="display:flex;"><span>        ◀───────│  message:received   │  ← Hook (PII 清洗)
+</span></span><span style="display:flex;"><span>                └─────────┬──────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>                ┌─────────▼──────────────┐
+</span></span><span style="display:flex;"><span>                │ 路由到对应 Agent (Lane)  │  ← Specialist Lanes
+</span></span><span style="display:flex;"><span>                │ (墨守 / 墨客 / 墨盒...)  │
+</span></span><span style="display:flex;"><span>                └─────────┬──────────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>                ┌─────────▼──────────────┐
+</span></span><span style="display:flex;"><span>                │ Agent 读取 AGENTS.md    │  ← Standing Orders
+</span></span><span style="display:flex;"><span>                │ (Authority/Trigger/...) │
+</span></span><span style="display:flex;"><span>                └─────────┬──────────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>              ┌───────────▼───────────┐
+</span></span><span style="display:flex;"><span>              │ AI 跑 tool chain       │
+</span></span><span style="display:flex;"><span>              └───────────┬───────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>              用户中途插话?│
+</span></span><span style="display:flex;"><span>                          ├─Yes─→ Steering Queue 排队等 boundary
+</span></span><span style="display:flex;"><span>                          ├─No──→ 继续
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>              ┌───────────▼───────────┐
+</span></span><span style="display:flex;"><span>              │ 接近 token 上限?        │
+</span></span><span style="display:flex;"><span>              └───────────┬───────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>                       Yes│
+</span></span><span style="display:flex;"><span>              ┌───────────▼───────────┐
+</span></span><span style="display:flex;"><span>              │ session:compact:before │  ← Hook (dump 决策)
+</span></span><span style="display:flex;"><span>              │ → 压缩                  │
+</span></span><span style="display:flex;"><span>              │ session:compact:after  │  ← Hook (notify)
+</span></span><span style="display:flex;"><span>              └───────────┬───────────┘
+</span></span><span style="display:flex;"><span>                          │
+</span></span><span style="display:flex;"><span>                          ▼
+</span></span><span style="display:flex;"><span>              ┌─────────────────────────┐
+</span></span><span style="display:flex;"><span>              │ 凌晨 3 点 cron 触发      │
+</span></span><span style="display:flex;"><span>              │ Dreaming sweep:         │
+</span></span><span style="display:flex;"><span>              │   Light → REM → Deep    │
+</span></span><span style="display:flex;"><span>              │ 关键内容写入 MEMORY.md   │
+</span></span><span style="display:flex;"><span>              └─────────────────────────┘
+</span></span></code></pre></div><p>每一层都互相加成：</p>
+<ul>
+<li><strong>Specialist Lanes</strong> 让消息路由到对的 Agent</li>
+<li><strong>Standing Orders</strong> 让 Agent 知道自己负责什么</li>
+<li><strong>Hooks</strong> 在关键节点插入定制逻辑</li>
+<li><strong>Steering Queue</strong> 让用户实时纠偏</li>
+<li><strong>Compaction</strong> 防止长会话拖垮系统</li>
+<li><strong>Dreaming</strong> 把今天的有效信息晋升到长期记忆</li>
+</ul>
+<p>这才是 OpenClaw 真正的设计目标——不是一个聊天网关，而是一套<strong>让 AI 能像人一样&quot;上班&quot;的运维操作系统</strong>。</p>
+<hr>
+<h2 id="九写在最后你的-ai-是临时工还是数字员工">九、写在最后：你的 AI 是临时工还是数字员工？
+</h2><p>回头看本文 6 个技巧，每一个都对应一个真实问题：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: center">痛点</th>
+					<th style="text-align: center">解法</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: center">怎么让 AI 自己干活？</td>
+					<td style="text-align: center"><strong>Standing Orders + Cron</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center">怎么在关键时刻插自己逻辑？</td>
+					<td style="text-align: center"><strong>Hooks</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center">怎么自动整理记忆？</td>
+					<td style="text-align: center"><strong>Dreaming</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center">怎么让多个 Agent 不打架？</td>
+					<td style="text-align: center"><strong>Specialist Lanes</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center">怎么边干边沟通？</td>
+					<td style="text-align: center"><strong>Queue Steering</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: center">怎么不让长会话拖垮系统？</td>
+					<td style="text-align: center"><strong>Compaction</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>如果你只是把 OpenClaw 当成&quot;另一个 Claude Code 接到飞书&quot;，那真的太亏了。</p>
+<p>文档地址直接在你机器上：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">ls /usr/local/lib/node_modules/openclaw/docs/</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># automation/  cli/  concepts/  gateway/  plugins/  reference/  tools/ ...</span>
+</span></span></code></pre></div><p>每一个技巧本文都标了对应的文件路径。今晚翻一翻，明天开始让你的 AI 真正&quot;上班&quot;。</p>
+<blockquote>
+<p><strong>延伸阅读</strong>：</p>
+<ul>
+<li><a class="link" href="/tutorials/openclaw-local-memory-qmd-token-reduction/" >OpenClaw 本地记忆神器：QMD 实现零 Token、毫秒级响应</a> - 配合 Dreaming 用，效果翻倍</li>
+<li><a class="link" href="/tutorials/openclaw-advanced-skills-gateway-daemon-setup-guide/" >OpenClaw 进阶：Skills 配置 + Gateway 设置 + 对接飞书全攻略</a> - 基础环境</li>
+<li><a class="link" href="/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/" >OpenClaw 飞书插件踩坑：消息重复 + API 耗尽</a> - 多 Agent 配合飞书时必读</li>
+</ul>
+</blockquote>
+<p>下篇预告：<strong>OpenClaw 多 Agent 协作实战——墨守、墨客、墨盒、墨攻是怎么联动的</strong>。把本篇 Specialist Lanes 那一节用真实代码完整演示。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/standing-orders/">Standing Orders</a>
+        
+            <a href="/tags/hooks/">Hooks</a>
+        
+            <a href="/tags/dreaming/">Dreaming</a>
+        
+            <a href="/tags/specialist-lanes/">Specialist Lanes</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a>
+        
+            <a href="/tags/%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/">记忆系统</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-%E7%A7%81%E6%9C%89%E5%8C%96%E9%83%A8%E7%BD%B2pve-lxc-%E5%AE%8C%E6%95%B4%E5%AE%89%E8%A3%85%E4%B8%8E%E8%B8%A9%E5%9D%91%E5%85%A8%E8%AE%B0%E5%BD%95/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-%E7%A7%81%E6%9C%89%E5%8C%96%E9%83%A8%E7%BD%B2pve-lxc-%E5%AE%8C%E6%95%B4%E5%AE%89%E8%A3%85%E4%B8%8E%E8%B8%A9%E5%9D%91%E5%85%A8%E8%AE%B0%E5%BD%95/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 私有化部署：PVE LXC 完整安装与踩坑全记录</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-local-memory-qmd-token-reduction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 本地记忆检索：QMD 实现零 Token、毫秒级响应</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/qmd-local-memory-optimization/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">怒省 1 亿 Token！OpenClaw 本地记忆检索实战：从 60 秒超时到 0.5 秒响应的优雅降级</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/openclaw-feishu-pitfalls-plugin-duplicate-api-exhaustion/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OpenClaw 飞书部署避坑：重复插件冲突与 API 调用耗尽问题全解</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee\/'; 
+        const pageTitle = '解锁 OpenClaw 真实力：6 个把 AI 从聊天机器人升级为数字员工的进阶玩法';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

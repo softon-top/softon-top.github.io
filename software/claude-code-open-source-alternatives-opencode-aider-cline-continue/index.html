@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Claude Code 月烧 $200,Cursor 总有断网,买阿里云 Coding Plan 又要 $50/月。开源派到底行不行?我把 OpenCode、Aider、Cline、Continue.dev 4 款主流开源 AI Coding 工具,接到 Qwen3 / Kimi K2 / DeepSeek 上各跑了一周,记录上手成本、模型支持、工作流契合度、Token 消耗,最后留下了 2 款,也淘汰了 2 款,顺手讲清楚为什么。">
+<title>Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款</title>
+
+<link rel='canonical' href='https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款">
+<meta property='og:description' content="Claude Code 月烧 $200,Cursor 总有断网,买阿里云 Coding Plan 又要 $50/月。开源派到底行不行?我把 OpenCode、Aider、Cline、Continue.dev 4 款主流开源 AI Coding 工具,接到 Qwen3 / Kimi K2 / DeepSeek 上各跑了一周,记录上手成本、模型支持、工作流契合度、Token 消耗,最后留下了 2 款,也淘汰了 2 款,顺手讲清楚为什么。">
+<meta property='og:url' content='https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='AI 编程' /><meta property='article:tag' content='OpenCode' /><meta property='article:tag' content='Aider' /><meta property='article:tag' content='Cline' /><meta property='article:tag' content='Continue' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='开源工具' /><meta property='article:tag' content='横评' /><meta property='article:published_time' content='2026-05-23T10:30:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-23T10:30:00&#43;08:00'/>
+<meta name="twitter:title" content="Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款">
+<meta name="twitter:description" content="Claude Code 月烧 $200,Cursor 总有断网,买阿里云 Coding Plan 又要 $50/月。开源派到底行不行?我把 OpenCode、Aider、Cline、Continue.dev 4 款主流开源 AI Coding 工具,接到 Qwen3 / Kimi K2 / DeepSeek 上各跑了一周,记录上手成本、模型支持、工作流契合度、Token 消耗,最后留下了 2 款,也淘汰了 2 款,顺手讲清楚为什么。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一为什么开源派现在值得认真测一次">一、为什么开源派现在值得认真测一次</a></li>
+    <li><a href="#二opencodeterminal-派的当代标杆">二、OpenCode:Terminal 派的当代标杆</a>
+      <ul>
+        <li><a href="#实测体感">实测体感</a></li>
+        <li><a href="#接国产模型的踩坑">接国产模型的踩坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#三aidergit-native-的老派精工">三、Aider:Git-Native 的老派精工</a>
+      <ul>
+        <li><a href="#实测体感-1">实测体感</a></li>
+        <li><a href="#我学会的用法">我学会的用法</a></li>
+      </ul>
+    </li>
+    <li><a href="#四clinevs-code-派的火力全开型">四、Cline:VS Code 派的&quot;火力全开&quot;型</a>
+      <ul>
+        <li><a href="#实测体感-2">实测体感</a></li>
+        <li><a href="#我的取舍">我的取舍</a></li>
+      </ul>
+    </li>
+    <li><a href="#五continuedev已经不是当年那个-continue-了">五、Continue.dev:已经不是当年那个 Continue 了</a>
+      <ul>
+        <li><a href="#实测一下确认">实测一下确认</a></li>
+      </ul>
+    </li>
+    <li><a href="#六留下的两款怎么配合用">六、留下的两款怎么配合用</a>
+      <ul>
+        <li><a href="#成本对照写稿当周实测">成本对照(写稿当周实测)</a></li>
+      </ul>
+    </li>
+    <li><a href="#七踩过的坑给后来者">七、踩过的坑(给后来者)</a></li>
+    <li><a href="#八写在最后三部曲收尾">八、写在最后:三部曲收尾</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/">Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-23T10:30:00&#43;08:00'>
+                    2026-05-23，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：17分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一为什么开源派现在值得认真测一次">一、为什么开源派现在值得认真测一次</a></li>
+    <li><a href="#二opencodeterminal-派的当代标杆">二、OpenCode:Terminal 派的当代标杆</a>
+      <ul>
+        <li><a href="#实测体感">实测体感</a></li>
+        <li><a href="#接国产模型的踩坑">接国产模型的踩坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#三aidergit-native-的老派精工">三、Aider:Git-Native 的老派精工</a>
+      <ul>
+        <li><a href="#实测体感-1">实测体感</a></li>
+        <li><a href="#我学会的用法">我学会的用法</a></li>
+      </ul>
+    </li>
+    <li><a href="#四clinevs-code-派的火力全开型">四、Cline:VS Code 派的&quot;火力全开&quot;型</a>
+      <ul>
+        <li><a href="#实测体感-2">实测体感</a></li>
+        <li><a href="#我的取舍">我的取舍</a></li>
+      </ul>
+    </li>
+    <li><a href="#五continuedev已经不是当年那个-continue-了">五、Continue.dev:已经不是当年那个 Continue 了</a>
+      <ul>
+        <li><a href="#实测一下确认">实测一下确认</a></li>
+      </ul>
+    </li>
+    <li><a href="#六留下的两款怎么配合用">六、留下的两款怎么配合用</a>
+      <ul>
+        <li><a href="#成本对照写稿当周实测">成本对照(写稿当周实测)</a></li>
+      </ul>
+    </li>
+    <li><a href="#七踩过的坑给后来者">七、踩过的坑(给后来者)</a></li>
+    <li><a href="#八写在最后三部曲收尾">八、写在最后:三部曲收尾</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>上一篇我把 Claude Code 月账单从 $214 砍到 $40,前一篇我把同事的 $50/月阿里云 Coding Plan Pro 也榨干了。</p>
+<p>评论区两个朋友几乎同时发了同一句话:<strong>&ldquo;还是闭源,有没有完全开源的方案?彻底白嫖那种。&rdquo;</strong></p>
+<p>我盯着这句话愣了三秒——是啊,我居然没认真测过开源派。</p>
+</blockquote>
+<p>闭源派的痛点,过去三周我已经聊得够多了。账单焦虑、模型锁定、动不动就跳出来的 &ldquo;rate limit&rdquo;、客户端版本一更新就要等三天的玄学。但真要切到开源,问题立刻倒过来:</p>
+<ul>
+<li>开源 CLI 那么多,<strong>到底哪个是日常主力</strong>?</li>
+<li>都说&quot;接任意模型&quot;,<strong>接到 Qwen3-Coder 和 Kimi K2 之后真的能干活吗</strong>?</li>
+<li>开源工具号称&quot;免费&quot;,但 <strong>API 费 + 自己折腾时间</strong>,真的比 Claude Pro 便宜?</li>
+<li>VS Code 派和 Terminal 派,<strong>做工程到底哪个顺手</strong>?</li>
+</ul>
+<p>为了不再瞎想,我把当下被讨论最多的 4 款开源 AI Coding 工具按照统一标准跑了一周——<strong>OpenCode、Aider、Cline、Continue.dev</strong>。同一台机器、同一份代码库、同一组真实任务、同一组国产模型 API。结论简单粗暴:<strong>留下 2 款,淘汰 2 款</strong>。</p>
+<p>这篇文章把 4 款的实战体验全摊开,一次性讲清楚为什么留、为什么淘汰、留下的两款怎么配合用。</p>
+<h2 id="一为什么开源派现在值得认真测一次">一、为什么开源派现在值得认真测一次
+</h2><p>过去半年,开源 AI Coding 生态已经偷偷换了一茬。先看几个数字:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>形态</th>
+					<th>GitHub Stars</th>
+					<th>出品方</th>
+					<th>协议</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>OpenCode</td>
+					<td>TUI / 桌面 / IDE 扩展</td>
+					<td>26K+</td>
+					<td>Anomaly Innovations(原 SST)</td>
+					<td>MIT</td>
+			</tr>
+			<tr>
+					<td>Aider</td>
+					<td>纯终端 + git</td>
+					<td>42K+</td>
+					<td>Aider-AI 社区</td>
+					<td>Apache-2.0</td>
+			</tr>
+			<tr>
+					<td>Cline</td>
+					<td>VS Code 扩展</td>
+					<td>高活,VSCode 8M+ 装机</td>
+					<td>cline.bot</td>
+					<td>Apache-2.0</td>
+			</tr>
+			<tr>
+					<td>Continue</td>
+					<td>VS Code + JetBrains + CLI</td>
+					<td>25K+</td>
+					<td>continuedev</td>
+					<td>Apache-2.0</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>数据是写稿当天 GitHub 检索的,Star 数会变,但量级不会。这四款已经覆盖了<strong>终端派 + IDE 派</strong>的主流场景,各自代表一种&quot;开源 Claude Code&quot;的路线。</p>
+<p><img src="https://img.softon.top/2026/05/23/103956-153216-IMG_01.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="开源 AI 编程工具栈"
+	
+	
+></p>
+<p>四款全是&quot;BYOK(Bring Your Own Key)&ldquo;模式——工具白嫖,模型自己配。这意味着对比维度跟订阅类完全不同:</p>
+<blockquote>
+<p><strong>闭源派比的是&quot;额度策略&rdquo;</strong>;<strong>开源派比的是&quot;工具与模型的匹配度&quot;</strong>。</p>
+</blockquote>
+<p>我把测试对齐到五个维度:</p>
+<ol>
+<li><strong>上手成本</strong>:从零到能干活的时间</li>
+<li><strong>模型支持广度</strong>:能不能稳定跑 Qwen3 / Kimi K2 / DeepSeek-V3 / GLM-5</li>
+<li><strong>工作流契合度</strong>:适合&quot;全包揽 agent&quot;,还是&quot;精细 pair programming&quot;</li>
+<li><strong>Token 消耗</strong>:同任务下烧掉多少上下文</li>
+<li><strong>社区温度</strong>:文档、issue 响应速度、PR 活跃度</li>
+</ol>
+<p>下面挨个拆。</p>
+<h2 id="二opencodeterminal-派的当代标杆">二、OpenCode:Terminal 派的当代标杆
+</h2><p><strong>一句话画像</strong>:把 Claude Code 那套&quot;TUI + 工具调用 + 子任务&quot;的体感,几乎一比一搬到开源世界,模型可以随便换。</p>
+<p>OpenCode 由原 SST(Serverless Stack)团队脱胎的 Anomaly Innovations 出品,2025 年 6 月发布,半年内 GitHub Stars 冲到 2.6 万、月活 20 万开发者。形态是 TUI 优先,同时提供桌面 App、VS Code 扩展、Web 界面,后端是统一的 Server,所有客户端共享会话状态。</p>
+<h3 id="实测体感">实测体感
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 装(Mac/Linux 通用)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl -fsSL https://opencode.ai/install | bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 配 OpenAI 兼容的国产 API(此处接阿里云百炼 Qwen3-Coder)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENCODE_PROVIDER</span><span style="color:#f92672">=</span><span style="color:#e6db74">openai</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENAI_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">https://dashscope.aliyuncs.com/compatible-mode/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENAI_API_KEY</span><span style="color:#f92672">=</span><span style="color:#e6db74">&lt;your-key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENCODE_MODEL</span><span style="color:#f92672">=</span><span style="color:#e6db74">qwen3-coder-480b</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">opencode .</span>
+</span></span></code></pre></div><p>启动后是一个键位跟 Claude Code 高度相似的 TUI:左边对话流、右边工具调用日志、底部输入框,<strong>完全没有学习成本</strong>。/init 自动扫整个仓库写出 AGENTS.md,/edit 调出 diff 视图,/run 直接喂进 shell。</p>
+<p>跑了一周下来,OpenCode 给我留下三个深刻印象:</p>
+<ol>
+<li><strong>工具系统抄到了精髓</strong>:read / edit / bash / glob / grep / web 全套齐活,而且工具 schema 非常干净,接不同模型时不会因为参数语法漂移而崩。</li>
+<li><strong>子任务隔离做得最好</strong>:开源派里少有的支持 sub-agent / task 隔离,跨任务上下文不会污染——这点直接抄 Claude Code 的 sub-agent 架构,但人家把它放进了开源协议。</li>
+<li><strong>多客户端共享会话</strong>:在 TUI 里聊一半,切到 VS Code 扩展能接着聊。背后是常驻 Server,这套架构比 Aider 那种&quot;开一次 chat session&quot;更工程化。</li>
+</ol>
+<h3 id="接国产模型的踩坑">接国产模型的踩坑
+</h3><p>Qwen3-Coder-480B 配上 OpenCode,工具调用成功率约 95%。Kimi K2 因为 function-calling 格式严格,初版偶尔会吐出格式不对的 JSON,我加了一行系统 prompt 提示&quot;严格按 OpenAI tool 格式输出&quot;后,稳定下来。DeepSeek-V3 表现介于两者之间,代码质量略低,但便宜得离谱(约百炼三分之一价)。</p>
+<blockquote>
+<p><strong>结论</strong>:OpenCode 是开源派当之无愧的&quot;新主力&quot;。如果你已经习惯 Claude Code 的工作流,迁移过去几乎零摩擦,只是模型从 Sonnet 换成了 Qwen3。</p>
+</blockquote>
+<h2 id="三aidergit-native-的老派精工">三、Aider:Git-Native 的老派精工
+</h2><p><strong>一句话画像</strong>:不是 agent,是个 pair programmer。每次对话都是一次 commit。</p>
+<p>Aider 是这次评测里<strong>资历最老</strong>的选手。GitHub Stars 4.2 万、PyPI 累计安装 570 万次,Apache-2.0,纯 Python 写的,纯终端运行,没有 IDE 扩展、没有桌面 App。从 2023 年就在那里了,定位三年没变:<strong>AI Pair Programming in your terminal</strong>。</p>
+<p>它跟 OpenCode 完全是两条路:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>OpenCode</th>
+					<th>Aider</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>形态</td>
+					<td>全包揽 agent</td>
+					<td>一次一改的 pair programmer</td>
+			</tr>
+			<tr>
+					<td>工具系统</td>
+					<td>通用 read/edit/bash/web</td>
+					<td>只有 file edit + git</td>
+			</tr>
+			<tr>
+					<td>上下文</td>
+					<td>工具自己挑</td>
+					<td>你手动 /add 文件</td>
+			</tr>
+			<tr>
+					<td>Commit 行为</td>
+					<td>跟 Claude Code 一样不主动 commit</td>
+					<td>每次接受改动<strong>自动 git commit</strong></td>
+			</tr>
+			<tr>
+					<td>适合场景</td>
+					<td>探索性任务</td>
+					<td>已知改动范围的精修</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="实测体感-1">实测体感
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">pip install aider-install &amp;&amp; aider-install</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 接 DeepSeek-V3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENAI_API_BASE</span><span style="color:#f92672">=</span><span style="color:#e6db74">https://api.deepseek.com</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export OPENAI_API_KEY</span><span style="color:#f92672">=</span><span style="color:#e6db74">&lt;your-key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">aider --model deepseek/deepseek-coder \</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">--no-stream \</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">--auto-commits</span>
+</span></span></code></pre></div><p>打开 Aider 之后，最强烈的对比就是<strong>它有多么&quot;克制&quot;</strong>:</p>
+<ul>
+<li>不会自动 grep 整个仓库;</li>
+<li>不会主动跑 shell;</li>
+<li>你说要改哪个文件,它才看哪个文件;</li>
+<li>改完直接 git commit,commit message 由模型自己写,质量出奇好。</li>
+</ul>
+<p>我把同一组任务(给一个 Hugo 站加 RSS、改 24 个 markdown 的 frontmatter、抽一个 Python 工具)分别在 OpenCode 和 Aider 上跑了一遍,得出一个反直觉的发现:</p>
+<blockquote>
+<p><strong>明确范围的小任务,Aider 反而更省 token,而且改完即提交,几乎不需要 review。</strong></p>
+</blockquote>
+<p>OpenCode 那套全权代理在批量重复改文件时,反复 grep + edit + 验证,token 用得吓人;同样的活 Aider 用 1/3 的 token 干完,因为它不&quot;探索&quot;。</p>
+<h3 id="我学会的用法">我学会的用法
+</h3><p>Aider 不适合当主力——它没有 web 工具、没有 sub-agent、没法搜文档,你要它从零写一个新功能它会反复让你提供更多文件。但它做<strong>两件事无敌</strong>:</p>
+<ol>
+<li><strong>批量重构</strong>:<code>aider file1.py file2.py file3.py</code>,一次性丢一堆文件让它做同一种改动,效率碾压一切。</li>
+<li><strong>Commit Bot</strong>:在 shell 脚本里把它当成&quot;AI 版 git commit -am&quot;,一行命令搞定带语义的 commit message。</li>
+</ol>
+<p>我现在把它当 OpenCode 的<strong>外科手术刀</strong>用,具体姿势放在第六节。</p>
+<p><img src="https://img.softon.top/2026/05/23/103958-cfe285-IMG_02.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="Aider 精修工作流"
+	
+	
+></p>
+<h2 id="四clinevs-code-派的火力全开型">四、Cline:VS Code 派的&quot;火力全开&quot;型
+</h2><p><strong>一句话画像</strong>:VS Code 里的全自动 agent,Plan/Act 双模式,体感最像&quot;小号 Claude Code&quot;——但代价是 token 烧得也最像。</p>
+<p>Cline(原名 Claude Dev,2024 年 Saoud Rizwan 出品,后独立成 cline.bot)是这次测试里<strong>生态最热</strong>的一个,单 VS Code 装机量已经过 800 万。它把 agent 思路完整搬进了 IDE 侧边栏:Plan 模式先生成方案、Act 模式逐步执行,每步可暂停、可改、可回滚。</p>
+<h3 id="实测体感-2">实测体感
+</h3><p>VS Code 里装好扩展、配上 OpenAI 兼容 base URL,就能用。我接的同样是 Qwen3-Coder-480B。</p>
+<p>体验上 Cline 给我两个&quot;哇&quot;的瞬间:</p>
+<ul>
+<li><strong>MCP 集成</strong>:它对 MCP 的支持比 OpenCode 还激进,自带一个 MCP marketplace,可以直接装&quot;网页抓取 / 数据库连接 / 浏览器自动化&quot;等工具,装完立刻用。</li>
+<li><strong>可视化 diff</strong>:每次改动以 IDE diff 视图显示,接受/拒绝按钮直接出现在编辑器里,这点比纯 TUI 顺手得多。</li>
+</ul>
+<p>但跑了三天后我决定<strong>淘汰它</strong>,原因只有一个:</p>
+<blockquote>
+<p><strong>吃 token 太凶</strong>。</p>
+</blockquote>
+<p>我用一组对照任务(给一个 React 组件加 a11y 改进)同时丢给 OpenCode 和 Cline,Cline 用了大约 2.4 倍的 token。原因有几个:</p>
+<ol>
+<li>Plan 模式会把整个工作区文件树和相关文件<strong>全量塞进 prompt</strong>;</li>
+<li>Act 模式每步都重传部分上下文做&quot;自我校验&quot;;</li>
+<li>工具调用的输出不会主动截断,有时候 <code>cat</code> 出几千行没人管。</li>
+</ol>
+<p>如果你接的是 Claude Sonnet 这种贵模型,Cline 一晚上能烧出几十美元——这正是我前一篇文章想避开的坑。换到便宜国产模型当然没那么疼,但<strong>烧的还是你的 API 余额</strong>。</p>
+<h3 id="我的取舍">我的取舍
+</h3><p>Cline 不是不好,它<strong>适合的是另一种人</strong>:VS Code 重度用户、不在乎 API 成本、需要 MCP 生态扩展、希望全流程在 IDE 里完成。我自己 80% 时间在 TUI,Cline 对我属于&quot;装得上、用不顺&quot;,果断淘汰。</p>
+<h2 id="五continuedev已经不是当年那个-continue-了">五、Continue.dev:已经不是当年那个 Continue 了
+</h2><p><strong>一句话画像</strong>:从&quot;开源 Copilot&quot;演变成了&quot;AI 软件质量平台&quot;,已经偏离日常 coding 助手的定位。</p>
+<p>Continue 当年的 slogan 是 &ldquo;open-source autocomplete + chat&rdquo;,VS Code / JetBrains 双端,自带 chat 面板和补全。25K Stars 不是白来的。但当我打开 continue.dev 写这篇文章时,首页第一行已经变成:</p>
+<blockquote>
+<p><strong>&ldquo;Quality control for your software factory. Source-controlled AI checks on every pull request.&rdquo;</strong></p>
+</blockquote>
+<p>GitHub README 也跟上了:<strong>&ldquo;Source-controlled AI checks, enforceable in CI&rdquo;</strong>。</p>
+<p>也就是说,Continue 团队已经把核心方向<strong>重定位到 PR Review / CI 质量门控</strong>——就像 SonarQube 装上了大模型。这个方向没问题,甚至是个聪明的差异化决策(不跟 Cursor、Cline 在 IDE 里硬刚),但这意味着<strong>它已经不是和 OpenCode、Aider、Cline 同台竞技的产品了</strong>。</p>
+<h3 id="实测一下确认">实测一下确认
+</h3><p>我装上 VS Code 扩展跑了半天,补全和 chat 还在,但更新节奏明显放缓,文档大量篇幅引导你接 CI、写 .continue/rules、配 PR Bot。如果你需要的是日常写代码的伙伴,Continue 现在的体验<strong>反而不如它一年前</strong>。</p>
+<blockquote>
+<p><strong>结论</strong>:Continue 不再是&quot;开源 Claude Code&quot;的合适候选。值得装,但场景是 CI 端做 AI Code Review,不是日常驾驶。</p>
+</blockquote>
+<h2 id="六留下的两款怎么配合用">六、留下的两款怎么配合用
+</h2><p>到这里,4 选 2 的结果已经很清楚:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>状态</th>
+					<th>用途</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>OpenCode</td>
+					<td>✅ 主力</td>
+					<td>探索式任务 / 跨文件 / 跨语言 / 长会话</td>
+			</tr>
+			<tr>
+					<td>Aider</td>
+					<td>✅ 副驾</td>
+					<td>批量重构 / git commit bot / 已知范围精修</td>
+			</tr>
+			<tr>
+					<td>Cline</td>
+					<td>⛔ 淘汰</td>
+					<td>Token 太贵,场景不匹配</td>
+			</tr>
+			<tr>
+					<td>Continue</td>
+					<td>⛔ 淘汰</td>
+					<td>已重定位到 CI,不是日常 coding 助手</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我现在的标准工作流变成两层:</p>
+<p><strong>第一层:OpenCode 当主驾驶。</strong> 接 Qwen3-Coder-480B,做所有需要&quot;理解整个仓库&quot;的任务——写新功能、跨模块重构、查 bug、写文档。它的 sub-agent 隔离 + 工具系统,是开源派里目前唯一能扛住&quot;多模块工程&quot;的那个。</p>
+<p><strong>第二层:Aider 当外科手术刀。</strong> 接 DeepSeek-V3(便宜、快、生成质量够),专门干两类活:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 已知范围的批量改:把 24 个 frontmatter 的 draft = true 改成 false</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">aider drafts/**/*.md \</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">--message &#34;请把所有 frontmatter 里的 draft</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">true 改成 draft = false,其他一律不动&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. AI 版 git commit:写完代码后直接来一发</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">aider --commit</span>
+</span></span></code></pre></div><p>这两件事在 OpenCode 里也能干,但<strong>用 Aider 大约能省 60-70% token</strong>——前提是任务范围已经清晰。</p>
+<h3 id="成本对照写稿当周实测">成本对照(写稿当周实测)
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>任务类型</th>
+					<th>OpenCode + Qwen3</th>
+					<th>Cline + Qwen3</th>
+					<th>Aider + DeepSeek</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>单文件 bugfix</td>
+					<td>约 8K token</td>
+					<td>约 18K token</td>
+					<td>约 3K token</td>
+			</tr>
+			<tr>
+					<td>跨 5 文件特性</td>
+					<td>约 35K token</td>
+					<td>约 80K token</td>
+					<td>约 25K token(需手动 /add)</td>
+			</tr>
+			<tr>
+					<td>24 文件 frontmatter</td>
+					<td>约 20K token</td>
+					<td>约 60K token</td>
+					<td><strong>约 8K token</strong></td>
+			</tr>
+			<tr>
+					<td>写 commit message</td>
+					<td>/</td>
+					<td>/</td>
+					<td><strong>约 0.5K token</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>数据是同一周的真实使用平均值,任务覆盖了 Hugo 网站、一个 Python 工具、一个 React 小组件。你的项目规模、模型选型不同,数字会变化,但相对比例基本稳定。</p>
+<p><strong>两层叠加后的月成本</strong>:DeepSeek + Qwen3 走 OpenAI 兼容 API,我这一个月跑了大约 800 万 token,账单不到 ¥40。</p>
+<p><img src="https://img.softon.top/2026/05/23/103959-221efa-IMG_03.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="开源派月成本骤降"
+	
+	
+>
+这是上一篇 <a class="link" href="/software/claude-code-token-cost-cut-7-tips/" >《把 Claude Code 月账单从 $200 砍到 $40》</a> 的延伸——开源派把它再往下砍了一个量级。</p>
+<h2 id="七踩过的坑给后来者">七、踩过的坑(给后来者)
+</h2><p>按时间顺序记录,免得你重蹈覆辙:</p>
+<ol>
+<li><strong>OpenCode 配国产模型时,模型名要写对</strong>。<code>qwen3-coder-480b</code> 不是 <code>qwen3-coder</code>,百炼 dashboard 上抄过来不要拼写凭印象。</li>
+<li><strong>Aider 接 OpenAI 兼容 endpoint,不要忘记加 <code>--no-stream</code></strong>,部分国产 endpoint 流式输出会卡。</li>
+<li><strong>Cline 关掉 &ldquo;Plan 模式&quot;也省不了多少 token</strong>,因为 Act 模式自带的全文校验是它真正的吞金兽。</li>
+<li><strong>Continue 装多个 profile 后</strong>,默认 chat 会话会被路由到 CI agent,如果你只想用日常 chat,profile 列表里要把 CI 那条关掉。</li>
+<li><strong>OpenCode 跨客户端共享会话,记得正确退出 server</strong>(<code>opencode kill</code>),否则下次启动会接到旧 session,容易污染上下文。</li>
+<li><strong>Aider 自动 commit 偶尔会把 .DS_Store / .env 也提交</strong>,务必先写好 .gitignore,别问我怎么知道的。</li>
+<li><strong>国产 API 的 function calling 格式要预热</strong>,首次开会话先问一个简单工具调用任务,后续工具调用稳定性会显著提升——我怀疑是 KV cache 帮了忙。</li>
+</ol>
+<h2 id="八写在最后三部曲收尾">八、写在最后:三部曲收尾
+</h2><p>回头看,这是我&quot;AI 编程成本控制三部曲&quot;的第三篇:</p>
+<ul>
+<li>第一篇 <a class="link" href="/software/alibaba-cloud-coding-plan-pro-50usd-real-test/" >《阿里云 Coding Plan Pro 实测一周》</a> 讲了<strong>闭源派怎么用得起</strong>;</li>
+<li>第二篇 <a class="link" href="/software/claude-code-token-cost-cut-7-tips/" >《把 Claude Code 月账单从 $200 砍到 $40》</a> 讲了<strong>闭源派怎么用得省</strong>;</li>
+<li>这一篇讲<strong>开源派完全可行,而且更便宜</strong>。</li>
+</ul>
+<p>闭源还是开源,不是站队问题,是<strong>任务规模和你愿意花在折腾上的时间</strong>之间的平衡。如果你每天 8 小时高强度写代码、需要最稳的体感和最聪明的模型,$50 的阿里云 Coding Plan 可能仍是性价比最高的;如果你跟我一样,任务密度中等、对延迟容忍度高、又喜欢自己折腾,<strong>OpenCode + Aider + 国产模型这套</strong>几乎能把成本压到忽略不计。</p>
+<blockquote>
+<p><strong>一句话:开源派现在不是&quot;凑合用&rdquo;,是真的能干活。但不是哪一款都行——挑错了,反而比闭源贵。</strong></p>
+</blockquote>
+<p>工具不会替你写代码,但选对工具能让你少烧两顿火锅钱。这篇文章如果帮你少踩一个坑,就值了。</p>
+<p>下一篇,我打算把 OpenCode 的 sub-agent 玩出花——做一个能自己跑测试、自己提 PR、自己回评论的&quot;半自动开发流水线&quot;。如果你也对这块好奇,记得回来看。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        
+            <a href="/tags/opencode/">OpenCode</a>
+        
+            <a href="/tags/aider/">Aider</a>
+        
+            <a href="/tags/cline/">Cline</a>
+        
+            <a href="/tags/continue/">Continue</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">开源工具</a>
+        
+            <a href="/tags/%E6%A8%AA%E8%AF%84/">横评</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/claude-code-token-cost-cut-7-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/alibaba-cloud-coding-plan-pro-50usd-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/claude-code-open-source-alternatives-opencode-aider-cline-continue\/'; 
+        const pageTitle = 'Claude Code 想换开源？OpenCode \/ Aider \/ Cline \/ Continue 我把 4 款全装一遍，留下了这 2 款';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

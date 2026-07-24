@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>安全 on softon.top</title>
+		<link>https://softon.top/tags/%E5%AE%89%E5%85%A8/</link>
+		<description>Recent content in 安全 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 21 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI Agent Jail 是什么：当智能体开始需要一座笼子</title>
+				<link>https://softon.top/ai/ai-agent-jail-what-it-is/</link>
+				<pubDate>Tue, 21 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-agent-jail-what-it-is/</guid>
+				<description>&lt;p&gt;最近 Hacker News 上有个选题很刺眼：&lt;strong&gt;A comprehensive, filterable list of AI agent jails&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;第一眼看到 &lt;code&gt;jail&lt;/code&gt; 这个词，很容易笑出来。AI 还没彻底进公司，笼子倒先造好了。可多看几眼，你会发现这不是段子，而是一个非常现实的信号：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;AI Agent 已经不再只是“会说话的模型”，它开始变成“会动手的进程”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;会动手，就会闯祸。&lt;/p&gt;&#xA;&lt;p&gt;以前我们担心 AI 胡说八道。它答错一个概念，写错一段代码，最多让人皱眉。现在不一样了。Agent 会读仓库、改文件、跑测试、开浏览器、调用 API、查数据库、发消息，甚至执行 shell 命令。它从屏幕里的顾问，变成了机器上的临时员工。&lt;/p&gt;&#xA;&lt;p&gt;临时员工最怕什么？不是不会干活，而是门禁卡权限太大。&lt;/p&gt;&#xA;&lt;p&gt;你让它整理一个项目，它顺手扫了整个 home 目录；你让它修一个 bug，它读到了 &lt;code&gt;.env&lt;/code&gt;；你让它跑测试，它碰到了生产数据库连接；你让它查资料，它把不该出网的内容带出去了。那一刻你才发现，真正危险的不是“模型不够聪明”，而是“它聪明到会自己找路”。&lt;/p&gt;&#xA;&lt;p&gt;这就是 &lt;code&gt;AI Agent Jail&lt;/code&gt; 开始流行的原因。&lt;/p&gt;&#xA;&lt;p&gt;它不是反 AI，也不是把智能体关起来虐待。它更像安全带、护栏、防火门和门禁系统：&lt;strong&gt;允许它干活，但只在你允许的范围里干活。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;ai-agent-jail-到底是什么&#34;&gt;AI Agent Jail 到底是什么&#xA;&lt;/h2&gt;&lt;p&gt;&lt;code&gt;Jail&lt;/code&gt; 这个词听起来很重，技术上可以理解成一套隔离和约束机制。它回答几个很朴素的问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 能看到哪些文件？&lt;/li&gt;&#xA;&lt;li&gt;Agent 能修改哪些目录？&lt;/li&gt;&#xA;&lt;li&gt;Agent 能执行哪些命令？&lt;/li&gt;&#xA;&lt;li&gt;Agent 能访问哪些网络？&lt;/li&gt;&#xA;&lt;li&gt;Agent 能不能接触密钥？&lt;/li&gt;&#xA;&lt;li&gt;Agent 做错了能不能回滚？&lt;/li&gt;&#xA;&lt;li&gt;Agent 做过什么有没有日志？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这几个问题，比“模型智商有多高”更接近生产环境的真实焦虑。&lt;/p&gt;&#xA;&lt;p&gt;一个 Agent 的能力大概可以拆成三层：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;推理层&lt;/strong&gt;：它会理解任务、拆步骤、做判断。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;工具层&lt;/strong&gt;：它会调用编辑器、浏览器、终端、API。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;环境层&lt;/strong&gt;：它能碰到文件、网络、凭证、数据库、消息系统。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;真正容易出事的是第三层。&lt;/p&gt;&#xA;&lt;p&gt;推理错了，可以纠正。工具调用失败，可以重试。可一旦环境权限失控，后果就不再停留在聊天窗口里。文件被覆盖、密钥被读走、请求打到生产、脏数据写进系统，这些都不是“AI 幻觉”，而是现实事故。&lt;/p&gt;&#xA;&lt;p&gt;所以 Jail 的核心不是限制推理，而是限制现实权限。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>GitLost 把 GitHub AI Agent 骗到泄露私有仓库：Agent 时代最危险的不是幻觉，是权限</title>
+				<link>https://softon.top/software/gitlost-github-ai-agent-private-repo-leak/</link>
+				<pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/gitlost-github-ai-agent-private-repo-leak/</guid>
+				<description>&lt;p&gt;我第一次看到 GitLost 这个名字时，第一反应不是“又一个 AI 安全漏洞”，而是后背发凉。&lt;/p&gt;&#xA;&lt;p&gt;因为它没有用到什么玄学技巧，也没有复杂到需要你打开十几个终端。它的攻击路径简单得像一张便签：在公开仓库里发一个看起来正常的 Issue，让 GitHub 的 AI Agent 读到它，然后 Agent 自己把组织内私有仓库的内容贴回公开评论区。&lt;/p&gt;&#xA;&lt;p&gt;这件事最刺眼的地方，不是 AI 被“骗了”。&lt;/p&gt;&#xA;&lt;p&gt;AI 本来就容易被骗。&lt;/p&gt;&#xA;&lt;p&gt;真正刺眼的是：&lt;strong&gt;被骗的不是一个聊天框，而是一个带权限、带工具、能跨仓库读取内容、还能对外发言的自动化系统。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这就是 Agent 时代最危险的拐点。过去我们担心模型胡说八道，今天我们要担心模型“照做”。&lt;/p&gt;&#xA;&lt;h2 id=&#34;gitlost-到底发生了什么&#34;&gt;GitLost 到底发生了什么&#xA;&lt;/h2&gt;&lt;p&gt;GitLost 是 Noma Labs 在 2026 年 7 月披露的一类 GitHub Agentic Workflows 安全问题。原文标题很直白：他们把 GitHub 的 AI Agent 骗到泄露私有仓库内容。&lt;/p&gt;&#xA;&lt;p&gt;先把背景压缩成人话。&lt;/p&gt;&#xA;&lt;p&gt;GitHub Agentic Workflows 是 GitHub 把 GitHub Actions 和 AI Agent 拼在一起的一种自动化能力。团队可以用 Markdown 写工作流描述，AI Agent 读取 Issue、调用工具、执行仓库相关任务，然后自动回复或处理问题。&lt;/p&gt;&#xA;&lt;p&gt;听起来很美：&lt;/p&gt;&#xA;&lt;p&gt;开发者不用写一大坨 YAML，产品经理甚至可以用自然语言描述流程，Agent 像一个不会下班的实习生，帮你读 Issue、查仓库、写回复。&lt;/p&gt;&#xA;&lt;p&gt;但实习生有一个问题：他太听话了。&lt;/p&gt;&#xA;&lt;p&gt;Noma Labs 发现的那个工作流，大致有几个关键配置：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

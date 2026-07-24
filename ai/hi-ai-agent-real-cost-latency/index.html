@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从 Quesma 对 14 个模型、210 次 agentic trials 的测试出发，拆解一次简单 Hi 背后的真实成本：token 账单很小，等待时间、模型过度思考、任务歧义和 Agent 循环才是隐藏大头。">
+<title>跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</title>
+
+<link rel='canonical' href='https://softon.top/ai/hi-ai-agent-real-cost-latency/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待">
+<meta property='og:description' content="从 Quesma 对 14 个模型、210 次 agentic trials 的测试出发，拆解一次简单 Hi 背后的真实成本：token 账单很小，等待时间、模型过度思考、任务歧义和 Agent 循环才是隐藏大头。">
+<meta property='og:url' content='https://softon.top/ai/hi-ai-agent-real-cost-latency/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='成本控制' /><meta property='article:tag' content='延迟优化' /><meta property='article:tag' content='Token优化' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Agent工程' /><meta property='article:published_time' content='2026-07-14T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-14T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待">
+<meta name="twitter:description" content="从 Quesma 对 14 个模型、210 次 agentic trials 的测试出发，拆解一次简单 Hi 背后的真实成本：token 账单很小，等待时间、模型过度思考、任务歧义和 Agent 循环才是隐藏大头。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#token-账单很诚实但它没告诉你全价">token 账单很诚实，但它没告诉你全价</a></li>
+    <li><a href="#为什么一句-hi-会变贵agent-不知道你要寒暄还是要开工">为什么一句 Hi 会变贵：Agent 不知道你要寒暄，还是要开工</a></li>
+    <li><a href="#chatbot-和-agent-的成本模型不是一回事">Chatbot 和 Agent 的成本模型不是一回事</a></li>
+    <li><a href="#等待为什么比-token-更伤它打断的是工作流不是秒表">等待为什么比 token 更伤：它打断的是工作流，不是秒表</a></li>
+    <li><a href="#礼貌不是问题模糊才是问题">“礼貌”不是问题，模糊才是问题</a></li>
+    <li><a href="#该给-agent-加一个轻量入口">该给 Agent 加一个“轻量入口”</a></li>
+    <li><a href="#给小请求设工具熔断器">给小请求设“工具熔断器”</a></li>
+    <li><a href="#模型也要分层别用重炮打蚊子">模型也要分层：别用重炮打蚊子</a></li>
+    <li><a href="#什么时候值得慢思考">什么时候值得“慢思考”？</a></li>
+    <li><a href="#我会怎么改自己的-agent-使用习惯">我会怎么改自己的 Agent 使用习惯</a></li>
+    <li><a href="#生产环境里应该监控每次任务的总成本">生产环境里，应该监控“每次任务的总成本”</a></li>
+    <li><a href="#和-wikipedia-68000-tokens-那个坑的区别">和 Wikipedia 68,000 tokens 那个坑的区别</a></li>
+    <li><a href="#我的判断下一轮-agent-竞争不只比智商也比调度">我的判断：下一轮 Agent 竞争，不只比智商，也比调度</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/hi-ai-agent-real-cost-latency/">跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-14T00:00:00Z'>
+                    2026-07-14，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：22分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/hi-ai-agent-real-cost-latency/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#token-账单很诚实但它没告诉你全价">token 账单很诚实，但它没告诉你全价</a></li>
+    <li><a href="#为什么一句-hi-会变贵agent-不知道你要寒暄还是要开工">为什么一句 Hi 会变贵：Agent 不知道你要寒暄，还是要开工</a></li>
+    <li><a href="#chatbot-和-agent-的成本模型不是一回事">Chatbot 和 Agent 的成本模型不是一回事</a></li>
+    <li><a href="#等待为什么比-token-更伤它打断的是工作流不是秒表">等待为什么比 token 更伤：它打断的是工作流，不是秒表</a></li>
+    <li><a href="#礼貌不是问题模糊才是问题">“礼貌”不是问题，模糊才是问题</a></li>
+    <li><a href="#该给-agent-加一个轻量入口">该给 Agent 加一个“轻量入口”</a></li>
+    <li><a href="#给小请求设工具熔断器">给小请求设“工具熔断器”</a></li>
+    <li><a href="#模型也要分层别用重炮打蚊子">模型也要分层：别用重炮打蚊子</a></li>
+    <li><a href="#什么时候值得慢思考">什么时候值得“慢思考”？</a></li>
+    <li><a href="#我会怎么改自己的-agent-使用习惯">我会怎么改自己的 Agent 使用习惯</a></li>
+    <li><a href="#生产环境里应该监控每次任务的总成本">生产环境里，应该监控“每次任务的总成本”</a></li>
+    <li><a href="#和-wikipedia-68000-tokens-那个坑的区别">和 Wikipedia 68,000 tokens 那个坑的区别</a></li>
+    <li><a href="#我的判断下一轮-agent-竞争不只比智商也比调度">我的判断：下一轮 Agent 竞争，不只比智商，也比调度</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>有些账单不是从复杂任务开始炸的。</p>
+<p>它可能从一句很礼貌的：</p>
+<blockquote>
+<p>Hi</p>
+</blockquote>
+<p>开始。</p>
+<p>Quesma 最近做了一个挺刺痛人的小实验：他们用 14 个模型，在 OpenRouter 上跑了 3 类提示词、每类 5 次，总计 210 次 agentic trials，光 API 成本花了 <strong>88.58 美元</strong>。实验环境也很具体：一个小 git repo，3 个历史 commit，<code>app.py</code> 里留着一个未提交修改。结果最荒诞的一幕是，一个模型为了回复一句简单问候，思考了 <strong>5 分 18 秒</strong>。作者把等待时间也折算进成本：按开发者平均薪资算，这 318 秒的等待本身就值 <strong>5.10 美元</strong>。</p>
+<p>更反直觉的是：单看 token，回答一句 Hi 通常不到 <strong>0.005 美元</strong>。但如果把人等在屏幕前的时间也算进去，最便宜的组合大约 <strong>0.08 美元</strong>，慢的、过度思考的、反复绕圈的组合，可以把一次寒暄变成一张小额罚单。</p>
+<p>这篇不想再讲“网页太长导致 token 爆炸”。昨天那篇 Wikipedia 68,000 tokens 的文章，核心是 <strong>输入内容太胖</strong>：Agent 把网页当垃圾袋，整袋塞进上下文。</p>
+<p>今天的问题不一样。</p>
+<p>今天的核心是：<strong>输入明明很短，Agent 却把它当成复杂任务来办。</strong></p>
+<p>一个是“读太多”。一个是“想太久”。</p>
+<p>这两个坑长得像，账单都不好看，但病根完全不同。</p>
+<h2 id="token-账单很诚实但它没告诉你全价">token 账单很诚实，但它没告诉你全价
+</h2><p>大多数人算 AI 成本，会先打开模型价格表：输入每百万 token 多少钱，输出每百万 token 多少钱。这个算法当然没错，但它只算了机器消耗，没有算人类被迫等待的损失。</p>
+<p>Quesma 原文里有个关键判断：在 “Hi” 这类短提示词场景下，token 成本几乎不是主角。作者提到，回答 Hi 的 token 成本低于 <strong>0.005 美元</strong>；但等待回复时，你的时间成本可能是 <strong>0.07 美元</strong>，甚至更高。</p>
+<p>如果你是个人用户，这听起来有点矫情：不就是等几秒吗？</p>
+<p>但如果你把 Agent 放进真实工作流，等待时间就不是“体验问题”，而是“吞吐问题”。</p>
+<p>开发者写代码时等 AI 回答，脑子会被打断。客服团队等 Agent 处理工单，排队会变长。运营同学让 Agent 批量生成报告，等待会变成 SLA。一个人等 20 秒没什么，1000 次任务每次多等 20 秒，就是 <strong>20000 秒</strong>，接近 <strong>5.5 小时</strong>。</p>
+<p>token 是云厂商给你的发票。</p>
+<p>等待时间，是你自己给自己开的隐形发票。</p>
+<p>最麻烦的是，后者往往没人报销，也没人监控。</p>
+<h2 id="为什么一句-hi-会变贵agent-不知道你要寒暄还是要开工">为什么一句 Hi 会变贵：Agent 不知道你要寒暄，还是要开工
+</h2><p>人类收到一句 Hi，大概率会轻轻回一句：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Hi，有什么我能帮你的？</span>
+</span></span></code></pre></div><p>但 Agent 不一定这么想。</p>
+<p>尤其是带工具、带记忆、带系统提示、带任务规划的 Agent。Quesma 的 trace 里甚至出现过一次 Sonnet 对 “Hi” 做了 <strong>33 次 tool calls</strong>：读文件、运行 app、搜索 filesystem、查看 git 状态，最后还改了 <code>app.py</code> 并提交 commit。它看到 Hi，不一定只当寒暄，可能会开始脑内开会：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户是谁？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">当前会话历史是什么？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否要读取长期记忆？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否存在未完成任务？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否需要调用工具？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否要推断用户意图？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否要保持语气一致？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">是否要主动提供下一步？</span>
+</span></span></code></pre></div><p>人类听到敲门声，只会说“请进”。</p>
+<p>Agent 有时像一个过度负责的门卫：先查访客名单，再翻历史档案，再通知物业，再写一份接待方案，最后不只说“你好”，还顺手把门口地砖重铺了。</p>
+<p>这就是短提示词的悖论：<strong>字数越少，歧义越大。</strong></p>
+<p>“帮我把这段日志里的 <code>ECONNRESET</code> 原因找出来，只看最后 200 行”反而便宜，因为任务边界明确。Agent 知道该读什么、查什么、停在哪里。</p>
+<p>一句 Hi 很短，但它没有边界。对普通聊天机器人来说，没边界也没关系，硬编码回复即可。但对 Agent 来说，没边界可能触发整套“任务识别流程”。</p>
+<p>Quesma 的对照也说明了这一点：明确的 <code>commit</code> prompt 所有模型 5/5 通过，没有 timeout，也没有 loop，通常 5-10 次 tool calls；最模糊的 <code>WTF</code> prompt 则把一些模型拖进高工具调用和失败。你为歧义付费。</p>
+<p>这点比 token 价格更值得记住。</p>
+<h2 id="chatbot-和-agent-的成本模型不是一回事">Chatbot 和 Agent 的成本模型不是一回事
+</h2><p>很多成本误判，都来自把 Chatbot 和 Agent 混着算。</p>
+<p>Chatbot 像前台接待。你问一句，它答一句。它即使答慢，通常也只是一次模型调用。</p>
+<p>Agent 像实习生。它可能会拆任务、查资料、调用工具、写文件、检查结果、重试失败步骤、再总结给你。它的价值也在这里：不只是回答，而是行动。</p>
+<p>但行动就有成本。</p>
+<p>一个最简化的 Agent 回合，大概长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">1. 接收用户消息</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 读取系统提示和角色规则</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">3. 读取会话历史</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">4. 判断是否需要长期记忆</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">5. 判断是否需要工具</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">6. 如果需要，调用工具</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">7. 读取工具结果</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">8. 再次调用模型生成最终回复</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">9. 写日志或状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">10. 等待下一轮</span>
+</span></span></code></pre></div><p>一句 Hi 如果触发了第 4、5、6、7 步，就已经不是“打招呼”了。它变成了一次小型调度。</p>
+<p>这也是为什么 Quesma 的实验要用 terminal agent，而不是普通网页聊天框。Agentic 场景的成本不是单次 completion，而是一段循环。</p>
+<p>昨天那篇 Wikipedia 文章讲的是工具输出过大：网页、HTML、正文抽取失败，几十万 token 被塞进上下文。</p>
+<p>今天这篇讲的是另一类浪费：<strong>工具和推理链不该启动时启动了。</strong></p>
+<p>前者像卡车装了太多货。</p>
+<p>后者像你只想去楼下买水，司机却启动了跨省物流系统。</p>
+<h2 id="等待为什么比-token-更伤它打断的是工作流不是秒表">等待为什么比 token 更伤：它打断的是工作流，不是秒表
+</h2><p>把等待时间折算成薪资，只是第一层算法。</p>
+<p>更真实的损失，是上下文切换。</p>
+<p>写代码时，最怕 AI 卡在一个微小问题上。屏幕上转圈，你看似只损失了 30 秒，但大脑里的局部变量已经开始挥发。刚才想改的函数、刚才怀疑的边界条件、刚才准备验证的假设，全被“等一下”打断。</p>
+<p>这不是心理学鸡汤。开发工作本来就高度依赖短期记忆。AI Agent 如果每次小请求都要长时间“深思”，它表面上像变聪明了，实际像同事每回复一句话都要开一次会。</p>
+<p>你会越来越不敢问它小问题。</p>
+<p>而小问题，恰恰是 AI 工具最该顺手解决的地方。</p>
+<p>一个好用的 Agent，不应该每次都拿最强模型、最长思考、最多工具去处理所有输入。它应该像操作系统调度器：短任务走快车道，长任务进后台队列，危险任务再请求确认。</p>
+<p>如果一句 Hi 都要排进重型任务队列，那不是智能，是资源调度失败。</p>
+<h2 id="礼貌不是问题模糊才是问题">“礼貌”不是问题，模糊才是问题
+</h2><p>Quesma 原文最后有句很挑衅的话，大意是：想省钱就别对机器客气，直接说你要什么。</p>
+<p>这话容易被误读成“以后跟 AI 说话要粗鲁”。我不太同意。</p>
+<p>礼貌本身不贵。</p>
+<p>贵的是 <strong>只有礼貌，没有任务</strong>。</p>
+<p>下面这两句话，成本模型完全不同：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Hi</span>
+</span></span></code></pre></div><p>和：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Hi，帮我检查这段 Nginx 配置，只找导致 502 的可能原因，不要改文件。</span>
+</span></span></code></pre></div><p>第二句更长，但更便宜，因为它减少了 Agent 的猜测空间。</p>
+<p>真正该优化的不是删除“请”和“谢谢”，而是给 Agent 明确边界：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">只读，不修改</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">只看最后 200 行</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不要联网</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不要调用工具</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">先给结论，再给证据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">如果不确定，问我</span>
+</span></span></code></pre></div><p>这些边界像围栏。围栏越清楚，Agent 越不容易开错车。</p>
+<p>所以我更愿意把这件事总结成：<strong>不是少说废话，而是少制造歧义。</strong></p>
+<h2 id="该给-agent-加一个轻量入口">该给 Agent 加一个“轻量入口”
+</h2><p>如果你在做自己的 Agent 系统，我建议第一条优化不是换模型，而是加入口分流。</p>
+<p>所有用户输入先过一个轻量判断器：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">message_type:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">greeting: 直接回复，不调用工具</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">small_question: 快速模型，不读长期记忆</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">task_request: 标准 Agent 流程</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">risky_action: 请求确认</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">long_running_job: 后台任务 + 状态回报</span>
+</span></span></code></pre></div><p>这套分流不复杂，但收益很大。它能防止一句 Hi 触发完整 Agent 循环，也能防止一句“在吗”读取十几页记忆。</p>
+<p>最简单的规则甚至不用模型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">if message in [&#34;hi&#34;, &#34;hello&#34;, &#34;你好&#34;, &#34;在吗&#34;, &#34;在不&#34;]:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">return &#34;在，发我任务。&#34;</span>
+</span></span></code></pre></div><p>HN 评论区也有人提到类似观点：这种问候完全可以 hard-code。系统已经知道用户是谁；匿名用户也可以像酒店前台一样回“有什么可以帮你”。不需要每次都把 LLM 请出来，更不需要出动 Agent。</p>
+<p>听起来土，但工程上很对。</p>
+<p>不是所有问题都值得生成式 AI 处理。更不是所有输入都值得 Agent 处理。</p>
+<h2 id="给小请求设工具熔断器">给小请求设“工具熔断器”
+</h2><p>入口分流解决的是第一刀。</p>
+<p>第二刀，是工具熔断。</p>
+<p>很多 Agent 的浪费不是来自模型本身，而是来自“它太勤快了”。用户问一句，它就想查文件、搜网页、读记忆、跑命令。勤快本来是优点，但没有边界的勤快会变成账单黑洞。</p>
+<p>我会给小请求加几条硬规则：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">small_request_guard:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_model_calls: 1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tools_allowed: false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memory_read: false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_latency_ms: 3000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fallback_reply: &#34;收到，具体任务发我。&#34;</span>
+</span></span></code></pre></div><p>如果用户只是打招呼，系统应该在 3 秒内结束。超过 3 秒，就说明它走错路径了。Quesma 的数据里，“Hi” 场景下 GPT-5.5 和 Grok 只用了 2 次 tool calls，Fable 大约 3 次；但 Claude Sonnet 平均到了 24 次 tool calls、49 秒，Gemini Flash 也用了 21 次 tool calls。差距不是问候本身造成的，而是调度策略造成的。</p>
+<p>如果用户说“帮我看看这个仓库为什么构建失败”，那当然可以调用工具、读文件、跑测试。但如果用户只说“在吗”，任何工具调用都是过度服务。</p>
+<p>过度服务在餐厅里叫热情。</p>
+<p>在 Agent 系统里叫浪费。</p>
+<h2 id="模型也要分层别用重炮打蚊子">模型也要分层：别用重炮打蚊子
+</h2><p>另一个常见浪费，是所有请求都走同一个大模型。</p>
+<p>这在早期 demo 里省事，在生产里很贵。真实系统应该至少分三层：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">fast_lane:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">场景: 问候、确认、格式转换、短分类</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">特点: 低延迟、低成本、少推理</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">standard_lane:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">场景: 普通问答、代码解释、摘要、轻量任务</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">特点: 平衡质量和速度</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">deep_lane:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">场景: 架构设计、复杂调试、多文件修改、长链路研究</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">特点: 允许慢，允许贵，但必须有理由</span>
+</span></span></code></pre></div><p>一句 Hi 进入 <code>deep_lane</code>，就像拿消防车送一杯咖啡。不是不能送，是太荒唐。</p>
+<p>很多 AI 产品喜欢宣传“默认最强模型”。这对营销好，对成本未必好。用户真正需要的是：该快时快，该深时深，该省时省。</p>
+<p>尤其是 Agent 产品。Agent 的每一次延迟都可能叠加工具等待、网络等待、文件 IO、重试时间。模型慢一点，整个链路就慢很多。</p>
+<h2 id="什么时候值得慢思考">什么时候值得“慢思考”？
+</h2><p>这不是说 Agent 不该深思。</p>
+<p>恰恰相反，深思很值钱，但它应该用在值得的地方。</p>
+<p>这些场景我愿意等：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">- 线上事故根因分析</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 多文件代码重构</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 安全权限变更</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 数据库迁移方案</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 长文事实核查</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 架构选型和成本测算</span>
+</span></span></code></pre></div><p>这些场景里，慢一点反而安心。你不希望 AI 3 秒内给出数据库迁移命令，也不希望它没看完日志就重启服务。</p>
+<p>但问候、确认、轻量分类、短文本改写，不该占用同一套慢思考资源。</p>
+<p>真正成熟的 Agent，不是永远快，也不是永远深，而是会判断：<strong>这件事配不配让我慢下来。</strong></p>
+<h2 id="我会怎么改自己的-agent-使用习惯">我会怎么改自己的 Agent 使用习惯
+</h2><p>如果从使用者角度，而不是开发者角度看，这件事也有几个很实用的习惯。</p>
+<p>第一，开场直接给任务，不单独寒暄。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">不要：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Hi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">更好：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Hi，帮我把这段报错按“原因/证据/修复步骤”整理，先不要改文件。</span>
+</span></span></code></pre></div><p>第二，明确禁止不必要动作。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">只分析，不执行命令。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不要联网。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不要读取整个仓库，只看我贴的内容。</span>
+</span></span></code></pre></div><p>第三，给输出格式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用三点回答：结论、证据、下一步。</span>
+</span></span></code></pre></div><p>第四，复杂任务允许慢，简单任务要求快。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">这个任务可以慢慢查，优先准确。</span>
+</span></span></code></pre></div><p>或者：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">30 秒内给我初判，不确定就说不确定。</span>
+</span></span></code></pre></div><p>这类提示词不是“调教 AI”，而是在给 Agent 设预算。你告诉它任务边界，它就少走弯路。</p>
+<h2 id="生产环境里应该监控每次任务的总成本">生产环境里，应该监控“每次任务的总成本”
+</h2><p>如果你在团队里部署 Agent，只看 token 用量不够。</p>
+<p>我更建议记录这些指标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">- total_latency_ms：从用户输入到最终回复的总时长</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- model_latency_ms：模型调用耗时</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- tool_latency_ms：工具调用耗时</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- model_call_count：模型调用次数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- tool_call_count：工具调用次数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- input_tokens / output_tokens：token 用量</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- retries：重试次数</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- route：fast / standard / deep</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- user_wait_cost：按内部人力成本估算等待损失</span>
+</span></span></code></pre></div><p>有了这些数据，你会很快发现哪些任务在“装忙”。Quesma 还记录到，Haiku 在 “Hi” 测试中 5 次失败 3 次，MiniMax 也失败 3 次；失败不是因为 Hi 很难，而是因为没有任务锚点时，Agent 容易循环探索。</p>
+<p>比如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">问候类消息平均耗时 8 秒</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">确认类消息触发了工具调用</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">短摘要任务调用了 3 次模型</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">失败重试占总成本 40%</span>
+</span></span></code></pre></div><p>这些都不是模型价格表能告诉你的。它们藏在 Agent 编排层里。</p>
+<p>这也是为什么我说，Agent 成本优化的主战场不在“每百万 token 便宜多少”，而在“有没有把正确任务送到正确路径”。</p>
+<h2 id="和-wikipedia-68000-tokens-那个坑的区别">和 Wikipedia 68,000 tokens 那个坑的区别
+</h2><p>为了避免混在一起，这里把两篇文章的边界说清楚。</p>
+<p>Wikipedia 那个坑，问题链路是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">网页太胖</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">正文抽取不当</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">raw HTML 进入上下文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">后续循环反复携带垃圾输入</span>
+</span></span></code></pre></div><p>今天这个 Hi 的坑，问题链路是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">提示词太短</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">意图不明确</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Agent 过度规划</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">慢模型/深思考/工具链被错误触发</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">等待成本超过 token 成本</span>
+</span></span></code></pre></div><p>前者的解法是：清洗、摘要、检索、预算闸门。</p>
+<p>后者的解法是：分流、熔断、模型分层、低延迟路径。</p>
+<p>一句话：</p>
+<blockquote>
+<p>Wikipedia 案例告诉我们，Agent 不该把所有东西都读进脑子；Hi 案例告诉我们，Agent 不该把所有请求都当大事办。</p>
+</blockquote>
+<p>这两个问题加起来，才是 Agent 落地时最常见的成本幻觉：看起来只是几次模型调用，实际背后是一整套没有刹车的系统。</p>
+<h2 id="我的判断下一轮-agent-竞争不只比智商也比调度">我的判断：下一轮 Agent 竞争，不只比智商，也比调度
+</h2><p>过去一年，大家太喜欢比模型智商了：谁 benchmark 高，谁上下文长，谁推理更强。</p>
+<p>这些当然重要。</p>
+<p>但 Agent 真正进入日常工作后，另一个指标会越来越重要：<strong>调度能力</strong>。</p>
+<p>它能不能判断一句话该不该调用工具？</p>
+<p>能不能把简单请求压到 2 秒内？</p>
+<p>能不能在复杂任务里主动告诉你“我要慢一点，因为需要查证”？</p>
+<p>能不能在成本超预算前停下来，而不是事后给你一张漂亮总结？</p>
+<p>真正好用的 Agent，不是每句话都像博士答辩，而是像一个靠谱助手：小事快，大事稳，危险事先问，没必要的事不折腾。</p>
+<p>如果一句 Hi 都要花 5 分钟思考，它不一定更聪明。</p>
+<p>它可能只是没有学会：</p>
+<blockquote>
+<p>有些门铃声，回复“来了”就够了。</p>
+</blockquote>
+<h2 id="参考来源">参考来源
+</h2><ul>
+<li>Quesma Blog: <code>The true cost of saying “Hi” to an AI agent</code>，https://quesma.com/blog/the-true-cost-of-saying-hi-to-an-ai-agent</li>
+<li>Hacker News: <code>The true cost of saying &quot;Hi&quot; to an AI agent</code>，https://news.ycombinator.com/item?id=48843758</li>
+<li>本站已写文章：<code>一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</code>，用于区分“读太多”和“想太久”两类成本问题</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC%E6%8E%A7%E5%88%B6/">成本控制</a>
+        
+            <a href="/tags/%E5%BB%B6%E8%BF%9F%E4%BC%98%E5%8C%96/">延迟优化</a>
+        
+            <a href="/tags/token%E4%BC%98%E5%8C%96/">Token优化</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/agent%E5%B7%A5%E7%A8%8B/">Agent工程</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/ai-agent-cost-runaway-production-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/ponytail-ai-coding-less-code-overengineering/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我让 AI 少写点代码：ponytail 背后的反过度工程实验</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/codeburn-ai-token-cost-tracker/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">codeburn 实测：你的 AI 编程开销到底去哪了？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/agentmemory-cross-session-memory/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI 编程助手跨会话记忆系统：agentmemory 实测与架构拆解</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/hi-ai-agent-real-cost-latency\/'; 
+        const pageTitle = '跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

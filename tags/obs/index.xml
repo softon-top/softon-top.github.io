@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>OBS on softon.top</title>
+		<link>https://softon.top/tags/obs/</link>
+		<description>Recent content in OBS on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 25 May 2026 10:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/obs/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>录屏工具 4 选 1：OBS / Screen Studio / Recordly / Loom 怎么挑不踩坑</title>
+				<link>https://softon.top/software/screen-recorder-2026-obs-screenstudio-recordly-loom/</link>
+				<pubDate>Mon, 25 May 2026 10:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/screen-recorder-2026-obs-screenstudio-recordly-loom/</guid>
+				<description>&lt;p&gt;&lt;strong&gt;摘要：&lt;/strong&gt; 不会再被&amp;quot;录屏工具大全&amp;quot;标题党骗。本文按&lt;strong&gt;用户角色&lt;/strong&gt;而不是按工具排名,把 OBS、Screen Studio、Recordly、Loom 拆给你看:&lt;strong&gt;自媒体看 OBS,产品经理看 Screen Studio,极客看 Recordly,远程团队看 Loom&lt;/strong&gt;——一句话定位完毕,剩下的是细节。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一录屏工具这门玄学为什么每年都有人在问该用哪个&#34;&gt;一、录屏工具这门玄学:为什么每年都有人在问&amp;quot;该用哪个&amp;quot;&#xA;&lt;/h2&gt;&lt;p&gt;每隔三个月,朋友圈就有人发问:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;录个 5 分钟教程,该用啥?QuickTime 不够用,OBS 又太复杂,Loom 还要登录&amp;hellip;&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这不是工具不够多。恰恰相反——&lt;strong&gt;录屏工具的赛道,从 2024 年开始彻底分裂了&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;过去录屏只有一个标准:&lt;strong&gt;能不能录下来&lt;/strong&gt;。现在的标准变成了:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;要不要剪辑&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;鼠标点击要不要自动 zoom&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;要 mp4 还是要在线链接&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;要不要团队共享&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;给客户看还是发 B 站&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;要不要 AI 转写自动生成字幕&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;录完&lt;strong&gt;导出体积能不能压到 10MB 以内&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;每加一道问题,答案就分叉一次。&lt;strong&gt;没有&amp;quot;最好&amp;quot;的录屏工具,只有匹配你工作流的那一个&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;更关键的是,这几家工具的设计哲学&lt;strong&gt;根本不同&lt;/strong&gt;。OBS 假设你懂视频技术,Screen Studio 假设你愿意为颜值付钱,Recordly 假设你愿意折腾,Loom 假设你和团队在不同时区。&lt;strong&gt;用错场景,工具反过来卡你&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;下面这四家,在 2026 年正好覆盖四种典型场景:&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;工具&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;一句话定位&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;适合谁&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;OBS Studio&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免费瑞士军刀&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;自媒体 / 直播主&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Screen Studio&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;macOS 付费精品&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;产品经理 / SaaS Demo&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Recordly&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Screen Studio 的开源平替&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;极客 / 跨平台用户&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Loom&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;云端异步沟通工具&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;远程团队 / 客户协作&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;挑哪个,先看你是哪类人,而不是看哪个工具评分高。下文按这个思路一家一家拆。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

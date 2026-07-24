@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Skill on softon.top</title>
+		<link>https://softon.top/tags/skill/</link>
+		<description>Recent content in Skill on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 08 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/skill/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Hermes Agent 与 OpenClaw：两种 AI Agent 框架的架构哲学与选型逻辑</title>
+				<link>https://softon.top/software/hermes-vs-openclaw-agent-framework-comparison/</link>
+				<pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/hermes-vs-openclaw-agent-framework-comparison/</guid>
+				<description>&lt;p&gt;2025—2026 年，AI Agent 框架像雨后春笋一样冒出来。如果你关注过这个领域，大概率听过两个名字：&lt;strong&gt;Hermes Agent&lt;/strong&gt;（前身是 AutoGPT？后来演化的企业级框架）和 &lt;strong&gt;OpenClaw&lt;/strong&gt;（一个从个人知识管理场景长出来的轻量级平台）。&lt;/p&gt;&#xA;&lt;p&gt;两个都是开源项目，都支持模型驱动的工作流编排，都宣称自己&amp;quot;简单易用&amp;quot;。但当你真的把两者装到本地、跑一个实际任务之后，你会发现它们的底层假设完全不同。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章是我三个月实测的总结：从概念模型、工具编排、记忆管理、到生态扩展四个维度逐层拆解，最后给出不同场景的选型建议。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一个测试任务每日选题自动出稿&#34;&gt;一个测试任务：每日选题自动出稿&#xA;&lt;/h2&gt;&lt;p&gt;先明确测试场景。我每天上午需要做一件事：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;从 NAS 读取选题文件&lt;/li&gt;&#xA;&lt;li&gt;选择一个感兴趣的方向&lt;/li&gt;&#xA;&lt;li&gt;生成一篇头条风格的技术短文&lt;/li&gt;&#xA;&lt;li&gt;保存到本地并同步回 NAS&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;这是一个典型的 RAG + 工具调用 + 文件 I/O 混合任务：涉及文件系统读取、AI 内容生成、文件写入、网络同步。拿来测 Agent 框架正好。&lt;/p&gt;&#xA;&lt;p&gt;两个框架的最终实现都能跑通，但背后花的时间和代码量差距很大。&lt;/p&gt;&#xA;&lt;h2 id=&#34;概念模型polyglot-大杂烩-vs-二分法&#34;&gt;概念模型：Polyglot 大杂烩 vs 二分法&#xA;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Hermes Agent&lt;/strong&gt; 的概念模型延续了 LLM 应用领域的常见路径：用 Agent、Task、Planner、Memory、Tool 等名词堆叠抽象层。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;Agent&lt;/code&gt;：一个执行实体，绑定 LLM 和 Tool 集合&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;Task&lt;/code&gt;：拆解后的子目标，交给 Agent 执行&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;Planner&lt;/code&gt;：负责将用户输入分解成 Task DAG&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;Memory&lt;/code&gt;：存储上下文和工具调用结果&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;Tool&lt;/code&gt;：暴露给 Agent 的外部能力接口&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;听起来合理，但实际使用时，你会发现这些抽象层级之间缺少清晰的分界线。比如&amp;quot;从 NAS 读取文件&amp;quot;这个动作：它到底是 Tool 还是 Task？如果把它定义成 Tool，那中间态的&amp;quot;文件路径解析&amp;quot;算不算另一个 Tool？如果定义成 Task，那 Agent 的 Planner 需要先计划出&amp;quot;调用读取文件的 Tool&amp;quot;，但读取文件本身只需要一个系统调用——为了让人读得懂，你不得不写大量样板胶水代码。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

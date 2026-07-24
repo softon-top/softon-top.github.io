@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Token 优化 on softon.top</title>
+		<link>https://softon.top/tags/token-%E4%BC%98%E5%8C%96/</link>
+		<description>Recent content in Token 优化 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 22 May 2026 20:30:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/token-%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</title>
+				<link>https://softon.top/software/claude-code-token-cost-cut-7-tips/</link>
+				<pubDate>Fri, 22 May 2026 20:30:00 +0800</pubDate>
+				<guid>https://softon.top/software/claude-code-token-cost-cut-7-tips/</guid>
+				<description>&lt;h2 id=&#34;你以为的-ai-编程聪明便宜丝滑现实账单像比特币&#34;&gt;你以为的 AI 编程：聪明、便宜、丝滑。现实：账单像比特币&#xA;&lt;/h2&gt;&lt;p&gt;我开 Claude Code 第一周写了一篇博客，第二周顺手改了几个 bug，第三周 Anthropic 发来一封&amp;quot;温馨提醒&amp;quot;邮件——&lt;strong&gt;当月账单已超过 $180&lt;/strong&gt;。第四周月结一出，$214。我把那张账单贴在便签里压在显示器底下，至今没撕。&lt;/p&gt;&#xA;&lt;p&gt;那一刻我盯着仪表盘想了很久。明明只是写代码、改文档，为什么烧得比开三台 EC2 还快？我问朋友们大家都用多少，得到的回答从 $30 到 $400 不等，差距最大的两个人&lt;strong&gt;写代码强度其实差不多&lt;/strong&gt;——区别在于他们跟 AI 的&amp;quot;相处姿势&amp;quot;完全不一样。&lt;/p&gt;&#xA;&lt;p&gt;为了搞清楚自己烧在哪，我把过去三十天的 usage CSV 拉下来逐条复盘，发现一件让我有点羞耻的事：&lt;strong&gt;真正写代码的 token 不到 30%，剩下的全是会话里那些&amp;quot;我以为不要钱&amp;quot;的废话。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;塞进去的整本 SKILL.md、&lt;code&gt;cat&lt;/code&gt; 出来的几千行日志、连续聊了四小时却没 &lt;code&gt;/clear&lt;/code&gt; 一次的祖传上下文、子任务没有隔离搬来的全套主会话历史、想到啥问啥的&amp;quot;碎片闲聊&amp;quot;——每一项都像水龙头没拧紧，单看不疼，攒一个月就是一辆共享单车。&lt;/p&gt;&#xA;&lt;p&gt;调整了两周后，账单稳定在 $40 上下，&lt;strong&gt;输出量没降，反而因为上下文更干净，AI 干活更准、错误更少&lt;/strong&gt;。这篇文章把这两周抠出来的 7 个技巧整理一下，按&amp;quot;性价比 / 立刻能做&amp;quot;的顺序排好。每条都附我自己的踩坑——别问怎么知道的，问就是钱花过。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;系列前作：&lt;a class=&#34;link&#34; href=&#34;https://softon.top/tutorials/openclaw-local-memory-qmd-token-reduction/&#34; &gt;把本地 Memory 与 QMD 接进 OpenClaw：我是怎么把 Token 砍掉一半的&lt;/a&gt;。前作讲&lt;strong&gt;架构层&lt;/strong&gt;怎么把历史会话压成可检索的笔记，这篇讲&lt;strong&gt;战术层&lt;/strong&gt;——日常写代码时的 7 个具体动作。两篇互补，配合食用味道最佳。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;钱去哪了先认识三只吞金兽&#34;&gt;钱去哪了？先认识三只&amp;quot;吞金兽&amp;quot;&#xA;&lt;/h2&gt;&lt;p&gt;要省钱，先得知道贵在哪。我把账单拆开后发现，Claude Code 的 token 消耗几乎全卡在三个地方：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;吞金兽&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;表现&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;占我账单比例（事后复盘）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Cache Miss&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;每开一次会话，几千 token 的 system prompt + 工具定义全价重算&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~25%&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;Context 堆积&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;一个会话从早聊到晚，每条新消息都拖着前面所有人话来回算&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~45%&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;工具日志噪音&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;code&gt;cat&lt;/code&gt; 一个 5000 行日志、&lt;code&gt;ls -R&lt;/code&gt; 整个项目、grep 没加 limit&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~20%&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;剩下 10% 才是&amp;quot;实际写代码&amp;quot;。看着是不是有点反直觉？这就是为什么&amp;quot;少写功能&amp;quot;省不了多少钱，&lt;strong&gt;真正能砍开的是上下文怎么进、子任务怎么切、缓存怎么用&lt;/strong&gt;——这三件事跟&amp;quot;业务&amp;quot;没半毛钱关系，全是工程姿势。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

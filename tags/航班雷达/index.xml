@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>航班雷达 on softon.top</title>
+		<link>https://softon.top/tags/%E8%88%AA%E7%8F%AD%E9%9B%B7%E8%BE%BE/</link>
+		<description>Recent content in 航班雷达 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 07 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E8%88%AA%E7%8F%AD%E9%9B%B7%E8%BE%BE/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？</title>
+				<link>https://softon.top/software/micro-radar-esp32-desktop-flight-radar/</link>
+				<pubDate>Tue, 07 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/micro-radar-esp32-desktop-flight-radar/</guid>
+				<description>&lt;p&gt;有些开源项目，一眼看上去不像“生产力工具”，更像程序员给自己做的一颗糖。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;micro-radar&lt;/code&gt; 就是这种东西。&lt;/p&gt;&#xA;&lt;p&gt;它不是下一个 Kubernetes，也不是能让你少写 50% 代码的 AI 插件。它只是把一个迷你航班雷达放到桌面上：基于 ESP32-C3，通过 Wi-Fi 从 OpenSky API 获取附近实时航班数据，再显示到一块 1.28 英寸的圆形屏幕里。&lt;/p&gt;&#xA;&lt;p&gt;听起来很小。&lt;/p&gt;&#xA;&lt;p&gt;但小得正好。&lt;/p&gt;&#xA;&lt;p&gt;因为它击中的不是“我需要一个航班监控系统”这种刚需，而是另一种更隐秘的快乐：你坐在电脑前，抬头看见桌上一块小圆屏，里面有飞机在移动。某个航班从你城市上空经过，它不是地图 App 里冷冰冰的一条线，而是被你亲手焊进桌面的一点闪光。&lt;/p&gt;&#xA;&lt;p&gt;项目地址：&lt;code&gt;https://github.com/AnthonySturdy/micro-radar&lt;/code&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;它不是-ads-b-接收机这点反而重要&#34;&gt;它不是 ADS-B 接收机，这点反而重要&#xA;&lt;/h2&gt;&lt;p&gt;先把误会讲清楚：&lt;code&gt;micro-radar&lt;/code&gt; 不是传统意义上的 ADS-B 接收设备。&lt;/p&gt;&#xA;&lt;p&gt;真正的 ADS-B 接收，需要天线、射频接收模块、解码链路，以及合适的安装位置。那是一套更硬核的玩法：你真的从空中接收飞机广播信号，然后解码出航班位置、高度、速度等数据。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;micro-radar&lt;/code&gt; 走的是轻量路线。它通过 Wi-Fi 访问 OpenSky API，获取附近航班数据，再在 ESP32-C3 驱动的小屏幕上展示。&lt;/p&gt;&#xA;&lt;p&gt;这意味着它牺牲了一部分“无线电原教旨主义”的浪漫，但换来了非常低的门槛。&lt;/p&gt;&#xA;&lt;p&gt;你不需要架天线，不需要折腾 SDR，不需要研究射频环境。你需要的是一块支持联网的 ESP32-C3、一块小屏幕、项目代码，以及一个能访问 API 的网络环境。&lt;/p&gt;&#xA;&lt;p&gt;这就是它适合作为桌面小项目的原因。&lt;/p&gt;&#xA;&lt;p&gt;它不试图把你拖进航空监控工程，而是把复杂系统切成一个能周末完成的颗粒度：联网、请求 API、解析数据、绘制 UI、塞进一个小壳子里。每一块都不吓人，连起来却很有成就感。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么是桌面航班雷达不是又一个天气屏&#34;&gt;为什么是“桌面航班雷达”，不是又一个天气屏？&#xA;&lt;/h2&gt;&lt;p&gt;ESP32 桌面小屏项目并不少。&lt;/p&gt;&#xA;&lt;p&gt;天气屏、番茄钟、股票看板、YouTube 订阅数、服务器监控、家庭温湿度仪表……这些都很常见。它们的共同点是“有用”。&lt;/p&gt;&#xA;&lt;p&gt;航班雷达不一样。&lt;/p&gt;&#xA;&lt;p&gt;它没那么有用。&lt;/p&gt;&#xA;&lt;p&gt;你每天不一定需要知道头顶飞过哪架飞机。大多数时候，这个信息不会帮你多赚一块钱，也不会让你的工作效率提升 3%。但它有一种很奇妙的“世界感”。&lt;/p&gt;&#xA;&lt;p&gt;天气屏告诉你窗外会不会下雨；服务器监控告诉你系统有没有挂；航班雷达告诉你：你的房间不是一个封闭盒子，它其实嵌在一张巨大的交通网络里。&lt;/p&gt;&#xA;&lt;p&gt;这就是 &lt;code&gt;micro-radar&lt;/code&gt; 的情绪价值。&lt;/p&gt;&#xA;&lt;p&gt;它把一个宏观系统缩小到桌面，把航空、地理、网络 API、嵌入式显示这些东西压进一个圆形屏幕。你不是在看数据，而是在看世界从你头顶路过。&lt;/p&gt;&#xA;&lt;h2 id=&#34;技术上它是一个很好的全链路练习题&#34;&gt;技术上，它是一个很好的“全链路练习题”&#xA;&lt;/h2&gt;&lt;p&gt;别被它可爱的外表骗了。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;micro-radar&lt;/code&gt; 这种项目，作为学习样本很合适，因为它天然包含一条完整链路：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

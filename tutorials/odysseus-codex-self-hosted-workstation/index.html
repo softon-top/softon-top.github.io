@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="PewDiePie 开源的全能 AI 工作台 Odysseus 搭配 OpenAI Codex CLI，自建一套隐私优先、零月费的 AI 开发环境。附部署踩坑记录和真实成本对比。">
+<title>用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="用 Odysseus + Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权">
+<meta property='og:description' content="PewDiePie 开源的全能 AI 工作台 Odysseus 搭配 OpenAI Codex CLI，自建一套隐私优先、零月费的 AI 开发环境。附部署踩坑记录和真实成本对比。">
+<meta property='og:url' content='https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='Odysseus' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='自托管' /><meta property='article:tag' content='AI工作台' /><meta property='article:tag' content='开源' /><meta property='article:tag' content='本地部署' /><meta property='article:tag' content='Ollama' /><meta property='article:published_time' content='2026-06-10T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-10T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="用 Odysseus + Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权">
+<meta name="twitter:description" content="PewDiePie 开源的全能 AI 工作台 Odysseus 搭配 OpenAI Codex CLI，自建一套隐私优先、零月费的 AI 开发环境。附部署踩坑记录和真实成本对比。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#到底什么是-odysseus">到底什么是 Odysseus？</a>
+      <ul>
+        <li><a href="#它和-open-webui-有什么区别">它和 Open WebUI 有什么区别？</a></li>
+      </ul>
+    </li>
+    <li><a href="#codex-cliagent-化编程">Codex CLI：Agent 化编程</a></li>
+    <li><a href="#合体架构odysseus--codex-的完整布局">合体架构：Odysseus + Codex 的完整布局</a></li>
+    <li><a href="#踩坑实录附解决方案">踩坑实录（附解决方案）</a>
+      <ul>
+        <li><a href="#坑-1docker-部署后本地-ollama-连不上">坑 1：Docker 部署后本地 Ollama 连不上</a></li>
+        <li><a href="#坑-2codex---oss-模式模型质量落差">坑 2：Codex <code>--oss</code> 模式模型质量落差</a></li>
+        <li><a href="#坑-3内存爆炸">坑 3：内存爆炸</a></li>
+        <li><a href="#坑-4邮件-oauth-的坑">坑 4：邮件 OAuth 的坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#费用账本到底能省多少">费用账本：到底能省多少</a></li>
+    <li><a href="#适合谁不适合谁">适合谁，不适合谁</a>
+      <ul>
+        <li><a href="#-适合">✅ 适合</a></li>
+        <li><a href="#-不适合">❌ 不适合</a></li>
+      </ul>
+    </li>
+    <li><a href="#一句话总结">一句话总结</a>
+      <ul>
+        <li><a href="#实用信息">实用信息</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/odysseus-codex-self-hosted-workstation/">用 Odysseus &#43; Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-06-10T00:00:00Z'>
+                    2026-06-10，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/odysseus-codex-self-hosted-workstation/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#到底什么是-odysseus">到底什么是 Odysseus？</a>
+      <ul>
+        <li><a href="#它和-open-webui-有什么区别">它和 Open WebUI 有什么区别？</a></li>
+      </ul>
+    </li>
+    <li><a href="#codex-cliagent-化编程">Codex CLI：Agent 化编程</a></li>
+    <li><a href="#合体架构odysseus--codex-的完整布局">合体架构：Odysseus + Codex 的完整布局</a></li>
+    <li><a href="#踩坑实录附解决方案">踩坑实录（附解决方案）</a>
+      <ul>
+        <li><a href="#坑-1docker-部署后本地-ollama-连不上">坑 1：Docker 部署后本地 Ollama 连不上</a></li>
+        <li><a href="#坑-2codex---oss-模式模型质量落差">坑 2：Codex <code>--oss</code> 模式模型质量落差</a></li>
+        <li><a href="#坑-3内存爆炸">坑 3：内存爆炸</a></li>
+        <li><a href="#坑-4邮件-oauth-的坑">坑 4：邮件 OAuth 的坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#费用账本到底能省多少">费用账本：到底能省多少</a></li>
+    <li><a href="#适合谁不适合谁">适合谁，不适合谁</a>
+      <ul>
+        <li><a href="#-适合">✅ 适合</a></li>
+        <li><a href="#-不适合">❌ 不适合</a></li>
+      </ul>
+    </li>
+    <li><a href="#一句话总结">一句话总结</a>
+      <ul>
+        <li><a href="#实用信息">实用信息</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>你有没有过这种时刻——月底打开 Claude Max 账单，$200 就这么没了？</p>
+<p>或者，你盯着 ChatGPT 的对话记录，明知道那些 prompt 里有公司的敏感代码，但除了安慰自己&quot;应该没事吧&quot;之外别无选择？</p>
+<p>2026 年 5 月底，一个叫 Odysseus 的项目在 GitHub 上炸了。作者是 PewDiePie（没错，就是那个 YouTuber），4 天斩获 5 万星标，到现在势头不减。它不是什么新模型，而是一个<strong>完全自托管的 AI 工作台</strong>——聊天、Agent、深度研究、文档管理、邮件、日历，全塞进一个浏览器标签页，跑在你的本地硬件上。</p>
+<p>你猜最吸引人的是什么？</p>
+<p>不是&quot;自托管&quot;这个 buzzword，而是它让你<strong>真正拥有了选择权</strong>：想省钱就用本地模型 Ollama，想用顶级能力就接 API，数据全程在自己手里。</p>
+<h2 id="到底什么是-odysseus">到底什么是 Odysseus？
+</h2><p>简单说，Odysseus 是一个开源（MIT 协议）、可自托管的 AI 工作空间。它的 UI 逻辑和 ChatGPT 类似——左侧聊天列表，中间对话区——但区别大了去了：<strong>一切跑在你的硬件上，数据不出门，模型随你换</strong>。</p>
+<p>核心能力清单：</p>
+<ul>
+<li><strong>Chat &amp; Agents</strong> — 多模型对话，内置 Agent 可执行文件编辑、网页浏览、邮件处理</li>
+<li><strong>Deep Research</strong> — 自动搜索、交叉验证、生成带引用的研究报告</li>
+<li><strong>文档处理</strong> — 内嵌文档编辑器，支持 PDF/Office 导出</li>
+<li><strong>记忆系统</strong> — 基于 ChromaDB 的向量记忆，Agent 能记住之前的对话和任务</li>
+<li><strong>邮件 &amp; 日历</strong> — IMAP/SMTP 接入，AI 辅助撰写和自动回复</li>
+<li><strong>MCP 支持</strong> — 可接入 Model Context Protocol 工具链</li>
+<li><strong>PWA 移动端</strong> — 手机浏览器也能访问</li>
+</ul>
+<p>部署方式上，它提供了 Docker Compose 一键部署，也支持 Linux/macOS/Windows 裸机运行。默认端口 7000。</p>
+<h3 id="它和-open-webui-有什么区别">它和 Open WebUI 有什么区别？
+</h3><p>这是 Hacker News 上最高频的问题。Odysseus 不只是聊天前端，它内置了 Agent 执行引擎、文档编辑、邮件日历整合、MCP 协议支持——更像一个<strong>AI 操作系统</strong>而非聊天界面。而且它没有品牌条款限制（Open WebUI 不允许移除品牌标识），是完全 MIT 自由的。</p>
+<h2 id="codex-cliagent-化编程">Codex CLI：Agent 化编程
+</h2><p>有了 Odysseus 作为工作台基座，你在编程场景还需要一个强力的 Coding Agent。这时 <strong>OpenAI Codex CLI</strong> 登场。</p>
+<p>Codex CLI 是 OpenAI 开源（2026 年初）的终端编程代理。和 Claude Code 的理念类似——终端优先、Agent 自主执行——但它有个独特优势：<strong>支持本地模型</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 安装 Codex CLI</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npm install -g @openai/codex</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动会话（ChatGPT 订阅用户免费）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd your-project</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">codex</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 或指定本地模型（通过 Ollama）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">codex -p oss --oss-model qwen2.5-coder:14b</span>
+</span></span></code></pre></div><p>亮点：</p>
+<ul>
+<li>原生支持 Git 工作流，自动 commit</li>
+<li>400K token 上下文窗口（GPT-5.5）</li>
+<li>沙箱执行，隔离安全风险</li>
+<li><code>--oss</code> 模式可对接 Ollama/LM Studio，<strong>不花一分 API 费</strong></li>
+<li>MCP server 扩展，链接外部工具</li>
+</ul>
+<h2 id="合体架构odysseus--codex-的完整布局">合体架构：Odysseus + Codex 的完整布局
+</h2><p>这才是真正的价值——两个工具不重叠，而是互补：</p>
+<pre tabindex="0"><code>┌──────────────────────────────┐
+│       Odysseus (端口 7000)     │
+│  ┌─────┐ ┌──────┐ ┌──────┐  │
+│  │ Chat │ │Agent │ │记忆  │  │
+│  └──┬──┘ └──┬───┘ └──────┘  │
+│     │       │               │
+│  ┌──▼───────▼──────────────┐ │
+│  │   Ollama (本地模型)      │ │
+│  │  Qwen2.5 / Llama 3 / ...│ │
+│  └─────────────────────────┘ │
+│     │       │               │
+│  ┌──▼───────▼──────────────┐ │
+│  │   Codex CLI (编程 Agent) │ │
+│  │   by OpenAI 或 本地模型   │ │
+│  └─────────────────────────┘ │
+│     │                       │
+│  ┌──▼──────────────┐       │
+│  │ 你的项目代码     │       │
+│  └─────────────────┘       │
+└──────────────────────────────┘
+</code></pre><p>日常工作流：</p>
+<ol>
+<li><strong>日常咨询 / 文档写作</strong> → 打开 Odysseus 浏览器页面，选本地模型，零成本</li>
+<li><strong>代码编写</strong> → 终端里 <code>codex</code>，用 ChatGPT 免费额度或本地模型</li>
+<li><strong>深度研究</strong> → Odysseus Deep Research 模式，自动搜+整理</li>
+<li><strong>邮件处理</strong> → Odysseus 内置邮件客户端，AI 辅助回复</li>
+<li><strong>所有数据</strong> → 本地 SQLite + ChromaDB，不出门</li>
+</ol>
+<h2 id="踩坑实录附解决方案">踩坑实录（附解决方案）
+</h2><h3 id="坑-1docker-部署后本地-ollama-连不上">坑 1：Docker 部署后本地 Ollama 连不上
+</h3><p>现象：Odysseus 容器内部无法访问宿主机的 Ollama（localhost:11434）。</p>
+<p>原因：Docker 容器默认网络模式下 localhost 指向容器自身，不是宿主机。</p>
+<p>解决：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 方法 1：用 host.docker.internal（macOS/Windows 适用）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">LLM_HOST</span><span style="color:#f92672">=</span><span style="color:#e6db74">host.docker.internal:11434</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法 2：用宿主机 IP（Linux 适用）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">LLM_HOST</span><span style="color:#f92672">=</span><span style="color:#e6db74">192.168.1.100:11434</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法 3：改用 --network host 模式，但会损失端口隔离</span>
+</span></span></code></pre></div><h3 id="坑-2codex---oss-模式模型质量落差">坑 2：Codex <code>--oss</code> 模式模型质量落差
+</h3><p>用 Qwen2.5-Coder-7B 本地跑的 Codex，写简单函数还行，但涉及跨文件重构时明显吃力。对比：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>GPT-5.5 (云端)</th>
+					<th>Qwen2.5-Coder-14B (本地)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>单文件函数编写</td>
+					<td>✅ 一次通过</td>
+					<td>✅ 基本通过</td>
+			</tr>
+			<tr>
+					<td>多文件重构</td>
+					<td>✅ 理解上下文</td>
+					<td>⚠️ 偶尔丢上下</td>
+			</tr>
+			<tr>
+					<td>测试生成</td>
+					<td>✅ 全覆盖</td>
+					<td>⚠️ 需人工补</td>
+			</tr>
+			<tr>
+					<td>响应速度</td>
+					<td>2-3 秒</td>
+					<td>8-15 秒 (M2 Max)</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>结论：</strong> 本地模型应付简单任务没问题，复杂项目建议用 API。好在选择权在你手里——Odysseus 支持每个对话独立选模型。</p>
+<h3 id="坑-3内存爆炸">坑 3：内存爆炸
+</h3><p>Odysseus + Ollama + ChromaDB 同时跑，16GB 机器直接卡死。建议：</p>
+<ul>
+<li>至少 32GB 内存</li>
+<li>Ollama 模型选 q4_K_M 量化版</li>
+<li>ChromaDB 用 Docker 独立资源限制</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># docker-compose 限制 ChromaDB 内存</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">services:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">chromadb:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">deploy:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">resources:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">limits:</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">memory: 2G</span>
+</span></span></code></pre></div><h3 id="坑-4邮件-oauth-的坑">坑 4：邮件 OAuth 的坑
+</h3><p>Odysseus 邮件客户端目前只支持 IMAP/SMTP 密码认证。Outlook/Office 365 强制 OAuth，连不上。Gmail 也需要开&quot;应用专用密码&quot;。这是目前最大的功能缺失，项目文档也明确标注了——如果需要微软邮箱支持，建议观望或自建 bridge。</p>
+<h2 id="费用账本到底能省多少">费用账本：到底能省多少
+</h2><p>对比 6 个月的总拥有成本（个人开发者，中等使用强度）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>月费</th>
+					<th>6 个月费用</th>
+					<th>数据隐私</th>
+					<th>模型自主权</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Claude Max</td>
+					<td>$200</td>
+					<td>$1,200</td>
+					<td>❌ 云存储</td>
+					<td>❌ 仅 Claude</td>
+			</tr>
+			<tr>
+					<td>ChatGPT Plus + Codex</td>
+					<td>$20</td>
+					<td>$120</td>
+					<td>❌ 云存储</td>
+					<td>❌ 仅 OpenAI</td>
+			</tr>
+			<tr>
+					<td>Odysseus + Ollama（全本地）</td>
+					<td>$0</td>
+					<td>$0</td>
+					<td>✅ 全本地</td>
+					<td>✅ 任意模型</td>
+			</tr>
+			<tr>
+					<td>Odysseus + API 混合</td>
+					<td>$5-30</td>
+					<td>$30-180</td>
+					<td>✅ 数据本地</td>
+					<td>✅ 任意模型</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>实际上，我的做法是<strong>混合模式</strong>：80% 日常任务走本地 Qwen2.5（零成本），20% 复杂编程走 Codex 的 GPT-5.5（ChatGPT Plus $20 包月）。月均总成本约 $25，相比此前的 Claude Max $200，<strong>每年省下 $2,100</strong>。</p>
+<h2 id="适合谁不适合谁">适合谁，不适合谁
+</h2><h3 id="-适合">✅ 适合
+</h3><ul>
+<li><strong>重度 AI 用户</strong>（日 Token 消耗 &gt; 5000 万）—— 自托管能省出一台 Mac Mini</li>
+<li><strong>关注数据隐私的团队</strong>—— 本地部署无合规风险</li>
+<li><strong>多模型控</strong>—— 想要在一处切换 Claude/GPT/国产模型</li>
+<li><strong>DIY 爱好者</strong>—— 折腾本身就是乐趣</li>
+</ul>
+<h3 id="-不适合">❌ 不适合
+</h3><ul>
+<li><strong>零命令行经验的新手</strong>—— 虽然 Docker 降低了门槛，但毕竟不是 App Store 一键装</li>
+<li><strong>需要 Outlook 邮件集成</strong>—— 等 OAuth 支持</li>
+<li><strong>硬件受限者</strong>—— 16GB 以下体验大打折扣</li>
+</ul>
+<h2 id="一句话总结">一句话总结
+</h2><p>Odysseus + Codex 的组合，用一个本地开源工作台替代了 Claude Max + ChatGPT Pro + 各种 SaaS，换来的是零月费、数据主权和模型选择自由。它不完美，但方向是对的——<strong>2026 年自托管 AI 不再是偏执狂的玩具，而是聪明人的省钱方案</strong>。</p>
+<h3 id="实用信息">实用信息
+</h3><ul>
+<li><strong>Odysseus</strong> → <a class="link" href="https://github.com/pewdiepie-archdaemon/odysseus"  target="_blank" rel="noopener"
+    >github.com/pewdiepie-archdaemon/odysseus</a> — 自托管 AI 工作台</li>
+<li><strong>Codex CLI</strong> → <code>npm install -g @openai/codex</code> — 编程 Agent</li>
+<li><strong>Ollama</strong> → <a class="link" href="https://ollama.ai"  target="_blank" rel="noopener"
+    >ollama.ai</a> — 本地模型运行器</li>
+<li><strong>硬件建议</strong>：32GB+ RAM，推荐 Apple Silicon 或 NVIDIA GPU</li>
+<li><strong>价格</strong>：软件全免费，仅需承担硬件电费和可选 API 费用</li>
+</ul>
+<p>如果你也在折腾自托管方案，欢迎分享你的踩坑经历。毕竟自己动手重建轮子这件事，永远是最佳学习方法。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/odysseus/">Odysseus</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/%E8%87%AA%E6%89%98%E7%AE%A1/">自托管</a>
+        
+            <a href="/tags/ai%E5%B7%A5%E4%BD%9C%E5%8F%B0/">AI工作台</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">开源</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/">本地部署</a>
+        
+            <a href="/tags/ollama/">Ollama</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/ollama-cost-saving-real-test-2026/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Ollama 成本实测：本地运行 LLM 如何让我每月省下 1800 元 API 费用（附真实账单）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/voxcpm2-tokenizer-free-tts-deep-dive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">VoxCPM2 深度拆解：Tokenizer-Free TTS 为什么是语音合成的新方向</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/odysseus-codex-self-hosted-workstation\/'; 
+        const pageTitle = '用 Odysseus \u002b Codex 自建 AI 工作台：告别月付 200 刀，拿回数据主权';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

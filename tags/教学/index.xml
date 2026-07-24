@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>教学 on softon.top</title>
+		<link>https://softon.top/tags/%E6%95%99%E5%AD%A6/</link>
+		<description>Recent content in 教学 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 29 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%95%99%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>2000 行代码写一个完整操作系统：egos-2000 源码拆解</title>
+				<link>https://softon.top/software/egos-2000-teaching-os-2000-lines/</link>
+				<pubDate>Mon, 29 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/egos-2000-teaching-os-2000-lines/</guid>
+				<description>&lt;h2 id=&#34;操作系统课的集体创伤&#34;&gt;操作系统课的集体创伤&#xA;&lt;/h2&gt;&lt;p&gt;学过操作系统的人大概都有类似的记忆：教材厚得像砖头，概念抽象得像哲学，考完试之后脑子里只剩下&amp;quot;进程是资源分配的基本单位，线程是调度的基本单位&amp;quot;这种八股文。&lt;/p&gt;&#xA;&lt;p&gt;至于真正的操作系统长什么样？不知道。代码在哪里？没见过。能不能自己写一个？想都不敢想。&lt;/p&gt;&#xA;&lt;p&gt;这不是你的问题，是教学方式的问题。&lt;/p&gt;&#xA;&lt;p&gt;传统操作系统课程有个致命矛盾：&lt;strong&gt;概念必须讲全，但代码不可能看全&lt;/strong&gt;。Linux 内核超过 2800 万行代码，就算是精简版的 xv6 也有近 1 万行——对于一个学期的课程来说，这已经是&amp;quot;只能挑重点讲&amp;quot;的体量了。&lt;/p&gt;&#xA;&lt;p&gt;结果就是：学生记住了一堆名词（上下文切换、页表、中断向量），却从未完整地理解过一个操作系统是怎么从第一行代码跑到最后一行的。&lt;/p&gt;&#xA;&lt;p&gt;Cornell 大学的博士生 Yunhao Zhang 决定解决这个问题。他的方案简单粗暴：&lt;strong&gt;把整个操作系统压缩到 2000 行代码，让每个学生都能从头到尾读完。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这就是 egos-2000。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-egos-2000&#34;&gt;什么是 egos-2000&#xA;&lt;/h2&gt;&lt;p&gt;egos-2000，全称 Earth and Grass Operating System，是一个专为教学设计的微型操作系统。它的核心代码恰好 2000 行（用 &lt;code&gt;cloc&lt;/code&gt; 工具计数），主要由 C 语言编写，配合少量 RISC-V 汇编。&lt;/p&gt;&#xA;&lt;p&gt;别被&amp;quot;2000 行&amp;quot;这个数字骗了，以为它只是个玩具。egos-2000 实现了一个操作系统应该有的所有核心组件：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;内存管理&lt;/strong&gt;：物理内存分配、虚拟地址空间&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程控制&lt;/strong&gt;：进程创建、调度、上下文切换&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;系统调用&lt;/strong&gt;：用户态与内核态的边界&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件系统&lt;/strong&gt;：inode、目录、文件读写&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程间通信&lt;/strong&gt;：消息传递机制&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Shell&lt;/strong&gt;：命令行交互界面&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;它能在 QEMU 模拟器上运行，也能烧录到真实的 RISC-V 开发板上跑起来——比如 Digilent 的 Arty A7 FPGA 板，或者 Sipeed 的 Lichee RV64 模块。&lt;/p&gt;&#xA;&lt;p&gt;更有意思的是，有人成功在 egos-2000 上跑起了 DOOM。没错，就是那个 1993 年的经典 FPS 游戏。一个 2000 行的操作系统，能撑起一个 3D 射击游戏的运行——这说明它的架构设计是认真的，不是糊弄学生的 demo。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

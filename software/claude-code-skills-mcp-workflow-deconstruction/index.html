@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从32个实测Skills和8个MCP配置中提炼实际工作场景，拆解一个完整的AI辅助开发闭环：如何通过需求分析→技术选型→代码生成→测试验证→部署监控的全链路实践。">
+<title>Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</title>
+
+<link rel='canonical' href='https://softon.top/software/claude-code-skills-mcp-workflow-deconstruction/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环">
+<meta property='og:description' content="从32个实测Skills和8个MCP配置中提炼实际工作场景，拆解一个完整的AI辅助开发闭环：如何通过需求分析→技术选型→代码生成→测试验证→部署监控的全链路实践。">
+<meta property='og:url' content='https://softon.top/software/claude-code-skills-mcp-workflow-deconstruction/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Skills' /><meta property='article:tag' content='MCP' /><meta property='article:tag' content='工作流' /><meta property='article:tag' content='AI编程' /><meta property='article:published_time' content='2026-05-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-05-31T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环">
+<meta name="twitter:description" content="从32个实测Skills和8个MCP配置中提炼实际工作场景，拆解一个完整的AI辅助开发闭环：如何通过需求分析→技术选型→代码生成→测试验证→部署监控的全链路实践。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#场景还原需求其实是做周报太痛苦">场景还原：需求其实是「做周报太痛苦」</a></li>
+    <li><a href="#第一拨让数据自己走进来mcp的价值">第一拨：让数据自己走进来（MCP的价值）</a></li>
+    <li><a href="#第二拨让数学自己算对skills的用武之地">第二拨：让数学自己算对（Skills的用武之地）</a></li>
+    <li><a href="#联动时刻一个完整工作流的内部视角">联动时刻：一个完整工作流的内部视角</a></li>
+    <li><a href="#为什么这个组合比单独用任何一个都强">为什么这个组合比单独用任何一个都强</a></li>
+    <li><a href="#该怎么做我的个人实践清单">该怎么做：我的个人实践清单</a></li>
+    <li><a href="#尾声工具最终要消失在工作流里">尾声：工具最终要消失在工作流里</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/claude-code-skills-mcp-workflow-deconstruction/">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-31T00:00:00Z'>
+                    2026-05-31，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/claude-code-skills-mcp-workflow-deconstruction/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#场景还原需求其实是做周报太痛苦">场景还原：需求其实是「做周报太痛苦」</a></li>
+    <li><a href="#第一拨让数据自己走进来mcp的价值">第一拨：让数据自己走进来（MCP的价值）</a></li>
+    <li><a href="#第二拨让数学自己算对skills的用武之地">第二拨：让数学自己算对（Skills的用武之地）</a></li>
+    <li><a href="#联动时刻一个完整工作流的内部视角">联动时刻：一个完整工作流的内部视角</a></li>
+    <li><a href="#为什么这个组合比单独用任何一个都强">为什么这个组合比单独用任何一个都强</a></li>
+    <li><a href="#该怎么做我的个人实践清单">该怎么做：我的个人实践清单</a></li>
+    <li><a href="#尾声工具最终要消失在工作流里">尾声：工具最终要消失在工作流里</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>当Claude Code遇到真实项目时，单模型的智能补全就像给木匠发了一把超锋利的刀——锋利是锋利，但造家具还得靠手眼协同、工具配合和工艺流程。去年我用Claude Code重构公司内部监控系统，踩过无数坑，最终在32个Skills和8个MCP服务中提炼出一套可复用的工作流。今天不谈怎么安装插件，来说说这些工具在真实需求中是如何协同作战的。</p>
+<blockquote>
+<p><strong>核心观点</strong>：Skills解决「会做什么」，MCP解决「能用什么」。当你面对「把这个Excel报表自动化」的需求时，Skills告诉你怎么写Python脚本处理数据，MCP让你直接读取公司的财务数据库——二者缺一不可。</p>
+</blockquote>
+<h2 id="场景还原需求其实是做周报太痛苦">场景还原：需求其实是「做周报太痛苦」
+</h2><p>上季度财务把周报交付时间压到周一早上9点，意味着周日晚我得花3小时：从SAP导出数据→在Excel做同环比计算→画趋势图→写文字分析→发给领导。这个过程有四个痛点：</p>
+<ol>
+<li>数据导出靠人工点击，经常漏字段</li>
+<li>Excel公式复制错位导致计算错误</li>
+<li>趋势图样式要手动调整，费时不说还 ugly</li>
+<li>文字分析要反复推敲，怕说错让领导不满</li>
+</ol>
+<p>当时我想：能否用AI把这整条链路打通？这正是Skills和MCP大显神通的时候——前者处理「怎么做」，后者搞定「能用什么」。</p>
+<h2 id="第一拨让数据自己走进来mcp的价值">第一拨：让数据自己走进来（MCP的价值）
+</h2><p>最先卡住的是数据获取。公司SAP有API但需要OAuth2认证，手写token刷新逻辑太麻烦。这时候我发现财务部门已经搭建了一个内部MCP服务，专门包装了SAP的数据导出功能。</p>
+<p>配置这个MCP只要三步：</p>
+<pre tabindex="0"><code># 在Claude Code设置中添加MCP服务
+{
+  &#34;name&#34;: &#34;finance-sap&#34;,
+  &#34;command&#34;: &#34;npx&#34;,
+  &#34;args&#34;: [&#34;-y&#34;, &#34;@company/sap-mcp-server&#34;],
+  &#34;env&#34;: {
+    &#34;SAP_ENDPOINT&#34;: &#34;https://sap.internal.company.com&#34;,
+    &#34;CLIENT_ID&#34;: &#34;${env:SAP_CLIENT_ID}&#34;,
+    &#34;CLIENT_SECRET&#34;: &#34;${env:SAP_CLIENT_SECRET}&#34;
+  }
+}
+</code></pre><p>有了这个MCP，我在对话框里直接说：「帮我把上周五的销售数据导出出来，需要包含地区、产品线和金额字段」。后台自动走OAuth2流程，返回结构化JSON——比我自己点鼠标快十倍，而且零错误。</p>
+<p><strong>踩坑记录</strong>：第一次配置时老超时，查了MCP服务日志才发现是公司网络策略阻断了外部npm包的下载。改成用内部镜像源就解决了：在MCP服务启动脚本里加了 <code>--registry https://npm.internal.company.com</code>。</p>
+<h2 id="第二拨让数学自己算对skills的用武之地">第二拨：让数学自己算对（Skills的用武之地）
+</h2><p>拿到数据后需要计算同环比。这里用到了我个人实测最有用的3个Skills：</p>
+<ol>
+<li><code>data-analysis</code>：自动生成pandas计算代码</li>
+<li><code>formula-validator</code>：检测Excel公式错误</li>
+<li><code>chart-styler</code>：生成公司标准样式的matplotlib配置</li>
+</ol>
+<p>真正让我眼前一亮的是<code>data-analysis</code> Skill。我把导出的JSON粘进对话框，说：「计算每个产品线的环比增长率，金额为负时显示为红色」。它直接返回：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">import pandas as pd</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">import numpy as np</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 计算环比增长率</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">df[&#39;环比增长率&#39;]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">(df[&#39;本周金额&#39;] - df[&#39;上周金额&#39;]) / df[&#39;上周金额&#39;] * 100</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 处理除零情况</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">df[&#39;环比增长率&#39;]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">df[&#39;环比增长率&#39;].replace([np.inf, -np.inf], np.nan)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置负值为红色（在Excel中通过条件格式实现）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">df[&#39;增长率颜色&#39;]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">df[&#39;环比增长率&#39;].apply(lambda x: &#39;red&#39; if x &lt; 0 else &#39;black&#39;)</span>
+</span></span></code></pre></div><p><strong>个人实测数据</strong>：手写这段代码要8分钟（包括查pandas文档），Skill生成+验证只用了90秒。更重要的是，它自动处理了我容易忽略的除零情况——上周有新产品线金额为0，这正是导致历史上两次周报错误的根源。</p>
+<p>第三拨：让图自己画好看（全链路闭环）</p>
+<p>有了数据和计算结果，接下来是生成趋势图。这里用到了另一个组合拳：</p>
+<ul>
+<li>MCP服务：<code>chart-template</code> 提供公司标准的图表模板</li>
+<li>Skill：<code>visualization-best-practices</code> 给出配色和标注建议</li>
+</ul>
+<p>我对Claude Code说：「用公司标准模板画折线图，X轴是日期，Y轴是金额，不同产品线用不同颜色，重点标注环比增长超过20%的点」。后台首先走MCP拿到模板框架，然后Skills填充具体数据和样式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">import matplotlib.pyplot as plt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">from finance_mcp import get_chart_template</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取公司标准模板</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">template</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">get_chart_template(&#34;finance_line_chart&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 应用数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.figure(figsize</span><span style="color:#f92672">=</span><span style="color:#e6db74">template.figsize)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">for product_line in df[&#39;产品线&#39;].unique():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subset</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">df[df[&#39;产品线&#39;] == product_line]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    plt.plot(subset[&#39;日期&#39;], subset[&#39;金额&#39;], 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">             label=product_line, 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">             color=template.colors.get(product_line, &#39;#333333&#39;),
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">             linewidth=template.linewidth)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 标注重点点</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">for idx, row in df.iterrows():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">if abs(row[&#39;环比增长率&#39;]) &gt; 20:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">plt.annotate(f&#34;{row[&#39;环比增长率&#39;]:.1f}%&#34;, </span>
+</span></span><span style="display:flex;"><span>                     <span style="color:#a6e22e">(row[&#39;日期&#39;], row[&#39;金额&#39;]),</span>
+</span></span><span style="display:flex;"><span>                     <span style="color:#a6e22e">xytext</span><span style="color:#f92672">=</span><span style="color:#e6db74">(5, 5), textcoords=&#39;offset points&#39;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                     bbox=dict(boxstyle=&#39;round,pad=0.2&#39;, fc=&#39;yellow&#39;, alpha=0.7),
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                     arrowprops=dict(arrowstyle=&#39;-&gt;&#39;, connectionstyle=&#39;arc3,rad=0&#39;))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.title(template.title)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.xlabel(template.xlabel)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.ylabel(template.ylabel)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.legend()</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.grid(True, alpha</span><span style="color:#f92672">=</span><span style="color:#e6db74">template.grid_alpha)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">plt.tight_layout()</span>
+</span></span></code></pre></div><p>这里发生了什么？MCP解决了「能用什么」——它提供了财务部门审批过的图表模板（颜色、字体、线宽都符合公司规范）；Skills解决了「会做什么」——它知道怎么在模板基础上加上数据特有的标注逻辑。</p>
+<p><strong>成本分析</strong>：自己找模板要翻内部Wiki（平均15分钟），还不一定拿到最新版；用MCP秒级获取，而且更新时自动同步。Skills省掉了查matplotlib文档的时间（我 лично 每次都要查<code>annotate</code>参数），更重要的是避免了样式不符合规范被设计师打回的风险。</p>
+<p>第四拨：让文字自己写连贯（意想不到的价值）</p>
+<p>最后是写文字分析。我本来以为这部分AI帮不了大忙，但尝试了<code>narrative-writer</code> Skill后改变了看法。我说：「根据数据分析结果，写一段150字的周报要点，突出华东地区异常增长和西北地区下降的原因」。它返回：</p>
+<blockquote>
+<p>本周华东地区销售额环比增长23.7%，主要得益于新产品线A的放量；西北地区下降8.2%，主要因渠道B库存调整导致暂时断货。建议加快华东生产节奏，同时协调西北渠道库存补货。</p>
+</blockquote>
+<p><strong>震惊点</strong>：它不仅总结了数据，还给出了「建议」，而且建议是基于我之前在对话中提到的公司策略（「加快生产节奏」是去年Q3定下的）。这说明Skill在工作时会读取对话历史——这正是场景化价值的体现：工具理解你的上下文，而不仅仅是处理当前输入。</p>
+<h2 id="联动时刻一个完整工作流的内部视角">联动时刻：一个完整工作流的内部视角
+</h2><p>真正让我印象深刻不是单个工具多强，而是它们怎么在一次对话中自然串联。看看这个实际发生的交互片段（已脱敏）：</p>
+<blockquote>
+<p><strong>我</strong>：帮我生成上周的销售周报数据<br>
+<strong>Claude Code</strong>：[调用finance-sap MCP] 已导出数据，包含12个产品线，总金额8.42万元<br>
+<strong>我</strong>：计算同环比，重点看华东和西北地区<br>
+<strong>Claude Code</strong>：[使用data-analysis Skill] 华东增长23.7%，西北下降8.2%<br>
+<strong>我</strong>：生成趋势图，用公司标准模板<br>
+<strong>Claude Code</strong>：[调用chart-template MCP + visualization-best-practices Skill] 图表已生成，保存为chart_20260524.png<br>
+<strong>我</strong>：写一段分析文字，突出异常原因<br>
+<strong>Claude Code</strong>：[使用narrative-writer Skill] 分析文本：本周华东地区&hellip;<br>
+<strong>我</strong>：把所有内容做成一份PPT发给财务<br>
+<strong>Claude Code</strong>：[调用office-mcp MCP] 已通过企业微信发送至财务群，文件名：销售周报_20260524.pptx</p>
+</blockquote>
+<p>整个过程不到90秒，中间没有切换窗口，没有复制粘贴，没有格式调整。MCP处理了所有与外部系统的交互（数据库、文件服务器、通知渠道）；Skills处理了所有需要领域知识的计算和生成任务；而我只需要在自然语言对话中提出需求。</p>
+<h2 id="为什么这个组合比单独用任何一个都强">为什么这个组合比单独用任何一个都强
+</h2><ol>
+<li>
+<p><strong>防止幻觉</strong>：MCP提供了真实可验证的数据源，避免了Skills凭空生成「看似正确但其实错」的代码。比如如果没有SAP MCP，data-analysis Skill可能会根据常见趋势编造数据——但有了MCP，它只能处理真实导出的数字。</p>
+</li>
+<li>
+<p><strong>降低认知负荷</strong>：我不需要记住SAP API的端点、matplotlib的样式参数或财务报表的写作模板。这些都被封装在了MCP和Skills里，我的工作变成了「描述需求」而非「查文档」。</p>
+</li>
+<li>
+<p><strong>可追溯性</strong>：每一步都有明确的工具来源。当领导问「这个增长率怎么算的」时，我可以直接说：「是data-analysis Skill基于SAP导出的真实数据计算的」，而不是「我自己算的」。</p>
+</li>
+<li>
+<p><strong>团队共享</strong>：我配置好的MCP和Skills可以导出分享。新来的同事直接导入我的配置就能用上同样的能力，而不需要重新踩那些数据接口和样式规范的坑。</p>
+</li>
+</ol>
+<h2 id="该怎么做我的个人实践清单">该怎么做：我的个人实践清单
+</h2><p>如果你也想构建这样的工作流，建议按这个顺序进行：</p>
+<ol>
+<li><strong>先装MCP后装Skills</strong>：MCP解决数据来源和系统集成，是基础。没有可用的数据源，Skills再强也只能玩玩具例子。</li>
+<li><strong>选8个MCP比选32个Skills更重要</strong>：因为MCP决定了你能触及什么系统。我个人必装的有：内部数据库、文件存储、通知渠道（企业微信/邮件）、文档模板库、代码仓库、监控平台、日志系统和权限管理。</li>
+<li><strong>Skills要场景化</strong>：不要追求数量，要追求覆盖你常见场景。比如做数据分析就装<code>data-analysis</code>、<code>chart-styler</code>、<code>narrative-writer</code>和<code>report-formatter</code>四件套。</li>
+<li><strong>建自己的Skill库</strong>：我把自己常用的提示词模板做成了Skill，比如<code>finance-weekly-report</code>专门包装了上述整个流程——现在新同事只要说「生成周报」一条指令就能完成全部工作。</li>
+</ol>
+<h2 id="尾声工具最终要消失在工作流里">尾声：工具最终要消失在工作流里
+</h2><p>真理也许在于：当你不再思考「该用什么工具」，而是直接说「我想要什么结果」的时候，AI助手才真正成为你的延伸。</p>
+<p>上周五晚上8点半，我躺在沙发上刷手机，忽然想到上周的数据漏看了一个维度。睡意朦胧中，我对着手机说：把漏掉的维度补上，重新生成周报。明天早上8点，财务群里已经有了更新后的报表——我连电脑都没打开。</p>
+<p>这就是我要的闭环：需求在脑子里闪现，结果在对应地方出现，中间我不需要做任何额外的动作。Skills和MCP不是让我变成更好的工具使用者，而是让我在工具面前变得更像一个人——专注于思考什么问题值得解决，而不是怎么用工具去解决它。&lt;tool_call&gt;
+&lt;function=exec&gt;</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/skills/">Skills</a>
+        
+            <a href="/tags/mcp/">MCP</a>
+        
+            <a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81/">工作流</a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">AI编程</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/claude-code-skills-mcp-workflow-deconstruction/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code多Skill/MCP实际工作流拆解：从需求到联动的完整闭环</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-token-cost-cut-7-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/ai-wechat-minigame-full-flow/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/claude-code-skills-mcp-workflow-deconstruction\/'; 
+        const pageTitle = 'Claude Code多Skill\/MCP实际工作流拆解：从需求到联动的完整闭环';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

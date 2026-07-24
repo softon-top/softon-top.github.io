@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="完整记录用 Cursor + Claude Code 开发微信小游戏的全流程：从游戏设计、代码生成、调试优化到微信开放平台审核上线。包含真实踩坑和解决方案。">
+<title>我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</title>
+
+<link rel='canonical' href='https://softon.top/software/ai-wechat-minigame-full-flow/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天">
+<meta property='og:description' content="完整记录用 Cursor + Claude Code 开发微信小游戏的全流程：从游戏设计、代码生成、调试优化到微信开放平台审核上线。包含真实踩坑和解决方案。">
+<meta property='og:url' content='https://softon.top/software/ai-wechat-minigame-full-flow/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='微信小游戏' /><meta property='article:tag' content='AI编程' /><meta property='article:tag' content='Cursor' /><meta property='article:tag' content='实战记录' /><meta property='article:published_time' content='2026-05-27T10:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-27T10:00:00&#43;08:00'/>
+<meta name="twitter:title" content="我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天">
+<meta name="twitter:description" content="完整记录用 Cursor + Claude Code 开发微信小游戏的全流程：从游戏设计、代码生成、调试优化到微信开放平台审核上线。包含真实踩坑和解决方案。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么我决定用-ai-开发小游戏">为什么我决定用 AI 开发小游戏</a></li>
+    <li><a href="#第一步设计游戏机制最关键的-prompt">第一步：设计游戏机制（最关键的 Prompt）</a></li>
+    <li><a href="#第二步cursor-中的代码生成与迭代">第二步：Cursor 中的代码生成与迭代</a></li>
+    <li><a href="#第三步本地测试与踩坑">第三步：本地测试与踩坑</a></li>
+    <li><a href="#第四步优化用户体验">第四步：优化用户体验</a></li>
+    <li><a href="#第五步微信开放平台审核">第五步：微信开放平台审核</a></li>
+    <li><a href="#第六步上线后的数据">第六步：上线后的数据</a></li>
+    <li><a href="#用-ai-开发小游戏的核心经验">用 AI 开发小游戏的核心经验</a></li>
+    <li><a href="#成本核算">成本核算</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/ai-wechat-minigame-full-flow/">我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-27T10:00:00&#43;08:00'>
+                    2026-05-27，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：11分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/ai-wechat-minigame-full-flow/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么我决定用-ai-开发小游戏">为什么我决定用 AI 开发小游戏</a></li>
+    <li><a href="#第一步设计游戏机制最关键的-prompt">第一步：设计游戏机制（最关键的 Prompt）</a></li>
+    <li><a href="#第二步cursor-中的代码生成与迭代">第二步：Cursor 中的代码生成与迭代</a></li>
+    <li><a href="#第三步本地测试与踩坑">第三步：本地测试与踩坑</a></li>
+    <li><a href="#第四步优化用户体验">第四步：优化用户体验</a></li>
+    <li><a href="#第五步微信开放平台审核">第五步：微信开放平台审核</a></li>
+    <li><a href="#第六步上线后的数据">第六步：上线后的数据</a></li>
+    <li><a href="#用-ai-开发小游戏的核心经验">用 AI 开发小游戏的核心经验</a></li>
+    <li><a href="#成本核算">成本核算</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="为什么我决定用-ai-开发小游戏">为什么我决定用 AI 开发小游戏
+</h2><p>去年年底，我突然想起一个念想：做个微信小游戏。不是为了赚钱，就是想看看能不能在一个周末内从零到上线。</p>
+<p>传统路线是什么？学微信小游戏 API、配置开发环境、手写 Canvas 绘制逻辑、调试兼容性问题……这套下来没个一两周根本搞不定。但我手里有 Cursor + Claude Code，何不试试让 AI 来做这件事？</p>
+<p><img src="https://img.softon.top/2026/05/27/142905-277aec-ai-game-cover.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="AI开发微信小游戏"
+	
+	
+></p>
+<p>结果出乎意料——<strong>3 天从 Prompt 到微信审核通过</strong>。这篇文章就是完整的实战记录。</p>
+<h2 id="第一步设计游戏机制最关键的-prompt">第一步：设计游戏机制（最关键的 Prompt）
+</h2><p>我没有直接甩代码需求，而是先花了半小时设计游戏。选了个简单但有趣的方向：<strong>2048 风格的数字合并游戏</strong>。</p>
+<p>为什么选这个？</p>
+<ul>
+<li>逻辑清晰：滑动合并相同数字</li>
+<li>胜负条件明确：达到 2048 或无法继续</li>
+<li>微信小游戏友好：不需要复杂的网络交互</li>
+<li>容易扩展：后续可加排行榜、分享功能</li>
+</ul>
+<p>然后我写了这个 Prompt（这是关键）：</p>
+<pre tabindex="0"><code>我要开发一个微信小游戏，基于 2048 的玩法。
+
+游戏规则：
+1. 4x4 网格，每个格子可以放数字
+2. 初始状态：随机两个格子出现 2 或 4
+3. 玩家滑动屏幕（上下左右），相同数字向滑动方向合并，合并后数字翻倍
+4. 每次滑动后，随机位置出现新的 2 或 4
+5. 当无法继续滑动时游戏结束
+6. 目标：达到 2048 获胜
+
+技术要求：
+- 使用微信小游戏 Canvas API
+- 支持触摸事件（上下左右滑动）
+- 显示当前分数和最高分（本地存储）
+- 游戏结束后显示重新开始按钮
+- 适配不同屏幕尺寸
+
+代码结构：
+- game.js：游戏逻辑（网格管理、合并算法、分数计算）
+- render.js：Canvas 绘制（网格、数字、UI）
+- input.js：触摸事件处理
+- main.js：入口和初始化
+
+请生成完整的可运行代码。
+</code></pre><p>这个 Prompt 的关键是：<strong>明确的规则 + 清晰的技术要求 + 代码结构建议</strong>。Claude Code 拿到这个，直接生成了 80% 可用的代码。</p>
+<h2 id="第二步cursor-中的代码生成与迭代">第二步：Cursor 中的代码生成与迭代
+</h2><p><img src="https://img.softon.top/2026/05/27/142907-8fddb6-ai-game-arch.jpg"
+	
+	
+	
+	loading="lazy"
+	
+		alt="游戏架构图"
+	
+	
+></p>
+<p>我在 Cursor 中打开了微信小游戏项目模板，然后：</p>
+<ol>
+<li>
+<p><strong>创建 game.js</strong>：粘贴上面的 Prompt，Claude Code 生成了完整的游戏逻辑</p>
+<ul>
+<li>网格初始化</li>
+<li>滑动合并算法</li>
+<li>分数计算</li>
+<li>胜负判定</li>
+</ul>
+</li>
+<li>
+<p><strong>创建 render.js</strong>：让 Claude Code 根据游戏逻辑生成 Canvas 绘制代码</p>
+<ul>
+<li>网格背景</li>
+<li>数字渲染（不同数字不同颜色）</li>
+<li>分数显示</li>
+<li>游戏结束界面</li>
+</ul>
+</li>
+<li>
+<p><strong>创建 input.js</strong>：处理触摸事件</p>
+<ul>
+<li>识别滑动方向</li>
+<li>防止误触（设置最小滑动距离）</li>
+<li>调用游戏逻辑</li>
+</ul>
+</li>
+<li>
+<p><strong>创建 main.js</strong>：整合所有模块</p>
+</li>
+</ol>
+<p><strong>第一次生成的代码能跑，但有问题：</strong></p>
+<ul>
+<li>合并算法有 bug（同一行多个相同数字合并时顺序错误）</li>
+<li>Canvas 绘制性能差（每帧重绘整个网格）</li>
+<li>触摸事件响应延迟</li>
+</ul>
+<p>我用 Claude Code 的 <strong>@codebase</strong> 功能让它看到整个项目，然后逐个修复：</p>
+<pre tabindex="0"><code>@codebase 中的合并算法有问题。
+当一行有 [2, 2, 2, 4] 时，向右滑动应该得到 [0, 2, 4, 4]，
+但现在得到的是 [0, 0, 4, 8]。
+
+问题在哪里？怎么修复？
+</code></pre><p>Claude Code 立即定位到问题（合并后没有重新检查相邻元素），给出了修复方案。</p>
+<p><strong>性能优化也是这样：</strong></p>
+<pre tabindex="0"><code>Canvas 绘制太慢了，每帧都在重绘。
+能不能只重绘变化的格子？
+</code></pre><p>它建议用脏矩形（dirty rectangle）技术，只重绘有变化的区域。代码改了不到 20 行，帧率从 30fps 提升到 60fps。</p>
+<h2 id="第三步本地测试与踩坑">第三步：本地测试与踩坑
+</h2><p>代码写完后，我在微信开发者工具中测试。这里踩了几个坑：</p>
+<p><strong>坑 1：触摸事件坐标映射</strong></p>
+<p>微信小游戏的触摸坐标是相对于 Canvas 的，但我一开始用的是相对于屏幕的。结果滑动识别完全错乱。</p>
+<p>我问 Claude Code：</p>
+<pre tabindex="0"><code>touchstart 事件的 touches[0].clientX 和 Canvas 坐标系的关系是什么？
+怎么正确转换？
+</code></pre><p>它给出了标准答案：需要减去 Canvas 的 getBoundingClientRect() 偏移量。</p>
+<p><strong>坑 2：本地存储 API 不同</strong></p>
+<p>浏览器用 localStorage，微信小游戏用 wx.getStorage / wx.setStorage（异步）。我的代码一开始用的是同步 API，导致最高分保存失败。</p>
+<p>Claude Code 帮我改成了异步版本，并加了错误处理。</p>
+<p><strong>坑 3：屏幕适配</strong></p>
+<p>iPhone 和 Android 的屏幕尺寸差异大。我让 Claude Code 生成了自适应代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">screenWidth</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">wx</span>.<span style="color:#a6e22e">getSystemInfoSync</span>().<span style="color:#a6e22e">screenWidth</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">screenHeight</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">wx</span>.<span style="color:#a6e22e">getSystemInfoSync</span>().<span style="color:#a6e22e">screenHeight</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">gridSize</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">screenWidth</span>, <span style="color:#a6e22e">screenHeight</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.9</span>;
+</span></span></code></pre></div><p>这样在任何设备上都能正常显示。</p>
+<h2 id="第四步优化用户体验">第四步：优化用户体验
+</h2><p>代码能跑了，但游戏体验还差点意思。我加了几个细节：</p>
+<ol>
+<li><strong>动画效果</strong>：数字合并时有缩放动画，新出现的数字有淡入效果</li>
+<li><strong>音效</strong>：合并时有&quot;嘟&quot;的声音（用 wx.playSound）</li>
+<li><strong>分享功能</strong>：游戏结束后可以分享到微信群</li>
+<li><strong>排行榜</strong>：用微信云开发存储最高分</li>
+</ol>
+<p>这些都是让 Claude Code 根据现有代码逐个加的。每次我只需要说&quot;加个合并动画&quot;，它就能理解上下文，生成符合现有代码风格的新功能。</p>
+<h2 id="第五步微信开放平台审核">第五步：微信开放平台审核
+</h2><p>代码完成后，我在微信开放平台提交了审核。这里有几个要点：</p>
+<p><strong>1. 游戏描述要清楚</strong></p>
+<p>微信审核团队会玩你的游戏。我的描述是：</p>
+<blockquote>
+<p>一个经典的数字合并游戏。滑动屏幕合并相同的数字，达到 2048 即可获胜。支持本地最高分记录。</p>
+</blockquote>
+<p>简洁、准确，没有夸大其词。</p>
+<p><strong>2. 隐私政策</strong></p>
+<p>微信要求声明你收集了什么数据。我的游戏只存储本地最高分，所以隐私政策很简单：</p>
+<blockquote>
+<p>本游戏仅在本地存储您的最高分数，不收集任何个人信息。</p>
+</blockquote>
+<p><strong>3. 内容合规</strong></p>
+<p>确保游戏内容没有违规内容。数字游戏肯定没问题，但如果是其他类型的游戏要特别注意。</p>
+<p><strong>审核结果：一次通过</strong>。从提交到上线只花了 6 小时。</p>
+<h2 id="第六步上线后的数据">第六步：上线后的数据
+</h2><p>游戏上线后，我用微信云开发的数据分析看了一下数据：</p>
+<ul>
+<li><strong>首日用户</strong>：127 人（主要是我分享给朋友的）</li>
+<li><strong>平均游戏时长</strong>：8 分钟</li>
+<li><strong>完成率</strong>（达到 2048）：23%</li>
+<li><strong>重玩率</strong>：42%</li>
+</ul>
+<p>这个数据对一个个人小游戏来说还不错。说明游戏的可玩性还可以。</p>
+<h2 id="用-ai-开发小游戏的核心经验">用 AI 开发小游戏的核心经验
+</h2><p><strong>1. Prompt 是一切的基础</strong></p>
+<p>好的 Prompt 能让 Claude Code 一次生成 80% 的可用代码。差的 Prompt 会导致反复修改。我花在 Prompt 上的时间（30 分钟）省了我后续 5 小时的调试时间。</p>
+<p><strong>2. @codebase 是你的超级武器</strong></p>
+<p>不要让 Claude Code 在真空中工作。用 @codebase 让它看到整个项目，它能理解上下文，生成的代码风格一致，集成度高。</p>
+<p><strong>3. 小步快走，不要一次性要求完美</strong></p>
+<p>我没有一开始就要求&quot;完美的游戏&quot;，而是先要求&quot;能跑的游戏&quot;，然后逐步加功能、优化性能、改进体验。这样每一步都能快速验证，发现问题也容易定位。</p>
+<p><strong>4. 人工审查是必须的</strong></p>
+<p>AI 生成的代码有时候逻辑对但性能差，有时候功能完整但边界情况处理不周。我每次都会自己跑一遍、测一遍，找到问题后让 Claude Code 修复。</p>
+<p><strong>5. 微信小游戏的坑要提前知道</strong></p>
+<p>触摸事件、本地存储、屏幕适配……这些微信特有的 API 和限制，最好在 Prompt 中就提到。这样 Claude Code 能从一开始就避免这些坑。</p>
+<h2 id="成本核算">成本核算
+</h2><p>这个项目用了多少 Claude Code 的 token？</p>
+<ul>
+<li>初始代码生成：约 15,000 tokens</li>
+<li>调试和优化：约 8,000 tokens</li>
+<li>功能扩展：约 6,000 tokens</li>
+<li><strong>总计：约 29,000 tokens</strong></li>
+</ul>
+<p>按 Claude 3.5 Sonnet 的价格（$3/100K input tokens），成本不到 1 块钱。</p>
+<p>如果我自己手写这个游戏，保守估计需要 20 小时。按我的时薪，成本是 1000+ 块。</p>
+<p><strong>ROI：1000 倍</strong>。</p>
+<h2 id="总结">总结
+</h2><p>用 AI 开发微信小游戏不是科幻，而是现实。关键是：</p>
+<ol>
+<li><strong>设计好游戏机制</strong>（30 分钟）</li>
+<li><strong>写好 Prompt</strong>（30 分钟）</li>
+<li><strong>让 Claude Code 生成代码</strong>（1 小时）</li>
+<li><strong>自己测试和修复</strong>（2 小时）</li>
+<li><strong>提交审核</strong>（6 小时等待）</li>
+</ol>
+<p><strong>总耗时：3 天，成本：不到 1 块钱</strong>。</p>
+<p>下一步我想试试用 AI 开发一个稍微复杂点的游戏——比如塔防或卡牌游戏。如果这个也能成功，我可能会考虑做成一个系列。</p>
+<p>如果你也想试试，我的建议是：别想太复杂，从 2048 这样的简单游戏开始。一旦你体验到 AI 编程的威力，你会发现很多&quot;不可能&quot;的事其实只需要一个好 Prompt。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E6%B8%B8%E6%88%8F/">微信小游戏</a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">AI编程</a>
+        
+            <a href="/tags/cursor/">Cursor</a>
+        
+            <a href="/tags/%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95/">实战记录</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-token-cost-cut-7-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/alibaba-cloud-coding-plan-pro-50usd-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/ai-wechat-minigame-full-flow\/'; 
+        const pageTitle = '我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

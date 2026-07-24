@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从 Hacker News 上一个 68000 tokens 的 Wikipedia 页面案例出发，复测 AI Agent 读取网页时的 token 成本，拆解 raw HTML、正文抽取、摘要、API 查询之间的成本差异。">
+<title>一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</title>
+
+<link rel='canonical' href='https://softon.top/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞">
+<meta property='og:description' content="从 Hacker News 上一个 68000 tokens 的 Wikipedia 页面案例出发，复测 AI Agent 读取网页时的 token 成本，拆解 raw HTML、正文抽取、摘要、API 查询之间的成本差异。">
+<meta property='og:url' content='https://softon.top/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Token优化' /><meta property='article:tag' content='WebFetch' /><meta property='article:tag' content='上下文工程' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='成本控制' /><meta property='article:published_time' content='2026-07-13T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-13T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞">
+<meta name="twitter:description" content="从 Hacker News 上一个 68000 tokens 的 Wikipedia 页面案例出发，复测 AI Agent 读取网页时的 token 成本，拆解 raw HTML、正文抽取、摘要、API 查询之间的成本差异。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#我复测了一遍同一个网页差距可以是-400-倍">我复测了一遍：同一个网页，差距可以是 400 倍</a></li>
+    <li><a href="#raw-html-为什么这么贵网页不是文章是一座脚手架">raw HTML 为什么这么贵：网页不是文章，是一座脚手架</a></li>
+    <li><a href="#webfetch-不总是错错的是没有兜底策略">WebFetch 不总是错，错的是没有兜底策略</a></li>
+    <li><a href="#一次网页读取可能在-agent-循环里被放大十倍">一次网页读取，可能在 Agent 循环里被放大十倍</a></li>
+    <li><a href="#成本差异来自信息粒度不是来自模型聪不聪明">成本差异来自“信息粒度”，不是来自模型聪不聪明</a></li>
+    <li><a href="#一套更稳的网页读取策略先轻后重逐级加码">一套更稳的网页读取策略：先轻后重，逐级加码</a>
+      <ul>
+        <li><a href="#第-1-层只拿搜索结果和摘要">第 1 层：只拿搜索结果和摘要</a></li>
+        <li><a href="#第-2-层调用站点-api-或结构化接口">第 2 层：调用站点 API 或结构化接口</a></li>
+        <li><a href="#第-3-层提取正文而不是读取源码">第 3 层：提取正文，而不是读取源码</a></li>
+        <li><a href="#第-4-层按问题检索片段">第 4 层：按问题检索片段</a></li>
+        <li><a href="#第-5-层raw-html-只给专门任务">第 5 层：raw HTML 只给专门任务</a></li>
+      </ul>
+    </li>
+    <li><a href="#给-agent-加一道网页预算闸门">给 Agent 加一道“网页预算闸门”</a></li>
+    <li><a href="#不要迷信长上下文窗口越大越需要节制">不要迷信长上下文：窗口越大，越需要节制</a></li>
+    <li><a href="#我的判断未来-agent-的核心能力不是会浏览网页而是会少读网页">我的判断：未来 Agent 的核心能力不是会浏览网页，而是会少读网页</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/">一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-13T00:00:00Z'>
+                    2026-07-13，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：16分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#我复测了一遍同一个网页差距可以是-400-倍">我复测了一遍：同一个网页，差距可以是 400 倍</a></li>
+    <li><a href="#raw-html-为什么这么贵网页不是文章是一座脚手架">raw HTML 为什么这么贵：网页不是文章，是一座脚手架</a></li>
+    <li><a href="#webfetch-不总是错错的是没有兜底策略">WebFetch 不总是错，错的是没有兜底策略</a></li>
+    <li><a href="#一次网页读取可能在-agent-循环里被放大十倍">一次网页读取，可能在 Agent 循环里被放大十倍</a></li>
+    <li><a href="#成本差异来自信息粒度不是来自模型聪不聪明">成本差异来自“信息粒度”，不是来自模型聪不聪明</a></li>
+    <li><a href="#一套更稳的网页读取策略先轻后重逐级加码">一套更稳的网页读取策略：先轻后重，逐级加码</a>
+      <ul>
+        <li><a href="#第-1-层只拿搜索结果和摘要">第 1 层：只拿搜索结果和摘要</a></li>
+        <li><a href="#第-2-层调用站点-api-或结构化接口">第 2 层：调用站点 API 或结构化接口</a></li>
+        <li><a href="#第-3-层提取正文而不是读取源码">第 3 层：提取正文，而不是读取源码</a></li>
+        <li><a href="#第-4-层按问题检索片段">第 4 层：按问题检索片段</a></li>
+        <li><a href="#第-5-层raw-html-只给专门任务">第 5 层：raw HTML 只给专门任务</a></li>
+      </ul>
+    </li>
+    <li><a href="#给-agent-加一道网页预算闸门">给 Agent 加一道“网页预算闸门”</a></li>
+    <li><a href="#不要迷信长上下文窗口越大越需要节制">不要迷信长上下文：窗口越大，越需要节制</a></li>
+    <li><a href="#我的判断未来-agent-的核心能力不是会浏览网页而是会少读网页">我的判断：未来 Agent 的核心能力不是会浏览网页，而是会少读网页</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>有些成本陷阱不是藏在模型价格表里，而是藏在一个看起来很无害的动作里：</p>
+<blockquote>
+<p>“帮我打开这个网页看一下。”</p>
+</blockquote>
+<p>这句话听起来像是一次普通浏览。人类打开网页，眼睛扫一遍标题、正文、引用、评论，觉得没什么。但 AI Agent 不一样。它不是“看”网页，它通常要先把网页变成一大坨文本，再塞进上下文窗口，然后才开始推理。</p>
+<p>Hacker News 上今天有个帖子把这个问题戳得很直：一个普通 Wikipedia 页面，直接喂给 AI Agent，可能要 <strong>68,240 tokens</strong>。Nike 首页更夸张，raw HTML 可能到 <strong>353,000 tokens</strong>。帖子作者说，Claude Code 的内置 <code>WebFetch</code> 在简单页面上表现不错，可以把 Wikipedia 总结到大约 950 tokens；但遇到 JS 渲染、反爬、Cloudflare 或 403 页面时，就可能失败。更糟的是，有些 Agent 会把 raw HTML 直接倒回上下文，烧了一大堆 token，最后仍然没读懂网页。</p>
+<p>这不是“模型贵”的问题。</p>
+<p>这是 <strong>Agent 读网页的姿势错了</strong>。</p>
+<h2 id="我复测了一遍同一个网页差距可以是-400-倍">我复测了一遍：同一个网页，差距可以是 400 倍
+</h2><p>为了不只复述别人的数字，我在本机用 <code>tiktoken</code> 做了一个小复测。编码器用 <code>cl100k_base</code>，抓取页面后分别统计 raw HTML 和简单可见文本抽取后的 token 数。</p>
+<p>结果如下：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>页面</th>
+					<th style="text-align: right">raw HTML tokens</th>
+					<th style="text-align: right">可见文本 tokens</th>
+					<th>备注</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Wikipedia: AI agent</td>
+					<td style="text-align: right">176,990</td>
+					<td style="text-align: right">13,934</td>
+					<td>页面不算大，但 HTML 很胖</td>
+			</tr>
+			<tr>
+					<td>Wikipedia: Artificial intelligence</td>
+					<td style="text-align: right">685,617</td>
+					<td style="text-align: right">61,985</td>
+					<td>大词条，引用和结构极多</td>
+			</tr>
+			<tr>
+					<td>Nike 首页</td>
+					<td style="text-align: right">281,984</td>
+					<td style="text-align: right">3,994</td>
+					<td>前端资源和脚本占主要体积</td>
+			</tr>
+			<tr>
+					<td>Wikipedia REST summary: AI agent</td>
+					<td style="text-align: right">415</td>
+					<td style="text-align: right">—</td>
+					<td>结构化摘要 API</td>
+			</tr>
+			<tr>
+					<td>Wikipedia API intro extract: AI agent</td>
+					<td style="text-align: right">111</td>
+					<td style="text-align: right">—</td>
+					<td>只取引言纯文本</td>
+			</tr>
+			<tr>
+					<td>Wikipedia API sections: AI agent</td>
+					<td style="text-align: right">984</td>
+					<td style="text-align: right">—</td>
+					<td>只取章节列表</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>这张表最吓人的地方，不是 <code>Artificial intelligence</code> 页面 raw HTML 到了 68 万 tokens，而是 <strong>同一个信息目标，可以有完全不同的读取成本</strong>。</p>
+<p>如果目标只是回答“AI agent 是什么”，你根本不需要 176,990 tokens 的 HTML。Wikipedia 的 REST summary 返回 415 tokens 就够了。如果只要引言，MediaWiki API 的 intro extract 只有 111 tokens。哪怕要章节结构，也不到 1,000 tokens。</p>
+<p>也就是说：</p>
+<blockquote>
+<p>真正昂贵的不是 Wikipedia，而是“把网页当垃圾袋一样整袋塞给模型”。</p>
+</blockquote>
+<p>AI Agent 的网页读取成本黑洞，正是从这里开始的。</p>
+<h2 id="raw-html-为什么这么贵网页不是文章是一座脚手架">raw HTML 为什么这么贵：网页不是文章，是一座脚手架
+</h2><p>人眼看到的是正文。</p>
+<p>Agent 看到的可能是这些东西：</p>
+<ul>
+<li><code>&lt;script&gt;</code> 里的前端状态</li>
+<li>CSS class 和内联样式</li>
+<li>导航栏、页脚、语言切换</li>
+<li>引用、脚注、编辑按钮、目录</li>
+<li>JSON-LD、hydration data、埋点配置</li>
+<li>广告位、推荐位、Cookie 弹窗</li>
+<li>无障碍标签、SVG、图标、懒加载占位</li>
+</ul>
+<p>网页不是一篇文章。现代网页更像一栋正在施工的大楼：正文只是房间，HTML 是钢筋、脚手架、电梯井、消防管、广告牌和物业公告栏。人类浏览器会把这些东西渲染掉，只给你看房间；Agent 如果拿 raw HTML，就等于把整栋楼的施工图纸吞下去。</p>
+<p>Wikipedia 已经算相对干净的网站了。它至少是以内容为核心，不是纯前端应用。但即便如此，<code>AI agent</code> 词条 raw HTML 仍然有 176,990 tokens。HN 原帖里提到的平均 Wikipedia 文章 68,240 tokens，并不夸张；我这里测到的数字更高，主要取决于词条大小、页面版本、抓取方式，以及是否包含导航、引用、模板、语言链接等页面结构。</p>
+<p>Nike 首页则是另一个典型：可见文本只有 3,994 tokens，raw HTML 却有 281,984 tokens。用户打开 Nike，是想看鞋；Agent 拿 raw HTML，可能先吃一肚子前端脚本。</p>
+<p>这就是第一层误区：<strong>把“网页内容”误认为“网页源码”。</strong></p>
+<h2 id="webfetch-不总是错错的是没有兜底策略">WebFetch 不总是错，错的是没有兜底策略
+</h2><p>这里要公平一点：不是所有 <code>WebFetch</code> 都糟糕。</p>
+<p>好的网页读取工具会做几件事：</p>
+<ul>
+<li>抓取页面</li>
+<li>清理 HTML</li>
+<li>去掉导航、脚本、样式</li>
+<li>提取正文</li>
+<li>根据问题做摘要</li>
+<li>只把摘要或相关片段交给模型</li>
+</ul>
+<p>HN 原帖也承认，Claude Code 的内置 <code>WebFetch</code> 对 Wikipedia 这类简单页面处理得不错，可以把页面总结到大约 950 tokens。这个数字很合理：如果用户只是问一个具体问题，950 tokens 的相关摘要比 68,000 tokens 的完整页面更适合进入上下文。</p>
+<p>问题出在失败路径。</p>
+<p>失败路径一般长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户：帮我看这个网页</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Agent：调用 WebFetch</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WebFetch：JS 渲染失败 / 403 / Cloudflare / 没提取到正文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Agent：尝试读取原始 HTML</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Agent：把几十万 tokens 的 HTML 塞进上下文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">模型：上下文变胖、费用上升、答案还可能错</span>
+</span></span></code></pre></div><p>最荒谬的地方是：<strong>你付钱买了一堆失败信息。</strong></p>
+<p>页面没读出来，任务没完成，但 token 已经烧掉了。更坏的是，这些无关 HTML 进入上下文后，还会污染后续推理。模型不是数据库，它不会自动把垃圾输入隔离在一边。上下文越胖，注意力越分散，答错的概率越高。</p>
+<p>所以，WebFetch 的关键不是“能不能抓网页”，而是：</p>
+<blockquote>
+<p>失败时，是否能停下来，而不是把失败结果继续喂给模型。</p>
+</blockquote>
+<p>这和运维里的日志处理很像。日志很有价值，但你不会把 2GB 的日志直接贴进工单。你会先 <code>grep</code>、<code>tail</code>、按时间过滤、按错误码聚合。Agent 读网页也一样，必须先过滤，再推理。</p>
+<h2 id="一次网页读取可能在-agent-循环里被放大十倍">一次网页读取，可能在 Agent 循环里被放大十倍
+</h2><p>很多人估 token 成本时，只估“一次调用”。比如，一个网页 68,000 tokens，按某个模型输入价算一下，觉得也没多少钱。</p>
+<p>这是低估。</p>
+<p>Agent 的真实成本来自循环。</p>
+<p>一个典型研究任务可能不是一次读取，而是这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">第 1 轮：搜索相关网页</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 2 轮：打开第一个结果</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 3 轮：总结页面</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 4 轮：发现缺引用，再打开第二个结果</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 5 轮：对比两个页面</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 6 轮：补充第三个来源</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 7 轮：生成大纲</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 8 轮：写正文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 9 轮：自检事实</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第 10 轮：修改输出</span>
+</span></span></code></pre></div><p>如果每一轮都带着前面的大段网页内容走，成本不是 <code>68,000 × 1</code>，而是像滚雪球一样增长。</p>
+<p>这也是 Agent 和普通 Chatbot 的区别。Chatbot 多数时候是一问一答；Agent 会调用工具、观察结果、再决定下一步。每一轮工具输出如果都保留在上下文里，前面网页的垃圾 HTML 会在后面反复付费。</p>
+<p>可以把它理解为“上下文利息”：你第一次把 68,000 tokens 塞进去，只付一次本金；但后面每轮调用都继续携带它，就开始付利息。循环越长，利息越吓人。</p>
+<p>这也是为什么我不喜欢“上下文窗口越大越好”这个说法。大窗口当然有价值，但它也会纵容坏习惯：以前 32K 窗口塞不进去的垃圾，现在 200K、1M 窗口能塞了，于是系统不报错了，账单开始报错。</p>
+<h2 id="成本差异来自信息粒度不是来自模型聪不聪明">成本差异来自“信息粒度”，不是来自模型聪不聪明
+</h2><p>回到前面的复测数据：</p>
+<ul>
+<li>raw HTML：176,990 tokens</li>
+<li>可见文本：13,934 tokens</li>
+<li>REST summary：415 tokens</li>
+<li>intro extract：111 tokens</li>
+<li>sections：984 tokens</li>
+</ul>
+<p>这些不是同一种东西。</p>
+<p>它们代表四种信息粒度：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>粒度</th>
+					<th>适用场景</th>
+					<th>风险</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>raw HTML</td>
+					<td>调试页面结构、爬虫解析、反爬分析</td>
+					<td>极贵，噪声巨大</td>
+			</tr>
+			<tr>
+					<td>可见全文</td>
+					<td>深读文章、审稿、找细节</td>
+					<td>中等成本，仍可能过量</td>
+			</tr>
+			<tr>
+					<td>章节 / 摘要</td>
+					<td>快速了解主题、判断是否值得深入</td>
+					<td>信息可能不够细</td>
+			</tr>
+			<tr>
+					<td>API 字段 / 片段</td>
+					<td>回答具体问题、抽取事实</td>
+					<td>依赖源站结构</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>多数 Agent 任务根本不需要 raw HTML。甚至多数任务也不需要全文。用户问“这篇文章讲什么”，摘要够了；问“有没有提到某个观点”，关键词检索加相关段落够了；问“这家公司官网有没有价格”，只要价格区域，不要全站脚本。</p>
+<p>所以网页读取的第一原则应该是：</p>
+<blockquote>
+<p>先问任务需要什么粒度，再决定抓什么内容。</p>
+</blockquote>
+<p>这句话听着像废话，但很多 Agent 框架默认不是这么干的。它们默认是“工具给什么，我就塞什么”。这在 demo 里没问题，在生产里就是账单炸弹。</p>
+<h2 id="一套更稳的网页读取策略先轻后重逐级加码">一套更稳的网页读取策略：先轻后重，逐级加码
+</h2><p>如果让我给 AI Agent 设计网页读取流程，我不会让它第一步就抓整页。我会让它像侦察兵，而不是像铲车。</p>
+<h3 id="第-1-层只拿搜索结果和摘要">第 1 层：只拿搜索结果和摘要
+</h3><p>先用搜索引擎 snippet、页面标题、描述判断相关性。很多问题在这一层已经够用了。</p>
+<p>适合：</p>
+<ul>
+<li>判断主题方向</li>
+<li>找官网 / 文档入口</li>
+<li>快速筛掉无关页面</li>
+<li>对比多个候选来源</li>
+</ul>
+<p>不要一上来就打开 10 个网页。先看 10 个标题，再决定打开哪 2 个。</p>
+<h3 id="第-2-层调用站点-api-或结构化接口">第 2 层：调用站点 API 或结构化接口
+</h3><p>Wikipedia 这类站点有成熟 API。不要抓 HTML。</p>
+<p>比如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">https://en.wikipedia.org/api/rest_v1/page/summary/AI_agent</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">https://en.wikipedia.org/w/api.php?action</span><span style="color:#f92672">=</span><span style="color:#e6db74">query&amp;prop=extracts&amp;exintro=1&amp;explaintext=1&amp;titles=AI_agent&amp;format=json</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">https://en.wikipedia.org/w/api.php?action</span><span style="color:#f92672">=</span><span style="color:#e6db74">parse&amp;page=AI_agent&amp;prop=sections&amp;format=json</span>
+</span></span></code></pre></div><p>我复测里，<code>AI_agent</code> 的 REST summary 是 415 tokens，intro extract 是 111 tokens，sections 是 984 tokens。对很多问答任务来说，这已经够了。</p>
+<h3 id="第-3-层提取正文而不是读取源码">第 3 层：提取正文，而不是读取源码
+</h3><p>如果 API 不够，再做正文抽取。可以用 Readability、Trafilatura、Jina Reader、Tavily Extract，或者自己写 HTML 清洗器。</p>
+<p>这一步目标不是“拿到网页所有内容”，而是拿到正文主体。</p>
+<p>复测里 <code>AI agent</code> Wikipedia raw HTML 是 176,990 tokens，简单可见文本抽取后是 13,934 tokens。虽然还不完美，但已经少了 92% 左右。</p>
+<h3 id="第-4-层按问题检索片段">第 4 层：按问题检索片段
+</h3><p>全文仍然太大时，不要直接喂给模型。先分块，做关键词或 embedding 检索，只取相关段落。</p>
+<p>例如用户问“AI agent 的安全风险是什么”，就只拿 <code>Security</code>、<code>Concerns</code>、<code>Threat modeling</code> 附近段落。不要把历史、应用、参考文献、语言导航全塞进去。</p>
+<h3 id="第-5-层raw-html-只给专门任务">第 5 层：raw HTML 只给专门任务
+</h3><p>raw HTML 应该是特权操作，不是默认操作。</p>
+<p>只有这些场景才值得读源码：</p>
+<ul>
+<li>调试爬虫选择器</li>
+<li>分析前端结构</li>
+<li>找隐藏字段</li>
+<li>排查 403 / JS 渲染问题</li>
+<li>写页面解析规则</li>
+</ul>
+<p>而且即便读，也应该有硬上限：比如最多 20,000 tokens，超过就保存到文件，让 Agent 用工具按需检索，不要直接进入模型上下文。</p>
+<h2 id="给-agent-加一道网页预算闸门">给 Agent 加一道“网页预算闸门”
+</h2><p>真正工程化的 Agent，不应该只会 <code>fetch(url)</code>。它应该在读取前先估算预算。</p>
+<p>可以设计一个简单策略：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">web_read_budget:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_tokens_per_page: 12000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">max_tokens_per_task: 40000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">prefer_api: true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">prefer_summary: true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">raw_html_default: false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">raw_html_max_tokens: 20000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">on_extract_failure: &#34;ask_or_skip&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">keep_failed_fetch_out_of_context: true</span>
+</span></span></code></pre></div><p>这里最关键的是最后两条：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">on_extract_failure: &#34;ask_or_skip&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keep_failed_fetch_out_of_context: true</span>
+</span></span></code></pre></div><p>意思是：正文抽取失败时，不要把失败页面原样塞进上下文。要么换工具，要么跳过，要么问人。失败结果可以存文件、记日志，但不要进入模型脑子里。</p>
+<p>我更喜欢把网页读取拆成两个阶段：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">阶段 A：采集层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 抓网页</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 解 JS</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 过反爬</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 清洗 HTML</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 抽正文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 保存原文和元数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">阶段 B：推理层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 只读摘要</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 只读相关片段</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 必要时回查原文位置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 不直接吞 raw HTML</span>
+</span></span></code></pre></div><p>这其实就是传统搜索系统的思路：爬虫归爬虫，索引归索引，查询归查询。Agent 不应该每次回答问题都从“抓取整个互联网”开始。</p>
+<h2 id="不要迷信长上下文窗口越大越需要节制">不要迷信长上下文：窗口越大，越需要节制
+</h2><p>现在很多模型开始支持 128K、200K、1M tokens。听起来像豪宅：空间大了，终于可以随便放东西。</p>
+<p>但用久了你会发现，大房子也会变成杂物间。</p>
+<p>长上下文真正适合的是这些场景：</p>
+<ul>
+<li>一次性审阅长合同</li>
+<li>对比多个完整文档</li>
+<li>分析大型代码文件</li>
+<li>处理不能拆分的连续材料</li>
+<li>保留复杂推理链的必要证据</li>
+</ul>
+<p>它不适合拿来装网页垃圾、重复日志、失败抓取结果、完整历史对话。</p>
+<p>更准确地说：<strong>长上下文是安全气囊，不是垃圾桶。</strong></p>
+<p>一旦 Agent 有了“大窗口兜底”，开发者很容易懒得做检索、过滤、摘要和缓存。短期 demo 很爽，长期成本很难看。真正成熟的 Agent 系统，应该在 32K 窗口内也能优雅工作；长上下文只在必要时加码。</p>
+<h2 id="我的判断未来-agent-的核心能力不是会浏览网页而是会少读网页">我的判断：未来 Agent 的核心能力不是会浏览网页，而是会少读网页
+</h2><p>早期我们夸一个 Agent 强，会说它“会用浏览器”“会搜索网页”“会打开链接”。这当然重要。但下一阶段，更重要的能力是：</p>
+<blockquote>
+<p>它知道什么时候不该打开网页，什么时候只读摘要，什么时候必须深读，什么时候应该停下来。</p>
+</blockquote>
+<p>这就像一个成熟程序员不会一上来 <code>cat</code> 整个 2GB 日志。他会先看错误时间、错误码、最近 200 行、相关 request id。AI Agent 也应该有这种职业习惯。</p>
+<p>今天这个 68,000 tokens 的 Wikipedia 案例，表面上是 token 成本问题，底层其实是上下文工程问题：</p>
+<ul>
+<li>上下文不是越多越好，而是越相关越好</li>
+<li>工具输出不是都该进模型，而是要先过筛</li>
+<li>网页不是文章，而是信息矿石</li>
+<li>Agent 不该吞矿石，应该先冶炼</li>
+</ul>
+<p>如果你在搭自己的 AI Agent，尤其是带联网搜索、网页阅读、资料研究的 Agent，我建议先加三条硬规则：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">1. raw HTML 默认不进上下文</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 每个网页进入模型前必须先估 token</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">3. 抽取失败时停止，不把失败内容喂给模型</span>
+</span></span></code></pre></div><p>这三条不性感，但很救命。</p>
+<p>因为 AI Agent 真正的成本黑洞，往往不是它想太多。</p>
+<p>是它读太多。</p>
+<h2 id="参考来源">参考来源
+</h2><ul>
+<li>Hacker News: <code>One Wikipedia page costs your AI agent 68,000 tokens</code></li>
+<li>PromptZone: <code>Wikipedia Pages Cost AI Agents 68K Tokens</code></li>
+<li>MindStudio: <code>Token Reduction Strategies for AI Agents</code></li>
+<li>本文复测：<code>tiktoken</code> + <code>cl100k_base</code>，页面抓取时间为 2026-07-13</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/token%E4%BC%98%E5%8C%96/">Token优化</a>
+        
+            <a href="/tags/webfetch/">WebFetch</a>
+        
+            <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/">上下文工程</a>
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC%E6%8E%A7%E5%88%B6/">成本控制</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/ai-agent-cost-runaway-production-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/codeburn-ai-token-cost-tracker/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">codeburn 实测：你的 AI 编程开销到底去哪了？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-token-cost-cut-7-tips/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/tolaria-git-markdown-ai-memory/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tolaria 把 AI 记忆拉回 Markdown：为什么 Git 仓库可能比向量数据库更适合第二大脑</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-runtime-vs-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 不能只靠框架：为什么运行时才是落地关键</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/wikipedia-68000-tokens-ai-agent-webfetch-cost\/'; 
+        const pageTitle = '一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

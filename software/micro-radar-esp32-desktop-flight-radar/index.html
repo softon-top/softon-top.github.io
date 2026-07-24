@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="micro-radar 是一个基于 ESP32-C3 的开源桌面航班雷达，通过 Wi-Fi 调用 OpenSky API 获取附近实时航班数据，并显示在 1.28 英寸圆形屏幕上。它不是 ADS-B 接收机，却很适合普通人理解开源硬件、公共数据 API 和桌面信息装置的边界。">
+<title>micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？</title>
+
+<link rel='canonical' href='https://softon.top/software/micro-radar-esp32-desktop-flight-radar/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？">
+<meta property='og:description' content="micro-radar 是一个基于 ESP32-C3 的开源桌面航班雷达，通过 Wi-Fi 调用 OpenSky API 获取附近实时航班数据，并显示在 1.28 英寸圆形屏幕上。它不是 ADS-B 接收机，却很适合普通人理解开源硬件、公共数据 API 和桌面信息装置的边界。">
+<meta property='og:url' content='https://softon.top/software/micro-radar-esp32-desktop-flight-radar/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='ESP32' /><meta property='article:tag' content='OpenSky' /><meta property='article:tag' content='开源硬件' /><meta property='article:tag' content='航班雷达' /><meta property='article:tag' content='桌面小玩具' /><meta property='article:published_time' content='2026-07-07T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-07T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？">
+<meta name="twitter:description" content="micro-radar 是一个基于 ESP32-C3 的开源桌面航班雷达，通过 Wi-Fi 调用 OpenSky API 获取附近实时航班数据，并显示在 1.28 英寸圆形屏幕上。它不是 ADS-B 接收机，却很适合普通人理解开源硬件、公共数据 API 和桌面信息装置的边界。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它不是-ads-b-接收机这点反而重要">它不是 ADS-B 接收机，这点反而重要</a></li>
+    <li><a href="#为什么是桌面航班雷达不是又一个天气屏">为什么是“桌面航班雷达”，不是又一个天气屏？</a></li>
+    <li><a href="#技术上它是一个很好的全链路练习题">技术上，它是一个很好的“全链路练习题”</a></li>
+    <li><a href="#opensky-api免费的浪漫也有现实边界">OpenSky API：免费的浪漫，也有现实边界</a></li>
+    <li><a href="#圆形屏幕的难点漂亮不是贴个-ui-就完事">圆形屏幕的难点：漂亮不是贴个 UI 就完事</a></li>
+    <li><a href="#它适合谁不是所有人都适合">它适合谁？不是所有人都适合</a></li>
+    <li><a href="#我会怎么改这个项目">我会怎么改这个项目</a></li>
+    <li><a href="#这类项目为什么值得写">这类项目为什么值得写？</a></li>
+    <li><a href="#项目信息">项目信息</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/micro-radar-esp32-desktop-flight-radar/">micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-07T00:00:00Z'>
+                    2026-07-07，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/micro-radar-esp32-desktop-flight-radar/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它不是-ads-b-接收机这点反而重要">它不是 ADS-B 接收机，这点反而重要</a></li>
+    <li><a href="#为什么是桌面航班雷达不是又一个天气屏">为什么是“桌面航班雷达”，不是又一个天气屏？</a></li>
+    <li><a href="#技术上它是一个很好的全链路练习题">技术上，它是一个很好的“全链路练习题”</a></li>
+    <li><a href="#opensky-api免费的浪漫也有现实边界">OpenSky API：免费的浪漫，也有现实边界</a></li>
+    <li><a href="#圆形屏幕的难点漂亮不是贴个-ui-就完事">圆形屏幕的难点：漂亮不是贴个 UI 就完事</a></li>
+    <li><a href="#它适合谁不是所有人都适合">它适合谁？不是所有人都适合</a></li>
+    <li><a href="#我会怎么改这个项目">我会怎么改这个项目</a></li>
+    <li><a href="#这类项目为什么值得写">这类项目为什么值得写？</a></li>
+    <li><a href="#项目信息">项目信息</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>有些开源项目，一眼看上去不像“生产力工具”，更像程序员给自己做的一颗糖。</p>
+<p><code>micro-radar</code> 就是这种东西。</p>
+<p>它不是下一个 Kubernetes，也不是能让你少写 50% 代码的 AI 插件。它只是把一个迷你航班雷达放到桌面上：基于 ESP32-C3，通过 Wi-Fi 从 OpenSky API 获取附近实时航班数据，再显示到一块 1.28 英寸的圆形屏幕里。</p>
+<p>听起来很小。</p>
+<p>但小得正好。</p>
+<p>因为它击中的不是“我需要一个航班监控系统”这种刚需，而是另一种更隐秘的快乐：你坐在电脑前，抬头看见桌上一块小圆屏，里面有飞机在移动。某个航班从你城市上空经过，它不是地图 App 里冷冰冰的一条线，而是被你亲手焊进桌面的一点闪光。</p>
+<p>项目地址：<code>https://github.com/AnthonySturdy/micro-radar</code></p>
+<h2 id="它不是-ads-b-接收机这点反而重要">它不是 ADS-B 接收机，这点反而重要
+</h2><p>先把误会讲清楚：<code>micro-radar</code> 不是传统意义上的 ADS-B 接收设备。</p>
+<p>真正的 ADS-B 接收，需要天线、射频接收模块、解码链路，以及合适的安装位置。那是一套更硬核的玩法：你真的从空中接收飞机广播信号，然后解码出航班位置、高度、速度等数据。</p>
+<p><code>micro-radar</code> 走的是轻量路线。它通过 Wi-Fi 访问 OpenSky API，获取附近航班数据，再在 ESP32-C3 驱动的小屏幕上展示。</p>
+<p>这意味着它牺牲了一部分“无线电原教旨主义”的浪漫，但换来了非常低的门槛。</p>
+<p>你不需要架天线，不需要折腾 SDR，不需要研究射频环境。你需要的是一块支持联网的 ESP32-C3、一块小屏幕、项目代码，以及一个能访问 API 的网络环境。</p>
+<p>这就是它适合作为桌面小项目的原因。</p>
+<p>它不试图把你拖进航空监控工程，而是把复杂系统切成一个能周末完成的颗粒度：联网、请求 API、解析数据、绘制 UI、塞进一个小壳子里。每一块都不吓人，连起来却很有成就感。</p>
+<h2 id="为什么是桌面航班雷达不是又一个天气屏">为什么是“桌面航班雷达”，不是又一个天气屏？
+</h2><p>ESP32 桌面小屏项目并不少。</p>
+<p>天气屏、番茄钟、股票看板、YouTube 订阅数、服务器监控、家庭温湿度仪表……这些都很常见。它们的共同点是“有用”。</p>
+<p>航班雷达不一样。</p>
+<p>它没那么有用。</p>
+<p>你每天不一定需要知道头顶飞过哪架飞机。大多数时候，这个信息不会帮你多赚一块钱，也不会让你的工作效率提升 3%。但它有一种很奇妙的“世界感”。</p>
+<p>天气屏告诉你窗外会不会下雨；服务器监控告诉你系统有没有挂；航班雷达告诉你：你的房间不是一个封闭盒子，它其实嵌在一张巨大的交通网络里。</p>
+<p>这就是 <code>micro-radar</code> 的情绪价值。</p>
+<p>它把一个宏观系统缩小到桌面，把航空、地理、网络 API、嵌入式显示这些东西压进一个圆形屏幕。你不是在看数据，而是在看世界从你头顶路过。</p>
+<h2 id="技术上它是一个很好的全链路练习题">技术上，它是一个很好的“全链路练习题”
+</h2><p>别被它可爱的外表骗了。</p>
+<p><code>micro-radar</code> 这种项目，作为学习样本很合适，因为它天然包含一条完整链路：</p>
+<ul>
+<li>硬件：ESP32-C3 负责联网和驱动屏幕；</li>
+<li>数据源：OpenSky API 提供航班状态数据；</li>
+<li>网络：设备需要通过 Wi-Fi 请求远程接口；</li>
+<li>解析：返回数据需要筛选、转换、映射到屏幕坐标；</li>
+<li>UI：1.28 英寸圆屏空间极小，信息密度必须克制；</li>
+<li>交互：如果加入按键或触摸，还要处理状态切换和详情展示。</li>
+</ul>
+<p>很多教程项目只练一个点：点亮 LED、请求 HTTP、显示文字。<code>micro-radar</code> 的价值在于它不是孤立练习，而是把这些能力串成一个真实装置。</p>
+<p>这类项目最适合培养“产品型工程直觉”。</p>
+<p>比如屏幕只有 1.28 英寸，你不可能把所有航班字段都塞进去。航班号、高度、距离、方向、更新时间，哪些该常驻？哪些该点击后再看？如果 API 一次返回很多飞机，如何筛选附近目标？如果网络失败，小屏幕该显示错误、重试，还是保留上次数据？</p>
+<p>这些问题不是语法题，而是系统题。</p>
+<p>小项目的好处就在这里：它足够小，小到你能掌控；又足够真实，真实到你必须做取舍。</p>
+<h2 id="opensky-api免费的浪漫也有现实边界">OpenSky API：免费的浪漫，也有现实边界
+</h2><p><code>micro-radar</code> 依赖 OpenSky API，这也是它最聪明、同时最脆弱的地方。</p>
+<p>聪明在于，OpenSky 把全球航空数据的一部分开放给开发者。对一个桌面小装置来说，直接调用 API 比自己接 ADS-B 信号现实得多。它让项目从“硬核无线电爱好者玩具”变成“普通开源硬件玩家也能复刻的小物件”。</p>
+<p>脆弱在于，任何公共 API 都有边界。</p>
+<p>免费接口通常会有频率限制、可用性波动、数据延迟或覆盖范围差异。你桌上的小雷达看不到飞机，不一定是设备坏了，也可能是 API 当前没有返回附近数据，或者你所在区域数据覆盖不够好。</p>
+<p>这点如果写进产品说明，会显得扫兴；但如果作为学习项目，它反而很有教育意义。</p>
+<p>真实世界的软件从来不是“请求接口 → 得到完美数据 → 展示完美 UI”。真实世界是：接口会慢，数据会缺，网络会抖，返回结构会变，用户会在最不合适的时候看见空屏。</p>
+<p>所以一个成熟的 <code>micro-radar</code> 玩法，不只是把飞机画出来，还要处理这些尴尬时刻：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Wi-Fi disconnected → 显示离线状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">API timeout → 显示重试倒计时</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">No aircraft nearby → 显示空域安静，而不是假装有数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Stale data → 标出更新时间，避免误导</span>
+</span></span></code></pre></div><p>这才是开源硬件项目真正好玩的地方。它把你从“能跑”推向“可用”。</p>
+<h2 id="圆形屏幕的难点漂亮不是贴个-ui-就完事">圆形屏幕的难点：漂亮不是贴个 UI 就完事
+</h2><p>1.28 英寸圆形屏幕很讨喜，但它也很残酷。</p>
+<p>方屏可以偷懒，圆屏不行。圆形屏幕天然有视觉中心，边缘空间又被曲线切掉。如果你照搬普通仪表盘布局，很容易出现信息挤在一起、边缘文字难读、图标比例怪异的问题。</p>
+<p>航班雷达偏偏又是强空间感 UI。</p>
+<p>它需要表达方向、距离、目标点、也许还有高度或航班标识。屏幕越小，设计越不能贪心。一个好的桌面雷达界面，应该像老式仪表一样克制：中心点代表自己，周围点代表飞机，颜色或大小表达高度 / 距离，详情只在需要时出现。</p>
+<p>这也是我觉得 <code>micro-radar</code> 比普通天气屏更值得写的原因。</p>
+<p>天气屏的信息结构很固定：温度、天气图标、日期、湿度。航班雷达则更像一个缩小版态势图。它要求开发者理解信息层级，而不是把 JSON 字段一股脑打印出来。</p>
+<p>小屏幕会逼你变得诚实。</p>
+<p>如果一个信息不重要，它就没有资格占据 1.28 英寸里的任何像素。</p>
+<h2 id="它适合谁不是所有人都适合">它适合谁？不是所有人都适合
+</h2><p><code>micro-radar</code> 适合三类人。</p>
+<p>第一类，是喜欢桌面小装置的人。你可能已经有墨水屏日历、服务器监控小屏、Home Assistant 面板。<code>micro-radar</code> 会成为这些设备里最不实用、但最有故事感的一个。</p>
+<p>第二类，是想学 ESP32 但讨厌“点灯教程”的人。点灯很经典，但点完之后很空。航班雷达至少给了一个完整目标：联网拿数据，画到屏幕上，最后摆到桌上长期运行。</p>
+<p>第三类，是想理解 API 产品边界的人。OpenSky 这类公共数据源能让项目快速启动，但也会把频率限制、数据延迟、异常处理这些现实问题一并带进来。它比 demo 更接近真实软件。</p>
+<p>但它不适合两类人。</p>
+<p>如果你想做专业航空监控，它太轻。你应该去研究 ADS-B 接收、天线、SDR、数据融合，而不是指望一个 Wi-Fi 小屏替代专业方案。</p>
+<p>如果你只想买个成品摆件，它可能也不够省心。开源硬件的乐趣往往在搭建过程，不在开箱即用。你要接受刷固件、配 Wi-Fi、调屏幕、查日志这些小麻烦。</p>
+<h2 id="我会怎么改这个项目">我会怎么改这个项目
+</h2><p>如果把 <code>micro-radar</code> 当作一个周末项目，我不会急着加功能。</p>
+<p>我会先做三件事。</p>
+<p>第一，给数据加“可信度”。比如明确显示数据更新时间。如果超过某个阈值，就把航班点变暗，避免用户以为旧数据仍然实时。</p>
+<p>第二，给空状态加设计。没有飞机时，不要只显示空白。可以显示“空域安静”、当前查询半径、下次刷新时间。好的空状态会让设备显得稳定，而不是像坏了。</p>
+<p>第三，做一个极简 Web 配置页。ESP32 项目最烦人的地方常常不是核心功能，而是改 Wi-Fi、改经纬度、改刷新间隔。把这些做成局域网页面，设备的寿命会长很多。</p>
+<p>再往后，才考虑更花的东西：</p>
+<ul>
+<li>根据高度改变颜色；</li>
+<li>根据方向画小箭头；</li>
+<li>点击查看航班详情；</li>
+<li>支持多地点配置；</li>
+<li>加入夜间模式；</li>
+<li>用外壳和支架把它变成真正的桌面摆件。</li>
+</ul>
+<p>注意，这些都不是为了堆功能，而是为了让它从“能演示”走向“愿意长期放桌上”。</p>
+<h2 id="这类项目为什么值得写">这类项目为什么值得写？
+</h2><p>因为它提醒我们：开源不只有框架、数据库、AI Agent。</p>
+<p>还有这种小东西。</p>
+<p>它不宏大，不严肃，不承诺改变世界。但它把几个普通技术点拼在一起，做成了一个你能摸到、能摆在桌上、能拿给朋友看的物件。</p>
+<p>在 AI 把软件生成变得越来越廉价之后，这类“软件 + 硬件 + 空间感”的项目反而更有魅力。它不是在屏幕里再造一个屏幕，而是把数据从浏览器里拎出来，放到现实世界的一角。</p>
+<p>你写一段代码，桌上一块小屏亮起来。几公里外的天空里，一架飞机正在经过。API、Wi-Fi、ESP32、圆形屏幕，把这件事翻译成一个小点。</p>
+<p>这就是 <code>micro-radar</code> 最迷人的地方。</p>
+<p>它没那么有用。</p>
+<p>但它让技术重新有了玩具感。</p>
+<p>而很多时候，正是这种玩具感，把人重新拉回创造里。</p>
+<h2 id="项目信息">项目信息
+</h2><ul>
+<li>项目：<code>micro-radar</code></li>
+<li>GitHub：<code>https://github.com/AnthonySturdy/micro-radar</code></li>
+<li>项目描述：<code>A tiny open-source flight radar for your desk</code></li>
+<li>核心硬件：ESP32-C3、1.28 英寸圆形屏幕</li>
+<li>数据来源：OpenSky API</li>
+<li>工作方式：通过 Wi-Fi 获取附近实时航班数据并显示在桌面小屏上</li>
+<li>注意：它不是 ADS-B 无线电接收机，而是 API 驱动的桌面航班显示装置</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/esp32/">ESP32</a>
+        
+            <a href="/tags/opensky/">OpenSky</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E7%A1%AC%E4%BB%B6/">开源硬件</a>
+        
+            <a href="/tags/%E8%88%AA%E7%8F%AD%E9%9B%B7%E8%BE%BE/">航班雷达</a>
+        
+            <a href="/tags/%E6%A1%8C%E9%9D%A2%E5%B0%8F%E7%8E%A9%E5%85%B7/">桌面小玩具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/clawdmeter-esp32-claude-code-usage-dashboard/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">给 Claude Code 装一块物理仪表盘：Clawdmeter ESP32 亲手搭建指南</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/micro-radar-esp32-desktop-flight-radar\/'; 
+        const pageTitle = 'micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

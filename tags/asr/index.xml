@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>ASR on softon.top</title>
+		<link>https://softon.top/tags/asr/</link>
+		<description>Recent content in ASR on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 16 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/asr/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CapsWriter-Offline：离线语音输入，可能是 AI 工作流最被低估的入口</title>
+				<link>https://softon.top/software/capswriter-offline-voice-input-ai-workflow/</link>
+				<pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/capswriter-offline-voice-input-ai-workflow/</guid>
+				<description>&lt;p&gt;语音输入这件事，过去十几年一直有点尴尬。&lt;/p&gt;&#xA;&lt;p&gt;它明明听起来很先进：人说话，电脑打字，像科幻片里的办公桌。但真放到日常工作里，很多人用了几次就关掉了。不是识别不准，就是延迟像隔着一条河；不是联网不稳，就是担心自己随口说出的内容被送去云端。最后大家又回到键盘前，用十根手指继续敲。&lt;/p&gt;&#xA;&lt;p&gt;这就是语音输入最吊诡的地方：&lt;strong&gt;它不是没有需求，而是体验的任何一个短板都会把人劝退。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;CapsWriter-Offline&lt;/code&gt; 有意思的地方，不在于它又做了一个“按住说话、松开上屏”的功能。真正值得写的是，它把语音输入从一个“输入法插件”，做成了一个本地优先的桌面工作流入口：本地 ASR 负责听懂你，热词系统负责纠偏，LLM 角色负责后处理，文件转录负责把音视频素材变成文本。&lt;/p&gt;&#xA;&lt;p&gt;这就不再是“懒得打字”的小工具了。&lt;/p&gt;&#xA;&lt;p&gt;它更像一块被放在键盘旁边的新按键：你按下去，声音进入电脑；你松开，文字进入工作流。&lt;/p&gt;&#xA;&lt;h2 id=&#34;电脑端语音输入为什么一直不够好用&#34;&gt;电脑端语音输入为什么一直不够好用&#xA;&lt;/h2&gt;&lt;p&gt;手机上的语音输入已经被训练得很自然。微信聊天时懒得打字，按住说一句，文字马上出来；开车时回消息，也知道语音比键盘安全。可一到电脑上，语音输入就像突然倒退了五年。&lt;/p&gt;&#xA;&lt;p&gt;问题不在“有没有识别模型”。问题在链路太长。&lt;/p&gt;&#xA;&lt;p&gt;一次真正舒服的电脑语音输入，至少要同时满足四件事：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;按下就能说，不能吞掉开头几个字&lt;/li&gt;&#xA;&lt;li&gt;松开就能上屏，不能让人等到忘了刚才说什么&lt;/li&gt;&#xA;&lt;li&gt;专业词、人名、软件名不能乱猜&lt;/li&gt;&#xA;&lt;li&gt;敏感内容不要默认发到云端&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;只要其中一项崩掉，用户心里那根线就断了。&lt;/p&gt;&#xA;&lt;p&gt;比如延迟。语音输入不是文件转写，文件转写慢一点还能忍，反正人不在旁边干等。但输入是交互动作，交互动作最怕“悬空”。你说完一句话，停在那里，等文字出现。那一秒钟会被无限拉长，像把手伸进门缝里等门合上。&lt;/p&gt;&#xA;&lt;p&gt;再比如专业词。普通聊天里，“今天吃什么”很好识别；但技术写作里，“Qwen3-ASR”“DirectML”“Ollama”“Claude Code”这种词如果反复识别错，你会发现自己不是在输入，而是在给语音识别擦屁股。&lt;/p&gt;&#xA;&lt;p&gt;还有隐私。很多人不是绝对不能用云端识别，而是不希望&lt;strong&gt;所有&lt;/strong&gt;输入都默认经过云端。日记、客户资料、内部会议、商业计划、代码注释，哪怕最终服务商没有滥用，心理门槛也已经在那儿了。&lt;/p&gt;&#xA;&lt;p&gt;所以电脑端语音输入一直卡在一个很现实的位置：能用，但不够“信任”；能识别，但不够“无感”。&lt;/p&gt;&#xA;&lt;p&gt;CapsWriter-Offline 的切入点，正好是这两个词：&lt;strong&gt;信任&lt;/strong&gt;和&lt;strong&gt;无感&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;capswriter-offline-真正做对的是把输入动作做成肌肉记忆&#34;&gt;CapsWriter-Offline 真正做对的，是把输入动作做成肌肉记忆&#xA;&lt;/h2&gt;&lt;p&gt;CapsWriter-Offline 的核心交互非常克制：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;按住 &lt;code&gt;CapsLock&lt;/code&gt; 或鼠标侧键 &lt;code&gt;X2&lt;/code&gt; 说话，松开即输入。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这句话看起来朴素，但背后是很重要的产品判断。&lt;/p&gt;&#xA;&lt;p&gt;它没有先弹一个窗口，没有让你点“开始录音”，也没有要求你把注意力从当前编辑器挪走。它把语音输入塞进一个已经存在的身体动作里：按键。&lt;/p&gt;&#xA;&lt;p&gt;键盘为什么好用？因为你打字时不会思考“我要调用一次文本输入服务”。你只是按键。鼠标为什么好用？因为你点击时不会思考“我要发起一次屏幕坐标选择请求”。你只是点。&lt;/p&gt;&#xA;&lt;p&gt;好的语音输入也应该如此。不是打开软件，不是进入模式，而是按住，说，松开。&lt;/p&gt;&#xA;&lt;p&gt;CapsWriter-Offline 为了这个体验，甚至选择持续启用麦克风。它的 FAQ 里解释过原因：如果录音时才启用麦克风，系统会有大约 &lt;code&gt;0.5s&lt;/code&gt; 延迟，开头一两个字容易被吞掉。持续打开麦克风，是为了按下按键就能马上说话。&lt;/p&gt;&#xA;&lt;p&gt;这其实是一个典型的桌面工具取舍：为了让输入动作变得“无感”，它牺牲了一点点看起来更优雅的资源管理。用户感受到的不是“麦克风管理策略”，而是开头不丢字。&lt;/p&gt;&#xA;&lt;p&gt;更细的一点是，它默认去掉短句末尾逗号句号。这个设计很小，但很懂真实输入：语音识别模型喜欢给你补标点，可你在聊天框、搜索框、命令描述里，很多时候不需要那个尾巴。v2.6 里它又把这个逻辑改得更细：仅对 &lt;code&gt;8&lt;/code&gt; 词以内结果去除末尾标点，长句不再误伤。&lt;/p&gt;&#xA;&lt;p&gt;这类细节不是参数堆砌，是工具长期被真实使用后的磨损痕迹。&lt;/p&gt;&#xA;&lt;h2 id=&#34;完全离线不只是隐私标签而是体验标签&#34;&gt;完全离线，不只是隐私标签，而是体验标签&#xA;&lt;/h2&gt;&lt;p&gt;CapsWriter-Offline 的名字里有 &lt;code&gt;Offline&lt;/code&gt;，这不是营销词。&lt;/p&gt;&#xA;&lt;p&gt;它的识别模型跑在本地，支持 &lt;code&gt;Paraformer&lt;/code&gt;、&lt;code&gt;SenseVoice-Small&lt;/code&gt;、&lt;code&gt;Fun-ASR-Nano&lt;/code&gt;、&lt;code&gt;Qwen3-ASR-1.7B&lt;/code&gt; 等引擎。按官方文档，目前主要保证 Windows 10/11 64 位环境。软件和模型分开下载，模型放进 &lt;code&gt;models/&lt;/code&gt; 对应目录后即可运行。&lt;/p&gt;&#xA;&lt;p&gt;官方给出的模型选择建议也很直接：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;独显电脑优先用 &lt;code&gt;Qwen3-ASR-1.7B-q5_k&lt;/code&gt;，准确率最好&lt;/li&gt;&#xA;&lt;li&gt;集显电脑可尝试 &lt;code&gt;Qwen3-ASR-1.7B-q4_k&lt;/code&gt;，延迟太高则降到 &lt;code&gt;Fun-ASR-Nano&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;性能较弱则建议 &lt;code&gt;SenseVoice-Small&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;性能参考里有一组数据很关键：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

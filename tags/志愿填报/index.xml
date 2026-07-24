@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>志愿填报 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BF%97%E6%84%BF%E5%A1%AB%E6%8A%A5/</link>
+		<description>Recent content in 志愿填报 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 28 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BF%97%E6%84%BF%E5%A1%AB%E6%8A%A5/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我用 5 款 AI 填了同一份高考志愿，结果全都不一样</title>
+				<link>https://softon.top/ai/ai-gaokao-volunteer-filing-test/</link>
+				<pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-gaokao-volunteer-filing-test/</guid>
+				<description>&lt;h2 id=&#34;这届考生都在拿-ai-填志愿&#34;&gt;这届考生，都在拿 AI 填志愿&#xA;&lt;/h2&gt;&lt;p&gt;2026 年 6 月，高考出分季。打开短视频平台，大概率能刷到 AI 填志愿的直播间。主播在镜头前输入分数、选科、地区，几十秒后一张&amp;quot;冲-稳-保&amp;quot;阶梯列表弹出来，每个学校后面还贴心地标着录取概率。弹幕不停滚：&amp;ldquo;河北物理类 598 能上什么？&amp;ldquo;&amp;ldquo;帮我看看这个方案行不行？&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;这不是什么小众现象。夸克高考产品公布的数据显示，其高考服务累计覆盖超 1.6 亿人次，其中一半以上来自三线及以下城市。短视频平台 AI 志愿填报话题播放量逼近亿级——当你还在犹豫&amp;quot;靠不靠谱&amp;quot;的时候，几千万考生已经用上了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;四类工具各显神通&#34;&gt;四类工具，各显神通&#xA;&lt;/h2&gt;&lt;p&gt;当前市面上能用于填志愿的 AI ，大致分四类。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;第一类：官方系统。&lt;/strong&gt; 教育部&amp;quot;阳光志愿&amp;quot;平台，以及全国 31 个省份各自的志愿填报参考系统。数据直接对接各省考试院，权威性和准确性最高，但功能偏基础，更像是&amp;quot;信息查询器&amp;quot;而非&amp;quot;智能助手&amp;rdquo;。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;第二类：互联网大厂产品。&lt;/strong&gt; 夸克高考志愿大模型（基于通义千问）、百度 AI 志愿助手（可调用文心一言、通义千问、DeepSeek）、QQ 浏览器 AI 高考通。这类产品有完整的&amp;quot;输入→生成梯度列表→标注概率→按偏好筛选&amp;quot;流程，核心功能免费，体验最接近普通人对&amp;quot;AI 填志愿&amp;quot;的想象。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;第三类：通用大模型对话。&lt;/strong&gt; DeepSeek、豆包、讯飞星火、腾讯元宝。没有固定表单，纯对话式交互。灵活性高，但输出质量高度依赖提问水平——问得细能得到好建议，问得笼统就只配得到泛泛之谈。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;第四类：垂类付费软件。&lt;/strong&gt; 高考直通车 App、靠谱 AI、有道领世。价格从 99 元到 2988 元不等，核心卖点是&amp;quot;解锁全部数据&amp;quot;或&amp;quot;一对一咨询&amp;rdquo;。但功能和免费的互联网大厂产品几乎没有本质区别。&lt;/p&gt;&#xA;&lt;h2 id=&#34;同一个分数五份不一样的答案&#34;&gt;同一个分数，五份不一样的答案&#xA;&lt;/h2&gt;&lt;p&gt;我翻看了大量正规媒体的实测报告，测试逻辑高度一致：用同一个考生的分数和条件，向不同 AI 工具提问，然后对比推荐结果。结论也高度一致——完全不一样。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;录取概率预测差异以十个百分点计。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;2024 年南方都市报记者以北京考生 550 分为例测试多款工具，对同一所高校，A 工具给出的录取概率是 26%，B 工具是 49%，落差高达 23 个百分点。A 工具认为是&amp;quot;冲刺校&amp;quot;，B 工具眼里已经是&amp;quot;稳妥校&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;《科技新知》2025 年的测试更典型。以浙江农林大学为目标，QQ 浏览器给出 42% 的录取概率，百度只有 20%，夸克干脆不将其列为冲刺目标——直接从推荐列表里消失了。&lt;/p&gt;&#xA;&lt;p&gt;如果你只看一个工具的结果，同一个分数很可能推导出截然不同的策略。而核心透明性问题在于：&lt;strong&gt;没有任何一个工具公开它的录取概率计算逻辑。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;推荐院校重合率极低。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;2026 年 6 月 25 日，极目新闻记者以&amp;quot;湖北物理类 632 分、想报考 985 高校&amp;quot;为条件，让 DeepSeek、讯飞星火、豆包三款工具分别推荐。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

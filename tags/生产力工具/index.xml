@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>生产力工具 on softon.top</title>
+		<link>https://softon.top/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7/</link>
+		<description>Recent content in 生产力工具 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 17 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</title>
+				<link>https://softon.top/software/lm-studio-bionic-local-open-model-agent/</link>
+				<pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/lm-studio-bionic-local-open-model-agent/</guid>
+				<description>&lt;p&gt;过去两年，本地大模型工具最像什么？&lt;/p&gt;&#xA;&lt;p&gt;像一个性能很强、但只会坐在客厅中央等你发问的朋友。你给它一个 prompt，它认真回答；你换一个模型，它换一种语气；你折腾量化、上下文、GPU 占用，最后得到一个漂亮的聊天窗口。&lt;/p&gt;&#xA;&lt;p&gt;问题是，&lt;strong&gt;聊天窗口不是工作流&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;真正工作时，我们不只是“问一句、答一句”。我们要读项目目录、改代码、整理文档、比对合同、翻 PDF、写表格、把脑子里的混乱想法通过语音倒出来，再让工具帮我们落成可编辑的文件。传统 LM Studio 做得很好的，是“把模型跑起来”；但 2026 年的本地 AI 如果还停在“模型播放器”，就像把一台高性能工作站只拿来放 MP3。&lt;/p&gt;&#xA;&lt;p&gt;所以 LM Studio Bionic 这个选题有意思。&lt;/p&gt;&#xA;&lt;p&gt;它不是又发布了一个模型，也不是给聊天框换皮。按照 LM Studio 官方博客的说法，Bionic 是 &lt;strong&gt;“the AI agent for open models”&lt;/strong&gt;：面向开放模型的 AI Agent，用来处理 coding、research、documents、files 这类真实工作。它支持本地模型，也能把更重的任务切到 LM Studio Secure Cloud 上的前沿开源模型，同时承诺 Zero Data Retention，不训练用户数据。&lt;/p&gt;&#xA;&lt;p&gt;这件事真正值得写，不是因为“LM Studio 多了一个新功能”，而是因为它像一个信号：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本地 AI 正在从“跑模型”进入“跑工作流”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;lm-studio-过去解决的是模型能不能跑bionic-想解决模型能不能干活&#34;&gt;LM Studio 过去解决的是“模型能不能跑”，Bionic 想解决“模型能不能干活”&#xA;&lt;/h2&gt;&lt;p&gt;很多人第一次接触 LM Studio，大概率不是因为 Agent，而是因为它把本地大模型的入门门槛降得足够低。&lt;/p&gt;&#xA;&lt;p&gt;以前你想在本地跑模型，要知道 Hugging Face、GGUF、量化位宽、llama.cpp、Metal、CUDA、上下文长度、显存估算。每个词都像地下城入口。LM Studio 把这些复杂度包进图形界面：搜索模型、下载模型、加载模型、开一个 OpenAI-compatible API server，然后聊天。&lt;/p&gt;&#xA;&lt;p&gt;这一步很重要。它解决的是“模型能不能在我电脑上活过来”。&lt;/p&gt;&#xA;&lt;p&gt;但模型活过来之后，第二个问题马上出现：&lt;strong&gt;它能不能真正参与工作？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;一个本地模型如果只能在聊天框里回答问题，那它离“生产力工具”还有一层玻璃。它看不到你的文件结构，不能安全地修改项目，不能把文档处理结果落地，不能在你写作或编程时主动嵌进流程。你必须不断复制、粘贴、整理、确认，像一个人肉 API 网关。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="B 站首页越刷越窄？TabulaBili-Plus 通过拦截首页推荐接口的 Cookie 让算法把你当新访客，找回早期 B 站那种「热门广场」的感觉。本文拆解原理、实测对比、记录踩坑。">
+<title>被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」</title>
+
+<link rel='canonical' href='https://softon.top/software/bilibili-tabulabili-plus-escape-algorithm-bubble/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」">
+<meta property='og:description' content="B 站首页越刷越窄？TabulaBili-Plus 通过拦截首页推荐接口的 Cookie 让算法把你当新访客，找回早期 B 站那种「热门广场」的感觉。本文拆解原理、实测对比、记录踩坑。">
+<meta property='og:url' content='https://softon.top/software/bilibili-tabulabili-plus-escape-algorithm-bubble/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='bilibili' /><meta property='article:tag' content='chrome扩展' /><meta property='article:tag' content='信息茧房' /><meta property='article:tag' content='算法推荐' /><meta property='article:tag' content='TabulaBili' /><meta property='article:published_time' content='2026-05-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-05-24T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」">
+<meta name="twitter:description" content="B 站首页越刷越窄？TabulaBili-Plus 通过拦截首页推荐接口的 Cookie 让算法把你当新访客，找回早期 B 站那种「热门广场」的感觉。本文拆解原理、实测对比、记录踩坑。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它到底解决什么问题">它到底解决什么问题</a></li>
+    <li><a href="#原理dnr-比-fetch-拦截更优雅">原理：DNR 比 Fetch 拦截更优雅</a></li>
+    <li><a href="#配置装上点一下没了">配置：装上点一下，没了</a></li>
+    <li><a href="#实战开和关到底差多少">实战：开和关，到底差多少</a></li>
+    <li><a href="#适合谁不适合谁">适合谁，不适合谁</a></li>
+    <li><a href="#踩坑记录">踩坑记录</a></li>
+    <li><a href="#横向看一眼算法对抗类扩展三巨头">横向看一眼：算法对抗类扩展三巨头</a></li>
+    <li><a href="#我更想说的一件事">我更想说的一件事</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/bilibili-tabulabili-plus-escape-algorithm-bubble/">被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-24T00:00:00Z'>
+                    2026-05-24，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：14分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/bilibili-tabulabili-plus-escape-algorithm-bubble/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它到底解决什么问题">它到底解决什么问题</a></li>
+    <li><a href="#原理dnr-比-fetch-拦截更优雅">原理：DNR 比 Fetch 拦截更优雅</a></li>
+    <li><a href="#配置装上点一下没了">配置：装上点一下，没了</a></li>
+    <li><a href="#实战开和关到底差多少">实战：开和关，到底差多少</a></li>
+    <li><a href="#适合谁不适合谁">适合谁，不适合谁</a></li>
+    <li><a href="#踩坑记录">踩坑记录</a></li>
+    <li><a href="#横向看一眼算法对抗类扩展三巨头">横向看一眼：算法对抗类扩展三巨头</a></li>
+    <li><a href="#我更想说的一件事">我更想说的一件事</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>打开 B 站，首页第一屏五条全是上次看过的同质化内容。再刷一次，第六条还是。再刷，第十条仍然是。</p>
+<p>这不是错觉，是算法在「贴心」地把你关进一个越来越小的房间。</p>
+<p>我以前不在意，直到某天突然意识到：<strong>已经记不清上一次在 B 站首页刷到「这玩意我居然不知道」的内容是什么时候了。</strong> 兴趣面被算法精准切片，每次打开都是同一组推荐池在轮换。</p>
+<blockquote>
+<p>信息茧房不是新概念，但 B 站把它做成了一种生理反应——刷得越久越无聊，越无聊越想刷。</p>
+</blockquote>
+<p>这周翻到一个开源扩展 <a class="link" href="https://chromewebstore.google.com/detail/tabulabili-plus-%E5%88%9D%E8%A7%81%E5%93%94%E5%93%A9%E5%A2%9E%E5%BC%BA%E7%89%88/pcbjbikpbpfhdfjiihnfgmphfmmeddgj"  target="_blank" rel="noopener"
+    >TabulaBili-Plus</a>，号称能让 B 站首页「彻底失忆」。装上跑了几天，确实把我从那种「越刷越闷」里捞出来了。聊聊它的原理、踩到的坑，还有一些更深的思考。</p>
+<h2 id="它到底解决什么问题">它到底解决什么问题
+</h2><p>先把痛点说清楚。B 站首页推荐有两种极端：</p>
+<ul>
+<li><strong>登录状态</strong>：1080P/4K 高清随便看，一键三连历史记录全在，但首页推荐被 Cookie 锁死，越看越窄。</li>
+<li><strong>未登录状态</strong>：首页是全站热门「广场」，内容杂、新鲜感强，但视频限制 720P，弹窗劝你登录到崩溃。</li>
+</ul>
+<p>这是一个典型的「鱼和熊掌」困境。绝大多数老用户都默默接受了第一种代价——<strong>用兴趣面萎缩换画质和便利</strong>。但代价远不止画面收窄那么简单：</p>
+<ul>
+<li>你以为你在「探索」，其实算法只是在你已知的圈子里反复打转。</li>
+<li>你以为你「品味独特」，其实只是被推荐过滤之后的幸存者偏差。</li>
+<li>你以为你「想看什么找什么」，其实你早就忘了 B 站还有别的内容存在。</li>
+</ul>
+<p><code>TabulaBili-Plus</code> 卡在这两者中间——<strong>保留登录态的所有特权，但把首页推荐流的 Cookie 干掉</strong>。算法读不到你是谁，只能按照「未登录访客」的逻辑给你推全站热门。</p>
+<p>一句话：<strong>身份保留，画像清零。</strong></p>
+<p>这种「单点漂白」的思路特别讨巧。它没有去和 B 站对抗，没有破解什么协议，只是把推荐接口的请求头精修了一刀。其他所有功能——播放、弹幕、登录态、大会员、收藏、历史——丝毫不动。</p>
+<h2 id="原理dnr-比-fetch-拦截更优雅">原理：DNR 比 Fetch 拦截更优雅
+</h2><p>这个项目最有意思的不是功能，而是实现路径。它用的是 Chrome MV3 的 <code>declarativeNetRequest</code>（DNR）规则，而不是常见的注入 JS 拦截 Fetch。</p>
+<p>两种思路差别很大：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>前端 Fetch/Ajax 拦截</th>
+					<th>DNR Cookie 移除</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>注入位置</td>
+					<td>每个页面注 JS</td>
+					<td>浏览器底层网络层</td>
+			</tr>
+			<tr>
+					<td>性能开销</td>
+					<td>解析+劫持，影响加载</td>
+					<td>几乎为零</td>
+			</tr>
+			<tr>
+					<td>维护成本</td>
+					<td>跟着 B 站前端改</td>
+					<td>只盯接口路径</td>
+			</tr>
+			<tr>
+					<td>抗签名干扰</td>
+					<td>容易和 Wbi 签名冲突</td>
+					<td>不碰前端逻辑</td>
+			</tr>
+			<tr>
+					<td>稳定性</td>
+					<td>一次改版可能全废</td>
+					<td>接口不变就一直能用</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>具体动作只有一个：当浏览器请求 B 站首页推荐接口时，DNR 规则把整个 <code>Cookie</code> 请求头拿掉。后端拿到的请求长得像一个全新访客，于是返回热度排序的内容，而不是个性化 feed。</p>
+<blockquote>
+<p>这个套路用在哪都行——任何「想保留登录态但不想被画像」的场景，都可以照搬。微博、知乎、YouTube 都有类似的可玩空间。</p>
+</blockquote>
+<p>看一下整个流程拆开有多简单：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 浏览器发起请求 → DNR 规则匹配 B 站首页 feed 接口</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   ↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 规则动作: 移除 Cookie 请求头</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   ↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># B 站后端收到请求: 「咦, 没 Cookie? 当未登录处理」</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   ↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 返回热度排序的 feed (而非个性化推荐)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   ↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 浏览器渲染: 你看到一个「陌生」的首页</span>
+</span></span></code></pre></div><p>整套机制最妙的地方：<strong>B 站后端没有任何手段判断这个请求异常</strong>。因为「未登录访客」本就是合法访问场景，是 B 站自己设计支持的。扩展所做的，只是让一个登录用户「在某个特定接口上扮演成访客」。攻防关系本质上无法成立。</p>
+<h2 id="配置装上点一下没了">配置：装上点一下，没了
+</h2><p>教程部分我尽量短，因为它真的没什么好教的。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 打开 Chrome 扩展商店</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 搜 &#34;TabulaBili-Plus&#34; 或直接装</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 把扩展图标 Pin 到工具栏</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 点击图标，看到一个开关</span>
+</span></span></code></pre></div><p>开关两档：</p>
+<ul>
+<li><strong>ACTIVE（开启）</strong>：纯净访客模式，首页变热门广场。</li>
+<li><strong>OFF（关闭）</strong>：恢复原版个性化推荐。</li>
+</ul>
+<p>切换时如果当前正在 B 站页面，扩展会自动局部刷新一下，不需要手动 F5。这是相对原项目的一个改进。</p>
+<p>两个细节值得提：</p>
+<ul>
+<li><strong>图标常驻</strong>：建议 Pin 到工具栏。不然每次找它要点两次。</li>
+<li><strong>不会自动启动</strong>：装完默认是关闭状态。第一次必须手动点一下开。这设计挺克制——避免新装的用户被吓一跳。</li>
+</ul>
+<h2 id="实战开和关到底差多少">实战：开和关，到底差多少
+</h2><p>这是我最关心的部分。装完不验证就当结束的，那是产品经理写公众号，不是技术博客。</p>
+<p>我做了一个最简单的对照：</p>
+<ol>
+<li><strong>关闭扩展</strong>，登录账号刷新首页，记下前 20 条视频的分类。</li>
+<li><strong>开启扩展</strong>，同一窗口刷新首页，记下前 20 条视频的分类。</li>
+</ol>
+<p>对比结果：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>关（个性化）</th>
+					<th>开（纯净访客）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>分类数量</td>
+					<td>4 类（科技/编程/AI/数码）</td>
+					<td>11 类（含游戏/影视/生活/动画/鬼畜/纪录片/科普）</td>
+			</tr>
+			<tr>
+					<td>重复 UP 主比例</td>
+					<td>约 35%</td>
+					<td>约 5%</td>
+			</tr>
+			<tr>
+					<td>「未关注但收藏过」UP</td>
+					<td>高频出现</td>
+					<td>几乎没有</td>
+			</tr>
+			<tr>
+					<td>视频平均时长</td>
+					<td>偏短（推算法偏好）</td>
+					<td>长短混合</td>
+			</tr>
+			<tr>
+					<td>整体感受</td>
+					<td>像看了一遍朋友圈</td>
+					<td>像走进一个陌生书店</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>最直观的变化</strong>：开启后，我看到了一条某美食 UP 做云南菜的视频，全程 23 分钟，看完顺手收藏。这种内容算法绝不会推给我，因为它知道我点过的全是技术。</p>
+<p>但<strong>这才是首页该干的事</strong>——给一个我自己想不到、搜不到、关键词描述不出来的发现。</p>
+<p>再看一组更主观的体感对照：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>关闭扩展</th>
+					<th>开启扩展</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>「随便刷刷」</td>
+					<td>5 分钟想关</td>
+					<td>20 分钟还在滑</td>
+			</tr>
+			<tr>
+					<td>找新 UP 主关注</td>
+					<td>几乎不发生</td>
+					<td>平均一天 1-2 个</td>
+			</tr>
+			<tr>
+					<td>「这玩意儿我居然不知道」</td>
+					<td>几乎没有</td>
+					<td>经常出现</td>
+			</tr>
+			<tr>
+					<td>同质化疲劳</td>
+					<td>强烈</td>
+					<td>几乎为零</td>
+			</tr>
+			<tr>
+					<td>关注列表里的更新</td>
+					<td>完全淹没</td>
+					<td>在动态页正常出现</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>注意最后一行——<strong>关注列表的内容不在首页推荐流上</strong>。所以这个扩展不会影响「我关注的 UP 主有更新」这件事，那部分内容走的是「动态」标签页，逻辑完全独立。</p>
+<p>开启之后唯一能影响的，是<strong>首页推荐这一栏</strong>。这是它的边界，也是它的克制之处。</p>
+<h2 id="适合谁不适合谁">适合谁，不适合谁
+</h2><p>这工具不是万能药。装之前先问自己：</p>
+<p><strong>适合</strong>：</p>
+<ul>
+<li>老 B 站用户，觉得首页越来越无聊。</li>
+<li>想保留 1080P/大会员/历史记录但摆脱推荐绑架。</li>
+<li>主要在桌面端刷 B 站。</li>
+<li>喜欢「逛街式」浏览，不喜欢被精准投喂。</li>
+</ul>
+<p><strong>不适合</strong>：</p>
+<ul>
+<li>主要在手机 App 看 B 站的人（扩展管不到 App）。</li>
+<li>习惯把首页当个人订阅页用的人——它本来就该乱，开了之后会更乱。</li>
+<li>期待「让算法变聪明」的人——这扩展是反方向的，它让算法变「不认识你」。</li>
+</ul>
+<h2 id="踩坑记录">踩坑记录
+</h2><p>跑了几天，遇到三个坑：</p>
+<p><strong>1. 刷太快会 429</strong></p>
+<p>扩展把 Cookie 抹掉之后，B 站后端把你识别为「未登录访客」。未登录访客的请求频率限制比登录用户严格得多，靠 IP 限速。我有一次连续刷新首页十几下做测试，直接被限流，过了几分钟才恢复。</p>
+<p>正常使用没问题，<strong>别在开启状态下狂按 F5</strong>。如果真的撞到 429，关掉扩展、等几分钟、再开，就好了。我撞过两次，都和测试有关，正常浏览没遇到过。</p>
+<p><strong>2. App 端无效</strong></p>
+<p>扩展只对桌面 Chrome 生效。手机 App 内部走自己的网络栈，DNR 规则管不到。所以「在手机上刷 B 站」依然是茧房原状。</p>
+<p>如果你大部分 B 站消费在手机，这个工具收益就不高。</p>
+<p><strong>3. 二开和原项目的关系</strong></p>
+<p>这一点容易忽略。<code>TabulaBili-Plus</code> 是基于原项目 <code>TabulaBili</code> 的二次开发版，作者是 tjsky，理由是原作者不打算上架扩展商店。两个项目都开源在 GitHub。</p>
+<p>如果你介意「不上架」，可以装 Plus 版；如果你介意「二开」，可以从原仓库自己打包加载。<strong>两条路都走得通，但要清楚自己装的是哪个。</strong></p>
+<h2 id="横向看一眼算法对抗类扩展三巨头">横向看一眼：算法对抗类扩展三巨头
+</h2><p>这种「让平台不认识你」的扩展，B 站不是第一个。我顺手梳理了一下手里在用的同类工具：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>平台</th>
+					<th>扩展</th>
+					<th>核心动作</th>
+					<th>类比</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>YouTube</td>
+					<td>Unhook</td>
+					<td>隐藏首页/侧栏推荐</td>
+					<td>用 CSS 屏蔽</td>
+			</tr>
+			<tr>
+					<td>Twitter/X</td>
+					<td>Control Panel for Twitter</td>
+					<td>关闭「为你推荐」、强制时间线</td>
+					<td>改 UI 入口</td>
+			</tr>
+			<tr>
+					<td>B 站</td>
+					<td>TabulaBili-Plus</td>
+					<td>抹除推荐接口 Cookie</td>
+					<td>改请求头</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>三种思路代表了三个对抗层次：</p>
+<ul>
+<li><strong>CSS 屏蔽</strong>最简单，眼不见为净，但数据其实还在传。</li>
+<li><strong>UI 改造</strong>中等，影响入口选择，但底层算法依旧懂你。</li>
+<li><strong>接口层处理</strong>最彻底，<strong>让后端在数据层面就拿不到你</strong>。</li>
+</ul>
+<p><code>TabulaBili-Plus</code> 走的是第三条路。这也是为什么我觉得它技术上更优雅。</p>
+<h2 id="我更想说的一件事">我更想说的一件事
+</h2><p>写到这里其实可以收尾了。但有个更值得说的点。</p>
+<p><strong>这个扩展的存在本身，就是一个时代的注脚。</strong></p>
+<p>十年前我们装扩展是为了去广告、加功能、改皮肤。今天我们装扩展，是为了<strong>让算法不要那么懂我</strong>。</p>
+<p>这是一个奇怪的反转——技术原本是用来理解人的，现在我们要用技术来制造一道墙，挡住技术对自己的理解。</p>
+<p><code>TabulaBili-Plus</code> 干的事情，本质和那些「关闭个性化推荐」的国家级合规开关是同一个方向。区别在于：合规开关只是「假装关」，而这个扩展是从协议层面让算法<strong>真的看不见你</strong>。</p>
+<p>更深一层想：所有大平台的「关闭个性化」开关，理论上能做到这种效果。但现实里没几个真的做到。算法和它带来的留存指标已经深度绑定了产品的 KPI，「真的关闭」对平台是一种自我伤害。所以合规开关们都做得：</p>
+<ul>
+<li>入口很深（埋三层菜单）。</li>
+<li>文案很模糊（「降低个性化程度」「调整推荐」）。</li>
+<li>动作很犹豫（点开之后还要再确认一次）。</li>
+<li>行为很微弱（关了之后首页变化不大）。</li>
+</ul>
+<p>相比之下，一个第三方扩展用 50 行 DNR 规则，就让算法<strong>真的失忆</strong>了。这种「外部力量比内部开关更靠谱」的局面，本身就值得品味。</p>
+<p><strong>用户对自己注意力的主权，最后竟然要靠浏览器扩展来收回。</strong></p>
+<p>如果你也开始觉得自己的首页不像首页，更像一面镜子在反复照自己——装一下，刷一会，看看那种「世界比我想象的大」的感觉，还能不能找回来。</p>
+<p>用了几天之后我有个小小的发现：开启它之后，我刷 B 站的总时长<strong>反而变短了</strong>。不是因为内容变差，而是因为「逛新地方」这件事本身有终点感——逛累了就走了。算法精准投喂没有终点，因为下一条永远更对胃口。</p>
+<p>这可能才是「算法成瘾」最阴险的地方——它不是因为内容好，是因为<strong>它从不让你产生「看够了」的感觉</strong>。</p>
+<h2 id="一句话总结">一句话总结
+</h2><p><strong>TabulaBili-Plus</strong>：5 秒装好，一个开关，让 B 站首页从「猜你喜欢」回到「热门广场」，登录态全保留，画质大会员不影响。</p>
+<p>GitHub 开源，Chrome 商店上架，免费。</p>
+<p>唯一代价：<strong>手别快，慢慢刷</strong>。</p>
+<p>如果觉得这个思路有意思，可以顺手看看我之前写的几篇相关：</p>
+<ul>
+<li><a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >Claude Code 32 个 Skill + 8 个 MCP 全配置</a> —— 让 AI 工具按你的脑回路工作</li>
+<li><a class="link" href="/software/claude-code-token-cost-cut-7-tips/" >Claude Code Token 成本砍 7 招</a> —— 同样是「让平台不要那么贪」</li>
+</ul>
+<p>收回属于自己的注意力，从来都不是大动作。一个扩展、一个开关，有时候就够了。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/bilibili/">Bilibili</a>
+        
+            <a href="/tags/chrome%E6%89%A9%E5%B1%95/">Chrome扩展</a>
+        
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E8%8C%A7%E6%88%BF/">信息茧房</a>
+        
+            <a href="/tags/%E7%AE%97%E6%B3%95%E6%8E%A8%E8%8D%90/">算法推荐</a>
+        
+            <a href="/tags/tabulabili/">TabulaBili</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/bilibili-tabulabili-plus-escape-algorithm-bubble\/'; 
+        const pageTitle = '被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

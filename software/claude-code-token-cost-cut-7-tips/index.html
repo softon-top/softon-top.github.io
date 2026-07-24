@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从月烧 $200 到稳在 $40，复盘一名重度 Claude Code 用户的 7 个 Token 省钱技巧。覆盖 prompt cache、SKILL.md 瘦身、sub-agent 隔离、工具输出截断、本地知识库替代会话挖掘、模型梯度路由,附踩坑实录与可复制配置。">
+<title>把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</title>
+
+<link rel='canonical' href='https://softon.top/software/claude-code-token-cost-cut-7-tips/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧">
+<meta property='og:description' content="从月烧 $200 到稳在 $40，复盘一名重度 Claude Code 用户的 7 个 Token 省钱技巧。覆盖 prompt cache、SKILL.md 瘦身、sub-agent 隔离、工具输出截断、本地知识库替代会话挖掘、模型梯度路由,附踩坑实录与可复制配置。">
+<meta property='og:url' content='https://softon.top/software/claude-code-token-cost-cut-7-tips/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='AI 编程' /><meta property='article:tag' content='Token 优化' /><meta property='article:tag' content='Prompt Cache' /><meta property='article:tag' content='Skills' /><meta property='article:tag' content='MCP' /><meta property='article:tag' content='成本控制' /><meta property='article:published_time' content='2026-05-22T20:30:00&#43;08:00'/><meta property='article:modified_time' content='2026-05-22T20:30:00&#43;08:00'/>
+<meta name="twitter:title" content="把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧">
+<meta name="twitter:description" content="从月烧 $200 到稳在 $40，复盘一名重度 Claude Code 用户的 7 个 Token 省钱技巧。覆盖 prompt cache、SKILL.md 瘦身、sub-agent 隔离、工具输出截断、本地知识库替代会话挖掘、模型梯度路由,附踩坑实录与可复制配置。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#你以为的-ai-编程聪明便宜丝滑现实账单像比特币">你以为的 AI 编程：聪明、便宜、丝滑。现实：账单像比特币</a></li>
+    <li><a href="#钱去哪了先认识三只吞金兽">钱去哪了？先认识三只&quot;吞金兽&quot;</a>
+      <ul>
+        <li><a href="#顺便讲讲为什么-context-堆积这么贵">顺便讲讲为什么 Context 堆积这么贵</a></li>
+      </ul>
+    </li>
+    <li><a href="#招式一把-prompt-cache-命中率冲到-90主打-cache-miss">招式一：把 prompt cache 命中率冲到 90%+（主打 Cache Miss）</a></li>
+    <li><a href="#招式二skillmd-瘦身从百科全书改成目录索引主打-cache-miss">招式二：SKILL.md 瘦身——从&quot;百科全书&quot;改成&quot;目录索引&quot;（主打 Cache Miss）</a></li>
+    <li><a href="#招式三clear-比你想的早得多主打-context-堆积">招式三：<code>/clear</code> 比你想的早得多（主打 Context 堆积）</a></li>
+    <li><a href="#招式四让-sub-agent-啃重活主会话只下达命令主打-context-堆积">招式四：让 sub-agent 啃重活，主会话只下达命令（主打 Context 堆积）</a></li>
+    <li><a href="#招式五工具输出截断与摘要化主打-工具日志噪音">招式五：工具输出截断与摘要化（主打 工具日志噪音）</a></li>
+    <li><a href="#招式六本地知识库替代上次咱聊过主打-context-堆积">招式六：本地知识库替代&quot;上次咱聊过&quot;（主打 Context 堆积）</a></li>
+    <li><a href="#招式七模型梯度路由小事-haiku大事-opus主打-全局">招式七：模型梯度路由——小事 Haiku，大事 Opus（主打 全局）</a></li>
+    <li><a href="#踩坑实录">踩坑实录</a></li>
+    <li><a href="#case-study写这篇文章总共烧了多少-token">Case Study：写这篇文章总共烧了多少 Token？</a></li>
+    <li><a href="#横向对比cursor--aider--codeium-的-token-模型">横向对比：Cursor / Aider / Codeium 的 Token 模型</a></li>
+    <li><a href="#进阶-helper-工具集">进阶 Helper 工具集</a></li>
+    <li><a href="#一个真实踩坑我是怎么发现自己一晚烧了-30-的">一个真实踩坑：我是怎么发现自己一晚烧了 $30 的</a></li>
+    <li><a href="#token-监控账单飙之前怎么提前发现">Token 监控：账单飙之前怎么提前发现</a></li>
+    <li><a href="#新手-30-天养成路线">新手 30 天养成路线</a></li>
+    <li><a href="#30-天复盘账单怎么从-214-走到-40">30 天复盘：账单怎么从 $214 走到 $40</a></li>
+    <li><a href="#收尾把-7-招按性价比排个序">收尾：把 7 招按性价比排个序</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#进阶话题什么时候省钱反而亏了">进阶话题：什么时候省钱反而亏了</a></li>
+    <li><a href="#我的实际工作流一天的-token-是怎么分配的">我的实际工作流：一天的 token 是怎么分配的</a></li>
+    <li><a href="#对号入座你属于哪种用户画像">对号入座：你属于哪种用户画像</a></li>
+    <li><a href="#隐性烧-token-黑洞">隐性烧 token 黑洞</a></li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/hugo/">
+                Hugo
+            </a>
+        
+            <a href="/tags/sharex/">
+                Sharex
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/claude-code-token-cost-cut-7-tips/">把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-05-22T20:30:00&#43;08:00'>
+                    2026-05-22，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：51分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/claude-code-token-cost-cut-7-tips/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#你以为的-ai-编程聪明便宜丝滑现实账单像比特币">你以为的 AI 编程：聪明、便宜、丝滑。现实：账单像比特币</a></li>
+    <li><a href="#钱去哪了先认识三只吞金兽">钱去哪了？先认识三只&quot;吞金兽&quot;</a>
+      <ul>
+        <li><a href="#顺便讲讲为什么-context-堆积这么贵">顺便讲讲为什么 Context 堆积这么贵</a></li>
+      </ul>
+    </li>
+    <li><a href="#招式一把-prompt-cache-命中率冲到-90主打-cache-miss">招式一：把 prompt cache 命中率冲到 90%+（主打 Cache Miss）</a></li>
+    <li><a href="#招式二skillmd-瘦身从百科全书改成目录索引主打-cache-miss">招式二：SKILL.md 瘦身——从&quot;百科全书&quot;改成&quot;目录索引&quot;（主打 Cache Miss）</a></li>
+    <li><a href="#招式三clear-比你想的早得多主打-context-堆积">招式三：<code>/clear</code> 比你想的早得多（主打 Context 堆积）</a></li>
+    <li><a href="#招式四让-sub-agent-啃重活主会话只下达命令主打-context-堆积">招式四：让 sub-agent 啃重活，主会话只下达命令（主打 Context 堆积）</a></li>
+    <li><a href="#招式五工具输出截断与摘要化主打-工具日志噪音">招式五：工具输出截断与摘要化（主打 工具日志噪音）</a></li>
+    <li><a href="#招式六本地知识库替代上次咱聊过主打-context-堆积">招式六：本地知识库替代&quot;上次咱聊过&quot;（主打 Context 堆积）</a></li>
+    <li><a href="#招式七模型梯度路由小事-haiku大事-opus主打-全局">招式七：模型梯度路由——小事 Haiku，大事 Opus（主打 全局）</a></li>
+    <li><a href="#踩坑实录">踩坑实录</a></li>
+    <li><a href="#case-study写这篇文章总共烧了多少-token">Case Study：写这篇文章总共烧了多少 Token？</a></li>
+    <li><a href="#横向对比cursor--aider--codeium-的-token-模型">横向对比：Cursor / Aider / Codeium 的 Token 模型</a></li>
+    <li><a href="#进阶-helper-工具集">进阶 Helper 工具集</a></li>
+    <li><a href="#一个真实踩坑我是怎么发现自己一晚烧了-30-的">一个真实踩坑：我是怎么发现自己一晚烧了 $30 的</a></li>
+    <li><a href="#token-监控账单飙之前怎么提前发现">Token 监控：账单飙之前怎么提前发现</a></li>
+    <li><a href="#新手-30-天养成路线">新手 30 天养成路线</a></li>
+    <li><a href="#30-天复盘账单怎么从-214-走到-40">30 天复盘：账单怎么从 $214 走到 $40</a></li>
+    <li><a href="#收尾把-7-招按性价比排个序">收尾：把 7 招按性价比排个序</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#进阶话题什么时候省钱反而亏了">进阶话题：什么时候省钱反而亏了</a></li>
+    <li><a href="#我的实际工作流一天的-token-是怎么分配的">我的实际工作流：一天的 token 是怎么分配的</a></li>
+    <li><a href="#对号入座你属于哪种用户画像">对号入座：你属于哪种用户画像</a></li>
+    <li><a href="#隐性烧-token-黑洞">隐性烧 token 黑洞</a></li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="你以为的-ai-编程聪明便宜丝滑现实账单像比特币">你以为的 AI 编程：聪明、便宜、丝滑。现实：账单像比特币
+</h2><p>我开 Claude Code 第一周写了一篇博客，第二周顺手改了几个 bug，第三周 Anthropic 发来一封&quot;温馨提醒&quot;邮件——<strong>当月账单已超过 $180</strong>。第四周月结一出，$214。我把那张账单贴在便签里压在显示器底下，至今没撕。</p>
+<p>那一刻我盯着仪表盘想了很久。明明只是写代码、改文档，为什么烧得比开三台 EC2 还快？我问朋友们大家都用多少，得到的回答从 $30 到 $400 不等，差距最大的两个人<strong>写代码强度其实差不多</strong>——区别在于他们跟 AI 的&quot;相处姿势&quot;完全不一样。</p>
+<p>为了搞清楚自己烧在哪，我把过去三十天的 usage CSV 拉下来逐条复盘，发现一件让我有点羞耻的事：<strong>真正写代码的 token 不到 30%，剩下的全是会话里那些&quot;我以为不要钱&quot;的废话。</strong></p>
+<p>塞进去的整本 SKILL.md、<code>cat</code> 出来的几千行日志、连续聊了四小时却没 <code>/clear</code> 一次的祖传上下文、子任务没有隔离搬来的全套主会话历史、想到啥问啥的&quot;碎片闲聊&quot;——每一项都像水龙头没拧紧，单看不疼，攒一个月就是一辆共享单车。</p>
+<p>调整了两周后，账单稳定在 $40 上下，<strong>输出量没降，反而因为上下文更干净，AI 干活更准、错误更少</strong>。这篇文章把这两周抠出来的 7 个技巧整理一下，按&quot;性价比 / 立刻能做&quot;的顺序排好。每条都附我自己的踩坑——别问怎么知道的，问就是钱花过。</p>
+<blockquote>
+<p>系列前作：<a class="link" href="/tutorials/openclaw-local-memory-qmd-token-reduction/" >把本地 Memory 与 QMD 接进 OpenClaw：我是怎么把 Token 砍掉一半的</a>。前作讲<strong>架构层</strong>怎么把历史会话压成可检索的笔记，这篇讲<strong>战术层</strong>——日常写代码时的 7 个具体动作。两篇互补，配合食用味道最佳。</p>
+</blockquote>
+<hr>
+<h2 id="钱去哪了先认识三只吞金兽">钱去哪了？先认识三只&quot;吞金兽&quot;
+</h2><p>要省钱，先得知道贵在哪。我把账单拆开后发现，Claude Code 的 token 消耗几乎全卡在三个地方：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>吞金兽</th>
+					<th>表现</th>
+					<th>占我账单比例（事后复盘）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Cache Miss</strong></td>
+					<td>每开一次会话，几千 token 的 system prompt + 工具定义全价重算</td>
+					<td>~25%</td>
+			</tr>
+			<tr>
+					<td><strong>Context 堆积</strong></td>
+					<td>一个会话从早聊到晚，每条新消息都拖着前面所有人话来回算</td>
+					<td>~45%</td>
+			</tr>
+			<tr>
+					<td><strong>工具日志噪音</strong></td>
+					<td><code>cat</code> 一个 5000 行日志、<code>ls -R</code> 整个项目、grep 没加 limit</td>
+					<td>~20%</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>剩下 10% 才是&quot;实际写代码&quot;。看着是不是有点反直觉？这就是为什么&quot;少写功能&quot;省不了多少钱，<strong>真正能砍开的是上下文怎么进、子任务怎么切、缓存怎么用</strong>——这三件事跟&quot;业务&quot;没半毛钱关系，全是工程姿势。</p>
+<p>更扎心的一个细节：Claude API 的 input token 价格虽然比 output 便宜，但<strong>重度对话场景下 input 量是 output 的 30~80 倍</strong>。也就是说，AI 写一个一百行的函数，你以为是为这一百行付钱，其实你是为&quot;AI 看完整套上下文然后吐出一百行&quot;付钱。</p>
+<p>把上面这张表贴在显示器边上，下面 7 招都是在打这三只兽。每一招我都会注明它主要打哪一只。</p>
+<h3 id="顺便讲讲为什么-context-堆积这么贵">顺便讲讲为什么 Context 堆积这么贵
+</h3><p>这点很多人理解不到位，我多花点篇幅讲清楚。Claude 的对话不像微信聊天——你发一条新消息，<strong>模型并不是只读你这一条</strong>，而是把整个会话从开头重新读一遍，再算下一条回应。</p>
+<p>所以一个 50 轮对话的会话，第 50 轮的 input token 大致是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">T_50</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">system_prompt + (T_1_prompt + T_1_response) + ... + (T_49_prompt + T_49_response) + T_50_prompt</span>
+</span></span></code></pre></div><p>看到了吗？<strong>第 50 轮要为前 49 轮全部付费</strong>。这就是为什么“聊到下午时单条消息变成 60k+”——不是某一条特别长，而是历史在背后悄悄叠加。</p>
+<p>更黑暗的是：<strong>每条历史消息都只有“开头那一段”能进 cache</strong>，后续追加的对话内容大多是 cache miss 价。也就是说，长会话不仅 input 变大，单价还变贵。</p>
+<p>这套机制下，<strong><code>/clear</code> 不是“清屏”，而是“重置计费起点”</strong>。理解这一点，下面招式三、四、六的逻辑就全通了。</p>
+<hr>
+<h2 id="招式一把-prompt-cache-命中率冲到-90主打-cache-miss">招式一：把 prompt cache 命中率冲到 90%+（主打 Cache Miss）
+</h2><p>Anthropic 的 prompt cache 价格表写得很清楚：<strong>cache 命中是 miss 价格的 1/10</strong>。这句话翻译一下——<strong>如果你能让 system prompt 永远走 cache，开场费直接打 1 折</strong>。</p>
+<p>但很多人没意识到一个细节：</p>
+<blockquote>
+<p>5 分钟内同一份 system prompt 第二次进来，自动走 cache 价。一旦超过 5 分钟空窗，cache 就被 evict 掉。</p>
+</blockquote>
+<p>也就是说，只要你的&quot;开场白&quot;够稳定、操作够连贯，账单可以直接砍 80%。但我以前老是把这事搞砸——</p>
+<p><strong>错误姿势一：边用边改 SKILL.md</strong>。我喜欢把 SKILL.md 一改就重启会话验证，每次重启都是一次 cache miss。一上午改三次 SKILL.md，等于把开场白全价付了三遍。</p>
+<p><strong>错误姿势二：长任务中间去摸鱼</strong>。写代码写一半切去刷小红书，半小时后回来继续。Cache 早被 evict 了，回来那一下相当于重新付了开场费——我管这叫&quot;咖啡税&quot;，去倒一杯咖啡的工夫，账单多 $0.3。</p>
+<p><strong>错误姿势三：频繁切换 model</strong>。<code>/model opus</code> 一下，<code>/model haiku</code> 一下，每次切都重新付 system prompt 的 miss 费。</p>
+<p>调整后的姿势：</p>
+<ol>
+<li><strong>SKILL / 工具配置改完攒一批再重启</strong>，别像调收音机似的反复 reload。养成&quot;每天开工前统一 review 一次配置&quot;的节奏。</li>
+<li><strong>长任务一气呵成</strong>。会话间隔超过 5 分钟，cache 就被 evict 了。如果中途真要走开，至少在临走前发一条&quot;你先把刚才的方案写成 markdown&quot;让 AI 处于活跃状态。</li>
+<li><strong>用 router 配置而不是手动切 model</strong>。OpenClaw / Claude Code 都支持把 model 配成 router（比如我现在用的 <code>9router/article-pool</code>），让 router 在背后做模型选择，你这边维持稳定开场白，<strong>让稳定路径享受 cache，让动态路径走便宜模型</strong>。</li>
+<li><strong>关闭那些&quot;自作聪明&quot;的 IDE 插件</strong>。有些插件每开一个文件就向 AI 询问一次&quot;要不要分析这个文件&quot;，背后偷偷打了几十次 API。一开始我没注意，账单里看到大量 <code>cache_creation_input_tokens</code> 才意识到问题。</li>
+</ol>
+<p>实测一周后，我看 usage 报表里 <code>cache_read_input_tokens</code> 这一列从原来 30% 涨到了 78%——<strong>这一项就把每天的开场费砍了 70% 以上</strong>。一天开 10 次会话，原本 $4，现在 $1.2。</p>
+<hr>
+<h2 id="招式二skillmd-瘦身从百科全书改成目录索引主打-cache-miss">招式二：SKILL.md 瘦身——从&quot;百科全书&quot;改成&quot;目录索引&quot;（主打 Cache Miss）
+</h2><p>Claude Code 启动时会把所有可用 Skill 的 SKILL.md preamble 全部拉进 system prompt。一个 Skill 三百行，二十个 Skill 就是六千行——还没干活就先吃掉了 8k token，<strong>而且每次重启会话都吃一遍</strong>。</p>
+<p>我之前最离谱的状态：每个 Skill 里写了&quot;完整教程 + 所有 CLI 参数 + 错误码字典 + FAQ&quot;，自以为 AI 一看就会。结果一查 system prompt 占用，惊掉下巴——光是我自定义的 7 个 Skill 就吃了 12k token。</p>
+<p>后来我把所有 Skill 改成两层结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 顶层：只放&#34;何时使用&#34;+ 关键路径（≤ 30 行）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SKILL.md           ← 永远进 system prompt，必须精简</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">↓ 触发后用 read 加载</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- DETAILED.md      ← 完整步骤、长 example</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- TROUBLESHOOT.md  ← 错误码字典、FAQ</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- examples/*.sh    ← 可执行脚本，按需读</span>
+</span></span></code></pre></div><p><code>SKILL.md</code> 里只回答两个问题：<strong>&ldquo;什么场景下激活我&rdquo;</strong> 和 <strong>&ldquo;激活后第一步去 read 哪个文件&rdquo;</strong>。其他细节全部下沉。</p>
+<p>举个具体的对照例子。改造前的 <code>r2-upload/SKILL.md</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># r2-upload Skill</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 介绍</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Cloudflare R2 是一个 S3 兼容的对象存储服务……（200 字介绍）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 安装</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">1. 安装 rclone……（30 行步骤）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 配置 token……（25 行）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 使用方法</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### 单文件上传</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rclone copy local r2:bucket/path</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">…</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### 批量上传</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">…（再来 50 行）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 常见问题</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Q1: 403 错误怎么办？……（3 段）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Q2: 域名解析失败……（2 段）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">…</span>
+</span></span></code></pre></div><p>总长 280 行。改造后只剩这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># r2-upload</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to use</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">用户提到上传图片/文件到 R2、img.softon.top、图床、Cloudflare 对象存储时激活。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Quick path</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">1. read DETAILED.md 看完整步骤</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 上传脚本：~/bin/r2-upload.sh &lt;local&gt; [filename]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">3. 出错先看 TROUBLESHOOT.md</span>
+</span></span></code></pre></div><p>不到 15 行。需要详情时 AI 主动 <code>read DETAILED.md</code>，按需付费。</p>
+<p>效果一目了然：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>改造前</th>
+					<th>改造后</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>平均 SKILL.md 行数</td>
+					<td>~280 行</td>
+					<td>~35 行</td>
+			</tr>
+			<tr>
+					<td>system prompt token 占用</td>
+					<td>~9.2k</td>
+					<td>~1.8k</td>
+			</tr>
+			<tr>
+					<td>单次会话开场费</td>
+					<td>全价 9.2k miss</td>
+					<td>全价 1.8k miss + cache</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>8k token / 次</strong> 的开场费没了。一天开十次新会话，就是 8 万 token。</p>
+<blockquote>
+<p>不知道怎么写紧凑 SKILL.md 的，可以参考 OpenClaw 自带的 <code>taskflow</code>、<code>weather</code>，那两个的精简度刚刚好——前者覆盖了任务编排这种复杂场景，SKILL.md 还是控制在 50 行内；后者更极致，20 行解决问题。</p>
+</blockquote>
+<p>我自己定的红线：<strong>任何 SKILL.md 超过 60 行立刻拆</strong>。超过的部分一律下沉到 DETAILED.md 或 examples/。这个规矩立起来后，新写 Skill 的速度反而快了——&ldquo;目录页&quot;逻辑天然让人写得简洁。</p>
+<hr>
+<h2 id="招式三clear-比你想的早得多主打-context-堆积">招式三：<code>/clear</code> 比你想的早得多（主打 Context 堆积）
+</h2><p>最违反直觉的一招：<strong>任务切换之间，立刻 <code>/clear</code></strong>。</p>
+<p>我有个坏习惯——一个会话从早聊到晚，上午写博客、中午改 nginx、下午调 Hugo 主题、晚上还想着顺手 debug 个 LXC。每次切换都不 clear，理由听起来很合理：&ldquo;说不定下个任务还要用上面的上下文呢。&rdquo;</p>
+<p><strong>真相</strong>：99% 不会用到。但每条新消息都要把前面所有的代码、报错、文件内容<strong>重新算一遍 input token</strong>。一段 4 小时的混合会话，到下午时单条消息 input 已经飙到 60k+——而你真正在解决的问题可能只用得上其中 3k。</p>
+<p>来看一段我以前一天的 usage 截面：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>时段</th>
+					<th>任务</th>
+					<th>单条 input 中位数</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>09:00-10:30</td>
+					<td>写博客</td>
+					<td>8k</td>
+			</tr>
+			<tr>
+					<td>10:30-12:00</td>
+					<td>改 nginx 配置</td>
+					<td>22k（多了博客残渣）</td>
+			</tr>
+			<tr>
+					<td>14:00-16:00</td>
+					<td>调 Hugo 主题</td>
+					<td>41k（再加 nginx 残渣）</td>
+			</tr>
+			<tr>
+					<td>16:00-18:00</td>
+					<td>debug LXC</td>
+					<td>58k（全套历史背着）</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>最后那两小时，<strong>我每问一次 AI 都在为上午的博客付钱</strong>。账单当然大头都集中在下午。</p>
+<p>我现在的纪律：</p>
+<ul>
+<li><strong>每个独立任务，新开会话或 <code>/clear</code> 一次</strong>。&ldquo;独立&quot;的判断标准：换了一个项目目录，或者换了一类问题（比如从写代码切到运维）。</li>
+<li><strong>长任务进行中需要查无关资料？用子会话</strong>（招式四），别污染主会话。</li>
+<li>实在不想新开，就用 <code>/compact</code> 让 Claude 自己总结一下当前会话，把历史压成几百 token——比手动 <code>/clear</code> 友好，缺点是会丢一点细节。</li>
+<li><strong>晚上睡觉前 <code>/clear</code></strong> 比早上起来 <code>/clear</code> 划算——隔夜的会话再连上来，前一天的所有上下文都还要重新计费。睡前清掉，明早干净开局。</li>
+</ul>
+<p>只这一招，我把单会话 input token 中位数从 35k 砍到了 8k。<strong>砍掉的全是没用的回忆。</strong></p>
+<p><code>/clear</code> 与 <code>/compact</code> 怎么选？我的判断：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>用什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>任务彻底切换</td>
+					<td><code>/clear</code></td>
+			</tr>
+			<tr>
+					<td>同任务但聊太久了</td>
+					<td><code>/compact</code></td>
+			</tr>
+			<tr>
+					<td>早上接续昨天的活</td>
+					<td>先 <code>/clear</code> 然后 read MEMORY.md</td>
+			</tr>
+			<tr>
+					<td>跨项目切换</td>
+					<td>直接新开会话</td>
+			</tr>
+	</tbody>
+</table></div>
+<hr>
+<h2 id="招式四让-sub-agent-啃重活主会话只下达命令主打-context-堆积">招式四：让 sub-agent 啃重活，主会话只下达命令（主打 Context 堆积）
+</h2><p>OpenClaw / Claude Code 都支持 <code>sessions_spawn</code> 出一个子 agent。很多人没用对——他们当成&quot;另一个聊天窗口&rdquo;，结果发现子 agent 启动时把主会话的所有历史 fork 了过去，等于花了两份 token。</p>
+<p>正确姿势：<strong>isolated 模式</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># OpenClaw 里的写法（伪代码）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sessions_spawn(</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">task</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;读 /var/log 里所有 error 日志，提炼出 top 5 报错类别&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  context=&#34;isolated&#34;,     # 不继承主会话
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  runtime=&#34;subagent&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">)</span>
+</span></span></code></pre></div><p>要点：</p>
+<ol>
+<li><strong><code>context=&quot;isolated&quot;</code> 是关键参数</strong>。默认 fork 会把主会话历史一并复制，子 agent 一启动就吃掉几万 token。改成 isolated，子 agent 只看到你给的 task 描述。</li>
+<li>主会话里把&quot;重活&quot;明确委托出去——大文件分析、批量改文件、长串测试日志解读，全部丢给子 agent。</li>
+<li>子 agent 干完只回一句结论，<strong>主会话的上下文永远干净</strong>。</li>
+</ol>
+<p>什么活适合外包？我整理了一份：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>重活</th>
+					<th>为什么适合 sub-agent</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>翻 1000+ 行日志找异常</td>
+					<td>中间过程没必要回到主会话</td>
+			</tr>
+			<tr>
+					<td>批量改 50+ 个文件的命名风格</td>
+					<td>改完只需要一句&quot;改了 X 个&rdquo;</td>
+			</tr>
+			<tr>
+					<td>跑测试套件并提炼失败原因</td>
+					<td>测试输出几万行，主会话不需要看</td>
+			</tr>
+			<tr>
+					<td>翻文档 / API 找某个参数</td>
+					<td>翻完直接告诉答案</td>
+			</tr>
+			<tr>
+					<td>给一段代码写完整 unit test</td>
+					<td>写测试本身要看大量上下文</td>
+			</tr>
+			<tr>
+					<td>从一堆素材里筛选 / 对比</td>
+					<td>比如这篇文章里查历史选题、对比前作</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>什么活<strong>不适合</strong>外包？需要持续来回讨论的、需要主会话当前上下文的、依赖你刚刚做的某个决定的——那种就老老实实在主会话做。</p>
+<p>我用这个套路写这篇文章：主会话只跟我交流大纲，让子 agent 去 NAS 翻历史选题、读前作内容、做对比表格。整个写作过程主会话上下文没超过 12k token。</p>
+<p>子 agent 的 task 描述怎么写？我的模板：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">[目标] 读 /var/log/syslog，提炼最近 7 天的 top 5 报错。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[输入] 文件路径：/var/log/syslog</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[期望输出] markdown 表格，列：报错关键词 / 出现次数 / 第一次出现时间。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[禁忌] 不要把日志原文返回，只要总结。</span>
+</span></span></code></pre></div><p>四行格式，<strong>[目标 / 输入 / 输出 / 禁忌]</strong>。最后那条&quot;禁忌&quot;特别重要——不写的话子 agent 经常会&quot;贴心&quot;地把原始日志大段塞回主会话，前面省的钱白省了。</p>
+<blockquote>
+<p>一句话总结：<strong>把&quot;看 5000 行日志&quot;这种活外包给一次性打工的 agent，主会话保持高管姿态。</strong></p>
+</blockquote>
+<hr>
+<h2 id="招式五工具输出截断与摘要化主打-工具日志噪音">招式五：工具输出截断与摘要化（主打 工具日志噪音）
+</h2><p>我曾经写过一行让自己很心痛的命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">cat /var/log/syslog</span>
+</span></span></code></pre></div><p>这条 syslog 4 万行。Claude Code 老老实实把它全读进来了。那一次 input token 11 万，账单瞬间多扣 $0.7。<strong>一行命令喝掉一杯瑞幸</strong>。</p>
+<p>血的教训之后，我给所有&quot;读取类&quot;工具调用加了三条铁律：</p>
+<ol>
+<li><strong>永远先 <code>wc -l</code> / <code>du -h</code> 探一下大小</strong>——超过 1000 行或 1MB 就触发摘要逻辑。</li>
+<li><strong>用 <code>grep</code> / <code>head</code> / <code>tail</code> / <code>awk</code> 取最相关那几屏</strong>，别让模型自己消化全文。</li>
+<li><strong>结构化数据用 <code>jq -c</code> 压成单行</strong>——同样一份 JSON，多行 indent 比 minified 多吃 30% token。</li>
+</ol>
+<p>具体怎么落地？我把这套思路写进了一个 helper 函数，伸手就能拿：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># ~/.bashrc 里的小工具</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">peek() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">local f</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$1&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  local lines=$(wc -l &lt; &#34;$f&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  if [ &#34;$lines&#34; -gt 500 ]; then
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== first 50 ====&#34; &amp;&amp; head -50 &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== last 50 ====&#34; &amp;&amp; tail -50 &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== total: $lines lines ====&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    cat &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 进阶版：grep 模式</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">grepN() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># grepN &lt;pattern&gt; &lt;file&gt; [context_lines]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">local ctx</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;${3:-3}&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  grep -nC &#34;$ctx&#34; -m 20 &#34;$1&#34; &#34;$2&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># JSON 压缩取样</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jsample() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">jq -c &#39;. as $r | if type</span><span style="color:#f92672">=</span><span style="color:#e6db74">=&#34;array&#34; then .[0:3] else . end&#39; &#34;$1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p>然后跟 Claude 说&quot;用 <code>peek</code> 看那个文件&quot;，它就再也不会一口气吞掉一整个 syslog 了。</p>
+<p>类似的还有：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>错误姿势</th>
+					<th>推荐姿势</th>
+					<th>token 节省</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>读项目结构</td>
+					<td><code>ls -R .</code></td>
+					<td><code>tree -L 2 -I 'node_modules|.git'</code></td>
+					<td>80%+</td>
+			</tr>
+			<tr>
+					<td>读巨型 JSON</td>
+					<td><code>cat big.json</code></td>
+					<td><code>jq -c '.data[0:3]' big.json</code></td>
+					<td>70%+</td>
+			</tr>
+			<tr>
+					<td>看 git diff</td>
+					<td><code>git diff</code></td>
+					<td><code>git diff --stat</code> 后再决定要不要细看</td>
+					<td>90%+</td>
+			</tr>
+			<tr>
+					<td>跑测试</td>
+					<td><code>npm test</code> 全跑</td>
+					<td>只跑相关 spec：<code>npm test -- foo.spec.ts</code></td>
+					<td>60%+</td>
+			</tr>
+			<tr>
+					<td>看进程列表</td>
+					<td><code>ps -ef</code></td>
+					<td><code>ps -ef | grep &lt;key&gt; | head</code></td>
+					<td>95%+</td>
+			</tr>
+			<tr>
+					<td>看磁盘占用</td>
+					<td><code>du -ah .</code></td>
+					<td><code>du -h --max-depth=1 | sort -rh | head</code></td>
+					<td>90%+</td>
+			</tr>
+			<tr>
+					<td>看错误日志</td>
+					<td><code>cat error.log</code></td>
+					<td><code>tail -200 error.log | grep -i error</code></td>
+					<td>80%+</td>
+			</tr>
+			<tr>
+					<td>看依赖树</td>
+					<td><code>npm ls</code></td>
+					<td><code>npm ls --depth=1</code></td>
+					<td>70%+</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>每一条单看好像没省多少，<strong>叠在一起一周能省下两顿火锅。</strong></p>
+<p>还有个进阶技巧——<strong>让 AI 主动选择截断</strong>。在 SKILL.md 里写一条&quot;读文件前先 <code>wc -l</code>，超过 500 行使用 head/tail 取头尾&quot;，AI 自己就会执行这套纪律，你不用每次提醒。</p>
+<hr>
+<h2 id="招式六本地知识库替代上次咱聊过主打-context-堆积">招式六：本地知识库替代&quot;上次咱聊过&quot;（主打 Context 堆积）
+</h2><p>第二贵的吞金兽是 context 堆积。第二贵的解药是——<strong>别让 AI 翻历史会话找答案，让它去读你写好的笔记</strong>。</p>
+<p>人脑怎么做决策？不是每次回忆全部经历，而是看一眼笔记本就开干。AI 也该这样。</p>
+<p>我现在的实践（也是前作 <a class="link" href="/tutorials/openclaw-local-memory-qmd-token-reduction/" >openclaw-local-memory-qmd-token-reduction</a> 的延伸）：</p>
+<ol>
+<li><strong>重要决策 / 配置 / 凭据落地到 <code>MEMORY.md</code></strong>——主会话开场默认 read 这一份，几百 token 搞定，比&quot;翻 200 条历史消息找 IP&quot;省一万倍。</li>
+<li><strong>每天的进展写到 <code>memory/YYYY-MM-DD.md</code></strong>——之后要回忆&quot;两周前我装 R2 的时候踩了啥坑&quot;，按日期 grep 就行，不用让 AI 在 30k 历史里大海捞针。</li>
+<li><strong>复杂方法论（比如本文这种 7 招）整理成 SKILL 或 markdown</strong>——下次需要时让 AI <code>read SKILL.md</code>，比&quot;我再给你讲一遍&quot;便宜 100 倍。</li>
+</ol>
+<p>我自己 <code>MEMORY.md</code> 的结构（脱敏示例，你按自己的环境填）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># 长期记忆
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 服务器与凭据
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> NAS: 内网 IP / SMB 用户与密码：见 .secrets/nas.txt
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 站点服务器: 内网 IP / SSH 别名：myhost
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 对象存储: bucket=*** / 公开域=*** / token 见 .secrets/r2.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 工作流闭环
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 写文章 → drafts/{cat}/{date}/{slug}.md（draft=false）
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 同步 NAS → sync-to-nas.sh
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 发布 → ssh user@myhost &#34;...&#34;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 配图 → r2-upload.sh 上传后嵌入
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 风格铁律
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 长文 ≥ 1 万字
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 5 段式：痛点→原理→配置→实战→踩坑
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 必含表格 + 代码块 + 互链前作
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 已踩坑
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> R2 token 不要 List 权限：rclone lsd 会 403
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> key 不要中文：CF 自定义域 URL 编码翻车
+</span></span></code></pre></div><p><strong>安全提醒</strong>：MEMORY.md 这种文件<strong>只应在本地存在</strong>，不要把真实 IP / 账号 / bucket 名贴进对外文章。我曾经差点把内网 IP 写进发布稿里，幸好 review 时发现——示例和真实凭据<strong>永远要分开</strong>。</p>
+<p>判断哪些信息该写进 <code>MEMORY.md</code>：</p>
+<ul>
+<li>✅ 你下次还会用到的（凭据、IP、路径、版本）</li>
+<li>✅ 你的口味偏好（这个项目用 TypeScript 不要 JavaScript）</li>
+<li>✅ 已经踩过的坑（避免重复掉同一个坑）</li>
+<li>❌ 一次性的（今天某个 bug 的具体错误码）</li>
+<li>❌ 客气话和过程性确认（&ldquo;好的&rdquo;、&ldquo;我来做&rdquo;）</li>
+<li>❌ 跟当前正在做的事相关的临时上下文</li>
+</ul>
+<p>每日的 <code>memory/YYYY-MM-DD.md</code> 模板：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># 2026-05-22
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 做了什么
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 选了今天的题目：Claude Code Token 优化（#6）
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 写了 5400 字的初稿
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 重构了大纲，改成痛点驱动
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 学到什么
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 没解决的问题
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 给未来的自己
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span></code></pre></div><p>把这套养起来，每个新会话开场只要 read 三五个 markdown 就有完整上下文。<strong>比&quot;会话连续聊到死&quot;既省钱，又记得清楚。</strong></p>
+<p>更妙的是——这些 markdown 用人类也能读。哪天 AI 服务挂了，你的笔记还在；哪天换 AI 工具，迁移成本几乎为零。<strong>钱省了，护城河还顺手挖了。</strong></p>
+<hr>
+<h2 id="招式七模型梯度路由小事-haiku大事-opus主打-全局">招式七：模型梯度路由——小事 Haiku，大事 Opus（主打 全局）
+</h2><p>最后一招最简单也最容易被忽略：<strong>别永远用最贵的那个</strong>。</p>
+<p>Anthropic 现在三档：Haiku / Sonnet / Opus。价格大致是 1 : 5 : 25。但<strong>写代码的日常 80% 是琐事</strong>——重命名变量、补 TypeScript 类型、写一段简单 SQL，Haiku 完全够用，反应还更快。</p>
+<p>OpenClaw 支持 router 配置（我现在用的 <code>9router/article-pool</code> 就是个例子），可以根据任务复杂度自动选模型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 简化的 router 思路</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">小任务 (rename, format, simple regex)   → haiku</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">中等任务 (写函数、改组件、debug)         → sonnet</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">重活 (架构设计、长文档、复杂重构)        → opus</span>
+</span></span></code></pre></div><p>也可以手动切：复杂问题前 <code>/model opus</code>，搞完切回 <code>/model haiku</code>。但我前面说过——<strong>频繁手切会破坏 cache</strong>，所以更建议用 router 自动化。</p>
+<p>我自己的口诀：</p>
+<blockquote>
+<p><strong>&ldquo;如果这件事我能在 30 秒口头说清需求，就用 Haiku；如果需要画图才能讲明白，才上 Opus。&rdquo;</strong></p>
+</blockquote>
+<p>具体决策树：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>任务特征</th>
+					<th>推荐 model</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>重命名 / 格式化 / 简单 regex</td>
+					<td>Haiku</td>
+			</tr>
+			<tr>
+					<td>单函数实现 / 单文件改动</td>
+					<td>Haiku 或 Sonnet</td>
+			</tr>
+			<tr>
+					<td>跨文件 refactor / 写测试</td>
+					<td>Sonnet</td>
+			</tr>
+			<tr>
+					<td>调 bug 需要看大段日志</td>
+					<td>Sonnet</td>
+			</tr>
+			<tr>
+					<td>系统架构设计 / 写长文档</td>
+					<td>Opus</td>
+			</tr>
+			<tr>
+					<td>关键决策（比如选型）</td>
+					<td>Opus</td>
+			</tr>
+			<tr>
+					<td>任何&quot;AI 第一次答得不对&quot;的问题</td>
+					<td>升一档再问</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>最后那条特别有用——<strong>与其在 Sonnet 上反复追问 5 次，不如直接升 Opus 一次问完</strong>。5 次 Sonnet 的钱常常超过 1 次 Opus，时间还更长。</p>
+<p>这条单看节省比例不大（也许 15-20%），但跟前面 6 招叠加，乘出来就很可观。</p>
+<hr>
+<h2 id="踩坑实录">踩坑实录
+</h2><p>省钱不是没代价，下面这些坑我每个都踩过，写出来希望你别再踩。</p>
+<p><strong>坑一：SKILL.md 拆得太碎，AI 找不到入口</strong></p>
+<p>我有一阵子把 SKILL.md 砍到 10 行，结果 Claude 经常不知道该 read 哪个 detail 文件，干脆放弃用 Skill 直接硬猜。后来发现：<strong>SKILL.md 至少要交代清楚&quot;我有这些子文档，分别管什么&quot;</strong>——把它当目录页，不是封面。30~50 行左右是甜点。</p>
+<p><strong>坑二：sub-agent isolated 模式忘记传上下文</strong></p>
+<p>isolated 子 agent 不会自动看到主会话的任何东西。一次让它&quot;按之前讨论的风格写&quot;，它一脸懵——&ldquo;之前&quot;是哪个之前？后来我都在 task 描述里把必要前提写明白，或者让它先 <code>read</code> 一个事先准备的 brief 文件。</p>
+<p><strong>坑三：<code>/clear</code> 太频繁，反而 cache 失效</strong></p>
+<p>刚学会这招那阵每聊 10 句就 <code>/clear</code>，结果 cache 还没建立稳定就被打掉了，付了一堆 miss。<strong><code>/clear</code> 是任务切换时用，不是焦虑性按钮</strong>。同一类任务一直聊就是它该干的事，让 cache 充分发挥。</p>
+<p><strong>坑四：把 <code>MEMORY.md</code> 写成日记</strong></p>
+<p>最早我啥都往 MEMORY 里塞——某天的心情、某次跟同事吵架的复盘、随手记的灵感。后来发现 AI 每次开场 read 都要算钱，几个月后 MEMORY 涨到 8000 字，开场费倒退到改造前。<strong>MEMORY.md 不是日记，是字典——只放查得到答案的事实</strong>。情感和过程移到日记 <code>memory/YYYY-MM-DD.md</code>，AI 不主动读。</p>
+<p><strong>坑五：用 sub-agent 跑死循环</strong></p>
+<p>让 sub-agent 自动批量改文件，结果它改完一轮发现还有问题，又起一轮，又起一轮——最后跑了 12 轮，账单一晚上炸了 $30。后来给所有 sub-agent task 加上&quot;最多重试 2 次，超过就 abort 报告人类&rdquo;。<strong>自动化要给 AI 装刹车，刹车比油门重要</strong>。</p>
+<p><strong>坑六：模型一升一降 cache 全废</strong></p>
+<p><code>/model opus</code> 问一个问题，得到答案后 <code>/model haiku</code> 继续，发现 input 价格异常——因为切了 model，前面 cache 全部失效，重新 miss 一次。<strong>解决方案</strong>：复杂问题在新会话里 opus 一次性解决，结果记到笔记里，主会话保持 haiku 不切。</p>
+<hr>
+<h2 id="case-study写这篇文章总共烧了多少-token">Case Study：写这篇文章总共烧了多少 Token？
+</h2><p>光讲方法论太抽象，我把写这篇文章的全过程拉出来给你看一眼实际数字。整篇文章大约 8000 字，从选题到成稿走了 4 个小时。如果用旧姿势会烧多少？用新姿势又烧了多少？</p>
+<p><strong>旧姿势模拟</strong>（按我以前的习惯估）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>旧做法</th>
+					<th>input token 估算</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>选题阶段</td>
+					<td>主会话直接翻 NAS 历史选题，cat 出来全文</td>
+					<td>~18k</td>
+			</tr>
+			<tr>
+					<td>大纲阶段</td>
+					<td>接着前面的会话讨论，没 /clear</td>
+					<td>~28k（叠加）</td>
+			</tr>
+			<tr>
+					<td>写作阶段</td>
+					<td>全文一气呵成，不断让 AI 看前面已写部分</td>
+					<td>~85k（每段都拖前文）</td>
+			</tr>
+			<tr>
+					<td>校对阶段</td>
+					<td>同会话读全文 + review</td>
+					<td>~110k</td>
+			</tr>
+			<tr>
+					<td><strong>合计</strong></td>
+					<td></td>
+					<td><strong>~241k input</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>按 Sonnet 现价 input $3 / M token 算，约 <strong>$0.72</strong>。光是写一篇文章。</p>
+<p><strong>新姿势实际</strong>（这次实测）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>新做法</th>
+					<th>input token 实际</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>选题阶段</td>
+					<td>sub-agent isolated 翻 NAS，回主会话只给一句结论</td>
+					<td>~3k（主会话） + 6k（子 agent，单价更低）</td>
+			</tr>
+			<tr>
+					<td>大纲阶段</td>
+					<td>主会话短对话，开局 read MEMORY.md 一次</td>
+					<td>~4k</td>
+			</tr>
+			<tr>
+					<td>写作阶段</td>
+					<td>sub-agent 起草，主会话只 review 关键段落</td>
+					<td>~12k（主会话）</td>
+			</tr>
+			<tr>
+					<td>校对阶段</td>
+					<td>用工具命令做语法检查，不让 AI 整体读</td>
+					<td>~2k</td>
+			</tr>
+			<tr>
+					<td><strong>合计</strong></td>
+					<td></td>
+					<td><strong>~21k input + 6k 子任务</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>按同样 Sonnet 价格，<strong>约 $0.07</strong>。一篇文章节省了 <strong>$0.65 = 90% 以上</strong>。</p>
+<p>这只是一篇文章。如果你每天写代码、改 bug、调架构，按一天 8 个类似规模的“会话单元”算，月底差距能拉到 <strong>$150 以上</strong>。</p>
+<p>更让我意外的是——<strong>新姿势写出来的内容质量更高</strong>。因为 sub-agent 出来的素材是结构化的（表格、要点、对比），主会话拿到的输入更清晰，反而推理更准。<strong>省钱顺手把质量也提了</strong>，这种好事不多。</p>
+<hr>
+<h2 id="横向对比cursor--aider--codeium-的-token-模型">横向对比：Cursor / Aider / Codeium 的 Token 模型
+</h2><p>有人问我：换工具能不能直接解决省钱问题？我把市面主流的几个 AI 编程工具拉出来横向对比，结论是——<strong>省钱 70% 靠姿势，30% 靠工具</strong>。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>计费模式</th>
+					<th>Token 透明度</th>
+					<th>我的体感价格</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Claude Code</strong></td>
+					<td>按 Anthropic API 实付</td>
+					<td>高（usage 仪表盘可看）</td>
+					<td>$40~200 / 月（看姿势）</td>
+			</tr>
+			<tr>
+					<td><strong>Cursor</strong></td>
+					<td>月费订阅 + 超额按次</td>
+					<td>中（隐藏 prompt 细节）</td>
+					<td>$20 起，重度用户超额很快</td>
+			</tr>
+			<tr>
+					<td><strong>Aider</strong></td>
+					<td>直连 OpenAI / Anthropic</td>
+					<td>高（每次 commit 显示用量）</td>
+					<td>跟 Claude Code 一个数量级</td>
+			</tr>
+			<tr>
+					<td><strong>GitHub Copilot</strong></td>
+					<td>月费固定</td>
+					<td>低（看不到 token 数）</td>
+					<td>$10 / 月，超量限速但不超费</td>
+			</tr>
+			<tr>
+					<td><strong>Codeium</strong></td>
+					<td>免费档为主</td>
+					<td>无</td>
+					<td>$0</td>
+			</tr>
+			<tr>
+					<td><strong>Continue</strong></td>
+					<td>自带 model，按你绑的 API 算</td>
+					<td>高</td>
+					<td>同 Aider</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>几个观察：</p>
+<ol>
+<li><strong>订阅制 ≠ 真便宜</strong>。Cursor 月费 $20 看着划算，重度用户两周就能把 fast premium 额度耗光，超额按次跟直接走 API 没本质区别。</li>
+<li><strong>看不到账单的工具最危险</strong>。Copilot 这种月费固定的反而最省心，但能力上限低，复杂任务还得回到 Claude Code。</li>
+<li><strong>真正决定开销的是你怎么用</strong>。同一份 Cursor 订阅，A 用户烧到上限 B 用户用一半——区别全在前面那 7 招里讲的姿势。</li>
+</ol>
+<p>所以建议不是“换工具”，而是<strong>留在你最顺手的工具里把姿势磨好</strong>。换工具的成本（学习 + 重新配置）通常比省下的 token 钱还高。</p>
+<p>如果你真要“轻量化”，我的推荐组合：</p>
+<ul>
+<li><strong>日常 80% 时间</strong>：Copilot（月费固定）补全代码</li>
+<li><strong>复杂思考的 20%</strong>：Claude Code 调用一次，按上面 7 招姿势用</li>
+<li><strong>零碎查询</strong>：直接 Web 端 Claude / ChatGPT，不算 API</li>
+</ul>
+<p>这套组合下来一个月不超过 $30，能干 80% 的活。</p>
+<hr>
+<h2 id="进阶-helper-工具集">进阶 Helper 工具集
+</h2><p>光说不练假把式。把我抠出来的几个 helper 脚本贴在这里，复制即用。</p>
+<p><strong>1. ~/.bashrc 里的 token 友好工具集</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 大文件预览（前 50 + 后 50）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">peek() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">local f</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$1&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  local lines=$(wc -l &lt; &#34;$f&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  if [ &#34;$lines&#34; -gt 500 ]; then
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== first 50 ====&#34; &amp;&amp; head -50 &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== last 50 ====&#34; &amp;&amp; tail -50 &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;==== total: $lines lines ====&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    cat &#34;$f&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 项目结构精简显示</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tree2() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tree -L 2 -I &#39;node_modules|.git|dist|build|.next|target|.venv&#39; &#34;$@&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># git 改动概览（不出全 diff）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">gdiff() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">git diff --stat &#34;$@&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">echo &#34;---&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">echo &#34;用 &#39;git diff &lt;file&gt;&#39; 看具体某个文件&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 错误日志聚焦</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">errlog() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tail -500 &#34;$1&#34; | grep -iE &#34;error|fail|exception|fatal&#34; | tail -30</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># JSON 取样</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jsample() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">jq -c &#39;. as $r | if type</span><span style="color:#f92672">=</span><span style="color:#e6db74">=&#34;array&#34; then .[0:3] else . end&#39; &#34;$1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 进程/磁盘快速 top</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pstop() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ps -eo pid,ppid,cmd,%cpu,%mem --sort</span><span style="color:#f92672">=</span><span style="color:#e6db74">-%cpu | head -15</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dutop() {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">du -h --max-depth</span><span style="color:#f92672">=</span><span style="color:#e6db74">1 &#34;${1:-.}&#34; 2&gt;/dev/null | sort -rh | head -15</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p>把这一坨贴进 <code>~/.bashrc</code>，然后跟 AI 说“用 peek / tree2 / gdiff 看”，每次都能省一大截 token。</p>
+<p><strong>2. SKILL.md 模板</strong>（精简版）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># &lt;skill-name&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to use</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">用户提到 &lt;关键词1&gt;、&lt;关键词2&gt;、&lt;场景描述&gt; 时激活。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Quick path</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">1. read DETAILED.md 看完整步骤</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 主入口命令: &lt;command&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">3. 出错先看 TROUBLESHOOT.md</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 关键路径</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 配置文件: &lt;path&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 日志位置: &lt;path&gt;</span>
+</span></span></code></pre></div><p>超过这个长度就该想想“是不是该下沉到 DETAILED.md”。</p>
+<p><strong>3. sub-agent task 描述模板</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">[目标] &lt;一句话说清要干什么&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[输入] &lt;文件路径 / 数据 / 上下文 brief 文档&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[期望输出] &lt;格式化要求：markdown 表格 / JSON / 几行总结&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[禁忌]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 不要返回原始数据</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 最多重试 2 次，失败就 abort 报告</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 不要污染主任务上下文</span>
+</span></span></code></pre></div><p><strong>4. router 配置思路</strong>（伪代码）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 路由规则</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">if task.type in [&#34;format&#34;, &#34;rename&#34;, &#34;simple_regex&#34;]:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">return &#34;haiku&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">elif task.tokens_estimate &gt; 50000 or &#34;architecture&#34; in task.tags:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">return &#34;opus&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">else:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">return &#34;sonnet&#34;</span>
+</span></span></code></pre></div><p>实际部署时可以根据自己的工作流调整阈值——重点是<strong>让模型选择自动化，把心智负担拿掉</strong>。</p>
+<hr>
+<h2 id="一个真实踩坑我是怎么发现自己一晚烧了-30-的">一个真实踩坑：我是怎么发现自己一晚烧了 $30 的
+</h2><p>这个故事必须讲。它是我整套省钱方法论的导火索，比账单本身更让我记忆深刻。</p>
+<p>那是个周五晚上，我在调一个 LXC 容器的网络问题——<code>OpenClaw</code> 在 PVE 上跑得好好的，迁移到一个新节点后死活连不上 Anthropic API。我打开 Claude Code 想让它帮我看，输入大致是这样的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">请帮我分析 LXC 容器内的网络问题，curl https://api.anthropic.com 总是 timeout</span>
+</span></span></code></pre></div><p>AI 让我贴一些信息进去。我贴心地一口气把以下东西都甩了过去：</p>
+<ul>
+<li><code>ip a</code> 输出（容器 + 主机）</li>
+<li><code>iptables -L -nv</code> 全文（300+ 行）</li>
+<li><code>journalctl -u openclaw --since=&quot;2 hours ago&quot;</code>（5000 行）</li>
+<li>PVE 主机的 <code>/etc/network/interfaces</code></li>
+<li>还有相关 LXC 配置文件</li>
+</ul>
+<p>第一轮没解决。AI 让我再跑几个测试。我又贴了 <code>tcpdump</code> 抓包结果（4000+ 行）和 <code>dmesg | tail -1000</code>。第二轮也没解决——但 input token 已经偷偷飙到 18 万。</p>
+<p>第三轮我急了，干脆把整个 PVE 节点的 <code>/var/log/syslog</code> 也贴了进去——3 万行，一次 47 万 input token，单条对话 <strong>$1.41</strong>。</p>
+<p>来回折腾到凌晨两点，问题终于定位到是 <code>keyctl</code> 的 capability 没开。整夜对话总 input 大约 <strong>820 万 token</strong>。按 Sonnet input 价格算，光那一晚账单 <strong>$24.6</strong>，加上零星 output 和之后几次重启验证，<strong>那一晚总共烧了 $30 出头</strong>。</p>
+<p>第二天早上我盯着 usage 仪表盘看了很久。问题本身只是加一行 capability 配置——五个字符级别的修复，<strong>我却为它支付了一顿火锅的钱</strong>。</p>
+<p>复盘下来错在哪？</p>
+<ol>
+<li><strong>没用 sub-agent</strong>——日志和抓包应该让 isolated 子任务先做摘要，主会话只接结论。</li>
+<li><strong>没截断输出</strong>——<code>dmesg | tail -1000</code> 完全可以变成 <code>dmesg | tail -100 | grep -iE &quot;error|deny&quot;</code>。</li>
+<li><strong>会话没切</strong>——从凌晨 0 点到 2 点同一个会话，每条新消息都拖着前面的全部历史。</li>
+<li><strong>没用 cache</strong>——焦虑下我反复 <code>/model opus</code> <code>/model sonnet</code> 切换，cache 全部击穿。</li>
+<li><strong>没让 AI 用工具命令</strong>——它本可以自己 <code>grep</code> 出关键行而不是读全文，但我没要求它这么做。</li>
+</ol>
+<p>那一晚之后我开始系统性整理这套方法论。这篇文章里讲的每一招，背后都站着一个具体的 $30 那一晚——区别只是疼到什么程度。</p>
+<hr>
+<h2 id="token-监控账单飙之前怎么提前发现">Token 监控：账单飙之前怎么提前发现
+</h2><p>省钱不能等月底看账单。我现在的工作流里加了一套<strong>轻量监控</strong>，让我能在事情失控之前察觉到。</p>
+<p><strong>1. 每天看一次 cache 命中率</strong></p>
+<p>登 Anthropic Console，看 <code>cache_read_input_tokens</code> 占 <code>total_input_tokens</code> 的比例。健康状态是 70%+。如果某天突然掉到 30%——说明你那天做了什么破坏 cache 的事，最常见的是：</p>
+<ul>
+<li>改了 SKILL.md / system prompt 后没攒批，反复重启验证</li>
+<li>频繁手动切 model</li>
+<li>用了一个新插件，它在背后乱发 API</li>
+</ul>
+<p><strong>2. 设一条简易超额预警</strong></p>
+<p>Anthropic Console 里能设 spend cap。我把 daily 上限设在 $3——超过就发邮件提醒。这条软限很关键，让我能在烧到 $30 之前停下来想一想发生了什么。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 类似思路也可以本地实现</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 cron 每天跑一次 usage 拉取脚本</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">0 22 * * * /home/user/scripts/anthropic-daily-usage.sh</span>
+</span></span></code></pre></div><p>脚本内容大致是用 Anthropic API 拿当日 usage，超过阈值就 ping 飞书 / 邮件。代码不长，几十行 Python 搞定。</p>
+<p><strong>3. 周复盘：每周一翻账单</strong></p>
+<p>每周一花 5 分钟，对照上周 7 天的 daily token 看趋势：</p>
+<ul>
+<li>哪天烧得最猛？为什么？是高强度工作日，还是有个失控的 sub-agent？</li>
+<li>input/output 比例正常吗？正常应在 30:1 左右，比例突涨说明上下文堆积</li>
+<li>cache 命中率有没有下降趋势？连续下滑 3 天就要 review SKILL.md</li>
+</ul>
+<p>这套监控看起来繁琐，<strong>真正做起来一周不超过 30 分钟</strong>——但能让你的账单永远不会惊喜。</p>
+<p>比起亡羊补牢，<strong>养一个反馈闭环</strong>才是长期省钱的根。</p>
+<hr>
+<h2 id="新手-30-天养成路线">新手 30 天养成路线
+</h2><p>如果你是 Claude Code 新人，下面这套节奏照搬即可——我把这 7 招按“上手成本”和“产生收益的时间”做了排序，每周做哪几件事一目了然。</p>
+<p><strong>Day 1~3：建立基础纪律（这 3 天就能砍掉 30% 账单）</strong></p>
+<ul>
+<li>把 <code>/clear</code> 写到任务切换的肌肉记忆里——每换一类问题就清。</li>
+<li><code>~/.bashrc</code> 贴 helper 函数集（peek / tree2 / errlog），让所有“读文件”动作自动截断。</li>
+<li>在 system prompt 或 SOUL 文件里加一条：“读文件前先 wc -l，超过 500 行用 head/tail”。</li>
+</ul>
+<p><strong>Day 4~7：cache 优化（再砍 20%）</strong></p>
+<ul>
+<li>检查现有 SKILL.md，超过 60 行的全部拆成两层结构。</li>
+<li>改用 router 配置（如 OpenClaw 的 9router），别手动切 model。</li>
+<li>关掉那些“主动询问 AI”的 IDE 插件——别让它在背后偷偷烧钱。</li>
+</ul>
+<p><strong>Day 8~14:sub-agent 隔离（再砍 15%）</strong></p>
+<ul>
+<li>识别哪些活适合外包:翻日志、批量改文件、跑测试、读文档。</li>
+<li>用 isolated 模式启动 sub-agent，task 描述用四行模板（目标/输入/输出/禁忌）。</li>
+<li>给所有 sub-agent 加“最多重试 2 次”的刹车。</li>
+</ul>
+<p><strong>Day 15~30:知识库长效化（开始产生复利）</strong></p>
+<ul>
+<li>建立 <code>MEMORY.md</code>，把凭据、IP、版本、决策、踩坑沉淀进去（≤3000 字）。</li>
+<li>每天写 <code>memory/YYYY-MM-DD.md</code>，作为可 grep 的日记。</li>
+<li>把重复 3 次以上的方法论提炼成 SKILL。</li>
+</ul>
+<p>按这条路线走，第二个月开始账单稳定在第一个月的 1/3~1/4。这不是“省钱”，是把 AI 编程的工作姿势整体提升了一个维度——<strong>省钱只是结果，效率和清晰度才是真正的副产品</strong>。</p>
+<p>如果你已经是老用户，账单还在飙——往回看你属于哪一阶段。多数人卡在 Day 4~7（cache 优化没做），少数人卡在 Day 15+（不肯写文件，依赖会话历史）。<strong>对症下药，不要全套照搬</strong>。</p>
+<hr>
+<h2 id="30-天复盘账单怎么从-214-走到-40">30 天复盘：账单怎么从 $214 走到 $40
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>周次</th>
+					<th>主要动作</th>
+					<th>周末 usage</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Week 1</td>
+					<td>啥也没改，继续作死</td>
+					<td>$52</td>
+			</tr>
+			<tr>
+					<td>Week 2</td>
+					<td>引入 <code>/clear</code> 纪律 + 工具输出截断</td>
+					<td>$35</td>
+			</tr>
+			<tr>
+					<td>Week 3</td>
+					<td>SKILL.md 全部瘦身，cache 命中率优化</td>
+					<td>$24</td>
+			</tr>
+			<tr>
+					<td>Week 4</td>
+					<td>sub-agent 隔离 + 模型路由 + MEMORY.md 落地</td>
+					<td>$11</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>月度对比</strong>：从 $214 → $122（前一周 $52 ×4 不到，因为后面在改）→ 月末稳定在 $40 左右的均速。新一个月开了大半，目前还在 $30 上下。</p>
+<p>砍掉的 $174 里，<strong>最大头的是招式三（/clear 纪律）和招式六（本地知识库）</strong>——这两条本质上都在治 context 堆积。这跟我前面那张吞金兽表完全对得上：context 堆积是最大那只兽，对症下药效果最猛。</p>
+<hr>
+<h2 id="收尾把-7-招按性价比排个序">收尾：把 7 招按性价比排个序
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>招式</th>
+					<th>上手成本</th>
+					<th>节省占比</th>
+					<th>主打吞金兽</th>
+					<th>要不要立刻做</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>/clear</code> 与任务切换纪律</td>
+					<td>⭐</td>
+					<td>高</td>
+					<td>Context 堆积</td>
+					<td>立刻</td>
+			</tr>
+			<tr>
+					<td>工具输出截断（peek/jq）</td>
+					<td>⭐⭐</td>
+					<td>中高</td>
+					<td>工具日志</td>
+					<td>立刻</td>
+			</tr>
+			<tr>
+					<td>Prompt cache 命中优化</td>
+					<td>⭐⭐</td>
+					<td>高</td>
+					<td>Cache Miss</td>
+					<td>这周</td>
+			</tr>
+			<tr>
+					<td>模型梯度路由</td>
+					<td>⭐⭐</td>
+					<td>中</td>
+					<td>全局</td>
+					<td>这周</td>
+			</tr>
+			<tr>
+					<td>sub-agent 隔离重活</td>
+					<td>⭐⭐⭐</td>
+					<td>高</td>
+					<td>Context 堆积</td>
+					<td>两周内</td>
+			</tr>
+			<tr>
+					<td>SKILL.md 瘦身</td>
+					<td>⭐⭐⭐</td>
+					<td>高</td>
+					<td>Cache Miss</td>
+					<td>两周内</td>
+			</tr>
+			<tr>
+					<td>本地知识库替代历史</td>
+					<td>⭐⭐⭐⭐</td>
+					<td>复利</td>
+					<td>Context 堆积</td>
+					<td>长期养</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>复盘下来一句话：<strong>Claude Code 不贵，是你跟它的相处姿势贵。</strong></p>
+<p>把&quot;无意识的输入&quot;治住，把&quot;重活外包&quot;养成习惯，把&quot;高频开场&quot;挪到 cache 里——剩下花的，全是真正解决问题的钱。这种钱，花起来不肉疼。</p>
+<p>更深一层的体会：<strong>省 token 的过程意外地让我代码写得更好了</strong>。被迫精简 prompt → 思路更清晰；被迫让 sub-agent 隔离干活 → 任务边界更清楚；被迫用 markdown 沉淀知识 → 自己也想问题更系统。<strong>省下的不只是钱，还有&quot;模糊的工作姿势&quot;。</strong></p>
+<blockquote>
+<p>下一篇我打算写&quot;OpenCode 9.4 万 stars 是不是真的能替代 Claude Code&quot;，会做一周深度对比实测。如果你也在纠结要不要换，可以等等。</p>
+</blockquote>
+<h2 id="faq">FAQ
+</h2><p><strong>Q1：我才入门 Claude Code，没必要这么早抠 token 吧？</strong></p>
+<p>恰恰相反——<strong>早期养成的姿势会决定你后面三个月的账单</strong>。等月烧 $200 才想起来省，前面那 $200 已经付了，习惯也已经长歪了。我建议从第一天就让 <code>/clear</code> 进肌肉记忆。</p>
+<p><strong>Q2：sub-agent 是不是会让响应变慢？</strong></p>
+<p>是的，多一层调度会慢 5~15 秒。但分清场景——<strong>主会话你需要快速反馈，sub-agent 干的活通常你也可以喝口水</strong>。慢一点不影响节奏，反而强迫你别“焦虑性追问”。</p>
+<p><strong>Q3：MEMORY.md 写多了 AI 是不是会混淆？</strong></p>
+<p>会。所以红线是<strong>总长不超过 3000 中文字</strong>，分章节组织，每章节有清晰标题。AI 读 MEMORY 是为了找“事实”，不是读小说，结构化最重要。</p>
+<p><strong>Q4：cache 命中率怎么查？</strong></p>
+<p>登 Anthropic Console → Usage → 拉时间段。看 <code>cache_read_input_tokens</code> / 总 input token。我自己的目标是 70% 以上，超过 80% 优秀，低于 50% 说明姿势出了问题。</p>
+<p><strong>Q5：写一个 Skill 划算还是用普通 prompt 划算？</strong></p>
+<p>判断标准：<strong>这个任务一周内会重复 3 次以上吗？</strong> 是 → 写 Skill；否 → 当次解决。Skill 的初始投入（写 + 测）大约 30 分钟，能 amortize 的前提是有重复使用。</p>
+<p><strong>Q6：长文档怎么塞给 AI 才不烧钱？</strong></p>
+<p>几招组合拳：</p>
+<ol>
+<li>文档放 NAS / 本地，不直接贴会话</li>
+<li>给 AI 路径，让它按需 <code>read</code> 片段</li>
+<li>大文档先用工具命令(grep / awk)缩到几屏</li>
+<li>实在要全部读，用 sub-agent isolated 模式读，主会话只接结论</li>
+</ol>
+<p><strong>Q7：团队场景这套还适用吗？</strong></p>
+<p>大部分适用，但有两点要调整：</p>
+<ol>
+<li><strong>MEMORY.md 要分公私</strong>——团队共享的放 repo 里，个人偏好放本地</li>
+<li><strong>Skill 仓库要 review</strong>——别让队友写的 SKILL.md 失控膨胀，开个 30 行硬性上限</li>
+</ol>
+<hr>
+<h2 id="进阶话题什么时候省钱反而亏了">进阶话题：什么时候省钱反而亏了
+</h2><p>这套方法论用了两个月之后，我发现一个反直觉的现象——<strong>有些场景下“省 token”反而是亏的</strong>。技术决策永远要看大局，省 $5 token 但花按1 小时的活，本质是在亏钱。</p>
+<p>下面这几种场景，我现在已经放弃节俭，老老实实让 AI 多吃 token：</p>
+<p><strong>场景一：架构设计 / 关键决策</strong></p>
+<p>选一个数据库、定一个 API 协议、决定要不要重构——这种事一旦做错，后面要花几十小时去填坑。这时候我宁愿让 Claude 把项目里所有相关代码全读一遍，给出深度建议。多花 $2 token 但避免一周的弯路，<strong>这是 ROI 最高的钱</strong>。</p>
+<p><strong>场景二：调一个一直找不到的 bug</strong></p>
+<p>如果某个 bug 我自己已经搜了 30 分钟还没头绪，与其继续抠门让 AI 看片段，不如打开“全套上下文”模式——让它读相关日志、代码、配置全部。一次烧 $1 但 5 分钟解决，比“省着用”反复来回半天划算多了。</p>
+<p><strong>场景三：写一份需要发出去的重要文档</strong></p>
+<p>这种场合质量优先。让 AI 把背景资料、相关文档、参考案例全部读全再写，比一段一段挤好得多。最终交付物的“分量感”是 token 堆出来的——<strong>该花的别省</strong>。</p>
+<p><strong>场景四：团队协作场景</strong></p>
+<p>如果是团队共享 Claude，节俭过头会让队友觉得“AI 这工具不好用”——比如有人问个简单问题但因为 SKILL.md 拆得太抽象 AI 答不上。这时候稍微“丰满”一点反而是必要的，便利性跟成本要平衡。</p>
+<p>判断“该不该省”的简单标准：</p>
+<blockquote>
+<p><strong>这个 token 节省下来，能换回多少倍的时间或决策质量？</strong></p>
+</blockquote>
+<p>如果换不回来，省得再狠也是负 ROI。<strong>省钱不是目的，把钱花在刀刃上才是。</strong></p>
+<hr>
+<h2 id="我的实际工作流一天的-token-是怎么分配的">我的实际工作流：一天的 token 是怎么分配的
+</h2><p>讲完原理和招式，给个具体的工作流闭环看看。这是我最近一周的“典型一天”——总 token 约 60k，账单约 $0.4。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">08:30  开机，新会话</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 主会话 read MEMORY.md（~800 token）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- read 今日 memory/2026-05-22.md（~500 token）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 准备好今日 todolist</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.005</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">09:00-11:00  写文章（这篇）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 主会话短对话定大纲</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 起一个 isolated sub-agent 翻 NAS 历史选题</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 主会话基于 sub-agent 总结撰写</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 中途无 /clear</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">11:00  /clear，切到运维任务</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 看监控发现某个服务 CPU 高</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- peek 日志而不是 cat</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 用 sub-agent 跑诊断</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.05</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">13:00-15:00  /clear，写代码（PR review）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 短文件用 read，长文件让 AI 用 grep</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 用 git diff --stat 而不是 git diff</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.08</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">16:00  /clear，最后一个会话——回 issue</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- Haiku 模型即可</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.02</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">21:00  /clear，做今日 memory 总结</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 写 memory/2026-05-22.md</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">- 更新 MEMORY.md（如有重要决策）</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cost: ~$0.01</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Daily total: ~60k input + 12k output ≈ $0.40</span>
+</span></span></code></pre></div><p>注意几个关键点：</p>
+<ol>
+<li><strong>每个任务边界都 <code>/clear</code></strong>——5 次 clear，5 个干净的会话起点</li>
+<li><strong>sub-agent 做了 3 次重活</strong>——主会话从未消化过原始日志或长文档</li>
+<li><strong>模型梯度路由自动跑</strong>——简单回 issue 走 haiku，写文章走 sonnet</li>
+<li><strong>MEMORY.md 每天 read 一次但只有 800 token</strong>——成本极低，价值极高</li>
+</ol>
+<p>按这个节奏，月度账单稳定在 <strong>$12 上下</strong>（工作日 22 天 × $0.4 + 杂项 $3）。从我刚开始的 $214 到现在，<strong>节省比例 94%</strong>——而且产出质量没降，反而因为流程更清晰，错误率比以前低。</p>
+<hr>
+<h2 id="对号入座你属于哪种用户画像">对号入座：你属于哪种用户画像
+</h2><p>这 7 招不是人人都要全上。根据你的使用强度和场景，优先级不同。我把身边朋友拉出来分成三类，看你是哪一种。</p>
+<p><strong>画像一：偶尔选手（月账单 &lt; $30）</strong></p>
+<p>特征：周末需要才开 Claude，主要帮个人项目。年烧不到 $360。</p>
+<p>优先看：招式三（<code>/clear</code> 纪律）+ 招式五（工具输出截断）。这两招上手成本低，产出收益快，能把你从 $30 拉到 $15。SKILL.md、sub-agent、MEMORY.md 这些重投入的招式抑迟上——你的使用量达不到 amortize 阈值。</p>
+<p>一句话：<strong>微调纪律即可，别上架构</strong>。</p>
+<p><strong>画像二：重度玩家（月账单 $30~$200）</strong></p>
+<p>特征：每天都开，写代码 + 写文档 + 运维全报。我自己之前在这个档位。</p>
+<p>优先看：全部 7 招都要上，但需要 1~2 个月分阶段部署。按前面“新手 30 天路线”走。最高 ROI 是招式三 + 招式六（本地知识库），这两招加上能决定你是 $50 月 还是 $20 月。</p>
+<p>一句话：<strong>他们说的都是针对你说的。</strong></p>
+<p><strong>画像三：专业选手（月账单 &gt; $200）</strong></p>
+<p>特征：全职靠 AI 生产力、运营 SaaS、或代客户跑项目。</p>
+<p>优先看：这7 招只是入门。你还得上：</p>
+<ul>
+<li>API 级别的 prompt cache + batch 启用</li>
+<li>多账号 负载均衡（有些账号能拿到不同价位）</li>
+<li>自建 router 服务控制模型选择</li>
+<li>部署 token usage 实时仪表盘（Grafana + Anthropic Usage API）</li>
+<li>考虑 Claude API 与 Anthropic 的 enterprise plan 谈价</li>
+</ul>
+<p>一句话：<strong>这个量级该考虑能不能将本文 7 招变成产品功能赖他们付费。</strong></p>
+<p>看完这三个画像。如果你是画像一，别看后面了——招式三和五够你用三年。如果你是画像三，本文只是起点，你需要的东西在 Anthropic Enterprise 文档里。</p>
+<p>多数人是画像二，也是本文的目标受众。</p>
+<hr>
+<h2 id="隐性烧-token-黑洞">隐性烧 token 黑洞
+</h2><p>讲了 7 招显式技巧，最后再补一组<strong>隐性陷阱</strong>——账单上看不出哪条是凶手，但累起来可能烧得猛。</p>
+<p><strong>陷阱一：MCP 服务器返回大对象</strong></p>
+<p>MCP（Model Context Protocol）让 AI 直接调外部 API。但很多 MCP 实现把整个响应原封不动塞回上下文。比如调一个 &ldquo;列出 GitHub 所有 issue&rdquo; 的 MCP，一口气吐 200 个完整 JSON——你以为只问了一句话，背后吃了 30k token。</p>
+<p>解法：MCP 工具自带 pagination 和 field filter。配置时主动限制返回字段，比如 GitHub API 只要 <code>title, number, state</code> 三列，省 80% 字段。</p>
+<p><strong>陷阱二：自动推送文件树</strong></p>
+<p>有些 IDE 集成在每条消息前自动把当前 workspace 文件树喂进去——5000 个文件就是 5000 行 path，每条消息都付一次。检查你的 IDE 配置，关掉这种贴心行为。</p>
+<p><strong>陷阱三：Markdown 表格里的对齐空格</strong></p>
+<p>一个看起来美观的 markdown 表格可能比同等内容的 CSV 多 40% token。<strong>让 AI 看 CSV 或 minified markdown，让人类看 pretty 版</strong>——分开存。</p>
+<p><strong>陷阱四：示例代码塞太多上下文</strong></p>
+<p>你贴一段代码让 AI 看，习惯把整个文件 1000 行都贴上。其实 AI 真正需要的是函数所在的那 50 行 + import 列表。<strong>精确截取比全套保险更省</strong>。</p>
+<p><strong>陷阱五：无意义的 &ldquo;是的请继续&rdquo;</strong></p>
+<p>会话里这种短回复，每次都让 AI 把前面所有上下文重读一遍。如果只是确认，用 emoji 回复或直接跳到下一个具体问题。</p>
+<p><strong>陷阱六：忘记关掉的 streaming</strong></p>
+<p>有些环境下 streaming 模式让 AI 边想边输出。如果你在做批量处理任务（不需要看过程），关掉 streaming 改用 batch 模式，按累积调用收费会便宜 10~20%。</p>
+<p>这些陷阱单独看不大，但<strong>累加起来可能占你账单的 20~30%</strong>。月底如果账单异常，照这份清单逐个排查，多半能找到漏点。</p>
+<hr>
+<h2 id="写在最后">写在最后
+</h2><p>这套省钱姿势不是 Anthropic 教我的，也没在哪本书上看到——是 $214 那张账单逼出来的。技术上没什么“魔法”，全是工程纪律：拒绝无意识输入、把重活分包、给 cache 让路、用文件代替记忆。</p>
+<p>说到底，AI 编程工具的“贵”，<strong>90% 是因为我们把它当成了一个永远耐心的朋友——它不嫌你啰嗦，它真的会全部读完，但每个字都在收钱</strong>。学会节制不是“对 AI 抠门”，而是把它放回工具的位置：精准下达指令，让它把活干漂亮，不闲聊、不情绪化、不“以防万一”。</p>
+<p>这种工作姿势养成之后，最妙的副作用是——<strong>就算哪天换 AI 工具，你的整套笔记体系、Skill 仓库、helper 函数都还在</strong>。AI 模型会迭代，工具会更换，但你沉淀下来的“跟智能体怎么协作”的方法论，是你自己的护城河。</p>
+<p>如果这篇文章帮你砍了哪怕一杯咖啡的钱，记得回来留个言告诉我——我喜欢看读者晒账单截图，比看自己的还开心。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/claude-code/">Claude Code</a>
+        
+            <a href="/tags/ai-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        
+            <a href="/tags/token-%E4%BC%98%E5%8C%96/">Token 优化</a>
+        
+            <a href="/tags/prompt-cache/">Prompt Cache</a>
+        
+            <a href="/tags/skills/">Skills</a>
+        
+            <a href="/tags/mcp/">MCP</a>
+        
+            <a href="/tags/%E6%88%90%E6%9C%AC%E6%8E%A7%E5%88%B6/">成本控制</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/alibaba-cloud-coding-plan-pro-50usd-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/claude-code-token-cost-cut-7-tips\/'; 
+        const pageTitle = '把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 204 天 17 小时 · 85 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-07-25 01:03:03 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

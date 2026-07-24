@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>语音合成 on softon.top</title>
+		<link>https://softon.top/tags/%E8%AF%AD%E9%9F%B3%E5%90%88%E6%88%90/</link>
+		<description>Recent content in 语音合成 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 06 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E8%AF%AD%E9%9F%B3%E5%90%88%E6%88%90/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>VoxCPM2 深度拆解：Tokenizer-Free TTS 为什么是语音合成的新方向</title>
+				<link>https://softon.top/software/voxcpm2-tokenizer-free-tts-deep-dive/</link>
+				<pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/voxcpm2-tokenizer-free-tts-deep-dive/</guid>
+				<description>&lt;p&gt;VoxCPM2 发布后，GitHub 一天涨了上千 star，社区讨论异常热烈。不是因为它是又一个 TTS 模型——市面上开源 TTS 已经不少，CosyVoice、SparkTTS、FishAudio S2 哪一个拉出来都能说话。真正让人好奇的是它的路线选择：&lt;strong&gt;Tokenizer-Free&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;传统 TTS 的逻辑是这样的：先把文本转成音素序列或离散 Token，再用一个 vocoder 或者自回归模型把 Token 变成波形。这套路线从 Tacotron 时代延续至今，几乎所有主流方案——VALL-E、CosyVoice、FishAudio、XTTS——都是这个套路。&lt;/p&gt;&#xA;&lt;p&gt;VoxCPM2 说：我不用 Tokenizer。&lt;/p&gt;&#xA;&lt;p&gt;它直接在文本和连续语音表征之间建立端到端映射，借用扩散模型接管了&amp;quot;从离散到连续&amp;quot;这个步骤。这篇文不打算复述一遍 README，而是站在开发者角度，聊清楚三个问题：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;为什么要去掉 Tokenizer？&lt;/li&gt;&#xA;&lt;li&gt;它用什么东西替代了 Tokenizer？&lt;/li&gt;&#xA;&lt;li&gt;少了 Tokenizer 之后，效果是更好还是更差？&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;tokenizer-free-到底解放了什么&#34;&gt;Tokenizer-Free 到底解放了什么？&#xA;&lt;/h2&gt;&lt;p&gt;理解 Tokenizer-Free 的价值，得先知道传统 TTS 的 Tokenizer 在干什么。&lt;/p&gt;&#xA;&lt;p&gt;一个典型的 TTS 管线是这样的：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;文本 → 前端（G2P / 音素转换） → 音素/Token 序列 → 声学模型 → 波形&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;每一步都是损失点：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;1. 信息损失。&lt;/strong&gt; &amp;ldquo;你吃饭了吗&amp;quot;这个句子，经过 G2P 转成音素时，&lt;strong&gt;语气、节奏、情感全部丢失&lt;/strong&gt;。模型拿到的是一串&amp;quot;ni3 chi1 fan4 le ma5&amp;rdquo;（或与之等价的一维 ID 序列），要从这样一个降采样过的输入还原出有情感的声音，本质上是&amp;quot;猜&amp;quot;——大语言模型猜文本的下一个 token 好歹还有上下文，TTS 猜情感近乎盲猜。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
