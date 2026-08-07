@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>API on softon.top</title>
+		<link>https://softon.top/tags/api/</link>
+		<description>Recent content in API on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/api/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Claude Code 钱花在哪了？claude-tap 把 AI 编程工具 API 流量扒了个底朝天</title>
+				<link>https://softon.top/software/claude-tap-ai-api-traffic-analyzer/</link>
+				<pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/claude-tap-ai-api-traffic-analyzer/</guid>
+				<description>&lt;p&gt;上周有个读者私信我：&amp;ldquo;我用 Claude Code 写了个周末项目，账单出来吓了一跳。但我完全不知道钱花在哪了。&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;我深有同感。codeburn 刚写过——它能告诉你&amp;quot;本月 Claude Code 花了 ¥XXX，占 67%&amp;quot;——但它是&lt;strong&gt;事后统计&lt;/strong&gt;。你不知道某个具体功能是怎么烧掉 5000 token 的。&lt;/p&gt;&#xA;&lt;p&gt;这就是 claude-tap 的生存空间：&lt;strong&gt;实时 API 流量分析&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;它是什么&#34;&gt;它是什么&#xA;&lt;/h2&gt;&lt;p&gt;claude-tap 是一个 Python 工具，挂在 AI 编程 CLI 旁边，&lt;strong&gt;中间人模式&lt;/strong&gt;记录每一次 LLM API 请求。&lt;/p&gt;&#xA;&lt;p&gt;支持 10 款主流工具：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Claude Code&lt;/li&gt;&#xA;&lt;li&gt;Codex CLI&lt;/li&gt;&#xA;&lt;li&gt;Gemini CLI&lt;/li&gt;&#xA;&lt;li&gt;Cursor CLI&lt;/li&gt;&#xA;&lt;li&gt;还有 6 款&amp;hellip;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;对每一次请求，它能记录：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;完整 prompt&lt;/strong&gt;（用户输入 + 系统指令 + 上下文）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;工具调用结果&lt;/strong&gt;（Claude Code 执行了 &lt;code&gt;read_file&lt;/code&gt; 还是 &lt;code&gt;run_command&lt;/code&gt;）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;流式响应&lt;/strong&gt;（逐 token 看模型怎么&amp;quot;思考&amp;quot;）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Token 用量&lt;/strong&gt;（输入/输出/总计）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;费用&lt;/strong&gt;（基于 LiteLLM 定价模型实时计算）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;用一句话总结：&lt;strong&gt;codeburn 告诉你花了多少，claude-tap 告诉你为什么花。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;实测把-claude-code-扒开看&#34;&gt;实测：把 Claude Code 扒开看&#xA;&lt;/h2&gt;&lt;p&gt;安装很简单，&lt;code&gt;pip install claude-tap&lt;/code&gt;，然后启动时加个参数：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

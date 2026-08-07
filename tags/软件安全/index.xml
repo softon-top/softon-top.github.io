@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>软件安全 on softon.top</title>
+		<link>https://softon.top/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8/</link>
+		<description>Recent content in 软件安全 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 29 Jul 2026 12:11:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>PowerToys 都有假官网了：Windows 装软件别再只靠搜索</title>
+				<link>https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/</link>
+				<pubDate>Wed, 29 Jul 2026 12:11:00 +0800</pubDate>
+				<guid>https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/</guid>
+				<description>&lt;p&gt;很多人装 Windows 软件时，流程几乎是肌肉记忆：打开搜索引擎，输入软件名，点第一个看起来最像官网的结果，下载，下一步下一步。&lt;/p&gt;&#xA;&lt;p&gt;过去这套流程不算优雅，但通常也不会立刻出事。现在不行了。&lt;/p&gt;&#xA;&lt;p&gt;7 月下旬，Wintoys 的开发者发现有人用近似域名搭了一个仿冒站。顺着域名注册信息往下挖，牵出的是一批超过 70 个的 Windows 软件仿冒站：PowerToys、CrystalDiskMark、EasyBCD、Wintoys、Lively Wallpaper、SignalRGB、WinUtil 等都在名单里。&lt;/p&gt;&#xA;&lt;p&gt;最让人后背发凉的点，不是骗子把页面做得多花哨，而是他们很懂“耐心”。部分站点在被发现时，下载按钮甚至仍指向 Microsoft Store 或真实项目页。它们先借正版下载建立信任、做搜索排名，等流量和信任攒够，再替换成带毒安装包。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;下载按钮这一次是安全的，不等于这个网站是安全的。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这篇不教你背几十个真假域名。那种防法只是在和骗子比赛记忆力，注定会输。我们要把“找软件”的路径改掉，让假官网少一个能碰到你的机会。&lt;/p&gt;&#xA;&lt;h2 id=&#34;这次的危险不是一个假站而是一套获客模型&#34;&gt;这次的危险，不是一个假站，而是一套获客模型&#xA;&lt;/h2&gt;&lt;p&gt;传统钓鱼常常很急：一封冒充银行的邮件，一个“账号即将冻结”的弹窗，一条催你点击的短链。它赌的是你在几十秒里慌张。&lt;/p&gt;&#xA;&lt;p&gt;软件仿冒站赌的则是另一个东西：&lt;strong&gt;你对搜索结果的默认信任。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;它们通常会做三件事：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;注册和软件名高度接近的域名，比如把常见项目名加上 &lt;code&gt;.app&lt;/code&gt;、&lt;code&gt;.net&lt;/code&gt;，或插入连字符；&lt;/li&gt;&#xA;&lt;li&gt;抄走旧 Logo、产品介绍、截图和文档结构，再铺大量“教程”“更新日志”“下载指南”；&lt;/li&gt;&#xA;&lt;li&gt;用 SEO 把页面推到搜索结果前排，有时排在真实项目之前。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;用户看到的是熟悉的软件名、像模像样的介绍、一个醒目的 Download 按钮。页面甚至还写着“不隶属于官方，只提供文档和官方下载链接”。这句免责声明看上去谨慎，实际没有任何安全担保。&lt;/p&gt;&#xA;&lt;p&gt;Wintoys 相关仿冒域名被报告后，Cloudflare 曾对其中一个域名加上“疑似钓鱼”拦截页。但域名逐个举报、逐个处理，速度永远很难跑过批量注册。&lt;/p&gt;&#xA;&lt;p&gt;更关键的是：这类站点不需要一开始就投毒。它们先让你觉得“这个网站一直都能用”，才是最便宜的信任建设。&lt;/p&gt;&#xA;&lt;h2 id=&#34;先纠正一个误区google-第一个结果不等于官方&#34;&gt;先纠正一个误区：Google 第一个结果，不等于官方&#xA;&lt;/h2&gt;&lt;p&gt;搜索引擎解决的是“谁和你的关键词最相关”，不是“谁对你的电脑最负责”。广告位、SEO、历史权重、页面内容，都会影响排序。软件名恰好又是最容易被抢占的关键词。&lt;/p&gt;&#xA;&lt;p&gt;所以，下面两句话都不成立：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;“排第一，肯定是官网。”&lt;/li&gt;&#xA;&lt;li&gt;“页面写得很专业，还能下载，肯定没问题。”&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;尤其对 PowerToys、CrystalDiskMark 这类高频工具，攻击者根本不需要骗每个人。几千个搜索者中有几十个人把安装包从错误地方拿走，生意就成立了。&lt;/p&gt;&#xA;&lt;p&gt;这不是让你从此不用搜索，而是别把搜索结果页当作软件下载页。搜索可以拿来找&lt;strong&gt;项目线索&lt;/strong&gt;，但下载动作应该落到可验证的官方渠道。&lt;/p&gt;&#xA;&lt;h2 id=&#34;windows-软件按这个优先级找&#34;&gt;Windows 软件，按这个优先级找&#xA;&lt;/h2&gt;&lt;p&gt;每次需要装软件，不妨按下面顺序选来源。越靠前，越少需要你判断网页真假。&lt;/p&gt;&#xA;&lt;h3 id=&#34;1-microsoft-store适合桌面工具和常见消费软件&#34;&gt;1. Microsoft Store：适合桌面工具和常见消费软件&#xA;&lt;/h3&gt;&lt;p&gt;如果软件在 Microsoft Store 有正式条目，优先从这里装。&lt;/p&gt;&#xA;&lt;p&gt;它不是绝对安全的乌托邦，但至少把域名仿冒、镜像下载站、捆绑下载器这几层风险挡在了外面。对于 PowerToys、Wintoys、Lively Wallpaper 一类 Windows 工具，这应该是第一站。&lt;/p&gt;&#xA;&lt;p&gt;要注意两件事：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;看发布者名称是否合理，不只看应用名称；&lt;/li&gt;&#xA;&lt;li&gt;不要因为 Store 搜不到，就去点搜索页最显眼的“免费下载”按钮。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Store 没有，不代表软件不存在；只代表要进入下一层验证。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Self-Host on softon.top</title>
+		<link>https://softon.top/tags/self-host/</link>
+		<description>Recent content in Self-Host on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 15 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/self-host/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>像Git一样管理数据库？我装了Dolt后发现它不只是噱头</title>
+				<link>https://softon.top/software/dolt-git-sql-database/</link>
+				<pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/dolt-git-sql-database/</guid>
+				<description>&lt;hr&gt;&#xA;&lt;h2 id=&#34;前言&#34;&gt;前言&#xA;&lt;/h2&gt;&lt;p&gt;你有没有过这种经历？&lt;/p&gt;&#xA;&lt;p&gt;生产环境数据库跑着跑着，一个SQL语句把表结构搞乱了，回滚？对不起，没有备份。想看看上周的数据长什么样？翻日志？可能都找不到。&lt;/p&gt;&#xA;&lt;p&gt;大多数开发者对代码版本控制驾轻就熟——&lt;code&gt;git commit&lt;/code&gt;、&lt;code&gt;git branch&lt;/code&gt;、&lt;code&gt;git revert&lt;/code&gt;，信手拈来。但对数据库呢？我们通常靠手动导出的 &lt;code&gt;.sql&lt;/code&gt; 文件、或者 Flyway/Liquibase 这类迁移工具，处理的是&lt;strong&gt;结构变更&lt;/strong&gt;，不是&lt;strong&gt;数据变更&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;直到我发现了 Dolt。&lt;/p&gt;&#xA;&lt;p&gt;Dolt 做的事很简单粗暴：&lt;strong&gt;把 Git 的版本控制能力，搬到数据库里来了&lt;/strong&gt;。你可以对数据 &lt;code&gt;branch&lt;/code&gt;、&lt;code&gt;merge&lt;/code&gt;、&lt;code&gt;diff&lt;/code&gt;、&lt;code&gt;commit&lt;/code&gt;、&lt;code&gt;revert&lt;/code&gt;——而且它兼容 MySQL 协议，大部分 MySQL 客户端直接就能连。&lt;/p&gt;&#xA;&lt;p&gt;听起来像科幻小说？我装了之后发现，它确实有真实价值，但也有一些你需要提前知道的坑。&lt;/p&gt;&#xA;&lt;h2 id=&#34;dolt-到底是什么&#34;&gt;Dolt 到底是什么？&#xA;&lt;/h2&gt;&lt;p&gt;先说结论：&lt;strong&gt;Dolt 不是一个&amp;quot;更好的 MySQL&amp;quot;&lt;/strong&gt;。它是一个&lt;strong&gt;带版本控制层的 MySQL 兼容数据库&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;它的核心思路是把 Git 的分布式版本控制理念引入数据库领域：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;每一张表都可以看作一个&amp;quot;仓库&amp;quot;&lt;/li&gt;&#xA;&lt;li&gt;每一次 &lt;code&gt;COMMIT&lt;/code&gt; 都会保存数据的快照&lt;/li&gt;&#xA;&lt;li&gt;你可以创建分支、合并冲突、回滚到任意历史版本&lt;/li&gt;&#xA;&lt;li&gt;甚至可以做行级别的 diff——看看某一行数据从周一到周五变了什么&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;技术实现上，Dolt 底层用的是 Go 语言编写，存储引擎基于 LevelDB 的变体。它不依赖传统的 MySQL 文件系统存储，而是自己管理数据持久化——这意味着它可以在任何能跑 Go 的环境上运行，不只是 Linux。&lt;/p&gt;&#xA;&lt;h2 id=&#34;架构拆解git-的-branchmerge-在数据库层怎么实现&#34;&gt;架构拆解：Git 的 branch/merge 在数据库层怎么实现？&#xA;&lt;/h2&gt;&lt;p&gt;这是我最好奇的部分。代码可以 diff，因为它是文本。但数据库存的是二进制或编码后的行数据，怎么做到 &lt;code&gt;git diff&lt;/code&gt; 的效果？&lt;/p&gt;&#xA;&lt;h3 id=&#34;数据存储模型&#34;&gt;数据存储模型&#xA;&lt;/h3&gt;&lt;p&gt;Dolt 把每张表的数据组织成一种&lt;strong&gt;不可变的、版本化的行集合&lt;/strong&gt;。每次 commit，它不会复制整张表，而是用类似 Git 的&amp;quot;对象存储&amp;quot;方式：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;新增的行 → 新建对象&lt;/li&gt;&#xA;&lt;li&gt;删除的行 → 标记删除&lt;/li&gt;&#xA;&lt;li&gt;修改的行 → 新旧版本共存，commit 指向新版本&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这和 Git 的 blob/tree/commit 对象模型异曲同工。区别在于，Dolt 是在&lt;strong&gt;行级别&lt;/strong&gt;做增量，而不是文件级别。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

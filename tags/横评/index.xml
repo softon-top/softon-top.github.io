@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>横评 on softon.top</title>
+		<link>https://softon.top/tags/%E6%A8%AA%E8%AF%84/</link>
+		<description>Recent content in 横评 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 23 May 2026 10:30:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%A8%AA%E8%AF%84/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Claude Code 想换开源？OpenCode / Aider / Cline / Continue 我把 4 款全装一遍，留下了这 2 款</title>
+				<link>https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/</link>
+				<pubDate>Sat, 23 May 2026 10:30:00 +0800</pubDate>
+				<guid>https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;上一篇我把 Claude Code 月账单从 $214 砍到 $40,前一篇我把同事的 $50/月阿里云 Coding Plan Pro 也榨干了。&lt;/p&gt;&#xA;&lt;p&gt;评论区两个朋友几乎同时发了同一句话:&lt;strong&gt;&amp;ldquo;还是闭源,有没有完全开源的方案?彻底白嫖那种。&amp;rdquo;&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;我盯着这句话愣了三秒——是啊,我居然没认真测过开源派。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;闭源派的痛点,过去三周我已经聊得够多了。账单焦虑、模型锁定、动不动就跳出来的 &amp;ldquo;rate limit&amp;rdquo;、客户端版本一更新就要等三天的玄学。但真要切到开源,问题立刻倒过来:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;开源 CLI 那么多,&lt;strong&gt;到底哪个是日常主力&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;都说&amp;quot;接任意模型&amp;quot;,&lt;strong&gt;接到 Qwen3-Coder 和 Kimi K2 之后真的能干活吗&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;li&gt;开源工具号称&amp;quot;免费&amp;quot;,但 &lt;strong&gt;API 费 + 自己折腾时间&lt;/strong&gt;,真的比 Claude Pro 便宜?&lt;/li&gt;&#xA;&lt;li&gt;VS Code 派和 Terminal 派,&lt;strong&gt;做工程到底哪个顺手&lt;/strong&gt;?&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;为了不再瞎想,我把当下被讨论最多的 4 款开源 AI Coding 工具按照统一标准跑了一周——&lt;strong&gt;OpenCode、Aider、Cline、Continue.dev&lt;/strong&gt;。同一台机器、同一份代码库、同一组真实任务、同一组国产模型 API。结论简单粗暴:&lt;strong&gt;留下 2 款,淘汰 2 款&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章把 4 款的实战体验全摊开,一次性讲清楚为什么留、为什么淘汰、留下的两款怎么配合用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一为什么开源派现在值得认真测一次&#34;&gt;一、为什么开源派现在值得认真测一次&#xA;&lt;/h2&gt;&lt;p&gt;过去半年,开源 AI Coding 生态已经偷偷换了一茬。先看几个数字:&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;工具&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;形态&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;GitHub Stars&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;出品方&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;协议&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;OpenCode&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;TUI / 桌面 / IDE 扩展&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;26K+&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Anomaly Innovations(原 SST)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;MIT&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Aider&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;纯终端 + git&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;42K+&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Aider-AI 社区&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Apache-2.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Cline&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;VS Code 扩展&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;高活,VSCode 8M+ 装机&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;cline.bot&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Apache-2.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Continue&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;VS Code + JetBrains + CLI&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;25K+&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;continuedev&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Apache-2.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;数据是写稿当天 GitHub 检索的,Star 数会变,但量级不会。这四款已经覆盖了&lt;strong&gt;终端派 + IDE 派&lt;/strong&gt;的主流场景,各自代表一种&amp;quot;开源 Claude Code&amp;quot;的路线。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

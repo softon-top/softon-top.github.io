@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Qwen3.5 on softon.top</title>
+		<link>https://softon.top/tags/qwen3.5/</link>
+		<description>Recent content in Qwen3.5 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 21 May 2026 11:30:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/qwen3.5/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>阿里云 Coding Plan Pro 实测一周：$50/月 90000 次请求,到底比 Claude Pro 香在哪</title>
+				<link>https://softon.top/software/alibaba-cloud-coding-plan-pro-50usd-real-test/</link>
+				<pubDate>Thu, 21 May 2026 11:30:00 +0800</pubDate>
+				<guid>https://softon.top/software/alibaba-cloud-coding-plan-pro-50usd-real-test/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;周一中午,我的 Claude Pro 又一次在 &lt;code&gt;/usage&lt;/code&gt; 里跳出红色横条:&lt;strong&gt;「You&amp;rsquo;ve reached your usage limit. Try again in 4 hours 23 minutes.」&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这是这个月第三次。我还没写完一个 PR。&lt;/p&gt;&#xA;&lt;p&gt;隔壁工位的小哥端着咖啡飘过来:「你还在用 Claude 官方订阅啊?换阿里云 Coding Plan 啊兄弟,$50 一个月,90000 次请求,Kimi、Qwen、GLM、MiniMax 随便切,5 小时一个滚动桶,我已经一个月没见到 rate limit 了。」&lt;/p&gt;&#xA;&lt;p&gt;我:「贵啊,Claude Pro 才 $20。」&lt;/p&gt;&#xA;&lt;p&gt;他:「那是你没算账。」&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;那天下午我下单了 Pro 套餐。一周后回头看,&lt;strong&gt;这笔账确实算反了&lt;/strong&gt;。本文把整个过程——订阅、配置 &lt;code&gt;ANTHROPIC_BASE_URL&lt;/code&gt;、被 &lt;code&gt;sk-sp-&lt;/code&gt; 那个坑卡了 40 分钟、四个模型在同一份代码任务上的真实表现、以及一个我至今觉得反直觉的「5 小时滚动恢复」机制——一次写清楚。&lt;/p&gt;&#xA;&lt;p&gt;读完你可以判断:&lt;strong&gt;你到底应不应该把 Claude Pro 那 $20 升级到这个 $50&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一先把账摆清楚20-vs-20-vs-50贵的反而便宜&#34;&gt;一、先把账摆清楚:$20 vs $20 vs $50,贵的反而便宜&#xA;&lt;/h2&gt;&lt;p&gt;绝大多数人看 Coding Plan 第一眼就劝退,理由都是「比 Claude Pro 贵一倍多」。这是典型的&lt;strong&gt;只看月费不看额度&lt;/strong&gt;的误判。&lt;/p&gt;&#xA;&lt;p&gt;我把三家主流方案放在一张表里(数据截至 2026-05-20):&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/21/192307-948a79-alibaba-codingplan-img-01.jpg&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;IMG_01&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;方案&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;月费&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;名义额度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;真实可用&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;模型&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;中国可用&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Claude Pro&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;$20&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;「约 45 条消息/5h」&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Sonnet 平均 ~50 条消息上限,长上下文吃满后 5h 锁死&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Sonnet 4.5&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;走代理&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Cursor Pro&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;$20&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;500 次 fast request/月&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;复杂任务 1 次 prompt = 多次 fast,常 200 多就吃完&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GPT-5 / Sonnet 4.5&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;走代理&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;阿里云 Coding Plan Pro&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;$50&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;90000 次/月,45000 次/周,6000 次/5h&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;单次提问消耗 5-30 次额度,日常一天 1500-3000 次足够&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Qwen3.5-Plus / Kimi-K2.5 / GLM-5 / MiniMax-M2.5 + Qwen3-Coder-Plus 等&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;直连国内骨干&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;注意第三栏「真实可用」。&lt;strong&gt;Claude Pro 的「45 条」不是 45 次工具调用&lt;/strong&gt;——是「45 个用户 prompt」。在 Claude Code 里,一个 prompt 后台会跑十几次 tool call,每个 tool call 都吃 token,Sonnet 一旦上 64K 上下文,你打三五个长 prompt 就触顶。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

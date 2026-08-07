@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>独立站 on softon.top</title>
+		<link>https://softon.top/tags/%E7%8B%AC%E7%AB%8B%E7%AB%99/</link>
+		<description>Recent content in 独立站 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 07 Jun 2026 23:25:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%8B%AC%E7%AB%8B%E7%AB%99/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Manus × Shopify 集成深度拆解：AI Agent 生成的独立店面与 Shopify 后端如何解耦</title>
+				<link>https://softon.top/software/manus-shopify-integration-architecture-deconstruction/</link>
+				<pubDate>Sun, 07 Jun 2026 23:25:00 +0800</pubDate>
+				<guid>https://softon.top/software/manus-shopify-integration-architecture-deconstruction/</guid>
+				<description>&lt;p&gt;如果你在 2026 年调研过 AI 工具链，会注意到一个反常现象：Manus 在被 Meta 收购后，第一个被官方力推的深度集成不是 GitHub、Notion、Slack，而是 &lt;strong&gt;Shopify&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这是商业策略选择，也是技术必然。Shopify 的数据模型（产品 / 客户 / 订单 / 库存）天然适合 Agent 操作，Storefront API 又是公开的标准 GraphQL/REST，Manus 这种通用 Agent 不需要走私有 SDK 就能接入。&lt;strong&gt;这意味着任何&amp;quot;AI 帮开独立站&amp;quot;的方案，本质上都是在 Manus × Shopify 集成的不同子集上做产品。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;本文拆解这一集成的实现机制、消耗成本、功能边界，给出基于实测的选型建议。&lt;/p&gt;&#xA;&lt;h2 id=&#34;集成架构独立店面与-shopify-后端的解耦设计&#34;&gt;集成架构：独立店面与 Shopify 后端的解耦设计&#xA;&lt;/h2&gt;&lt;p&gt;很多用户第一次接触 Manus × Shopify 集成时会有一个误解：Manus 是不是在 Shopify 主题里改代码？&lt;/p&gt;&#xA;&lt;p&gt;不是。&lt;strong&gt;Shopify Magic 才是改主题的方案&lt;/strong&gt;（在 Liquid 模板里插入 AI 生成的文案），Manus 走的是另一条路：生成一个&lt;strong&gt;独立店面&lt;/strong&gt;（standalone storefront），前端部署在 Manus 自己的 CDN 上，后端通过 Storefront API + Admin API 调用 Shopify。&lt;/p&gt;&#xA;&lt;p&gt;这种架构带来三个关键特性：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;后端复用&lt;/strong&gt;：订单、库存、客户、支付全部走 Shopify 原生系统，零数据迁移成本&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;前端自由&lt;/strong&gt;：Manus 生成的店面不受 Shopify 主题系统约束，可以用任何前端框架（实测是 Next.js + Tailwind）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;解耦可替换&lt;/strong&gt;：任何时候可以回退到 Shopify 默认主题，业务数据零丢失&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&lt;strong&gt;与 Shopify Magic 的工程对比&lt;/strong&gt;：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

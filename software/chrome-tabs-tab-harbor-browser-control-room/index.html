@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Tab Harbor 不试图替你消灭标签，而是把标签、待读、会话和待办收进新标签页。它适合谁，又不适合谁？">
+<title>Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台</title>
+
+<link rel='canonical' href='https://softon.top/software/chrome-tabs-tab-harbor-browser-control-room/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台">
+<meta property='og:description' content="Tab Harbor 不试图替你消灭标签，而是把标签、待读、会话和待办收进新标签页。它适合谁，又不适合谁？">
+<meta property='og:url' content='https://softon.top/software/chrome-tabs-tab-harbor-browser-control-room/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Chrome' /><meta property='article:tag' content='浏览器插件' /><meta property='article:tag' content='标签管理' /><meta property='article:tag' content='Tab Harbor' /><meta property='article:tag' content='效率工具' /><meta property='article:published_time' content='2026-07-28T12:17:00&#43;08:00'/><meta property='article:modified_time' content='2026-07-28T12:17:00&#43;08:00'/>
+<meta name="twitter:title" content="Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台">
+<meta name="twitter:description" content="Tab Harbor 不试图替你消灭标签，而是把标签、待读、会话和待办收进新标签页。它适合谁，又不适合谁？"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#多标签真正麻烦的不是数量">多标签真正麻烦的，不是数量</a></li>
+    <li><a href="#它把标签栏改成了可读的工作现场">它把“标签栏”改成了可读的工作现场</a></li>
+    <li><a href="#为什么说它像控制台而不只是标签管理器">为什么说它像控制台，而不只是标签管理器</a></li>
+    <li><a href="#本地优先不等于不需要看权限">本地优先，不等于不需要看权限</a></li>
+    <li><a href="#用它之前先给标签定三种命运">用它之前，先给标签定三种命运</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/chrome-tabs-tab-harbor-browser-control-room/">Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-28T12:17:00&#43;08:00'>
+                    2026-07-28，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/chrome-tabs-tab-harbor-browser-control-room/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#多标签真正麻烦的不是数量">多标签真正麻烦的，不是数量</a></li>
+    <li><a href="#它把标签栏改成了可读的工作现场">它把“标签栏”改成了可读的工作现场</a></li>
+    <li><a href="#为什么说它像控制台而不只是标签管理器">为什么说它像控制台，而不只是标签管理器</a></li>
+    <li><a href="#本地优先不等于不需要看权限">本地优先，不等于不需要看权限</a></li>
+    <li><a href="#用它之前先给标签定三种命运">用它之前，先给标签定三种命运</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>浏览器标签失控，通常不是因为你不懂得关闭。</p>
+<p>是因为每一个标签背后都挂着一个还没结束的念头：准备比较的产品、只看了一半的文档、等有空再读的文章、写到一半需要回查的资料。关掉怕忘，留着又像把一整张书桌塞进抽屉。几天后，窗口顶端只剩下一排缩到看不清标题的小图标，找回某个页面，全靠记忆和运气。</p>
+<p>大多数标签管理工具给出的答案是“收纳”：把它们存成列表、文件夹或快照。Tab Harbor 的想法不同：既然这些页面仍在参与你的工作，就别急着把它们藏起来。把 Chrome 新标签页改造成一个<strong>浏览器控制台</strong>，让正在做的事、稍后再看的事、待处理的小事，回到同一个可见界面。</p>
+<p>它不是革命性的新类别。标签管理赛道早已挤满 OneTab、Session Buddy、Workona 等工具。Tab Harbor 值得写，不在于发明了新功能，而在于它把一组很容易散落的动作——看当前标签、保存一批页面、处理重复标签、记一条待办——放到了你每天打开次数最多的入口：新标签页。</p>
+<h2 id="多标签真正麻烦的不是数量">多标签真正麻烦的，不是数量
+</h2><p>“标签太多”只是表象。</p>
+<p>真正让人累的是，浏览器无法区分不同状态。一个正在写方案时必看的文档，和一个准备周末再读的长文，在标签栏里拥有完全相同的地位；一个已经完成任务却没来得及关的页面，和一个必须继续跟进的页面，也没有任何区别。</p>
+<p>于是人会形成一种很熟悉的低效循环：开新标签页，找旧页面；找不到，搜索一次；搜到后再开几个关联页面；事情结束时告诉自己“等会儿一起整理”。这个“等会儿”通常不会来。</p>
+<p>Tab Harbor 不承诺替你自动判断每个网页的重要性。它做的是把选择成本降下来：</p>
+<ul>
+<li>当前打开的标签，按域名自动归组；首页类页面会单独归到 <code>Homepages</code>。</li>
+<li>需要按项目组织时，可以再建手动分组。</li>
+<li>暂时不看的页面，可以保存成会话；之后恢复，或折叠起来不占视线。</li>
+<li>重复标签可一键清理；暂时不关、又不想继续占资源的标签，可手动休眠。</li>
+<li>快捷链接和轻量待办留在同一页，不必为了记一句“待确认”再跳去另一个应用。</li>
+</ul>
+<p>这套设计的重点不是“功能全”。重点是它承认：浏览器已经是很多人的临时工作台。资料检索、写作、购物比较、排查报错、追踪项目，很多过程都在标签之间来回跳。既然如此，新标签页就不该只是一张壁纸加搜索框。</p>
+<h2 id="它把标签栏改成了可读的工作现场">它把“标签栏”改成了可读的工作现场
+</h2><p>Tab Harbor 最有价值的功能，是按域名整理当前标签。</p>
+<p>这听起来不复杂，但很贴近真实使用。做一个选题时，可能同时开着 GitHub、产品官网、文档、论坛讨论和几个搜索结果。传统标签栏只能按打开先后排队，信息结构被时间顺序打散；Tab Harbor 把同站页面归在一起，至少能立刻看出：今天到底在哪些来源上花了时间，哪个主题已经堆积出一团页面。</p>
+<p>不过，域名不是项目。一个 GitHub 标签可能属于工作项目，另一个却只是临时查资料；同一篇文章也可能同时服务于两项任务。因此它保留手动分组，作为自动归类之后的第二层组织。自动分组负责减少混乱，手动分组负责保留意图。</p>
+<p>保存会话的设计也比“把所有标签导出成列表”更接近工作流。你可以选择要保存的页面，把新页面追加进已有会话，之后再恢复。对“正在做，但今天先暂停”的任务，这比把页面塞进书签更合适：书签是长期收藏，会话是可恢复的现场。</p>
+<p>这里有个重要区别。</p>
+<blockquote>
+<p>不要把所有页面都保存。真正有效的会话，应该对应一个可以重新开始的任务。</p>
+</blockquote>
+<p>例如“比较三款笔记工具”“排查某个部署报错”“下周要看的课程资料”。会话标题写清任务，恢复时才不会变成另一座数字仓库。若只是把标签从标签栏搬到会话列表，混乱只是在换地方住。</p>
+<h2 id="为什么说它像控制台而不只是标签管理器">为什么说它像控制台，而不只是标签管理器
+</h2><p>OneTab 式工具的核心价值，是把大量标签压缩成可恢复清单，解决的是“浏览器窗口太拥挤”。Workona 一类工具更强调工作区、项目和跨设备协作，解决的是“多个项目如何分开”。</p>
+<p>Tab Harbor 夹在两者中间。</p>
+<p>它没有试图成为项目管理系统，也没有只负责把标签打包收走。它让当前标签、已保存会话、快捷入口和待办共同出现在新标签页。你开新页面时，看到的不是空白，而是自己正在推进的浏览器上下文。</p>
+<p>这对下面几类人尤其有用：</p>
+<ul>
+<li>经常边搜索边写作，标签会随着思路扩散的人。</li>
+<li>同时跟进多个轻量任务，但不想每个任务都开一套 Notion 或项目管理工具的人。</li>
+<li>把浏览器当资料工作台，又讨厌注册账号、搭服务、维护同步的人。</li>
+<li>有“稍后读”习惯，但发现收藏夹最终只会积灰的人。</li>
+</ul>
+<p>反过来，它也不适合所有人。</p>
+<p>如果你真正需要的是跨电脑、跨浏览器同步，Tab Harbor 不是答案。它明确采用本地存储：会话、待办、快捷链接、主题偏好等数据都放在 <code>chrome.storage.local</code>，没有后端，也没有同步账号。换电脑、重装系统、切到另一台设备，不能期待它像云端工作区那样自动跟过去。</p>
+<p>如果你需要团队共享项目、统一分配任务、给每个页面加复杂字段，它也太轻。它的待办是贴近浏览器动作的一层提醒，不该替代专业任务管理工具。</p>
+<p>这恰好是它最诚实的边界：<strong>它不试图把浏览器变成公司协作平台，只试图让你的浏览器少一点失忆。</strong></p>
+<h2 id="本地优先不等于不需要看权限">本地优先，不等于不需要看权限
+</h2><p>Tab Harbor 是基于 Manifest V3 的 Chrome 扩展，开源仓库采用 MIT 许可证。项目说明强调不设后端、不设账号，数据保存在本机；从隐私模型看，这比把标签历史交给一个陌生云服务更让人安心。</p>
+<p>但“本地优先”不是“闭眼安装”。标签管理扩展天然需要较高浏览器权限，因为它必须读取、归组、关闭、休眠或恢复标签。Tab Harbor 的清单包含 <code>tabs</code>、<code>storage</code>、<code>tabGroups</code> 等权限，此外还有 <code>search</code>、<code>clipboardRead</code> 与 <code>favicon</code>。这些权限是否合理，要按功能逐项理解，而不是只看“开源”和“本地”两个词就下结论。</p>
+<p>安装任何此类扩展前，建议做三件事：</p>
+<ol>
+<li>看 Chrome Web Store 权限说明，确认权限与功能是否对应。</li>
+<li>对新项目，优先观察更新频率、Issues 和代码仓库，而不是只看宣传页。</li>
+<li>别把浏览器同步、会话备份当成理所当然；重要页面仍应有自己的书签、文档或项目记录。</li>
+</ol>
+<p>截至 2026 年 7 月，Tab Harbor GitHub 仓库约 600 星，创建于今年 4 月，仍是很年轻的项目。年轻意味着界面和功能还在快速变化，也意味着稳定性、兼容性和长期维护，都需要用一段真实工作流去验证。把它当成一个值得试用的本地工具，而不是一键治好信息焦虑的神药，预期会更准确。</p>
+<h2 id="用它之前先给标签定三种命运">用它之前，先给标签定三种命运
+</h2><p>工具装得再多，浏览器混乱的根源仍可能是“所有网页都被当作同一类东西”。试 Tab Harbor 时，不妨用一个简单规则：每次看到一个页面，只决定它的下一步，而不是给它永久归宿。</p>
+<ul>
+<li><strong>正在用</strong>：留在当前标签组。它属于眼下任务。</li>
+<li><strong>还要继续，但不是现在</strong>：存进有名称的会话。它属于可恢复现场。</li>
+<li><strong>未来可能有用</strong>：进入书签或知识库。它属于长期资料。</li>
+</ul>
+<p>做完一项任务，再花半分钟处理当前组：关掉已完成页面，保存仍有价值的上下文，删掉重复标签。这个动作看似微小，却会让浏览器从“所有历史都还活着”的地方，变成“只呈现下一步”的地方。</p>
+<p>Tab Harbor 最值得肯定的地方，是没有要求用户建立一套复杂体系。它把整理动作压缩在新标签页里：打开浏览器，看到秩序；结束一轮工作，留下一点可恢复的痕迹。</p>
+<p>多标签不是自控力差的证据。很多时候，它只是工作正在展开的痕迹。问题不在于把所有标签消灭，而在于别让它们把你正在做什么也一起淹没。</p>
+<p>对需要跨设备协作的人，选择更成熟的云端工作区；对只想让 Chrome 这个主战场重新可读的人，Tab Harbor 值得装上几天，看看它能不能把每次新建标签页，从又一次分心，变成回到工作现场。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/chrome/">Chrome</a>
+        
+            <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/">浏览器插件</a>
+        
+            <a href="/tags/%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86/">标签管理</a>
+        
+            <a href="/tags/tab-harbor/">Tab Harbor</a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/ponytail-ai-coding-less-code-overengineering/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我让 AI 少写点代码：ponytail 背后的反过度工程实验</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/desktop-search-tools-comparison-2026/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Everything vs Listary vs uTools vs Fluent Search：4 款桌面搜索工具 2026 实测对比</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/2026-top-8-chrome-extensions-productivity/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">8 个 Chrome 插件让你效率翻倍（2026 实测）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/2026-efficiency-revolution-ai-tools/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">2026年效率革命：五款值得尝试的AI集成工具</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/chrome-tabs-tab-harbor-browser-control-room\/'; 
+        const pageTitle = 'Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 218 天 8 小时 · 96 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-07 16:44:08 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

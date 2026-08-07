@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>微信 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BE%AE%E4%BF%A1/</link>
+		<description>Recent content in 微信 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 03 Aug 2026 15:10:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BE%AE%E4%BF%A1/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装</title>
+				<link>https://softon.top/software/windows-clipboard-image-bloat-slimpaste/</link>
+				<pubDate>Mon, 03 Aug 2026 15:10:00 +0800</pubDate>
+				<guid>https://softon.top/software/windows-clipboard-image-bloat-slimpaste/</guid>
+				<description>&lt;p&gt;一张网页配图，原文件只有 80 KB。右键复制，粘进飞书、微信、WPS 或笔记里，转眼成了几 MB；连续贴几十张，聊天记录和文档像被悄悄灌了铅。&lt;/p&gt;&#xA;&lt;p&gt;这事最容易让人误会成：接收软件压缩太差，或者截图工具把图片搞坏了。&lt;/p&gt;&#xA;&lt;p&gt;真相往往藏在更早一步：&lt;strong&gt;图片进入 Windows 剪贴板时，文件不一定还以“原来的 JPG 或 PNG 文件”存在。它可能已被解码成一整块像素数据。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;SlimPaste 盯上的正是这层隐形膨胀。它不是新的截图工具，也不是万能图片压缩器；它在你粘贴前，把剪贴板里的图片像素重新压成更轻的图片，再交给目标应用。这个思路很窄，但对高频贴图的人很实用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一张-80-kb-图片为什么能在剪贴板里长到-mb-级&#34;&gt;一张 80 KB 图片，为什么能在剪贴板里长到 MB 级&#xA;&lt;/h2&gt;&lt;p&gt;先把“图片文件”和“图片像素”分开。&lt;/p&gt;&#xA;&lt;p&gt;JPG、PNG、WebP 是为了存储和传输而生的文件格式。它们会用压缩算法，把大量重复或人眼不敏感的信息收起来。因此一张尺寸不大、颜色变化不复杂的截图，可能只有几十 KB。&lt;/p&gt;&#xA;&lt;p&gt;但屏幕显示和图像编辑不能靠压缩包直接工作。程序需要先把它解码成每个像素的颜色值。以一张 &lt;code&gt;1920 × 1080&lt;/code&gt; 图片为例，共有 207 万像素；若按每像素 4 字节存放红、绿、蓝和透明度：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;1920 × 1080 × 4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;8,294,400 bytes&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;约 8 MB。这里不是说每次复制都会得到一个名为 &lt;code&gt;.bmp&lt;/code&gt; 的 8 MB 文件，而是说剪贴板可向应用提供一份接近这个量级的原始位图数据。&lt;/p&gt;&#xA;&lt;p&gt;Windows 这样做并不荒谬。Word、PPT、Photoshop、画图等软件需要拿到可编辑的图像内容；同一份剪贴板还可能同时提供 PNG、DIB、HTML 等多种格式，供不同应用各取所需。兼容性换来了便利，也留下一个后果：&lt;strong&gt;接收端若直接围绕像素数据落盘，或重新编码策略不够节制，最终保存的图片就会比原图大很多。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;所以，看到微信或文档里的图片很大，未必代表原图本来就大；看到最终文件后缀是 PNG 或 JPG，也不能反推剪贴板里没有原始位图。文件格式和内存里的像素表示，本来就是两回事。&lt;/p&gt;&#xA;&lt;h2 id=&#34;slimpaste-做的不是自动压缩所有图片&#34;&gt;SlimPaste 做的不是“自动压缩所有图片”&#xA;&lt;/h2&gt;&lt;p&gt;SlimPaste 的工作方式很克制：正常 &lt;code&gt;Ctrl + V&lt;/code&gt; 不动；需要轻量粘贴时，按 &lt;code&gt;Ctrl + Shift + V&lt;/code&gt;。它读取剪贴板中的图片像素，使用 JPEGli 编码为高质量 JPG，把压缩后的图片以文件对象重新放回剪贴板，然后完成粘贴。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

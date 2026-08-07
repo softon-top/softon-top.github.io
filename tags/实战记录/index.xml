@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>实战记录 on softon.top</title>
+		<link>https://softon.top/tags/%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95/</link>
+		<description>Recent content in 实战记录 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 27 May 2026 10:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我用 Claude Code 开发了个微信小游戏，从 Prompt 到上线只花了 3 天</title>
+				<link>https://softon.top/software/ai-wechat-minigame-full-flow/</link>
+				<pubDate>Wed, 27 May 2026 10:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/ai-wechat-minigame-full-flow/</guid>
+				<description>&lt;h2 id=&#34;为什么我决定用-ai-开发小游戏&#34;&gt;为什么我决定用 AI 开发小游戏&#xA;&lt;/h2&gt;&lt;p&gt;去年年底，我突然想起一个念想：做个微信小游戏。不是为了赚钱，就是想看看能不能在一个周末内从零到上线。&lt;/p&gt;&#xA;&lt;p&gt;传统路线是什么？学微信小游戏 API、配置开发环境、手写 Canvas 绘制逻辑、调试兼容性问题……这套下来没个一两周根本搞不定。但我手里有 Cursor + Claude Code，何不试试让 AI 来做这件事？&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/27/142905-277aec-ai-game-cover.jpg&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;AI开发微信小游戏&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;p&gt;结果出乎意料——&lt;strong&gt;3 天从 Prompt 到微信审核通过&lt;/strong&gt;。这篇文章就是完整的实战记录。&lt;/p&gt;&#xA;&lt;h2 id=&#34;第一步设计游戏机制最关键的-prompt&#34;&gt;第一步：设计游戏机制（最关键的 Prompt）&#xA;&lt;/h2&gt;&lt;p&gt;我没有直接甩代码需求，而是先花了半小时设计游戏。选了个简单但有趣的方向：&lt;strong&gt;2048 风格的数字合并游戏&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;为什么选这个？&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;逻辑清晰：滑动合并相同数字&lt;/li&gt;&#xA;&lt;li&gt;胜负条件明确：达到 2048 或无法继续&lt;/li&gt;&#xA;&lt;li&gt;微信小游戏友好：不需要复杂的网络交互&lt;/li&gt;&#xA;&lt;li&gt;容易扩展：后续可加排行榜、分享功能&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;然后我写了这个 Prompt（这是关键）：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;我要开发一个微信小游戏，基于 2048 的玩法。&#xA;&#xA;游戏规则：&#xA;1. 4x4 网格，每个格子可以放数字&#xA;2. 初始状态：随机两个格子出现 2 或 4&#xA;3. 玩家滑动屏幕（上下左右），相同数字向滑动方向合并，合并后数字翻倍&#xA;4. 每次滑动后，随机位置出现新的 2 或 4&#xA;5. 当无法继续滑动时游戏结束&#xA;6. 目标：达到 2048 获胜&#xA;&#xA;技术要求：&#xA;- 使用微信小游戏 Canvas API&#xA;- 支持触摸事件（上下左右滑动）&#xA;- 显示当前分数和最高分（本地存储）&#xA;- 游戏结束后显示重新开始按钮&#xA;- 适配不同屏幕尺寸&#xA;&#xA;代码结构：&#xA;- game.js：游戏逻辑（网格管理、合并算法、分数计算）&#xA;- render.js：Canvas 绘制（网格、数字、UI）&#xA;- input.js：触摸事件处理&#xA;- main.js：入口和初始化&#xA;&#xA;请生成完整的可运行代码。&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个 Prompt 的关键是：&lt;strong&gt;明确的规则 + 清晰的技术要求 + 代码结构建议&lt;/strong&gt;。Claude Code 拿到这个，直接生成了 80% 可用的代码。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

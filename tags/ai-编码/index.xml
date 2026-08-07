@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI 编码 on softon.top</title>
+		<link>https://softon.top/tags/ai-%E7%BC%96%E7%A0%81/</link>
+		<description>Recent content in AI 编码 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 06 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai-%E7%BC%96%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</title>
+				<link>https://softon.top/software/cursor-to-codex-two-weeks-real-feeling/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/cursor-to-codex-two-weeks-real-feeling/</guid>
+				<description>&lt;p&gt;Cursor 用了一年半。从 2025 年年初 Composer 还叫 Composer 的时候就在用，见证它一路涨价、一路加功能、一路把内存吃到 4G。&lt;/p&gt;&#xA;&lt;p&gt;半个月前，因为一件很小的事，我把 Cursor 关了，开始试 Codex CLI。&lt;/p&gt;&#xA;&lt;p&gt;原本以为顶多用一周就滚回来。结果这半个月，Cursor 图标躺在 Dock 里一次没点过。今天写这篇不是要黑 Cursor，也不是要吹 Codex，我想说的是一件更本质的事：&lt;strong&gt;AI 写代码这件事，可能压根不需要 IDE&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;让我关掉-cursor-的那件小事&#34;&gt;让我关掉 Cursor 的那件小事&#xA;&lt;/h2&gt;&lt;p&gt;那天在改一个 monorepo 里的 &lt;code&gt;pnpm&lt;/code&gt; 依赖冲突。三个包互相 peer，Cursor 的 Composer 咔咔改了半天，改完跑不起来。&lt;/p&gt;&#xA;&lt;p&gt;我说：&lt;code&gt;回滚，重新看一下 packages/core 的 package.json。&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Composer 回：&lt;code&gt;好的，我来查看...&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;然后就没有然后了。三十秒后我看到那个熟悉的转圈，右下角 token 消耗 &lt;code&gt;2,847 → 3,142 → 3,505&lt;/code&gt;。它在&lt;strong&gt;继续消耗上下文，但没在做事&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;那一刻我意识到一件事：Cursor 的 UI 太热闹了。侧边栏对话、编辑器里的 diff、底部 status bar、右下角通知、Composer 里的多轮对话 —— 我根本分不清 AI 现在在&lt;strong&gt;思考&lt;/strong&gt;、还是在&lt;strong&gt;编辑&lt;/strong&gt;、还是在&lt;strong&gt;卡住&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;我关掉 Cursor，&lt;code&gt;cd&lt;/code&gt; 进项目根目录，敲了一句：&lt;code&gt;codex &amp;quot;回滚 pnpm 依赖冲突相关的改动，先给我看 packages/core 的 package.json&amp;quot;&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;八秒后，终端里干干净净地列出了 diff 和文件内容。没有转圈，没有侧边栏，没有 25 个 tab。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

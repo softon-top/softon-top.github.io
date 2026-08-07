@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>预览问题 on softon.top</title>
+		<link>https://softon.top/tags/%E9%A2%84%E8%A7%88%E9%97%AE%E9%A2%98/</link>
+		<description>Recent content in 预览问题 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 31 May 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E9%A2%84%E8%A7%88%E9%97%AE%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>头条电脑端发布文章时预览无反应，我是如何找到原因并解决的</title>
+				<link>https://softon.top/tutorials/toutiao-publish-preview-no-response-fix/</link>
+				<pubDate>Sun, 31 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/toutiao-publish-preview-no-response-fix/</guid>
+				<description>&lt;p&gt;最近遇到一个诡异问题：&lt;strong&gt;头条电脑端编辑文章正常，但点击【预览并发布】完全没反应、页面无弹窗、无报错提示&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;换浏览器、清缓存、开隐私模式全都没用，折腾好久（好多天）找不到原因。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;诡异现象：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;1、家里的电脑（windows11）包括内网的PVE里面的Zorin（Linux）均不行；&lt;/p&gt;&#xA;&lt;p&gt;2、不管是Chrome、Edge、Firefox等等，换了好多浏览器均不行；&lt;/p&gt;&#xA;&lt;p&gt;3、公司的电脑（windows7）可以，没有问题。&lt;/p&gt;&#xA;&lt;p&gt;今天把我&lt;strong&gt;完整排错全过程+根因+终极解决方案&lt;/strong&gt;一次性记录下来，记录并发布主要是让大家了解遇到电脑问题时，如何去找思路，我觉得这是最重要的，当然这也是我的兴趣爱好。&lt;/p&gt;&#xA;&lt;h1 id=&#34;一问题现象&#34;&gt;一、问题现象&#xA;&lt;/h1&gt;&lt;p&gt;1、头条号后台（mp.toutiao.com）文章编辑正常，&lt;strong&gt;点击预览按钮完全没反应&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;2、页面无弹窗、无提示、无任何反馈，属于静默卡死&lt;/p&gt;&#xA;&lt;p&gt;3、更换无痕隐私窗口、关闭所有扩展、重启浏览器、重启电脑 &lt;strong&gt;全部无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;4、编辑器可以正常打字、上传图片，但是&lt;strong&gt;不能保存草稿，预览功能彻底失效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;二查找原因&#34;&gt;二、查找原因&#xA;&lt;/h1&gt;&lt;p&gt;1、以前遇到问题第一时间baidu或者google，现在遇到问题第一时间豆包或者千问&lt;/p&gt;&#xA;&lt;p&gt;2、两者刚开始回答其实大差不差，我们看看两边的回答对比&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/31/2026-05-30_221643.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;2026-05-30_221643.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/31/2026-05-30_221714.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;2026-05-30_221714.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;三常规排查踩坑记录全部无效&#34;&gt;三、常规排查踩坑记录（全部无效）&#xA;&lt;/h1&gt;&lt;p&gt;我依次排查了网上所有通用方案，全部踩坑无效：&lt;/p&gt;&#xA;&lt;p&gt;✅ 关闭浏览器硬件加速 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 浏览器无痕/隐私模式测试 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 清理缓存、Cookie、重置浏览器设置 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 更换Chrome/Edge双浏览器测试 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 关闭防火墙、关闭杀毒软件 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 刷新DNS、重置网络、重启电脑 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;✅ 换家里局域网PVE下面的Zorin（Linux）系统 → &lt;strong&gt;无效&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;就差更新显卡驱动了，主要是想到换了Linux系统也不行，估计不是系统和显卡的问题了，其实到这里我基本准备放弃认命了，因为以前也遇到了怎么也解决不了的问题最终放弃了&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;我想实在不行只能每天远程用公司的电脑发文算了，因为这个问题不是一天两天了，好多天了，每次想起来就去搜一下，折腾一下，最后还是以失败告终。&lt;/p&gt;&#xA;&lt;h1 id=&#34;四深度定位根因关键一步&#34;&gt;四、深度定位根因（关键一步）&#xA;&lt;/h1&gt;&lt;p&gt;今天豆包提供了一个新的思路&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;按 F12→Network（网络），点预览按钮后：&lt;/p&gt;&#xA;&lt;p&gt;看是否有 红色 / 4xx/5xx 请求，复制报错 URL / 状态码，截图给头条客服。&lt;/p&gt;&#xA;&lt;p&gt;切换到 Console（控制台），看有无 JS 报错，大概率是缓存或插件阻塞。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;于是我用隐私窗口打开头条电脑端，再按F12打开开发者工具，切换到网络，看看有什么错误，&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/31/2026-05-30_222927.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;2026-05-30_222927.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;&#xA;&lt;p&gt;当然我只看到了很多错误，我也是不太懂的，直接丢给豆包继续分析&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://img.softon.top/2026/05/31/2026-05-30_223135.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;&#xA;&#x9;loading=&#34;lazy&#34;&#xA;&#x9;&#xA;&#x9;&#x9;alt=&#34;2026-05-30_223135.png&#34;&#xA;&#x9;&#xA;&#x9;&#xA;&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

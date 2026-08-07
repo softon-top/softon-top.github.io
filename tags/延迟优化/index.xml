@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>延迟优化 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BB%B6%E8%BF%9F%E4%BC%98%E5%8C%96/</link>
+		<description>Recent content in 延迟优化 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 14 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BB%B6%E8%BF%9F%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</title>
+				<link>https://softon.top/ai/hi-ai-agent-real-cost-latency/</link>
+				<pubDate>Tue, 14 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/hi-ai-agent-real-cost-latency/</guid>
+				<description>&lt;p&gt;有些账单不是从复杂任务开始炸的。&lt;/p&gt;&#xA;&lt;p&gt;它可能从一句很礼貌的：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Hi&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;开始。&lt;/p&gt;&#xA;&lt;p&gt;Quesma 最近做了一个挺刺痛人的小实验：他们用 14 个模型，在 OpenRouter 上跑了 3 类提示词、每类 5 次，总计 210 次 agentic trials，光 API 成本花了 &lt;strong&gt;88.58 美元&lt;/strong&gt;。实验环境也很具体：一个小 git repo，3 个历史 commit，&lt;code&gt;app.py&lt;/code&gt; 里留着一个未提交修改。结果最荒诞的一幕是，一个模型为了回复一句简单问候，思考了 &lt;strong&gt;5 分 18 秒&lt;/strong&gt;。作者把等待时间也折算进成本：按开发者平均薪资算，这 318 秒的等待本身就值 &lt;strong&gt;5.10 美元&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;更反直觉的是：单看 token，回答一句 Hi 通常不到 &lt;strong&gt;0.005 美元&lt;/strong&gt;。但如果把人等在屏幕前的时间也算进去，最便宜的组合大约 &lt;strong&gt;0.08 美元&lt;/strong&gt;，慢的、过度思考的、反复绕圈的组合，可以把一次寒暄变成一张小额罚单。&lt;/p&gt;&#xA;&lt;p&gt;这篇不想再讲“网页太长导致 token 爆炸”。昨天那篇 Wikipedia 68,000 tokens 的文章，核心是 &lt;strong&gt;输入内容太胖&lt;/strong&gt;：Agent 把网页当垃圾袋，整袋塞进上下文。&lt;/p&gt;&#xA;&lt;p&gt;今天的问题不一样。&lt;/p&gt;&#xA;&lt;p&gt;今天的核心是：&lt;strong&gt;输入明明很短，Agent 却把它当成复杂任务来办。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;一个是“读太多”。一个是“想太久”。&lt;/p&gt;&#xA;&lt;p&gt;这两个坑长得像，账单都不好看，但病根完全不同。&lt;/p&gt;&#xA;&lt;h2 id=&#34;token-账单很诚实但它没告诉你全价&#34;&gt;token 账单很诚实，但它没告诉你全价&#xA;&lt;/h2&gt;&lt;p&gt;大多数人算 AI 成本，会先打开模型价格表：输入每百万 token 多少钱，输出每百万 token 多少钱。这个算法当然没错，但它只算了机器消耗，没有算人类被迫等待的损失。&lt;/p&gt;&#xA;&lt;p&gt;Quesma 原文里有个关键判断：在 “Hi” 这类短提示词场景下，token 成本几乎不是主角。作者提到，回答 Hi 的 token 成本低于 &lt;strong&gt;0.005 美元&lt;/strong&gt;；但等待回复时，你的时间成本可能是 &lt;strong&gt;0.07 美元&lt;/strong&gt;，甚至更高。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

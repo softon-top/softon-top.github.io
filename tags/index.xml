@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 07 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI</title>
+				<link>https://softon.top/tags/ai/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>LLM</title>
+				<link>https://softon.top/tags/llm/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/llm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>UEFI</title>
+				<link>https://softon.top/tags/uefi/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/uefi/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>开源</title>
+				<link>https://softon.top/tags/%E5%BC%80%E6%BA%90/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E5%BC%80%E6%BA%90/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>本地大模型</title>
+				<link>https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>隐私</title>
+				<link>https://softon.top/tags/%E9%9A%90%E7%A7%81/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E9%9A%90%E7%A7%81/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI 编码</title>
+				<link>https://softon.top/tags/ai-%E7%BC%96%E7%A0%81/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-%E7%BC%96%E7%A0%81/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Claude-Code</title>
+				<link>https://softon.top/tags/claude-code/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/claude-code/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CLI</title>
+				<link>https://softon.top/tags/cli/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cli/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Codex</title>
+				<link>https://softon.top/tags/codex/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/codex/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Cursor</title>
+				<link>https://softon.top/tags/cursor/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cursor/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>开发工具</title>
+				<link>https://softon.top/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</link>
+				<pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RogueCleaner</title>
+				<link>https://softon.top/tags/roguecleaner/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/roguecleaner/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Windows</title>
+				<link>https://softon.top/tags/windows/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/windows/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>注册表</title>
+				<link>https://softon.top/tags/%E6%B3%A8%E5%86%8C%E8%A1%A8/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E6%B3%A8%E5%86%8C%E8%A1%A8/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>流氓软件</title>
+				<link>https://softon.top/tags/%E6%B5%81%E6%B0%93%E8%BD%AF%E4%BB%B6/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E6%B5%81%E6%B0%93%E8%BD%AF%E4%BB%B6/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>系统清理</title>
+				<link>https://softon.top/tags/%E7%B3%BB%E7%BB%9F%E6%B8%85%E7%90%86/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E7%B3%BB%E7%BB%9F%E6%B8%85%E7%90%86/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Claude-Skills</title>
+				<link>https://softon.top/tags/claude-skills/</link>
+				<pubDate>Tue, 04 Aug 2026 16:20:00 +0800</pubDate>
+				<guid>https://softon.top/tags/claude-skills/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Ffmpeg</title>
+				<link>https://softon.top/tags/ffmpeg/</link>
+				<pubDate>Tue, 04 Aug 2026 16:20:00 +0800</pubDate>
+				<guid>https://softon.top/tags/ffmpeg/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Gemini</title>
+				<link>https://softon.top/tags/gemini/</link>
+				<pubDate>Tue, 04 Aug 2026 16:20:00 +0800</pubDate>
+				<guid>https://softon.top/tags/gemini/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

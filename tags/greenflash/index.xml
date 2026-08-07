@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Greenflash on softon.top</title>
+		<link>https://softon.top/tags/greenflash/</link>
+		<description>Recent content in Greenflash on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 19 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/greenflash/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI Agent 不是黑盒魔法：为什么下一代产品需要对话观测系统？</title>
+				<link>https://softon.top/ai/ai-agent-conversation-observability-greenflash/</link>
+				<pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-agent-conversation-observability-greenflash/</guid>
+				<description>&lt;p&gt;很多团队做 AI Agent，最容易掉进一个很隐蔽的坑：&lt;strong&gt;工程上看起来一切正常，用户体验却在悄悄烂掉。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;日志没有报错，API 没有超时，工具调用也返回了 200。仪表盘一片绿色，像一块擦得发亮的玻璃。可玻璃另一边，用户已经第三次问同一个问题，第四次换了个说法，第五次开始怀疑自己是不是不会用。&lt;/p&gt;&#xA;&lt;p&gt;这就是 AI 产品最麻烦的地方：它不像传统按钮。按钮点了没反应，错误很明显；Agent 回答了，但没解决问题，错误藏在语言里。&lt;/p&gt;&#xA;&lt;p&gt;最近 Hacker News 上有个 Show HN 项目叫 &lt;strong&gt;Greenflash&lt;/strong&gt;，标题很直接：&lt;code&gt;we read every conversation your AI agent has with users&lt;/code&gt;。它自己的定位也很明确：&lt;strong&gt;Product Management for AI Agents&lt;/strong&gt;，不是单纯的日志工具，也不是传统 eval 平台，而是读取真实用户对话，把“哪里卡住了、什么需求没被满足、下一步该改什么”提炼成产品决策。&lt;/p&gt;&#xA;&lt;p&gt;我不想把它写成一篇“某某工具介绍”。真正值得讨论的不是 Greenflash 本身，而是它暴露出的趋势：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;当语言成为产品界面，产品经理、工程师、运营都需要一种新的眼睛。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这双眼睛不是看 CPU、不是看 HTTP 500，也不是看 prompt 单测通过率。它要看的是：用户到底有没有拿到想要的东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;传统可观测性看不到答非所问&#34;&gt;传统可观测性看不到“答非所问”&#xA;&lt;/h2&gt;&lt;p&gt;过去做软件，监控链路比较清楚。&lt;/p&gt;&#xA;&lt;p&gt;服务器挂了，告警响；接口慢了，APM 标红；按钮转化率跌了，埋点告诉你哪一步漏了人。传统产品像一条铺好的路，用户从 A 走到 B，中间每个路口都有摄像头。&lt;/p&gt;&#xA;&lt;p&gt;AI Agent 不一样。它更像一个会说话的前台。&lt;/p&gt;&#xA;&lt;p&gt;用户不会严格按路径走。他可能先抱怨，再描述背景，然后突然问价格，再要求 Agent 做动作。一个会话里有需求、有情绪、有误解、有反复确认，还有一些连用户自己都没完全讲清楚的意图。&lt;/p&gt;&#xA;&lt;p&gt;这时候，如果你只看传统日志，容易得到一个荒谬结论：系统运行完美。&lt;/p&gt;&#xA;&lt;p&gt;因为从机器视角看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;LLM 返回了内容&lt;/li&gt;&#xA;&lt;li&gt;工具调用成功&lt;/li&gt;&#xA;&lt;li&gt;数据库查询正常&lt;/li&gt;&#xA;&lt;li&gt;对话没有崩溃&lt;/li&gt;&#xA;&lt;li&gt;用户没有触发明确错误&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;但从用户视角看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 没理解真正问题&lt;/li&gt;&#xA;&lt;li&gt;回答一直绕圈&lt;/li&gt;&#xA;&lt;li&gt;关键下一步没给&lt;/li&gt;&#xA;&lt;li&gt;该推荐升级时只解释规则&lt;/li&gt;&#xA;&lt;li&gt;该执行动作时只输出说明&lt;/li&gt;&#xA;&lt;li&gt;用户越问越急，最后关掉页面&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这类失败最烦的地方在于：&lt;strong&gt;它不是系统失败，而是体验失败。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

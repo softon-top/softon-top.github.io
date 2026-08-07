@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Ds4 on softon.top</title>
+		<link>https://softon.top/tags/ds4/</link>
+		<description>Recent content in Ds4 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 23 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ds4/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>ds4：Redis 作者用 C 语言写了一个 DeepSeek 专用推理引擎</title>
+				<link>https://softon.top/software/ds4-deepseek-inference-engine/</link>
+				<pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ds4-deepseek-inference-engine/</guid>
+				<description>&lt;p&gt;Salvatore Sanfilippo，网名 antirez，Redis 的作者，在数据库和键值存储领域耕耘了近 15 年。&lt;/p&gt;&#xA;&lt;p&gt;2025 年底，他转了个方向，开始写一个 DeepSeek 专用的大模型推理引擎。&lt;/p&gt;&#xA;&lt;p&gt;项目名叫 &lt;strong&gt;ds4&lt;/strong&gt;——有人猜是 &amp;ldquo;DeepSeek for 4-bit&amp;rdquo;，有人猜是 &amp;ldquo;DeepSeek 4&amp;rdquo;，antirez 本人没解释过命名由来。&lt;/p&gt;&#xA;&lt;p&gt;但不管叫什么，这个项目做的东西很有意思：&lt;strong&gt;它不是又一个 GGUF 运行工具，而是一个从零开始、专为 DeepSeek 模型设计的独立推理引擎&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;用 C 语言写的。Metal 和 CUDA 后端。2-bit 量化。磁盘 KV 缓存持久化。HTTP API 服务。编程智能体。&lt;/p&gt;&#xA;&lt;p&gt;开源的。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么需要一个专用推理引擎&#34;&gt;为什么需要一个&amp;quot;专用&amp;quot;推理引擎&#xA;&lt;/h2&gt;&lt;p&gt;在 ds4 出现之前，本地跑 DeepSeek 模型的主流方案是 llama.cpp / Ollama。它们支持 GGUF 格式，兼容几乎所有主流开源模型，是事实上的标准。&lt;/p&gt;&#xA;&lt;p&gt;但 GGUF 是一个通用格式——它追求的是&amp;quot;兼容一切&amp;quot;，而不是&amp;quot;在某个模型上跑得最快&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;antirez 的思路是反过来的：&lt;strong&gt;只服务 DeepSeek 模型，把 DeepSeek 的架构特性用到极致&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;DeepSeek-V4-Flash 是 DeepSeek 在 2025 年底发布的模型，架构上有几个关键特性：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;MoE（混合专家）架构，总参数量大但每次推理只激活一部分&lt;/li&gt;&#xA;&lt;li&gt;MLA（Multi-head Latent Attention）注意力机制&lt;/li&gt;&#xA;&lt;li&gt;FP8 混合精度训练&lt;/li&gt;&#xA;&lt;li&gt;支持原生 2-bit 量化&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;llama.cpp 对 MoE 和 MLA 的支持是&amp;quot;能跑就行&amp;quot;级别。而 ds4 从底层数据结构开始，&lt;strong&gt;针对这些特性做了专门优化&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

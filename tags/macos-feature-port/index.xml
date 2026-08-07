@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Macos-Feature-Port on softon.top</title>
+		<link>https://softon.top/tags/macos-feature-port/</link>
+		<description>Recent content in Macos-Feature-Port on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 14 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/macos-feature-port/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>PeekDesktop：Windows 终于有了 macOS 点击壁纸显示桌面</title>
+				<link>https://softon.top/software/peekdesktop-windows-macos-show-desktop-feature/</link>
+				<pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/peekdesktop-windows-macos-show-desktop-feature/</guid>
+				<description>&lt;h2 id=&#34;缘起一个被-windows-忽略的痛点&#34;&gt;缘起：一个被 Windows 忽略的痛点&#xA;&lt;/h2&gt;&lt;p&gt;我用了三年 macOS，最离不开的不是 Touch Bar，不是 Retina 屏幕，而是那个看似微不足道的功能——&lt;strong&gt;点击壁纸显示桌面&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;在 macOS 上，把鼠标移到右下角（或者使用快捷键），所有窗口瞬间消失，桌面一览无余。再点一次，所有窗口恢复到原来的位置。这个操作我每天要使用几十次。&lt;/p&gt;&#xA;&lt;p&gt;切换到 Windows 后，我花了三个月才接受这个事实：Windows 没有原生支持这个功能。任务栏右下角的&amp;quot;显示桌面&amp;quot;按钮又小又难按，Win+D 会最小化所有窗口但也打乱了工作流，手动一个个最小化更是地狱般的体验。&lt;/p&gt;&#xA;&lt;p&gt;直到我发现了 PeekDesktop。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么-windows-一直没有这个功能&#34;&gt;为什么 Windows 一直没有这个功能&#xA;&lt;/h2&gt;&lt;p&gt;微软的产品哲学是&amp;quot;让用户保持专注&amp;quot;，所以 Windows 的窗口管理相对保守。&amp;ldquo;显示桌面&amp;quot;这个需求，在微软看来，一个任务栏按钮就够了。&lt;/p&gt;&#xA;&lt;p&gt;但实际使用中，这个按钮有几个致命问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;位置太小&lt;/strong&gt;：17寸笔记本上只有 20px 宽，容易误触&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;功能太弱&lt;/strong&gt;：只能显示桌面，不能恢复之前的窗口状态&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;快捷键不直观&lt;/strong&gt;：Win+D 需要两只手配合&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;而 macOS 的实现更优雅——它保留了窗口状态，你随时可以切回原来的工作流。&lt;/p&gt;&#xA;&lt;h2 id=&#34;peekdesktop-做了什么&#34;&gt;PeekDesktop 做了什么&#xA;&lt;/h2&gt;&lt;p&gt;PeekDesktop 是一款开源 Windows 小工具，核心功能只有一个：点击壁纸或任务栏空白区域，隐藏所有窗口。再点一次，恢复原状。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;我的实测数据&lt;/strong&gt;：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;维度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;测试结果&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;内存占用（空闲）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;4.2 MB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;内存占用（触发时）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;7.8 MB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;CPU 占用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;0%（事件驱动，几乎为0）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;启动时间&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;即时（事件注册式，非常驻）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;首次触发延迟&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&amp;lt; 50ms&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;窗口恢复准确率&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;100%（测试50次）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;这个数据是什么概念？Fences 占用 15-25 MB，Nimi Places 占用 2-4 MB。PeekDesktop 的 4.2 MB 空闲内存几乎可以忽略不计。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>WebFetch on softon.top</title>
+		<link>https://softon.top/tags/webfetch/</link>
+		<description>Recent content in WebFetch on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 13 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/webfetch/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</title>
+				<link>https://softon.top/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/</link>
+				<pubDate>Mon, 13 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/</guid>
+				<description>&lt;p&gt;有些成本陷阱不是藏在模型价格表里，而是藏在一个看起来很无害的动作里：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;“帮我打开这个网页看一下。”&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这句话听起来像是一次普通浏览。人类打开网页，眼睛扫一遍标题、正文、引用、评论，觉得没什么。但 AI Agent 不一样。它不是“看”网页，它通常要先把网页变成一大坨文本，再塞进上下文窗口，然后才开始推理。&lt;/p&gt;&#xA;&lt;p&gt;Hacker News 上今天有个帖子把这个问题戳得很直：一个普通 Wikipedia 页面，直接喂给 AI Agent，可能要 &lt;strong&gt;68,240 tokens&lt;/strong&gt;。Nike 首页更夸张，raw HTML 可能到 &lt;strong&gt;353,000 tokens&lt;/strong&gt;。帖子作者说，Claude Code 的内置 &lt;code&gt;WebFetch&lt;/code&gt; 在简单页面上表现不错，可以把 Wikipedia 总结到大约 950 tokens；但遇到 JS 渲染、反爬、Cloudflare 或 403 页面时，就可能失败。更糟的是，有些 Agent 会把 raw HTML 直接倒回上下文，烧了一大堆 token，最后仍然没读懂网页。&lt;/p&gt;&#xA;&lt;p&gt;这不是“模型贵”的问题。&lt;/p&gt;&#xA;&lt;p&gt;这是 &lt;strong&gt;Agent 读网页的姿势错了&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;我复测了一遍同一个网页差距可以是-400-倍&#34;&gt;我复测了一遍：同一个网页，差距可以是 400 倍&#xA;&lt;/h2&gt;&lt;p&gt;为了不只复述别人的数字，我在本机用 &lt;code&gt;tiktoken&lt;/code&gt; 做了一个小复测。编码器用 &lt;code&gt;cl100k_base&lt;/code&gt;，抓取页面后分别统计 raw HTML 和简单可见文本抽取后的 token 数。&lt;/p&gt;&#xA;&lt;p&gt;结果如下：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;页面&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th style=&#34;text-align: right&#34;&gt;raw HTML tokens&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th style=&#34;text-align: right&#34;&gt;可见文本 tokens&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;备注&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wikipedia: AI agent&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;176,990&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;13,934&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;页面不算大，但 HTML 很胖&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wikipedia: Artificial intelligence&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;685,617&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;61,985&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;大词条，引用和结构极多&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Nike 首页&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;281,984&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;3,994&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;前端资源和脚本占主要体积&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wikipedia REST summary: AI agent&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;415&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;结构化摘要 API&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wikipedia API intro extract: AI agent&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;111&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;只取引言纯文本&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Wikipedia API sections: AI agent&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;984&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td style=&#34;text-align: right&#34;&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;只取章节列表&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;这张表最吓人的地方，不是 &lt;code&gt;Artificial intelligence&lt;/code&gt; 页面 raw HTML 到了 68 万 tokens，而是 &lt;strong&gt;同一个信息目标，可以有完全不同的读取成本&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

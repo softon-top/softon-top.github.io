@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Windows 11 on softon.top</title>
+		<link>https://softon.top/tags/windows-11/</link>
+		<description>Recent content in Windows 11 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 25 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/windows-11/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>打了 7 月补丁没？Win11 有个 Bug 能把 C 盘吃到只剩渣</title>
+				<link>https://softon.top/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/</link>
+				<pubDate>Sat, 25 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/</guid>
+				<description>&lt;p&gt;C 盘突然红了，不一定是你装太多软件，也可能是 Windows 自己在背后默默吞空间。&lt;/p&gt;&#xA;&lt;p&gt;这次被点名的不是“某个第三方清理工具误报”，而是 &lt;strong&gt;Windows 11 24H2 / 25H2&lt;/strong&gt; 里的一个真实系统问题。微软后来在支持页里直接写了修复说明：它会改善 &lt;strong&gt;&lt;code&gt;CapabilityAccessManager.db-wal&lt;/code&gt;&lt;/strong&gt; 的磁盘占用。翻成大白话，就是这个系统组件对应的日志文件，可能会像没拧紧的水龙头一样持续长大，把系统盘一点点喝干。&lt;/p&gt;&#xA;&lt;p&gt;更扎心的是，这事不是“理论上可能出问题”。多家媒体实测和转述里，都提到过它能把空间吃到 &lt;strong&gt;500GB 以上&lt;/strong&gt;，极端情况下甚至被写成 &lt;strong&gt;513GB&lt;/strong&gt;。对一台 1TB SSD 来说，这不是“占了点地方”，这是直接把半个盘拿去当垃圾场。&lt;/p&gt;&#xA;&lt;h2 id=&#34;这-bug-到底在吃什么&#34;&gt;这 Bug 到底在吃什么&#xA;&lt;/h2&gt;&lt;p&gt;重点在 &lt;strong&gt;&lt;code&gt;CapabilityAccessManager.db-wal&lt;/code&gt;&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;Windows 里有些权限、能力、应用访问记录，会落到这个组件相关的数据库日志里。正常情况下，&lt;code&gt;.db-wal&lt;/code&gt; 这种写前日志文件会随着事务推进被回收、合并，不该无限长大。可这次问题就是它没有正常收口，导致文件不断膨胀，最后被系统盘背锅。&lt;/p&gt;&#xA;&lt;p&gt;所以你在“存储感知”里看到的，往往不是一个名字特别吓人的病毒文件，而是很朴素的一类表现：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;“系统与保留”突然暴涨&lt;/li&gt;&#xA;&lt;li&gt;C 盘明明没装新东西，却越来越红&lt;/li&gt;&#xA;&lt;li&gt;磁盘清理、常规卸载、删下载目录都没啥用&lt;/li&gt;&#xA;&lt;li&gt;你越查越像玄学，最后发现是 Windows 自己在吃盘&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这类 bug 最恶心的地方，不在于它会不会报错，而在于它&lt;strong&gt;安静&lt;/strong&gt;。它不弹窗、不报警、不敲锣打鼓，等你反应过来时，盘已经快见底了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;微软认了修也给了&#34;&gt;微软认了，修也给了&#xA;&lt;/h2&gt;&lt;p&gt;这次比较关键的一点，是微软不是装死。&lt;/p&gt;&#xA;&lt;p&gt;在 &lt;strong&gt;2026-06-23&lt;/strong&gt; 的 &lt;strong&gt;KB5095093&lt;/strong&gt; 预览更新说明里，微软已经明确写了：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;This update improves disk space usage for the CapabilityAccessManager.db-wal file.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;也就是说，微软至少承认两件事：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;这个文件确实有异常占用问题&lt;/li&gt;&#xA;&lt;li&gt;修复已经进入补丁链路&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;随后到 &lt;strong&gt;2026-07-14&lt;/strong&gt; 左右，这个修复被更广泛地带进 7 月更新节奏里。换句话说，事情不是“某个论坛里有人喊盘满了”，而是官方更新说明里已经把刀口指出来了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;你怎么判断自己是不是中招&#34;&gt;你怎么判断自己是不是中招&#xA;&lt;/h2&gt;&lt;p&gt;别急着先删系统文件。先确认现象。&lt;/p&gt;&#xA;&lt;p&gt;最直接的办法是去看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;设置 → 系统 → 存储 → 显示更多类别 → 系统和保留&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;或者用磁盘分析工具看系统盘的大头到底是谁&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果你看到 &lt;code&gt;System &amp;amp; Reserved&lt;/code&gt; 异常大，且增长很快，那就要怀疑这类问题。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

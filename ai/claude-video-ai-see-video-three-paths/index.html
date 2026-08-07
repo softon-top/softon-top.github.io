@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="claude-video 用 yt-dlp+FFmpeg+Whisper 给 Claude Code 装眼睛，Gemini 3 直接原生看视频。两派押注不一样：一派信分层观察，一派信感官融合。第三条路是 Anthropic 自家的 Record a Skill。这篇把三条路的架构、成本、边界一次算清。">
+<title>AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态</title>
+
+<link rel='canonical' href='https://softon.top/ai/claude-video-ai-see-video-three-paths/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态">
+<meta property='og:description' content="claude-video 用 yt-dlp+FFmpeg+Whisper 给 Claude Code 装眼睛，Gemini 3 直接原生看视频。两派押注不一样：一派信分层观察，一派信感官融合。第三条路是 Anthropic 自家的 Record a Skill。这篇把三条路的架构、成本、边界一次算清。">
+<meta property='og:url' content='https://softon.top/ai/claude-video-ai-see-video-three-paths/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='claude-code' /><meta property='article:tag' content='claude-skills' /><meta property='article:tag' content='gemini' /><meta property='article:tag' content='yt-dlp' /><meta property='article:tag' content='ffmpeg' /><meta property='article:tag' content='whisper' /><meta property='article:tag' content='多模态' /><meta property='article:published_time' content='2026-08-04T16:20:00&#43;08:00'/><meta property='article:modified_time' content='2026-08-04T16:20:00&#43;08:00'/>
+<meta name="twitter:title" content="AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态">
+<meta name="twitter:description" content="claude-video 用 yt-dlp+FFmpeg+Whisper 给 Claude Code 装眼睛，Gemini 3 直接原生看视频。两派押注不一样：一派信分层观察，一派信感官融合。第三条路是 Anthropic 自家的 Record a Skill。这篇把三条路的架构、成本、边界一次算清。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#claude-code-用户装-claude-video其实是被逼的">Claude Code 用户装 claude-video，其实是被逼的</a></li>
+    <li><a href="#三条路径的底层世界观">三条路径的底层世界观</a></li>
+    <li><a href="#路径一gemini-原生视频简单粗暴明码标价">路径一：Gemini 原生视频，简单粗暴，明码标价</a></li>
+    <li><a href="#路径二claude-video-的分层观察绕开-claude-的多模态短板">路径二：claude-video 的分层观察，绕开 Claude 的多模态短板</a></li>
+    <li><a href="#路径三anthropic-自家的-record-a-skill学的是人在做什么">路径三：Anthropic 自家的 Record a Skill，学的是&quot;人在做什么&quot;</a></li>
+    <li><a href="#三条路的选择矩阵一张表决定你走哪条">三条路的选择矩阵：一张表决定你走哪条</a></li>
+    <li><a href="#独立判断为什么分层观察派在-skill-生态里能长期活下去">独立判断：为什么&quot;分层观察派&quot;在 Skill 生态里能长期活下去</a></li>
+    <li><a href="#上手-claude-video-的最小闭环">上手 claude-video 的最小闭环</a></li>
+    <li><a href="#说到底选路径就是选世界观">说到底，选路径就是选世界观</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/claude-video-ai-see-video-three-paths/">AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-04T16:20:00&#43;08:00'>
+                    2026-08-04，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：13分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/claude-video-ai-see-video-three-paths/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#claude-code-用户装-claude-video其实是被逼的">Claude Code 用户装 claude-video，其实是被逼的</a></li>
+    <li><a href="#三条路径的底层世界观">三条路径的底层世界观</a></li>
+    <li><a href="#路径一gemini-原生视频简单粗暴明码标价">路径一：Gemini 原生视频，简单粗暴，明码标价</a></li>
+    <li><a href="#路径二claude-video-的分层观察绕开-claude-的多模态短板">路径二：claude-video 的分层观察，绕开 Claude 的多模态短板</a></li>
+    <li><a href="#路径三anthropic-自家的-record-a-skill学的是人在做什么">路径三：Anthropic 自家的 Record a Skill，学的是&quot;人在做什么&quot;</a></li>
+    <li><a href="#三条路的选择矩阵一张表决定你走哪条">三条路的选择矩阵：一张表决定你走哪条</a></li>
+    <li><a href="#独立判断为什么分层观察派在-skill-生态里能长期活下去">独立判断：为什么&quot;分层观察派&quot;在 Skill 生态里能长期活下去</a></li>
+    <li><a href="#上手-claude-video-的最小闭环">上手 claude-video 的最小闭环</a></li>
+    <li><a href="#说到底选路径就是选世界观">说到底，选路径就是选世界观</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="claude-code-用户装-claude-video其实是被逼的">Claude Code 用户装 claude-video，其实是被逼的
+</h2><p>先说一个 Claude Code 老用户经常遇到的场景。</p>
+<p>你录了一段 5 分钟的屏幕录像，想让 Claude 帮你定位一个 UI 卡顿到底发生在第几秒、点了什么按钮之后。你把 <code>.mp4</code> 塞进去，Claude 一脸茫然：我只能读文件的字节流。</p>
+<p>Claude 官方的 <code>claude.ai</code> 网页版能上传图片，但视频这条路，长期以来是 <strong>Claude 生态的一个巨大盲区</strong>。而同期 Gemini 2.5 / 3 已经把视频作为一等公民，1 FPS 拆帧、原生看画面、听声音，一次调用搞定。</p>
+<p><code>claude-video</code> 就是被这个盲区催生出来的补丁工具，也是 HelloGitHub 8 月 4 日的今日推荐。作者是 bradautomates，用 Claude Skill 的标准形态发布：一个 SKILL.md + 一条 yt-dlp + FFmpeg + Whisper 的组合拳，绕开 Claude 不能原生吃视频这件事。</p>
+<p>但真正有意思的是，绕的方法不止一种。今天要拆的，就是 AI 处理视频的 <strong>三条完全不同的路径</strong>——它们的架构、成本、精度差得离谱，选错了，钱包和结果都要挨打。</p>
+<h2 id="三条路径的底层世界观">三条路径的底层世界观
+</h2><ul>
+<li><strong>原生多模态派</strong>：Gemini、Qwen-VL、GPT-4o。视频进来，模型自己拆帧、听音、融合，一次推理输出结论。押注的是 <strong>感官融合</strong>——模型自己看，才是真理。</li>
+<li><strong>分层观察派</strong>：<code>claude-video</code>、<code>watch-video-skill</code>、以及一堆 Claude Code 里的 Skill。视频先被 yt-dlp 拉下来，FFmpeg 拆关键帧和字幕，字幕缺了就 Whisper 转录，最后把结构化文本 + 关键帧图片塞给 Claude。押注的是 <strong>分层观察</strong>——模型不用全看，看关键的。</li>
+<li><strong>动作捕捉派</strong>：Anthropic 自家的 <code>Record a Skill</code>，视频里那个&quot;人&quot;在做什么才是重点。录屏 + 讲解，模型学的是操作流，不是像素。</li>
+</ul>
+<p>同一个视频，三条路径回答的问题都不一样。搞清楚这个，才知道自己该走哪条。</p>
+<h2 id="路径一gemini-原生视频简单粗暴明码标价">路径一：Gemini 原生视频，简单粗暴，明码标价
+</h2><p>Gemini 是目前把视频原生化做得最狠的。你甩一段视频进去，它按 1 FPS 采样，每帧算成一堆 token 一起吃。</p>
+<p>看一下明面上的价格，一切按 token 走。对 Gemini 3 Pro 系列：</p>
+<ul>
+<li>默认分辨率：每帧 <code>258 token</code></li>
+<li>高分辨率 <code>MEDIA_RESOLUTION_HIGH</code>：每帧 <code>280 token</code></li>
+<li>低分辨率 <code>MEDIA_RESOLUTION_LOW</code>：每帧 <code>66 ~ 70 token</code></li>
+</ul>
+<p>一段 10 分钟的 720p 视频，1 FPS 采样就是 <code>600 帧</code>。默认分辨率算下来大约 <code>600 × 258 ≈ 15.5 万 token</code>，光是视频输入这一块就烧掉 15 万上下文。Gemini 3 Pro 的 API 价目里，视频输入按 <code>$0.00079/帧</code> 计，10 分钟视频光输入约 <code>$0.47</code>。Flash Lite 那档便宜一半，<code>$0.000395/帧</code>。</p>
+<blockquote>
+<p>表面看很贵，但你要买的是&quot;模型自己看画面 + 听声音 + 融合语义&quot;这个能力。声音里那个&quot;啊，我按错了&quot;，Gemini 能听懂并挂在时间轴上——这是 claude-video 派需要多步骤才能凑出来的。</p>
+</blockquote>
+<p><strong>Gemini 派的优势</strong>：</p>
+<ul>
+<li>一次调用，端到端。工程复杂度 = 零。</li>
+<li>声画同频。模型能对齐音轨里的&quot;这里&quot;和画面里的按钮位置。</li>
+<li>长视频扛得住。1M 上下文塞得下 2 小时 720p。</li>
+</ul>
+<p><strong>Gemini 派的痛点</strong>：</p>
+<ul>
+<li>视频得先上传到 Google，隐私敏感的场景直接劝退。</li>
+<li>定价按帧走，长视频费用增长是线性的，一场 2 小时会议随手就是十几美元。</li>
+<li>你没法追问&quot;第 03:42 秒那颗按钮里的文字是什么&quot;这种像素级细节，模型看到的是采样过的关键帧，不是原始录像。默认 1 FPS 意味着 <strong>超过 1 秒的动作可能被吞掉半帧</strong>。</li>
+</ul>
+<h2 id="路径二claude-video-的分层观察绕开-claude-的多模态短板">路径二：claude-video 的分层观察，绕开 Claude 的多模态短板
+</h2><p><code>claude-video</code> 的架构可以画成一条流水线：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">输入(URL / 本地文件)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">yt-dlp 下载(YouTube/B站/本地都能吃)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FFmpeg 拆关键帧 + 抽字幕</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">↓  (字幕存在？)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">├─ 是 → 直接用官方字幕</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">└─ 否 → Whisper 本地转录</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关键帧图片(base64) + 时间轴字幕(JSON)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">喂给 Claude Code</span>
+</span></span></code></pre></div><p>这条流水线的核心哲学，是把&quot;看视频&quot;拆成 <strong>三个独立可优化的观察层</strong>：</p>
+<ol>
+<li><strong>像素层</strong>：FFmpeg 只挑关键帧（场景切换、I 帧、人为间隔），一段 10 分钟视频通常拆出 20-60 张图。</li>
+<li><strong>语义层</strong>：字幕负责讲清楚&quot;发生了什么&quot;。有官方字幕就白嫖，没有就 Whisper 兜底。</li>
+<li><strong>推理层</strong>：Claude 读到的其实是&quot;文本 + 稀疏图像&quot;的组合，它擅长的正是这种结构化推理。</li>
+</ol>
+<p><code>watch-video-skill</code> 是这条路径上一个有意思的分叉。它在 Brad 的引擎上加了 4 层，其中最实用的一层是 <strong>改成 slash-only 触发</strong>——原版 Brad 的默认是&quot;看到任何视频 URL 或 watch this video 就自动开火&quot;，长视频一不小心烧掉几万 token。改成 <code>/watch-video</code> 显式触发，把成本控制权还给用户。</p>
+<p><strong>分层观察派的算账方式</strong>：</p>
+<p>假设同一段 10 分钟 720p 视频：</p>
+<ul>
+<li>yt-dlp 下载：本地成本，几乎为零。</li>
+<li>FFmpeg 拆 30 张关键帧：本地 CPU，几秒钟。</li>
+<li>Whisper 转录（没字幕情况）：本地 GPU 或 API <code>whisper-1</code> 约 <code>$0.006/分钟</code>，10 分钟 = <code>$0.06</code>。</li>
+<li>Claude 推理：30 张图算图像输入，加上字幕文本约 2000 字，Claude Sonnet 4.5 输入价 <code>$3/M token</code>，一次调用约 <code>$0.10 ~ $0.15</code>。</li>
+</ul>
+<p><strong>总成本约 $0.20 上下</strong>，比 Gemini 直传便宜一半多。而且——所有原始数据没离开你的机器，Whisper 走本地 GPU 甚至连 API 都不用。</p>
+<p><strong>分层观察派的优势</strong>：</p>
+<ul>
+<li>成本可控，长视频更省。</li>
+<li>隐私守得住，视频不上传第三方。</li>
+<li>中间态可复用。同一段视频，拆出来的关键帧和字幕缓存到磁盘，第二次问同一个视频免费。</li>
+<li>Claude 的推理能力直接吃到，你不必换模型生态。</li>
+</ul>
+<p><strong>分层观察派的痛点</strong>：</p>
+<ul>
+<li>FFmpeg 拆帧策略决定天花板。关键帧算法看走眼，Claude 也看不见细节。</li>
+<li>声画对齐靠字幕的时间戳，Whisper 时间戳精度一般在 200ms 上下——查&quot;第 43.2 秒到底按了什么&quot;这种事，比 Gemini 直看还是差一截。</li>
+<li>依赖链长。yt-dlp、FFmpeg、Whisper 任何一个环境炸了，整条流水线断掉。</li>
+</ul>
+<h2 id="路径三anthropic-自家的-record-a-skill学的是人在做什么">路径三：Anthropic 自家的 Record a Skill，学的是&quot;人在做什么&quot;
+</h2><p>第三条路是 Anthropic 官方在 Claude Cowork 里推的 <strong>Record a Skill</strong>（Pro/Max/Team 计划才有）。逻辑跟前两条完全不一样：</p>
+<p>你不是把视频交给 Claude 分析内容，你是让 Claude <strong>看着你干一次活，然后把这个动作序列压成一个 Skill</strong>，下次它自己重放。</p>
+<p>比如你录一段 &ldquo;怎么在 Notion 里写周报模板&rdquo;，Claude 学到的不是&quot;这一帧像素是什么颜色&quot;，而是——</p>
+<ul>
+<li>打开 Notion 主页</li>
+<li>找到&quot;周报&quot;文件夹</li>
+<li>点右上角&quot;新建&quot;</li>
+<li>按 H1 输入标题</li>
+<li>按 Callout 分块</li>
+</ul>
+<p>学完之后，Skill 就固化下来了。下次你说&quot;帮我写周报&quot;，它按这个模板复现。</p>
+<p><strong>这条路径押注的是</strong>：视频最有价值的信息，不是画面本身，而是&quot;某个人在这个视频里的操作意图&quot;。这是 <strong>动作捕捉 + 操作抽象</strong> 的思路，属于 Skill 生态的原教旨玩法。</p>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>反复重复的操作流程（比如每周走一次的报表流程）</li>
+<li>你自己会做，但懒得写文档</li>
+<li>需要 Claude Cowork 桌面端支持</li>
+</ul>
+<p><strong>不适用场景</strong>：</p>
+<ul>
+<li>分析别人的视频内容</li>
+<li>学一段没有明确&quot;人在操作&quot;的画面（比如监控录像、纪录片）</li>
+</ul>
+<h2 id="三条路的选择矩阵一张表决定你走哪条">三条路的选择矩阵：一张表决定你走哪条
+</h2><p>场景决定路径，别反过来。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>首选</th>
+					<th>理由</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>一次性看懂一段公开视频（B 站教程、YouTube 演讲）</td>
+					<td>claude-video</td>
+					<td>便宜、可缓存、隐私可控</td>
+			</tr>
+			<tr>
+					<td>长视频精读，需要声画对齐（法庭录像、访谈复盘）</td>
+					<td>Gemini 3 Pro</td>
+					<td>原生多模态，时间戳精度到帧</td>
+			</tr>
+			<tr>
+					<td>分析涉密录屏（内部会议、公司系统操作）</td>
+					<td>claude-video 本地流水线</td>
+					<td>视频不出机器</td>
+			</tr>
+			<tr>
+					<td>教 AI 走一遍固定 SOP</td>
+					<td>Record a Skill</td>
+					<td>学的是动作不是内容</td>
+			</tr>
+			<tr>
+					<td>视频里的具体像素细节（第 42 秒按钮上的水印）</td>
+					<td>Gemini + <code>MEDIA_RESOLUTION_HIGH</code></td>
+					<td>提取式流水线拆帧会漏</td>
+			</tr>
+			<tr>
+					<td>大批量视频归档摘要（自动打标签、写简介）</td>
+					<td>claude-video + 缓存复用</td>
+					<td>单价可预测，可跑批</td>
+			</tr>
+	</tbody>
+</table></div>
+<h2 id="独立判断为什么分层观察派在-skill-生态里能长期活下去">独立判断：为什么&quot;分层观察派&quot;在 Skill 生态里能长期活下去
+</h2><p>写到这里应该有人要问：Gemini 都能一次搞定了，claude-video 这种流水线是不是过渡态？</p>
+<p>我的判断是——<strong>至少两年内不会死</strong>。原因有三条：</p>
+<p><strong>第一，隐私边界。</strong> 只要企业客户和涉密数据存在，&ldquo;视频不出机房&quot;就是硬需求。原生多模态方案再便宜，都过不了合规这一关。</p>
+<p><strong>第二，中间态资产化。</strong> claude-video 拆出的关键帧和字幕是可存储、可复用、可搜索的中间产物。一场会议的字幕可以再喂给别的 Skill 做纪要，可以做 embedding 检索，可以做知识库。Gemini 那次推理产出的答案，是一次性消费品。</p>
+<p><strong>第三，Skill 生态的架构偏好。</strong> Skill 派押的是&quot;AI 自己不用什么都会，但会调工具&rdquo;。yt-dlp、FFmpeg、Whisper 都是被验证了十年的成熟工具，Skill 只需要负责编排。这种&quot;AI + 老工具&quot;的组合，工程稳定性远高于依赖单一供应商的黑盒多模态。</p>
+<p>反过来，Gemini 派押的是&quot;感官融合就是最优路径&quot;。这个赌局赢或输，取决于原生视频推理的成本能不能持续下降。目前看，Google 一直在压价，但架不住视频输入的 token 数是天文数字——<strong>一小时 720p 视频等于近百万 token</strong>，架构上就不占便宜。</p>
+<h2 id="上手-claude-video-的最小闭环">上手 claude-video 的最小闭环
+</h2><p>如果你打算今晚就试，最短路径是这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 装 Claude Code(如未装)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npm install -g @anthropic-ai/claude-code</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 装依赖</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew install yt-dlp ffmpeg</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pip install openai-whisper   # 或走 API 版</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 装 claude-video 这个 Skill</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claude install claude-video    # 或从 GitHub 下 SKILL.md 手动加载</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 试跑</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">claude &#34;watch this video and summarize:https://www.youtube.com/watch?v</span><span style="color:#f92672">=</span><span style="color:#e6db74">xxxxx&#34;</span>
+</span></span></code></pre></div><p>第一次跑，注意看它到底拆了多少张关键帧、走没走 Whisper。如果你的场景不需要自动触发，直接换成 <code>watch-video-skill</code> 的 slash-only 版本，避免长视频误开火烧 token。</p>
+<blockquote>
+<p>Tip：把 <code>~/.claude/skills/claude-video/</code> 里的关键帧提取阈值调紧一点。默认可能给你拆 60 张，很多都是重复画面。生产用途下 <code>scene detection threshold</code> 调到 <code>0.4</code> 通常够用，能砍掉一半 token。</p>
+</blockquote>
+<h2 id="说到底选路径就是选世界观">说到底，选路径就是选世界观
+</h2><p>三条路径的技术栈可以列一张表，但真正决定你选哪条的，是你相信 <strong>AI 的下一站是&quot;感官融合&quot;还是&quot;工具编排&quot;</strong>。</p>
+<ul>
+<li>押感官融合，你会喜欢 Gemini 这种原生多模态。</li>
+<li>押工具编排，你会喜欢 claude-video 这种 Skill 流水线。</li>
+<li>押动作抽象，你会喜欢 Anthropic 自家的 Record a Skill。</li>
+</ul>
+<p>这三种世界观不冲突，也不会互相取代——就像今天摄像头、麦克风、键盘同时存在一样，未来 AI 的&quot;看&quot;也会分工。今天挑一个上手，别为难自己。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/claude-code-skills-mcp-workflow-deconstruction/" >Claude Code Skills 工作流深度拆解：Skills 和 MCP 到底该怎么分工</a></li>
+<li><a class="link" href="/tutorials/matt-pocock-skills-engineering-vibe-coding/" >Matt Pocock 的 Skills 工程学：把 AI 编程从 vibe coding 拉回工程实践</a></li>
+<li><a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >用 Claude Code 比雇人还贵？32 个 Skills + 8 个 MCP 的省钱配置实录</a></li>
+<li><a class="link" href="/ai/ai-agent-workflow-cost-ledger-finops/" >AI Agent 工作流成本失控？给你的 AI 系统装个财务账本</a></li>
+<li><a class="link" href="/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/" >Wikipedia 一页 68000 tokens：AI Agent 用 web_fetch 的真实成本</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/claude-skills/">Claude-Skills</a>
+        
+            <a href="/tags/gemini/">Gemini</a>
+        
+            <a href="/tags/yt-dlp/">Yt-Dlp</a>
+        
+            <a href="/tags/ffmpeg/">Ffmpeg</a>
+        
+            <a href="/tags/whisper/">Whisper</a>
+        
+            <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">多模态</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/claude-video-ai-see-video-three-paths\/'; 
+        const pageTitle = 'AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 218 天 8 小时 · 96 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-07 16:44:08 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

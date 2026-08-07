@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>注册表 on softon.top</title>
+		<link>https://softon.top/tags/%E6%B3%A8%E5%86%8C%E8%A1%A8/</link>
+		<description>Recent content in 注册表 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 05 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%B3%A8%E5%86%8C%E8%A1%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>国产流氓软件卸完还阴魂不散？这个 3MB 开源工具专挖 6 个藏身处（含一键回滚）</title>
+				<link>https://softon.top/software/roguecleaner-windows-uninstall-residue-cleaner/</link>
+				<pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/roguecleaner-windows-uninstall-residue-cleaner/</guid>
+				<description>&lt;p&gt;Windows 用久了都懂那种感觉。&lt;/p&gt;&#xA;&lt;p&gt;你只装了一个&amp;quot;看图工具&amp;quot;，结果右键菜单突然多了三行；开机变慢十秒；任务管理器背景里蹲着两个你从没听过的服务；打开一个 JPG 默认跳出来的还是&amp;quot;某某超清看图 Pro&amp;quot;；连&amp;quot;此电脑&amp;quot;里都被塞了一个假装是本地磁盘的网盘图标——你把主程序卸了，这些东西还在。&lt;/p&gt;&#xA;&lt;p&gt;系统清理软件那么多，为啥这些残留没人管？&lt;/p&gt;&#xA;&lt;p&gt;因为大部分&amp;quot;清理工具&amp;quot;都在做&lt;strong&gt;表层&lt;/strong&gt;的活：清缓存、清临时文件、清 Cookie。而流氓软件最狡猾的手段，恰恰藏在系统的&lt;strong&gt;结构层&lt;/strong&gt;——注册表深处的右键菜单项、计划任务、服务、Shell 扩展、浏览器 Native Messaging Host。这些地方主流清理工具要么不敢碰，要么根本没做识别名单。&lt;/p&gt;&#xA;&lt;p&gt;今天要写的是刚被小众软件推上首页的开源新工具 &lt;code&gt;RogueCleaner&lt;/code&gt;，中文名&amp;quot;流氓软件克星&amp;quot;。3MB 单文件 exe，专治国产软件卸载后阴魂不散。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为啥旧办法都不管用&#34;&gt;为啥旧办法都不管用&#xA;&lt;/h2&gt;&lt;p&gt;先聊聊为啥这活这么难。&lt;/p&gt;&#xA;&lt;p&gt;如果你自己动过手清残留，大概试过下面这几条路：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;路子一：控制面板卸载 + 重启&lt;/strong&gt;。最原始的办法。问题是流氓软件的卸载程序 90% 只删自己的主目录，注册表里的自启项、计划任务、服务、右键菜单条目——一个都不动。有些&amp;quot;高情商&amp;quot;卸载器还会顺手往浏览器扩展策略里塞一条永久留守条款。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;路子二：CCleaner / 优化大师&lt;/strong&gt;。老牌大清理。清缓存、清 Cookie、清临时文件确实很猛，但你打开它看看有没有一个页面叫&amp;quot;右键菜单管理&amp;quot;？没有。有没有&amp;quot;计划任务清理&amp;quot;？没有。它是&lt;strong&gt;卫生工&lt;/strong&gt;，不是&lt;strong&gt;拆迁队&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;路子三：ContextMenuManager&lt;/strong&gt;。GitHub 上老牌的右键菜单管理神器。但它只管右键菜单这&lt;strong&gt;一件事&lt;/strong&gt;。你还得再找一个管服务的，再找一个管计划任务的，再找一个管浏览器扩展的。四五个工具串起来才能干完一个卸载器该干的事。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;路子四：Autoruns（Sysinternals）&lt;/strong&gt;。微软官方的深度扫描器，能列出的项目比 RogueCleaner 多得多。问题是它是给&lt;strong&gt;运维和逆向人员&lt;/strong&gt;看的：几千条原始条目、英文文件路径、无分类、无风险评级。普通用户打开界面就懵了：这一条到底是系统组件还是流氓软件？删了会不会开不了机？没有识别名单，就没有敢下手的勇气。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;路子五：手动改注册表&lt;/strong&gt;。你要知道右键菜单藏在 &lt;code&gt;HKCR\Directory\shell&lt;/code&gt; 和 &lt;code&gt;HKCR\*\shellex\ContextMenuHandlers&lt;/code&gt; 一堆分支下；开机启动至少要看四个位置；服务在 &lt;code&gt;services.msc&lt;/code&gt;；计划任务在 &lt;code&gt;taskschd.msc&lt;/code&gt;；文件关联又是另一套 GUID 迷宫。全部手工翻一遍？普通用户一小时都翻不完，还容易删错东西开不了机。&lt;/p&gt;&#xA;&lt;p&gt;RogueCleaner 想解决的，就是这个&amp;quot;没人接得住的中间层&amp;quot;：&lt;strong&gt;比控制面板深、比 Autoruns 好用、比手动改注册表安全&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;它到底扫哪些地方&#34;&gt;它到底扫哪些地方&#xA;&lt;/h2&gt;&lt;p&gt;作者 &lt;code&gt;aakk007&lt;/code&gt; 把要挖的坑列得很清楚。核心是&lt;strong&gt;六大类&lt;/strong&gt;，加两个补充。&lt;/p&gt;&#xA;&lt;h3 id=&#34;1-资源管理器右键菜单和-shell-扩展&#34;&gt;1. 资源管理器右键菜单和 Shell 扩展&#xA;&lt;/h3&gt;&lt;p&gt;你右键点一个文件夹弹出的那个长菜单里，一半的条目是流氓软件塞进来的。RogueCleaner 会扫两个位置：一是经典的 Shell 扩展注册项，二是 Windows 11 新的右键菜单命令。&lt;/p&gt;&#xA;&lt;p&gt;这里坑最深的其实是 Shell 扩展，因为它是 DLL 注入进资源管理器的——你没打开那个软件，但每次右键都在加载它的代码。资源管理器卡顿的锅十有八九在这。&lt;/p&gt;&#xA;&lt;h3 id=&#34;2-此电脑里的伪装磁盘图标&#34;&gt;2. &amp;ldquo;此电脑&amp;quot;里的伪装磁盘图标&#xA;&lt;/h3&gt;&lt;p&gt;打开&amp;quot;此电脑&amp;rdquo;，除了 C/D/E 盘，你有没有看到过某某网盘、某某同步盘、某某手机助手的图标躲在磁盘列表里？&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

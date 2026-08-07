@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>GPG on softon.top</title>
+		<link>https://softon.top/tags/gpg/</link>
+		<description>Recent content in GPG on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 18 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/gpg/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>gopass：把团队密码交给 Git 和 GPG，是复古还是清醒？</title>
+				<link>https://softon.top/software/gopass-git-gpg-team-password-manager/</link>
+				<pubDate>Sat, 18 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/gopass-git-gpg-team-password-manager/</guid>
+				<description>&lt;p&gt;密码管理器这件事，最尴尬的地方从来不是“怎么存一个密码”。&lt;/p&gt;&#xA;&lt;p&gt;真正麻烦的是：&lt;strong&gt;一群人怎么共享一堆秘密，同时别把秘密变成一团没人敢碰的黑箱&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;账号密码、API Token、服务器证书、数据库连接串、临时 SSH 凭据、第三方平台回调密钥……这些东西像厨房里的刀。每个人都要用，但没人希望它们躺在微信群、飞书聊天记录、Excel 附件、Notion 页面、开发机桌面上的 &lt;code&gt;密码.txt&lt;/code&gt; 里。&lt;/p&gt;&#xA;&lt;p&gt;SaaS 密码管理器当然能解决一部分问题。1Password、Bitwarden、Dashlane 这类工具把 UI、浏览器插件、团队权限、审计日志都包好了。对大多数公司来说，这是最省心的路线。&lt;/p&gt;&#xA;&lt;p&gt;但 gopass 走的是另一条路。&lt;/p&gt;&#xA;&lt;p&gt;它不试图把密码管理变成一座云端宫殿，而是把它拆回三个开发者已经熟得不能再熟的积木：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件&lt;/strong&gt;：每个 secret 是一个文件&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;GPG / age&lt;/strong&gt;：每个文件独立加密&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Git&lt;/strong&gt;：变更历史、同步、分支、冲突处理都交给 Git&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;听起来像上世纪 UNIX 哲学留下来的化石。但有趣的是，到了 AI Agent、自托管服务、CI/CD 密钥满天飞的 2026 年，这种“复古”反而显得有点清醒。&lt;/p&gt;&#xA;&lt;h2 id=&#34;gopass-不是又一个漂亮密码-app&#34;&gt;gopass 不是又一个漂亮密码 App&#xA;&lt;/h2&gt;&lt;p&gt;gopass 官方给自己的定位很直接：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The slightly more awesome standard unix password manager for teams.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;它是经典 UNIX 密码管理器 &lt;code&gt;pass&lt;/code&gt; 的 Go 语言重写和增强版。默认情况下，gopass 使用 &lt;code&gt;GPG&lt;/code&gt; 加密凭据，用 &lt;code&gt;Git&lt;/code&gt; 给密码仓库做版本管理。它主要面向命令行用户，也可以通过 &lt;code&gt;gopassbridge&lt;/code&gt; 接入 Firefox、Chrome 等浏览器。&lt;/p&gt;&#xA;&lt;p&gt;官方文档里有几句很关键：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;它是 &lt;code&gt;pass&lt;/code&gt; 的 drop-in replacement&lt;/li&gt;&#xA;&lt;li&gt;默认用 &lt;code&gt;gpg&lt;/code&gt; encryption 和 &lt;code&gt;git&lt;/code&gt; storage&lt;/li&gt;&#xA;&lt;li&gt;可以改用 &lt;code&gt;age&lt;/code&gt; 等加密后端&lt;/li&gt;&#xA;&lt;li&gt;可以不用 Git，改成普通文件系统存储&lt;/li&gt;&#xA;&lt;li&gt;主界面是命令行，适合 CLI 用户、CI/CD 系统和自动化流程&lt;/li&gt;&#xA;&lt;li&gt;支持团队共享、多个 password store、recipient 管理、浏览器集成、Git credential helper、HIBP 泄露检查等扩展&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;换成人话：&lt;strong&gt;gopass 不是给“我忘了 Netflix 密码”的人准备的，它更像给开发团队和基础设施管理员准备的一把折叠刀。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
