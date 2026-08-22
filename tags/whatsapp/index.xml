@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>WhatsApp on softon.top</title>
+		<link>https://softon.top/tags/whatsapp/</link>
+		<description>Recent content in WhatsApp on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 23 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/whatsapp/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Hermes Agent &#43; FreeLLMAPI：零成本搭建 WhatsApp 私人 AI 助手</title>
+				<link>https://softon.top/software/hermes-agent-whatsapp-free-llm-zero-cost/</link>
+				<pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/hermes-agent-whatsapp-free-llm-zero-cost/</guid>
+				<description>&lt;p&gt;两个月前，Nous Research 开源了 Hermes Agent，GitHub 星标已经从0飙到3.4万。&lt;/p&gt;&#xA;&lt;p&gt;这不是又一个&amp;quot;把 ChatGPT 包装成 API&amp;quot;的项目。Hermes 住在你的服务器上，有持久记忆，会自己写技能卡片，越用越聪明。&lt;/p&gt;&#xA;&lt;p&gt;但真正让我停下来的，是 Reddit 上一个帖子——有人用 Hermes Agent + FreeLLMAPI 搭了一个完全自托管的 WhatsApp AI 助手，月费$0。&lt;/p&gt;&#xA;&lt;p&gt;零。不是&amp;quot;几乎零&amp;quot;，不是&amp;quot;前三年免费&amp;quot;。是真的$0。&lt;/p&gt;&#xA;&lt;h2 id=&#34;这个架构到底怎么工作的&#34;&gt;这个架构到底怎么工作的&#xA;&lt;/h2&gt;&lt;p&gt;先说结论：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;WhatsApp → 自定义桥接 → Hermes Agent → FreeLLMAPI → 16个免费LLM提供商&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;整个链路跑在一台 Oracle Cloud Free Tier 服务器上。&lt;/p&gt;&#xA;&lt;p&gt;你往自己的 WhatsApp 号码发消息，消息经过桥接层到达 Hermes Agent。Hermes 用自己的持久记忆处理上下文，然后把请求发给 FreeLLMAPI。FreeLLMAPI 自动选择当前可用的最佳免费模型，返回结果，Hermes 整理后发回 WhatsApp。&lt;/p&gt;&#xA;&lt;p&gt;没有 OpenAI API Key。没有 Anthropic 订阅。没有 Groq 付费计划。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;16个免费提供商的聚合，大约每月17亿token的免费额度。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;hermes-agent-到底是什么&#34;&gt;Hermes Agent 到底是什么&#xA;&lt;/h2&gt;&lt;p&gt;Hermes Agent 是 Nous Research 在2026年2月发布的开源自主AI Agent框架。Nous 之前做过 Hermes 系列模型（3B、8B、70B、405B），但 Hermes Agent 是完全不同的东西——它不是一个模型，而是一个&lt;strong&gt;运行时环境&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</title>
+				<link>https://softon.top/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/</link>
+				<pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/</guid>
+				<description>&lt;p&gt;你早上醒来，拿起手机，WhatsApp 上有一条未读消息。&lt;/p&gt;&#xA;&lt;p&gt;不是 spam，不是家人群里的早安表情包，是你的 AI Agent 发来的：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;早上好。你昨天让我调研的那个 React 状态管理库，我对比了 Zustand、Jotai 和 Redux Toolkit 的 GitHub star 增速，Zustand 过去三个月涨了 12k，社区活跃度最高。另外，你周三下午有个产品评审会，我帮你整理了上周的用户反馈 Top 5，按严重程度排序。&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这条消息不是 ChatGPT 网页版发来的，不是某个 SaaS 平台的推送通知，而是跑在你自己的 VPS 上、连着你自己的 WhatsApp 账号、调用着免费 LLM API 的 AI Agent 发给你的。&lt;/p&gt;&#xA;&lt;p&gt;成本：$0（除了 VPS 的几美元）。&#xA;延迟：2-3 秒。&#xA;控制权：100% 在你手里。&lt;/p&gt;&#xA;&lt;p&gt;这一幕正在被越来越多的人实现。而引爆这个话题的，是 Reddit 上 r/hermesagent 板块的一条热帖——热度 52，47 条评论，标题直白得令人兴奋：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;&amp;ldquo;Built a fully self-hosted WhatsApp AI Agent with Hermes Agent and FreeLLMAPI&amp;rdquo;&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这条帖子让我们看到一个有趣的三角关系：&lt;strong&gt;Hermes Agent&lt;/strong&gt;（AI Agent 运行时）+ &lt;strong&gt;FreeLLMAPI&lt;/strong&gt;（免费 LLM 路由层）+ &lt;strong&gt;WhatsApp&lt;/strong&gt;（触达渠道）。三个人各司其职，拼在一起就是一个&lt;strong&gt;零成本的个人 AI 助理系统&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

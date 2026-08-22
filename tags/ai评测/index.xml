@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI评测 on softon.top</title>
+		<link>https://softon.top/tags/ai%E8%AF%84%E6%B5%8B/</link>
+		<description>Recent content in AI评测 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 29 May 2026 20:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai%E8%AF%84%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>DeepSeek-V4-Pro vs GLM-5.1 代码生成横向对比：谁才是程序员的得力助手？</title>
+				<link>https://softon.top/software/deepseek-v4-pro-vs-glm-5-1-codegen-comparison/</link>
+				<pubDate>Fri, 29 May 2026 20:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/deepseek-v4-pro-vs-glm-5-1-codegen-comparison/</guid>
+				<description>&lt;p&gt;去年我曾用 GLM-4 做过一次 AI 编程助手的尝试，结果是：写个简单的 CRUD 接口还能凑合，稍微复杂点的业务逻辑就开始瞎猜。当时的感受就像给实习生分配任务——他总是能交出些东西，但你得花更多时间去检查、修改。&lt;/p&gt;&#xA;&lt;p&gt;今年 DeepSeek-V4-Pro 和 GLM-5.1 相继发布，宣传都说在代码理解和生成上有质的飞跃。我不想只看官方榜单，想亲自在真实项目里试一试：它们到底能帮我们省多少力？在什么情况下该用哪个？&lt;/p&gt;&#xA;&lt;p&gt;本文把我在同一台机器上、同样的评测集合（HumanEval、MBPP）以及两个私有项目上的实测结果摊开来说。不是简单的排名，而是想告诉你：&lt;strong&gt;在你的具体场景里，该如何选型？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;一为什么我们需要横向对比&#34;&gt;一、为什么我们需要横向对比？&#xA;&lt;/h2&gt;&lt;p&gt;市面上太多「 XXX 模型在 HumanEval 上达到了 85% 」的新闻标题。但作为开发者，我们更关心：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;它能否直接生成可用的业务代码，还是需要大量修改？&lt;/li&gt;&#xA;&lt;li&gt;在我们常用的语言（Python、JavaScript、Go）里表现如何？&lt;/li&gt;&#xA;&lt;li&gt;推理速度和显存占用是否能接受？&lt;/li&gt;&#xA;&lt;li&gt;在私有代码库上做微调或提示词工程后，效果提升有多大？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;单纯看榜单无法回答这些问题。于是我决定做一个&lt;strong&gt;可复现的横向对比&lt;/strong&gt;：相同硬件、相同提示词框架、相同评测任务，只换模型。&lt;/p&gt;&#xA;&lt;h2 id=&#34;二实验设置公平才有意义&#34;&gt;二、实验设置：公平才有意义&#xA;&lt;/h2&gt;&lt;p&gt;为了让结果有说服力，我控制了以下变量：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;变量&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;取值&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;硬件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1× RTX 4090 (24GB VRAM) + Intel i9-13900K&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;框架&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;vLLM 0.5.3，Tensor Parallelism=1&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;提示词&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;统模板：&lt;code&gt;你是一个精通 {language} 的程序员。请根据以下描述生成代码：{prompt}&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;采样参数&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;temperature=0.2, top_p=0.95, max_tokens=512&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;评测集合&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;HumanEval (Python)、MBPP (Python)、私有项目 A (JavaScript)、私有项目 B (Go)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;指标&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;通过率（Pass@1）、平均延迟（token/s）、峰值显存占用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;注意：所有模型均采用官方发布的 4-bit 量化版本（DeepSeek-V4-Pro-4bit、GLM-5.1-4bit），以确保在同一张卡上能够跑满批次。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;21-私有项目背景&#34;&gt;2.1 私有项目背景&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;项目 A&lt;/strong&gt;：一个基于 Express 的中后台管理系统，涉及权限控制、数据校验、异常处理。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;项目 B&lt;/strong&gt;：一个用 Go 写的微服务框架，包含 gRPC 接口、Consul 注册、链路追踪。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;我从每个项目中随机抽取了 20 个典型功能点作为测试 prompt，确保涵盖中间件、业务逻辑、数据访问等多个方面。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

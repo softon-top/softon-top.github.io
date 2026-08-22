@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>电源管理 on softon.top</title>
+		<link>https://softon.top/tags/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86/</link>
+		<description>Recent content in 电源管理 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 13 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Windows 11 低延迟模式深度评测：系统响应速度的真实提升，还是心理安慰？</title>
+				<link>https://softon.top/tutorials/windows-11-low-latency-profile-deep-test/</link>
+				<pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/windows-11-low-latency-profile-deep-test/</guid>
+				<description>&lt;h2 id=&#34;问题的起点&#34;&gt;问题的起点&#xA;&lt;/h2&gt;&lt;p&gt;去年 Windows 11 v24H2 更新时，微软在电源选项里悄悄加了一个&amp;quot;低延迟&amp;quot;档位。截图在 Reddit 和 Twitter 上转疯了，开发者们开始争论：这到底是真提升还是换个名字的噱头？&lt;/p&gt;&#xA;&lt;p&gt;我花了两周时间在自己的机器上实测，从系统响应、游戏帧率、视频编辑到续航——所有能量化的地方都试过。结果比你想的复杂得多。&lt;/p&gt;&#xA;&lt;h2 id=&#34;测试环境--方法论&#34;&gt;测试环境 &amp;amp; 方法论&#xA;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;硬件配置&lt;/strong&gt;（2024年11月购置）：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;CPU：Intel Core Ultra 9 285K&lt;/li&gt;&#xA;&lt;li&gt;RAM：64GB DDR5 6000MHz&lt;/li&gt;&#xA;&lt;li&gt;GPU：RTX 4090&lt;/li&gt;&#xA;&lt;li&gt;SSD：Samsung 990 Pro 4TB&lt;/li&gt;&#xA;&lt;li&gt;系统：Windows 11 v24H2 Build 26100&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;测试场景&lt;/strong&gt;分三类：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;日常应用&lt;/strong&gt;（Office、浏览器、终端）—— 测响应延迟&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;游戏&lt;/strong&gt;（CS2、Cyberpunk 2077、帧数敏感型）—— 测 FPS 和输入延迟&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;创意工作&lt;/strong&gt;（DaVinci Resolve、Adobe Premiere）—— 测导出和实时预览&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&lt;strong&gt;对比基线&lt;/strong&gt;：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;默认均衡模式&lt;/li&gt;&#xA;&lt;li&gt;高性能模式&lt;/li&gt;&#xA;&lt;li&gt;低延迟模式（新增）&lt;/li&gt;&#xA;&lt;li&gt;节能模式（对照组）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;每组测试运行 3 次取平均值。所有测试都在&lt;strong&gt;纯净系统&lt;/strong&gt;（刚装完系统，没有第三方驱动优化工具）下进行。&lt;/p&gt;&#xA;&lt;h2 id=&#34;第一部分系统响应延迟&#34;&gt;第一部分：系统响应延迟&#xA;&lt;/h2&gt;&lt;p&gt;这是最容易感受到的指标。我用两个工具测：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;工具1：LatencyMon&lt;/strong&gt;（测中断和驱动延迟）&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;电源模式&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;平均延迟&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;P99 延迟&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;最大突刺&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;节能模式&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;285µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1240µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;8450µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;均衡模式&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;178µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;620µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;3280µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;高性能&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;142µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;480µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2100µs&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;低延迟&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;138µs&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;460µs&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;1950µs&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;工具2：Windows Performance Analyzer（WPA）&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

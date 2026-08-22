@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="OneDrive Photos 2026 年 7 月起随 Windows Update 静默安装，与 OneDrive 深度绑定、无法单独卸载，还默认能扫本地照片和人脸。本文给出三种可操作的清除方案。">
+<title>微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/win11-onedrive-photos-force-install-uninstall/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程">
+<meta property='og:description' content="OneDrive Photos 2026 年 7 月起随 Windows Update 静默安装，与 OneDrive 深度绑定、无法单独卸载，还默认能扫本地照片和人脸。本文给出三种可操作的清除方案。">
+<meta property='og:url' content='https://softon.top/tutorials/win11-onedrive-photos-force-install-uninstall/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='Windows 11' /><meta property='article:tag' content='OneDrive' /><meta property='article:tag' content='隐私' /><meta property='article:tag' content='系统流氓' /><meta property='article:published_time' content='2026-08-11T19:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-08-11T19:00:00&#43;08:00'/>
+<meta name="twitter:title" content="微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程">
+<meta name="twitter:description" content="OneDrive Photos 2026 年 7 月起随 Windows Update 静默安装，与 OneDrive 深度绑定、无法单独卸载，还默认能扫本地照片和人脸。本文给出三种可操作的清除方案。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#微软到底干了啥">微软到底干了啥</a></li>
+    <li><a href="#为啥卸不掉">为啥卸不掉</a></li>
+    <li><a href="#三种清除方案">三种清除方案</a>
+      <ul>
+        <li><a href="#方案-a只删快捷方式保-onedrive">方案 A：只删快捷方式（保 OneDrive）</a></li>
+        <li><a href="#方案-b连-onedrive-一起卸掉最彻底">方案 B：连 OneDrive 一起卸掉（最彻底）</a></li>
+        <li><a href="#方案-cintune-远程清理企业管理员">方案 C：Intune 远程清理（企业管理员）</a></li>
+      </ul>
+    </li>
+    <li><a href="#我怎么选的">我怎么选的</a></li>
+    <li><a href="#微软那句正在修复值得等吗">微软那句&quot;正在修复&quot;值得等吗</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/win11-onedrive-photos-force-install-uninstall/">微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-11T19:00:00&#43;08:00'>
+                    2026-08-11，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：7分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/win11-onedrive-photos-force-install-uninstall/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#微软到底干了啥">微软到底干了啥</a></li>
+    <li><a href="#为啥卸不掉">为啥卸不掉</a></li>
+    <li><a href="#三种清除方案">三种清除方案</a>
+      <ul>
+        <li><a href="#方案-a只删快捷方式保-onedrive">方案 A：只删快捷方式（保 OneDrive）</a></li>
+        <li><a href="#方案-b连-onedrive-一起卸掉最彻底">方案 B：连 OneDrive 一起卸掉（最彻底）</a></li>
+        <li><a href="#方案-cintune-远程清理企业管理员">方案 C：Intune 远程清理（企业管理员）</a></li>
+      </ul>
+    </li>
+    <li><a href="#我怎么选的">我怎么选的</a></li>
+    <li><a href="#微软那句正在修复值得等吗">微软那句&quot;正在修复&quot;值得等吗</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>打开开始菜单，你会看到一个自己从没装过的图标：<strong>OneDrive Photos</strong>。</p>
+<p>不是错觉。是微软 2026 年 7 月底开始，通过 Windows Update 和 OneDrive 客户端更新，<strong>静默</strong>推送的一个&quot;新&quot;照片应用。没弹窗、没变更日志、没同意提示。图标就那么出现了。</p>
+<p>更离谱的是，你<strong>卸不掉它</strong>。</p>
+<hr>
+<h2 id="微软到底干了啥">微软到底干了啥
+</h2><p>先说事实。这不是一个传统意义上的 UWP/MSIX 应用，Microsoft Store 里找不到，「已安装的应用」里也没有独立条目。</p>
+<p>它藏在这里：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">C:\Program Files\Microsoft OneDrive\OneDrive.App.exe</span>
+</span></span></code></pre></div><p>底层是 <strong>WebView2</strong>，也就是网页套壳。OneDrive 同步客户端每次更新，把这个 exe 一起塞进去，然后在开始菜单丢一个快捷方式。</p>
+<p>Windows Latest 7 月 29 日的实测证实了一件更恶心的事：<strong>即使你没登录任何 Microsoft 账号</strong>，OneDrive Photos 打开就能直接读取你本地硬盘里的照片，还给你分门别类展示。人脸分组功能默认关，但初次打开会弹窗劝你开启。</p>
+<p>微软 8 月初回应了。原话大意：「OneDrive Photos 是一次孵化中的新体验，推广范围超出了预期。」翻译一下：本来只想给消费者版慢慢试，结果一激动把企业版电脑也一起装了。</p>
+<p>企业管理员的原话更实在：</p>
+<blockquote>
+<p>我们用 Intune 管着数百台电脑，一觉醒来所有电脑开始菜单里都多了个 OneDrive Photos。这个应用连 Entra 账户都不兼容。不彻底卸载 OneDrive 就删不掉它。</p>
+</blockquote>
+<hr>
+<h2 id="为啥卸不掉">为啥卸不掉
+</h2><p>因为它<strong>不是独立应用</strong>。</p>
+<p>传统的 UWP 应用你可以 <code>Get-AppxPackage | Remove-AppxPackage</code>。传统 Win32 应用能在「设置 → 已安装的应用」找到卸载按钮。OneDrive Photos 都不属于这两种。</p>
+<p>它是 OneDrive 同步客户端<strong>内部的一个组件</strong>。共用一套安装目录、共用一套更新通道、共用一套自动修复机制。</p>
+<p>Windows Latest 后来又补了一刀：即便你手动删了快捷方式和 exe，只要 OneDrive 还活着，下次同步客户端更新就会<strong>把它重新塞回来</strong>。</p>
+<p>这不是 bug。这是设计。</p>
+<hr>
+<h2 id="三种清除方案">三种清除方案
+</h2><p>按&quot;手起刀落&quot;程度从轻到重排。</p>
+<h3 id="方案-a只删快捷方式保-onedrive">方案 A：只删快捷方式（保 OneDrive）
+</h3><p>如果你还在用 OneDrive 同步，只是不想在开始菜单看到那个图标，删快捷方式够了。</p>
+<p>管理员 PowerShell 里跑：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">$shortcut</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;OneDrive Photos.lnk&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">$paths</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">@(
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  (Join-Path $env:ProgramData &#34;Microsoft\Windows\Start Menu\Programs\$shortcut&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  (Join-Path $env:PUBLIC &#34;Desktop\$shortcut&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Get-ChildItem &#34;C:\Users&#34; -Directory | ForEach-Object {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">$paths +</span><span style="color:#f92672">=</span> <span style="color:#e6db74">Join-Path $_.FullName &#34;AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$shortcut&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">foreach ($p in $paths) {</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">if (Test-Path -LiteralPath $p) {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Remove-Item -LiteralPath $p -Force</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Write-Host &#34;Removed: $p&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><p><strong>代价</strong>：OneDrive 下次自动更新（一般几周一次）后，快捷方式会回来。你得把上面这段脚本挂到计划任务里，每次 OneDrive 更新完自动跑一遍。</p>
+<p>治标不治本，但对多数人够用。</p>
+<h3 id="方案-b连-onedrive-一起卸掉最彻底">方案 B：连 OneDrive 一起卸掉（最彻底）
+</h3><p>这是微软官方目前<strong>唯一支持</strong>的方式。</p>
+<ol>
+<li>打开 <code>设置 → 应用 → 已安装的应用</code></li>
+<li>搜索 <code>Microsoft OneDrive</code></li>
+<li>点右侧三点 → <code>卸载</code></li>
+<li>重启一次</li>
+</ol>
+<p>重启后开始菜单里 OneDrive Photos 会跟着消失。以后 Windows Update 也不会再推它。</p>
+<p><strong>代价</strong>：你彻底没了 OneDrive 云同步。如果你本来就是 Google Drive / 坚果云 / 本地 NAS 用户，OneDrive 只是 Windows 硬塞的赠品，这方案是干净利落的一刀。</p>
+<p>如果你在用 Microsoft 365、Office 文档要跨设备，那这刀砍下去代价有点大。</p>
+<h3 id="方案-cintune-远程清理企业管理员">方案 C：Intune 远程清理（企业管理员）
+</h3><p>大规模场景请走 Intune 远程修复脚本，System Center Dudes 有一份现成的可以参考。核心逻辑还是&quot;找快捷方式 + 删除 + 日志&quot;，配上 Intune 的计划任务重跑机制。</p>
+<p>普通个人用户不用管这个。</p>
+<hr>
+<h2 id="我怎么选的">我怎么选的
+</h2><p>我的两台 Windows 电脑一台工作一台游戏。工作机走的是坚果云 + Git，OneDrive 从来没登录过 —— 直接 <strong>方案 B</strong>，<code>卸载 OneDrive</code>，一键清干净，重启完连 OneDrive 图标都不见了，桌面清爽。</p>
+<p>游戏机绑着 Microsoft 账号还有几个订阅，OneDrive 得留着。走 <strong>方案 A</strong>，加了一个每月自动清理的计划任务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">schtasks /Create /SC MONTHLY /TN &#34;Remove OneDrive Photos Shortcut&#34; ^</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">/TR &#34;powershell.exe -ExecutionPolicy Bypass -File C:\Scripts\clean-onedrive-photos.ps1&#34; ^</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">/RU SYSTEM</span>
+</span></span></code></pre></div><p>丑陋，但能跑。</p>
+<hr>
+<h2 id="微软那句正在修复值得等吗">微软那句&quot;正在修复&quot;值得等吗
+</h2><p>微软自己说了两件事：</p>
+<ol>
+<li>企业版 PC 上安装的 OneDrive Photos 会<strong>自动删除</strong>（8 月中旬起陆续推送）</li>
+<li>正在开发<strong>独立卸载控件</strong>，让用户能分开卸 OneDrive 和 OneDrive Photos</li>
+</ol>
+<p>第一件事 IT 管理员可能能等到。第二件事没有明确时间表 —— 微软说&quot;正在开发&quot;的东西，你懂的。</p>
+<p>如果你今天就想桌面干净，别等。上面三种方案挑一个，动手。</p>
+<hr>
+<h2 id="一句话总结">一句话总结
+</h2><p>微软把 OneDrive Photos 当&quot;OneDrive 的一部分&quot;来分发，就是想让你想删它的时候得掂量一下&quot;我还要不要 OneDrive&quot;。</p>
+<p>这个套路以前叫<strong>捆绑安装</strong>，我们骂了流氓软件二十年。今天，操作系统本身来干这个。</p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/" >Windows 11 磁盘空间被吞 500GB？KB5095093 补丁背后的坑</a></li>
+<li><a class="link" href="/software/roguecleaner-windows-uninstall-residue-cleaner/" >RogueCleaner：把 Windows 卸载残留一键清干净</a></li>
+<li><a class="link" href="/software/optimizerduck-windows-optimization-trust-revert/" >OptimizerDuck：Windows 优化工具的信任危机与回滚指南</a></li>
+<li><a class="link" href="/software/windows-clipboard-image-bloat-slimpaste/" >SlimPaste：治好微信剪贴板图片把 C 盘撑爆的顽疾</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windows-11/">Windows 11</a>
+        
+            <a href="/tags/onedrive/">OneDrive</a>
+        
+            <a href="/tags/%E9%9A%90%E7%A7%81/">隐私</a>
+        
+            <a href="/tags/%E7%B3%BB%E7%BB%9F%E6%B5%81%E6%B0%93/">系统流氓</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">打了 7 月补丁没？Win11 有个 Bug 能把 C 盘吃到只剩渣</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/optimizerduck-windows-optimization-trust-revert/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/win11-onedrive-photos-force-install-uninstall\/'; 
+        const pageTitle = '微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

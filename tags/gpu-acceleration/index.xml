@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Gpu-Acceleration on softon.top</title>
+		<link>https://softon.top/tags/gpu-acceleration/</link>
+		<description>Recent content in Gpu-Acceleration on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 11 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/gpu-acceleration/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Zed vs VS Code 2026：Rust 编辑器凭什么快 2 倍、省 16 倍内存？</title>
+				<link>https://softon.top/software/zed-rust-editor-vs-vscode-2026/</link>
+				<pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/zed-rust-editor-vs-vscode-2026/</guid>
+				<description>&lt;p&gt;你有没有这种感觉——VS Code 越装插件越慢，开个中等项目都要等好几秒，内存动不动就上 3GB，风扇狂转？&lt;/p&gt;&#xA;&lt;p&gt;问题出在 &lt;strong&gt;Electron&lt;/strong&gt;。它本质是个浏览器，跑应用-level 的代码天生有性能损耗。堆插件越多，开销越大。&lt;/p&gt;&#xA;&lt;p&gt;于是，一群 &lt;strong&gt;Atom 前团队成员&lt;/strong&gt; 出来做了个 &lt;strong&gt;Zed&lt;/strong&gt;——用 Rust 从头写，GPU 加速渲染，目标是：&lt;strong&gt;不妥协的速度&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 5 月，Zed 发布 &lt;strong&gt;1.0 正式版&lt;/strong&gt;，同时开源核心代码。这一年多实测下来，数据非常惊人：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;指标&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;VS Code&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Zed&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;差距&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;冷启动速度&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~1.3s&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~0.4s&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;3.25x 快&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;内存占用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;最高 3.5GB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;稳定 ~200MB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;17.5x 省&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;打字延迟&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~20ms&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&amp;lt;10ms&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;2x 低&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;大文件打开&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;慢（卡顿）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;几乎瞬时&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;显著差异&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;source: tech-insider.org, weavai.app 2026 对比测试&lt;/p&gt;&#xA;&lt;p&gt;这些数字怎么来的？为什么 Rust+GPU 能这么强？Zed 适合你吗？这篇拆解。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;核心黑科技rust--gpu--无负担架构&#34;&gt;核心黑科技：Rust + GPU + 无负担架构&#xA;&lt;/h2&gt;&lt;h3 id=&#34;rust-语言的优势&#34;&gt;Rust 语言的优势&#xA;&lt;/h3&gt;&lt;p&gt;Zed 不用 Electron（JavaScript/C++），而是用 &lt;strong&gt;Rust&lt;/strong&gt; 从头实现整个编辑器。Rust 的三大特性让性能起飞：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

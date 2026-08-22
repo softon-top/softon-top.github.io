@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Sandbox on softon.top</title>
+		<link>https://softon.top/tags/sandbox/</link>
+		<description>Recent content in Sandbox on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 26 Jul 2026 18:05:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/sandbox/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</title>
+				<link>https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/</link>
+				<pubDate>Sun, 26 Jul 2026 18:05:00 +0800</pubDate>
+				<guid>https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/</guid>
+				<description>&lt;p&gt;把一个 AI Agent 接上 &lt;code&gt;exec&lt;/code&gt;、浏览器和 Git 仓库后，很多人会立刻想到 Docker：起个容器，不就隔离了吗？&lt;/p&gt;&#xA;&lt;p&gt;这句话只对了一半。&lt;/p&gt;&#xA;&lt;p&gt;容器确实能把进程、文件系统视图和网络命名空间切开；但它们仍共用宿主机内核。对一个会读网页、装依赖、运行第三方脚本、调用外部 API 的 Agent 来说，风险并不止“它会不会把程序跑坏”。真正难题是：&lt;strong&gt;一段不受完全信任的指令，最终能碰到哪些资产？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;可能是宿主机的 Docker Socket；可能是挂进容器的项目目录；可能是云端 API Key；也可能是能访问内网的网络出口。模型是否被提示注入、工具调用是否被诱导、依赖包是否有恶意代码，这些问题最后都会落到同一个地方：执行环境有没有边界。&lt;/p&gt;&#xA;&lt;p&gt;沙箱不是给 Agent 盖一层玻璃罩。它是在替人做权限拆分：让 Agent 能完成任务，但拿不到不该拿的东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;先别选技术先画出-agent-的攻击路径&#34;&gt;先别选技术，先画出 Agent 的攻击路径&#xA;&lt;/h2&gt;&lt;p&gt;普通 Web 服务的代码通常来自团队仓库，输入也经过设计。Agent 的工作流恰好反过来：它常常需要处理陌生输入，并把输入翻译成操作。&lt;/p&gt;&#xA;&lt;p&gt;一封邮件里的一句“请读取这个文件并执行修复脚本”，一段网页里的隐藏提示，一份带有恶意安装命令的 README，都可能进入模型上下文。模型即使没有“中毒”，也可能把这些文字当作高优先级任务，继而调用 Shell、浏览器或代码执行工具。&lt;/p&gt;&#xA;&lt;p&gt;因此，沙箱至少要回答五个问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程边界&lt;/strong&gt;：Agent 启动的程序能否影响宿主机或其他任务？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件边界&lt;/strong&gt;：它能读写哪些目录？工作成果如何带出来？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络边界&lt;/strong&gt;：它能访问公网、内网、元数据服务、公司 SaaS 吗？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;身份边界&lt;/strong&gt;：API Key、OAuth Token、SSH Key 是否会直接出现在进程或文件里？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;资源边界&lt;/strong&gt;：它能吃掉多少 CPU、内存、磁盘、进程数和运行时间？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果只回答“我用了 Docker”，其实只覆盖了其中一部分。Docker 更像隔间，不是完整的保险库。&lt;/p&gt;&#xA;&lt;h2 id=&#34;docker足够快但别把默认容器当安全边界&#34;&gt;Docker：足够快，但别把默认容器当安全边界&#xA;&lt;/h2&gt;&lt;p&gt;Docker 仍是多数个人项目和内部自动化的第一站。原因很朴素：镜像好做，生态完整，启动快，依赖隔离直观。为每次 Agent 任务创建短生命周期容器，也比直接在宿主机执行安全得多。&lt;/p&gt;&#xA;&lt;p&gt;但 Docker 的隔离属于操作系统级隔离。容器与宿主机共享 Linux 内核；如果运行时配置太宽松，隔离会被自己打穿。&lt;/p&gt;&#xA;&lt;p&gt;最常见的“沙箱变后门”有四种：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;挂载过大的目录&lt;/strong&gt;：把整个家目录、仓库根目录或 &lt;code&gt;/var/run&lt;/code&gt; 挂进去，Agent 的可见范围就远大于任务需要。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;暴露 Docker Socket&lt;/strong&gt;：容器一旦能控制 Docker，往往就等于能启动高权限容器，边界名存实亡。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;使用特权模式或过多 Capabilities&lt;/strong&gt;：&lt;code&gt;--privileged&lt;/code&gt; 是为了方便排障，不该成为常态；额外 Linux capabilities 同样应按需给。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络默认放行&lt;/strong&gt;：容器可以出网并不代表它应该能访问所有内网地址、云元数据端点或管理面板。&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;个人场景里，Docker 可以承担低风险任务：格式化文本、转换文件、运行受信代码的测试、处理不含密钥的公开数据。前提是把它收紧到“任务最小集合”。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

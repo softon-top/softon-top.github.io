@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI架构 on softon.top</title>
+		<link>https://softon.top/tags/ai%E6%9E%B6%E6%9E%84/</link>
+		<description>Recent content in AI架构 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 10 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI Agent 不能只靠框架：为什么运行时才是落地关键</title>
+				<link>https://softon.top/ai/ai-agent-runtime-vs-framework/</link>
+				<pubDate>Fri, 10 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-agent-runtime-vs-framework/</guid>
+				<description>&lt;p&gt;AI Agent 这两年最迷人的错觉，是“只要把大模型、提示词和工具调用串起来，一个能干活的数字员工就诞生了”。&lt;/p&gt;&#xA;&lt;p&gt;这句话在 Demo 里通常是真的。&lt;/p&gt;&#xA;&lt;p&gt;你写一个 &lt;code&gt;system prompt&lt;/code&gt;，挂几个工具：查数据库、发邮件、读工单、调 API。模型理解用户意图，决定调用哪个工具，再把结果组织成自然语言。演示时它像个聪明实习生：能听懂话，会翻资料，还知道主动补一步。&lt;/p&gt;&#xA;&lt;p&gt;然后你把它拿去上线评审，会议室里的空气突然变硬。&lt;/p&gt;&#xA;&lt;p&gt;安全同事问：“它到底能调用哪些工具？有没有可能绕过限制？”&lt;/p&gt;&#xA;&lt;p&gt;业务负责人问：“它自动退款、自动发公告、自动改配置之前，谁审批？”&lt;/p&gt;&#xA;&lt;p&gt;运维同事问：“昨天晚上那次异常调用，是哪个版本的 Agent 干的？”&lt;/p&gt;&#xA;&lt;p&gt;财务同事问：“它循环重试 40 分钟烧了多少 Token？为什么没人拦住？”&lt;/p&gt;&#xA;&lt;p&gt;这时候你才发现，所谓“Agent 已经能跑”，只解决了最轻的一层问题：&lt;strong&gt;它会思考和调用工具。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;真正重的东西在后面：它以什么身份运行、拥有什么权限、能活多久、失败后怎么恢复、调用链怎么追溯、版本怎么冻结、谁批准了高风险动作。&lt;/p&gt;&#xA;&lt;p&gt;这些问题，靠框架很难回答。不是 LangChain、CrewAI、AutoGen、OpenAI Agents SDK 不好，而是它们本质上属于另一个层级。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;框架解决“怎么写 Agent”。运行时解决“Agent 上线后怎么活”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这就是今天这个选题最值得写的地方：AI Agent 从玩具走向生产系统时，缺的往往不是更多框架，而是一个真正的运行时。&lt;/p&gt;&#xA;&lt;h2 id=&#34;框架像乐高运行时像城市&#34;&gt;框架像乐高，运行时像城市&#xA;&lt;/h2&gt;&lt;p&gt;Agent 框架很好理解。&lt;/p&gt;&#xA;&lt;p&gt;它像一盒乐高零件：模型适配器、工具调用、记忆模块、规划器、多 Agent 编排、回调钩子。你用它把一个 Agent 拼起来，速度很快，表达力也强。&lt;/p&gt;&#xA;&lt;p&gt;典型代码大概长这样：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;agent &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Agent(&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    model&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gpt-4.1&amp;#34;&lt;/span&gt;,&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    instructions&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;你是一个客服助手&amp;#34;&lt;/span&gt;,&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    tools&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[search_ticket, lookup_order, issue_refund]&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这段代码能让 Agent 运行。但评审真正关心的问题，不在这几行里。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;issue_refund&lt;/code&gt; 最多能退多少钱？超过 500 元是否需要人工确认？谁有权批准？批准记录存在哪里？如果模型被用户诱导，要求给自己全额退款，拦截发生在提示词里，还是工具调用之前？&lt;/p&gt;&#xA;&lt;p&gt;如果答案是“我们在 prompt 里写了不要乱退钱”，那基本等于没答。&lt;/p&gt;&#xA;&lt;p&gt;提示词像贴在门口的告示：“请勿入内”。运行时才像真正的门禁：刷卡、验权、留日志、报警。&lt;/p&gt;&#xA;&lt;p&gt;这就是框架和运行时的根本区别。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;框架是库。&lt;/strong&gt; 它被你的应用调用，嵌在你的进程里，帮你组织代码。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;运行时是环境。&lt;/strong&gt; 它反过来承载 Agent，管理会话、调度工具、执行策略、记录证据、控制权限。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

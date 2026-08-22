@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>OneDrive on softon.top</title>
+		<link>https://softon.top/tags/onedrive/</link>
+		<description>Recent content in OneDrive on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 11 Aug 2026 19:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/onedrive/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程</title>
+				<link>https://softon.top/tutorials/win11-onedrive-photos-force-install-uninstall/</link>
+				<pubDate>Tue, 11 Aug 2026 19:00:00 +0800</pubDate>
+				<guid>https://softon.top/tutorials/win11-onedrive-photos-force-install-uninstall/</guid>
+				<description>&lt;p&gt;打开开始菜单，你会看到一个自己从没装过的图标：&lt;strong&gt;OneDrive Photos&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;不是错觉。是微软 2026 年 7 月底开始，通过 Windows Update 和 OneDrive 客户端更新，&lt;strong&gt;静默&lt;/strong&gt;推送的一个&amp;quot;新&amp;quot;照片应用。没弹窗、没变更日志、没同意提示。图标就那么出现了。&lt;/p&gt;&#xA;&lt;p&gt;更离谱的是，你&lt;strong&gt;卸不掉它&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;微软到底干了啥&#34;&gt;微软到底干了啥&#xA;&lt;/h2&gt;&lt;p&gt;先说事实。这不是一个传统意义上的 UWP/MSIX 应用，Microsoft Store 里找不到，「已安装的应用」里也没有独立条目。&lt;/p&gt;&#xA;&lt;p&gt;它藏在这里：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;C:\Program Files\Microsoft OneDrive\OneDrive.App.exe&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;底层是 &lt;strong&gt;WebView2&lt;/strong&gt;，也就是网页套壳。OneDrive 同步客户端每次更新，把这个 exe 一起塞进去，然后在开始菜单丢一个快捷方式。&lt;/p&gt;&#xA;&lt;p&gt;Windows Latest 7 月 29 日的实测证实了一件更恶心的事：&lt;strong&gt;即使你没登录任何 Microsoft 账号&lt;/strong&gt;，OneDrive Photos 打开就能直接读取你本地硬盘里的照片，还给你分门别类展示。人脸分组功能默认关，但初次打开会弹窗劝你开启。&lt;/p&gt;&#xA;&lt;p&gt;微软 8 月初回应了。原话大意：「OneDrive Photos 是一次孵化中的新体验，推广范围超出了预期。」翻译一下：本来只想给消费者版慢慢试，结果一激动把企业版电脑也一起装了。&lt;/p&gt;&#xA;&lt;p&gt;企业管理员的原话更实在：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;我们用 Intune 管着数百台电脑，一觉醒来所有电脑开始菜单里都多了个 OneDrive Photos。这个应用连 Entra 账户都不兼容。不彻底卸载 OneDrive 就删不掉它。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为啥卸不掉&#34;&gt;为啥卸不掉&#xA;&lt;/h2&gt;&lt;p&gt;因为它&lt;strong&gt;不是独立应用&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;传统的 UWP 应用你可以 &lt;code&gt;Get-AppxPackage | Remove-AppxPackage&lt;/code&gt;。传统 Win32 应用能在「设置 → 已安装的应用」找到卸载按钮。OneDrive Photos 都不属于这两种。&lt;/p&gt;&#xA;&lt;p&gt;它是 OneDrive 同步客户端&lt;strong&gt;内部的一个组件&lt;/strong&gt;。共用一套安装目录、共用一套更新通道、共用一套自动修复机制。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

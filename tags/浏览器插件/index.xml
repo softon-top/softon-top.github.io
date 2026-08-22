@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>浏览器插件 on softon.top</title>
+		<link>https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/</link>
+		<description>Recent content in 浏览器插件 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 28 Jul 2026 12:17:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台</title>
+				<link>https://softon.top/software/chrome-tabs-tab-harbor-browser-control-room/</link>
+				<pubDate>Tue, 28 Jul 2026 12:17:00 +0800</pubDate>
+				<guid>https://softon.top/software/chrome-tabs-tab-harbor-browser-control-room/</guid>
+				<description>&lt;p&gt;浏览器标签失控，通常不是因为你不懂得关闭。&lt;/p&gt;&#xA;&lt;p&gt;是因为每一个标签背后都挂着一个还没结束的念头：准备比较的产品、只看了一半的文档、等有空再读的文章、写到一半需要回查的资料。关掉怕忘，留着又像把一整张书桌塞进抽屉。几天后，窗口顶端只剩下一排缩到看不清标题的小图标，找回某个页面，全靠记忆和运气。&lt;/p&gt;&#xA;&lt;p&gt;大多数标签管理工具给出的答案是“收纳”：把它们存成列表、文件夹或快照。Tab Harbor 的想法不同：既然这些页面仍在参与你的工作，就别急着把它们藏起来。把 Chrome 新标签页改造成一个&lt;strong&gt;浏览器控制台&lt;/strong&gt;，让正在做的事、稍后再看的事、待处理的小事，回到同一个可见界面。&lt;/p&gt;&#xA;&lt;p&gt;它不是革命性的新类别。标签管理赛道早已挤满 OneTab、Session Buddy、Workona 等工具。Tab Harbor 值得写，不在于发明了新功能，而在于它把一组很容易散落的动作——看当前标签、保存一批页面、处理重复标签、记一条待办——放到了你每天打开次数最多的入口：新标签页。&lt;/p&gt;&#xA;&lt;h2 id=&#34;多标签真正麻烦的不是数量&#34;&gt;多标签真正麻烦的，不是数量&#xA;&lt;/h2&gt;&lt;p&gt;“标签太多”只是表象。&lt;/p&gt;&#xA;&lt;p&gt;真正让人累的是，浏览器无法区分不同状态。一个正在写方案时必看的文档，和一个准备周末再读的长文，在标签栏里拥有完全相同的地位；一个已经完成任务却没来得及关的页面，和一个必须继续跟进的页面，也没有任何区别。&lt;/p&gt;&#xA;&lt;p&gt;于是人会形成一种很熟悉的低效循环：开新标签页，找旧页面；找不到，搜索一次；搜到后再开几个关联页面；事情结束时告诉自己“等会儿一起整理”。这个“等会儿”通常不会来。&lt;/p&gt;&#xA;&lt;p&gt;Tab Harbor 不承诺替你自动判断每个网页的重要性。它做的是把选择成本降下来：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;当前打开的标签，按域名自动归组；首页类页面会单独归到 &lt;code&gt;Homepages&lt;/code&gt;。&lt;/li&gt;&#xA;&lt;li&gt;需要按项目组织时，可以再建手动分组。&lt;/li&gt;&#xA;&lt;li&gt;暂时不看的页面，可以保存成会话；之后恢复，或折叠起来不占视线。&lt;/li&gt;&#xA;&lt;li&gt;重复标签可一键清理；暂时不关、又不想继续占资源的标签，可手动休眠。&lt;/li&gt;&#xA;&lt;li&gt;快捷链接和轻量待办留在同一页，不必为了记一句“待确认”再跳去另一个应用。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这套设计的重点不是“功能全”。重点是它承认：浏览器已经是很多人的临时工作台。资料检索、写作、购物比较、排查报错、追踪项目，很多过程都在标签之间来回跳。既然如此，新标签页就不该只是一张壁纸加搜索框。&lt;/p&gt;&#xA;&lt;h2 id=&#34;它把标签栏改成了可读的工作现场&#34;&gt;它把“标签栏”改成了可读的工作现场&#xA;&lt;/h2&gt;&lt;p&gt;Tab Harbor 最有价值的功能，是按域名整理当前标签。&lt;/p&gt;&#xA;&lt;p&gt;这听起来不复杂，但很贴近真实使用。做一个选题时，可能同时开着 GitHub、产品官网、文档、论坛讨论和几个搜索结果。传统标签栏只能按打开先后排队，信息结构被时间顺序打散；Tab Harbor 把同站页面归在一起，至少能立刻看出：今天到底在哪些来源上花了时间，哪个主题已经堆积出一团页面。&lt;/p&gt;&#xA;&lt;p&gt;不过，域名不是项目。一个 GitHub 标签可能属于工作项目，另一个却只是临时查资料；同一篇文章也可能同时服务于两项任务。因此它保留手动分组，作为自动归类之后的第二层组织。自动分组负责减少混乱，手动分组负责保留意图。&lt;/p&gt;&#xA;&lt;p&gt;保存会话的设计也比“把所有标签导出成列表”更接近工作流。你可以选择要保存的页面，把新页面追加进已有会话，之后再恢复。对“正在做，但今天先暂停”的任务，这比把页面塞进书签更合适：书签是长期收藏，会话是可恢复的现场。&lt;/p&gt;&#xA;&lt;p&gt;这里有个重要区别。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;不要把所有页面都保存。真正有效的会话，应该对应一个可以重新开始的任务。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;例如“比较三款笔记工具”“排查某个部署报错”“下周要看的课程资料”。会话标题写清任务，恢复时才不会变成另一座数字仓库。若只是把标签从标签栏搬到会话列表，混乱只是在换地方住。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么说它像控制台而不只是标签管理器&#34;&gt;为什么说它像控制台，而不只是标签管理器&#xA;&lt;/h2&gt;&lt;p&gt;OneTab 式工具的核心价值，是把大量标签压缩成可恢复清单，解决的是“浏览器窗口太拥挤”。Workona 一类工具更强调工作区、项目和跨设备协作，解决的是“多个项目如何分开”。&lt;/p&gt;&#xA;&lt;p&gt;Tab Harbor 夹在两者中间。&lt;/p&gt;&#xA;&lt;p&gt;它没有试图成为项目管理系统，也没有只负责把标签打包收走。它让当前标签、已保存会话、快捷入口和待办共同出现在新标签页。你开新页面时，看到的不是空白，而是自己正在推进的浏览器上下文。&lt;/p&gt;&#xA;&lt;p&gt;这对下面几类人尤其有用：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;经常边搜索边写作，标签会随着思路扩散的人。&lt;/li&gt;&#xA;&lt;li&gt;同时跟进多个轻量任务，但不想每个任务都开一套 Notion 或项目管理工具的人。&lt;/li&gt;&#xA;&lt;li&gt;把浏览器当资料工作台，又讨厌注册账号、搭服务、维护同步的人。&lt;/li&gt;&#xA;&lt;li&gt;有“稍后读”习惯，但发现收藏夹最终只会积灰的人。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;反过来，它也不适合所有人。&lt;/p&gt;&#xA;&lt;p&gt;如果你真正需要的是跨电脑、跨浏览器同步，Tab Harbor 不是答案。它明确采用本地存储：会话、待办、快捷链接、主题偏好等数据都放在 &lt;code&gt;chrome.storage.local&lt;/code&gt;，没有后端，也没有同步账号。换电脑、重装系统、切到另一台设备，不能期待它像云端工作区那样自动跟过去。&lt;/p&gt;&#xA;&lt;p&gt;如果你需要团队共享项目、统一分配任务、给每个页面加复杂字段，它也太轻。它的待办是贴近浏览器动作的一层提醒，不该替代专业任务管理工具。&lt;/p&gt;&#xA;&lt;p&gt;这恰好是它最诚实的边界：&lt;strong&gt;它不试图把浏览器变成公司协作平台，只试图让你的浏览器少一点失忆。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;本地优先不等于不需要看权限&#34;&gt;本地优先，不等于不需要看权限&#xA;&lt;/h2&gt;&lt;p&gt;Tab Harbor 是基于 Manifest V3 的 Chrome 扩展，开源仓库采用 MIT 许可证。项目说明强调不设后端、不设账号，数据保存在本机；从隐私模型看，这比把标签历史交给一个陌生云服务更让人安心。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

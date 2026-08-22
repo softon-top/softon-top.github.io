@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>生产环境 on softon.top</title>
+		<link>https://softon.top/tags/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83/</link>
+		<description>Recent content in 生产环境 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 30 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI Agent 成本失控怎么办？从真实账单看生产环境省钱之道</title>
+				<link>https://softon.top/software/ai-agent-cost-runaway-production-tips/</link>
+				<pubDate>Tue, 30 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ai-agent-cost-runaway-production-tips/</guid>
+				<description>&lt;p&gt;有一天我检查 Claude Code 的账单，发现一夜之间多了 120 万的输入 token。而那天晚上，我明明只是在睡觉。&lt;/p&gt;&#xA;&lt;p&gt;排查后真相大白：我写的一个定时 cron 作业触发了 Agent 自动分析日志的流程，结果日志量比预期大了 10 倍，Agent 被塞进了 80 万 token 的日志上下文，然后它&amp;quot;认真&amp;quot;地分析了每一行——花了大约 &lt;strong&gt;$4.8&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;不是一笔大钱，但如果这种场景每个月发生 10 次呢？如果有 5 个 Agent 同时跑呢？如果团队 20 个人都用呢？&lt;/p&gt;&#xA;&lt;p&gt;AI Agent 最大的谎言不是&amp;quot;它们会取代程序员&amp;quot;，而是&amp;quot;每次调用才几分钱&amp;quot;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;成本不是线性增长的它是指数跳变的&#34;&gt;成本不是线性增长的——它是指数跳变的&#xA;&lt;/h2&gt;&lt;p&gt;先给一个残酷的数字：我用一个三 Agent 架构（调度 Agent + 编码 Agent + 审查 Agent）处理日常代码维护任务，三个月的账单趋势是这样的：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;月份&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Agent 调用次数&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;总 Token 用量（M）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;费用（$）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;环比增长&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;第 1 月&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;632&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;8.2&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~$24&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;第 2 月&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1,847&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;31.5&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~$95&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;296%&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;第 3 月&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;4,326&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;89.7&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~$269&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;183%&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;不是线性 3 倍，是指数跳变。第二个月增长了约 3 倍，第三个月又翻了约 2.8 倍——看数字和增长可以理解为 Agent 数量没变、调用场景没变，&lt;strong&gt;但每个 Agent 每轮对话的上下文越来越胖了&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

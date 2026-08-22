@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="AI Agent 获得 Shell、浏览器和网络后，沙箱真正该隔离什么？从威胁模型出发，对比 Docker、gVisor 与 MicroVM，并给出可落地的选型边界。">
+<title>给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选">
+<meta property='og:description' content="AI Agent 获得 Shell、浏览器和网络后，沙箱真正该隔离什么？从威胁模型出发，对比 Docker、gVisor 与 MicroVM，并给出可落地的选型边界。">
+<meta property='og:url' content='https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Sandbox' /><meta property='article:tag' content='Docker' /><meta property='article:tag' content='gVisor' /><meta property='article:tag' content='MicroVM' /><meta property='article:tag' content='安全' /><meta property='article:published_time' content='2026-07-26T18:05:00&#43;08:00'/><meta property='article:modified_time' content='2026-07-26T18:05:00&#43;08:00'/>
+<meta name="twitter:title" content="给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选">
+<meta name="twitter:description" content="AI Agent 获得 Shell、浏览器和网络后，沙箱真正该隔离什么？从威胁模型出发，对比 Docker、gVisor 与 MicroVM，并给出可落地的选型边界。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#先别选技术先画出-agent-的攻击路径">先别选技术，先画出 Agent 的攻击路径</a></li>
+    <li><a href="#docker足够快但别把默认容器当安全边界">Docker：足够快，但别把默认容器当安全边界</a></li>
+    <li><a href="#gvisor仍像容器但给系统调用加一道缓冲层">gVisor：仍像容器，但给系统调用加一道缓冲层</a></li>
+    <li><a href="#microvm隔离更硬代价是运维更像在管一批小机器">MicroVM：隔离更硬，代价是运维更像在管一批小机器</a></li>
+    <li><a href="#opensandbox-这类平台解决的不是起容器而是生命周期">OpenSandbox 这类平台，解决的不是“起容器”而是生命周期</a></li>
+    <li><a href="#真正该隔离的是网络和凭据">真正该隔离的，是网络和凭据</a></li>
+    <li><a href="#一张选型表按风险和任务不按热度">一张选型表：按风险和任务，不按热度</a></li>
+    <li><a href="#一条能落地的升级路线">一条能落地的升级路线</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/">给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-26T18:05:00&#43;08:00'>
+                    2026-07-26，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：14分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#先别选技术先画出-agent-的攻击路径">先别选技术，先画出 Agent 的攻击路径</a></li>
+    <li><a href="#docker足够快但别把默认容器当安全边界">Docker：足够快，但别把默认容器当安全边界</a></li>
+    <li><a href="#gvisor仍像容器但给系统调用加一道缓冲层">gVisor：仍像容器，但给系统调用加一道缓冲层</a></li>
+    <li><a href="#microvm隔离更硬代价是运维更像在管一批小机器">MicroVM：隔离更硬，代价是运维更像在管一批小机器</a></li>
+    <li><a href="#opensandbox-这类平台解决的不是起容器而是生命周期">OpenSandbox 这类平台，解决的不是“起容器”而是生命周期</a></li>
+    <li><a href="#真正该隔离的是网络和凭据">真正该隔离的，是网络和凭据</a></li>
+    <li><a href="#一张选型表按风险和任务不按热度">一张选型表：按风险和任务，不按热度</a></li>
+    <li><a href="#一条能落地的升级路线">一条能落地的升级路线</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>把一个 AI Agent 接上 <code>exec</code>、浏览器和 Git 仓库后，很多人会立刻想到 Docker：起个容器，不就隔离了吗？</p>
+<p>这句话只对了一半。</p>
+<p>容器确实能把进程、文件系统视图和网络命名空间切开；但它们仍共用宿主机内核。对一个会读网页、装依赖、运行第三方脚本、调用外部 API 的 Agent 来说，风险并不止“它会不会把程序跑坏”。真正难题是：<strong>一段不受完全信任的指令，最终能碰到哪些资产？</strong></p>
+<p>可能是宿主机的 Docker Socket；可能是挂进容器的项目目录；可能是云端 API Key；也可能是能访问内网的网络出口。模型是否被提示注入、工具调用是否被诱导、依赖包是否有恶意代码，这些问题最后都会落到同一个地方：执行环境有没有边界。</p>
+<p>沙箱不是给 Agent 盖一层玻璃罩。它是在替人做权限拆分：让 Agent 能完成任务，但拿不到不该拿的东西。</p>
+<h2 id="先别选技术先画出-agent-的攻击路径">先别选技术，先画出 Agent 的攻击路径
+</h2><p>普通 Web 服务的代码通常来自团队仓库，输入也经过设计。Agent 的工作流恰好反过来：它常常需要处理陌生输入，并把输入翻译成操作。</p>
+<p>一封邮件里的一句“请读取这个文件并执行修复脚本”，一段网页里的隐藏提示，一份带有恶意安装命令的 README，都可能进入模型上下文。模型即使没有“中毒”，也可能把这些文字当作高优先级任务，继而调用 Shell、浏览器或代码执行工具。</p>
+<p>因此，沙箱至少要回答五个问题：</p>
+<ul>
+<li><strong>进程边界</strong>：Agent 启动的程序能否影响宿主机或其他任务？</li>
+<li><strong>文件边界</strong>：它能读写哪些目录？工作成果如何带出来？</li>
+<li><strong>网络边界</strong>：它能访问公网、内网、元数据服务、公司 SaaS 吗？</li>
+<li><strong>身份边界</strong>：API Key、OAuth Token、SSH Key 是否会直接出现在进程或文件里？</li>
+<li><strong>资源边界</strong>：它能吃掉多少 CPU、内存、磁盘、进程数和运行时间？</li>
+</ul>
+<p>如果只回答“我用了 Docker”，其实只覆盖了其中一部分。Docker 更像隔间，不是完整的保险库。</p>
+<h2 id="docker足够快但别把默认容器当安全边界">Docker：足够快，但别把默认容器当安全边界
+</h2><p>Docker 仍是多数个人项目和内部自动化的第一站。原因很朴素：镜像好做，生态完整，启动快，依赖隔离直观。为每次 Agent 任务创建短生命周期容器，也比直接在宿主机执行安全得多。</p>
+<p>但 Docker 的隔离属于操作系统级隔离。容器与宿主机共享 Linux 内核；如果运行时配置太宽松，隔离会被自己打穿。</p>
+<p>最常见的“沙箱变后门”有四种：</p>
+<ol>
+<li><strong>挂载过大的目录</strong>：把整个家目录、仓库根目录或 <code>/var/run</code> 挂进去，Agent 的可见范围就远大于任务需要。</li>
+<li><strong>暴露 Docker Socket</strong>：容器一旦能控制 Docker，往往就等于能启动高权限容器，边界名存实亡。</li>
+<li><strong>使用特权模式或过多 Capabilities</strong>：<code>--privileged</code> 是为了方便排障，不该成为常态；额外 Linux capabilities 同样应按需给。</li>
+<li><strong>网络默认放行</strong>：容器可以出网并不代表它应该能访问所有内网地址、云元数据端点或管理面板。</li>
+</ol>
+<p>个人场景里，Docker 可以承担低风险任务：格式化文本、转换文件、运行受信代码的测试、处理不含密钥的公开数据。前提是把它收紧到“任务最小集合”。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">docker run --rm \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--read-only \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--user 10001:10001 \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--cap-drop ALL \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--security-opt no-new-privileges \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--pids-limit 256 \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--memory 2g \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--cpus 2 \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">--network none \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">-v &#34;$PWD/input:/work/input:ro&#34; \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">-v &#34;$PWD/output:/work/output&#34; \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">agent-worker:latest</span>
+</span></span></code></pre></div><p>这段命令没有把 Docker 变成绝对安全的执行舱，但做了几件重要小事：根文件系统只读；使用非 root 用户；移除 capabilities；禁止新权限；限制资源；默认断网；输入只读、输出单独可写。</p>
+<p>代价也很现实：有些构建会因只读根文件系统失败，有些语言工具链需要缓存，有些任务必须访问指定 API。正确做法不是删掉所有限制，而是逐项打开、逐项记录。安全配置不是一次性“加固完成”，而是每多一个能力，都问一次：这项能力是否真的服务于本次任务？</p>
+<h2 id="gvisor仍像容器但给系统调用加一道缓冲层">gVisor：仍像容器，但给系统调用加一道缓冲层
+</h2><p>当 Agent 要运行陌生依赖、抓取来的代码或难以审计的插件时，仅共享宿主机内核会让人不太踏实。此时 gVisor 处在一个很有价值的位置。</p>
+<p>gVisor 提供 OCI 兼容运行时 <code>runsc</code>，可以接入 Docker 和 Kubernetes。它不是传统虚拟机，也不是另一套容器编排；它在应用与宿主机内核之间放入一个“应用内核”。应用发起的系统调用不会像普通容器那样直接抵达宿主机内核，而会先被 gVisor 拦截和处理。</p>
+<p>这意味着什么？攻击者若想利用内核接口逃逸，面对的接口面被缩小了。gVisor 官方文档强调，它的目的正是为不受信用户态代码增加一层针对内核漏洞利用的防线。</p>
+<p>但别把它理解成万能防毒软件。gVisor 保护的是“工作负载与宿主机的内核交界”，不能替你修复这些错误：</p>
+<ul>
+<li>把生产数据库密码注入 Agent 进程；</li>
+<li>把敏感目录以可写方式挂载进去；</li>
+<li>放开所有网络出口；</li>
+<li>给了错误的云 IAM 权限；</li>
+<li>把 Agent 生成的代码自动合并、自动发布。</li>
+</ul>
+<p>gVisor 也会带来兼容性和性能成本。系统调用路径多了一层，某些低层特性、调试方式和高性能工作负载可能不适配。因此，它特别适合这类中间地带：需要容器生态和较快启动，又要执行来源不完全可信的代码。</p>
+<p>例如，CI 中让 Agent 拉取 issue 附件、生成补丁、运行测试；或内部平台让多名用户提交脚本，但不希望这些脚本直接贴着宿主机内核运行。Docker 的工作方式还在，安全边界却比默认容器厚了一层。</p>
+<h2 id="microvm隔离更硬代价是运维更像在管一批小机器">MicroVM：隔离更硬，代价是运维更像在管一批小机器
+</h2><p>再往前一步，就是 Firecracker 这类 MicroVM。它利用 KVM 硬件虚拟化，每个任务运行在独立的轻量虚拟机里，拥有自己的 guest kernel。与容器共享宿主机内核不同，MicroVM 把内核也放进了边界之内。</p>
+<p>这正是它适合高风险、多租户 Agent 的原因。</p>
+<p>如果平台允许不同用户的 Agent 执行任意代码，或者 Agent 需要长期运行、带浏览器桌面、读写较复杂的工作区，MicroVM 的隔离模型更接近传统 VM：一个工作负载越界，不应直接触及另一个工作负载的内核空间。Firecracker 的设计目标就是在传统虚拟机的隔离特性与容器的启动速度、资源效率之间找平衡。</p>
+<p>代价同样不能忽略：</p>
+<ul>
+<li>要维护 guest kernel、根文件系统镜像和补丁节奏；</li>
+<li>冷启动、镜像分发、日志采集、文件回收都比容器复杂；</li>
+<li>同样的硬件下，密度通常不如普通容器；</li>
+<li>网络、持久化卷、快照恢复和可观测性都需要平台层配合。</li>
+</ul>
+<p>所以 MicroVM 不是“每个 Python 脚本都必须用”的答案。它更像一把更重的锁：平台给外部用户提供执行环境、让 Agent 操作浏览器访问不可信网页、或涉及高价值凭据与内部网络时，值得付出这份复杂度。</p>
+<h2 id="opensandbox-这类平台解决的不是起容器而是生命周期">OpenSandbox 这类平台，解决的不是“起容器”而是生命周期
+</h2><p>真正让团队头疼的，常常不是创建一个隔离环境，而是创建一千个以后怎么管。</p>
+<p>一个 Agent 沙箱必须有身份、镜像、配额、网络策略、超时清理、工作区导出、日志审计、暂停恢复和密钥注入。只用 <code>docker run</code> 拼起来，最初很轻，半年后就会长成一团谁也不敢改的脚本。</p>
+<p>OpenSandbox 这类面向 Agent 的运行时平台，价值在于把这些共性装进统一生命周期：创建沙箱、执行命令、传输文件、设置超时、回收资源。其社区实现也在围绕 Kubernetes Pod 隔离、持久化工作区、暂停恢复、预热池和网络出口控制继续迭代。</p>
+<p>这里有个容易忽略的判断：<strong>“能持久化”不是天然优点。</strong></p>
+<p>Agent 每次执行后都保留环境，调试和长任务会舒服很多；但状态也可能带走上一次任务的临时凭据、恶意依赖或错误配置。安全设计应把“临时任务”和“长期工作区”区分开：</p>
+<ul>
+<li>临时任务：优先无状态、结束即销毁；</li>
+<li>需要交付文件：只导出明确的输出目录，经过扫描或人工审核；</li>
+<li>长任务：允许持久化，但要有快照、过期时间和可追溯身份；</li>
+<li>任何凭据：尽量短期化、按任务绑定、可撤销，避免写入镜像和工作区。</li>
+</ul>
+<h2 id="真正该隔离的是网络和凭据">真正该隔离的，是网络和凭据
+</h2><p>很多沙箱文章把注意力全放在“容器会不会逃逸”。对日常 Agent，发生概率更高的事故反而是权限过大。</p>
+<p>一个 Agent 不必逃逸，只要能访问内网、读取部署 Token、把文件上传到任意域名，就足以造成损失。于是网络与身份策略应比运行时类型更早设计。</p>
+<p>网络建议分三档：</p>
+<ul>
+<li><strong>完全断网</strong>：格式化、编译、静态分析、离线数据处理。默认首选。</li>
+<li><strong>域名白名单出网</strong>：只允许包仓库、模型 API、指定文档源。DNS、代理和 HTTPS 访问都需要可审计。</li>
+<li><strong>受控内网访问</strong>：通过独立服务身份、短期 Token 和固定 API，不让 Agent 直接拿到通用 VPN 或管理员网络。</li>
+</ul>
+<p>凭据也一样。把 <code>API_KEY</code> 作为环境变量塞进任务，确实方便，但它会出现在进程环境、调试输出、崩溃报告甚至模型可读取的文件中。更稳妥的方向是凭据代理或网关：Agent 只得到调用某项能力的授权，真实密钥由网络层或专门服务注入；每次请求都记录主体、目标、范围和时间。</p>
+<p>这与“让 Agent 更聪明”无关，却比换一个更大模型更能减少事故。</p>
+<h2 id="一张选型表按风险和任务不按热度">一张选型表：按风险和任务，不按热度
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>首选</th>
+					<th>关键条件</th>
+					<th>不该做什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>本地低风险自动化、公开数据处理</td>
+					<td>收紧后的 Docker</td>
+					<td>只挂输入输出目录，默认无网络，非 root</td>
+					<td>挂宿主机家目录、Docker Socket</td>
+			</tr>
+			<tr>
+					<td>CI 运行 Agent 补丁与第三方依赖</td>
+					<td>Docker + gVisor</td>
+					<td>临时工作区、有限网络、资源限制</td>
+					<td>直接给生产凭据和发布权限</td>
+			</tr>
+			<tr>
+					<td>多用户代码执行、浏览器 Agent、来源不明脚本</td>
+					<td>MicroVM 或基于它的平台</td>
+					<td>独立网络策略、镜像治理、审计和回收</td>
+					<td>把它当成无需运维的“安全开关”</td>
+			</tr>
+			<tr>
+					<td>高价值生产操作</td>
+					<td>不让 Agent 直连生产</td>
+					<td>专用 API、审批、人类确认、短期权限</td>
+					<td>给 SSH root、通用云管理员权限</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>如果只记住一句话：<strong>隔离等级要跟“最坏情况下 Agent 能造成的损失”对齐，而不是跟项目的技术潮流对齐。</strong></p>
+<h2 id="一条能落地的升级路线">一条能落地的升级路线
+</h2><p>不必为了安全一夜之间改造出 MicroVM 平台。大多数团队可以按下面顺序推进：</p>
+<ol>
+<li><strong>盘点 Agent 工具</strong>：列出 Shell、浏览器、文件、Git、数据库、消息、部署等能力。</li>
+<li><strong>默认拒绝网络与挂载</strong>：从 <code>--network none</code>、只读输入、独立输出目录开始，再按任务加白名单。</li>
+<li><strong>清理高危捷径</strong>：禁止 Docker Socket、<code>--privileged</code>、宿主机根目录挂载、长期管理员 Token。</li>
+<li><strong>给陌生代码增加 gVisor</strong>：先选 CI 或预发布环境做试点，测兼容性与性能。</li>
+<li><strong>把高风险任务迁进 MicroVM</strong>：面向多租户、浏览器自动化、任意代码执行等场景建立独立运行池。</li>
+<li><strong>把凭据从环境里拿走</strong>：改为短期、最小权限、可审计的服务身份或凭据网关。</li>
+<li><strong>保留人工闸门</strong>：沙箱能限制破坏半径，不能判断业务后果。合并代码、删除数据、发版、付款仍需要明确确认。</li>
+</ol>
+<p>AI Agent 的能力增长很快，权限往往增长得更快。真正成熟的自动化，不是让 Agent 拥有一台什么都能做的电脑，而是让它每次只拿到完成眼前任务所需的那把钥匙。</p>
+<h2 id="参考资料">参考资料
+</h2><ul>
+<li><a class="link" href="https://gvisor.dev/docs/"  target="_blank" rel="noopener"
+    >gVisor：What is gVisor?</a></li>
+<li><a class="link" href="https://gvisor.dev/docs/architecture_guide/security/"  target="_blank" rel="noopener"
+    >gVisor：Security Model</a></li>
+<li><a class="link" href="https://firecracker-microvm.github.io/"  target="_blank" rel="noopener"
+    >Firecracker 官方网站</a></li>
+<li><a class="link" href="https://github.com/firecracker-microvm/firecracker/blob/main/docs/design.md"  target="_blank" rel="noopener"
+    >Firecracker Design</a></li>
+<li><a class="link" href="https://github.com/opensandbox-group/OpenSandbox"  target="_blank" rel="noopener"
+    >OpenSandbox 项目</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">AI Agent</a>
+        
+            <a href="/tags/sandbox/">Sandbox</a>
+        
+            <a href="/tags/docker/">Docker</a>
+        
+            <a href="/tags/gvisor/">GVisor</a>
+        
+            <a href="/tags/microvm/">MicroVM</a>
+        
+            <a href="/tags/%E5%AE%89%E5%85%A8/">安全</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-jail-what-it-is/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent Jail 是什么：当智能体开始需要一座笼子</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/gitlost-github-ai-agent-private-repo-leak/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">GitLost 把 GitHub AI Agent 骗到泄露私有仓库：Agent 时代最危险的不是幻觉，是权限</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-kill-switch-human-takeover/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我造了一个关不掉的 AI Agent：自动化最危险的地方，不是它出错，而是它不听停</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-conversation-observability-greenflash/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 不是黑盒魔法：为什么下一代产品需要对话观测系统？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lm-studio-bionic-local-open-model-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/ai-agent-sandbox-docker-gvisor-microvm-selection\/'; 
+        const pageTitle = '给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="MangoDisk 是基于 Tauri 2 + Rust 的开源深度磁盘清理工具，GPL-3.0 免费，同时支持 macOS 和 Windows。深度清理 + 大文件 + 重复文件 + 应用残留 + 磁盘矩形图，一次装完顶掉一堆付费软件。">
+<title>CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS &#43; Windows 双平台）</title>
+
+<link rel='canonical' href='https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS + Windows 双平台）">
+<meta property='og:description' content="MangoDisk 是基于 Tauri 2 + Rust 的开源深度磁盘清理工具，GPL-3.0 免费，同时支持 macOS 和 Windows。深度清理 + 大文件 + 重复文件 + 应用残留 + 磁盘矩形图，一次装完顶掉一堆付费软件。">
+<meta property='og:url' content='https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='MangoDisk' /><meta property='article:tag' content='磁盘清理' /><meta property='article:tag' content='开源软件' /><meta property='article:tag' content='macOS' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='Tauri' /><meta property='article:tag' content='Rust' /><meta property='article:tag' content='CleanMyMac' /><meta property='article:published_time' content='2026-08-22T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-22T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS + Windows 双平台）">
+<meta name="twitter:description" content="MangoDisk 是基于 Tauri 2 + Rust 的开源深度磁盘清理工具，GPL-3.0 免费，同时支持 macOS 和 Windows。深度清理 + 大文件 + 重复文件 + 应用残留 + 磁盘矩形图，一次装完顶掉一堆付费软件。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么值得一试">为什么值得一试</a></li>
+    <li><a href="#它到底能干嘛">它到底能干嘛</a></li>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#规则库怎么保证不误删">规则库怎么保证不误删</a></li>
+    <li><a href="#我踩过的一个坑">我踩过的一个坑</a></li>
+    <li><a href="#局限--谁不适合">局限 &amp; 谁不适合</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/mangodisk-free-open-source-cleanmymac-alternative/">CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS &#43; Windows 双平台）</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-22T00:00:00Z'>
+                    2026-08-22，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么值得一试">为什么值得一试</a></li>
+    <li><a href="#它到底能干嘛">它到底能干嘛</a></li>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#规则库怎么保证不误删">规则库怎么保证不误删</a></li>
+    <li><a href="#我踩过的一个坑">我踩过的一个坑</a></li>
+    <li><a href="#局限--谁不适合">局限 &amp; 谁不适合</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>先讲个真实故事。</p>
+<p>我 Mac 的 512GB SSD 用了两年，前几天点开「关于本机 → 存储」，系统那一栏红彤彤地写着 187GB。我确信我没装过 187GB 的系统文件。翻遍了 <code>~/Library/Caches</code>、<code>~/Developer</code>、<code>.docker</code>、<code>.gradle</code>、Xcode DerivedData——最后累到想直接掏钱买 CleanMyMac。</p>
+<p>打开官网一看，<code>$149.95/年</code>，或者 <code>$199.95</code> 买断（还得升级付费）。199 刀，够我买两包咖啡豆用一整年了。</p>
+<p>于是我又去搜有没有免费替代。这一搜，就撞见了昨天在阮一峰 Weekly 上被作者自荐的 <strong>MangoDisk（芒果磁盘清理）</strong>——GPL-3.0 开源、macOS + Windows 双平台通吃、Tauri 2 + Rust 内核、界面颜值在线，Trendshift 上 Rust 榜进过日榜前 11。</p>
+<p>装完试了两小时，我基本可以说：<strong>这就是 CleanMyMac 的免费替代品，而且 Windows 用户第一次有了对得起颜值的选项。</strong></p>
+<blockquote>
+<p>项目地址：<a class="link" href="https://github.com/harry0703/MangoDisk"  target="_blank" rel="noopener"
+    >https://github.com/harry0703/MangoDisk</a>
+官网：<a class="link" href="https://mangodisk.app"  target="_blank" rel="noopener"
+    >https://mangodisk.app</a></p>
+</blockquote>
+<h2 id="为什么值得一试">为什么值得一试
+</h2><p>先说结论，不绕弯。MangoDisk 在这三个维度赢：</p>
+<p><strong>1. 双平台，尤其救 Windows 用户。</strong> macOS 有 CleanMyMac、DaisyDisk、OmniDiskSweeper，就算免费也有 Dusty、GrandPerspective。Windows 这边呢？CCleaner 被 Avast 收购之后各种全家桶弹窗，WinDirStat 十几年没大更新界面像 XP，BleachBit 又太糙。MangoDisk 一套 UI 同时跑 macOS 和 Windows，Windows 用户终于不用在难看和不安全之间二选一。</p>
+<p><strong>2. 免费开源 + 不用登录 + 不联网。</strong> GPL-3.0，源码在 GitHub 全公开，规则库也公开在仓库里可审计。打开就用，不注册、不弹窗、不推服务。对付费软件那种「先扫描后收钱、订阅到期就变砖」的套路免疫。</p>
+<p><strong>3. 技术栈选得聪明。</strong> Tauri 2 + Rust + Vue 3。Rust 负责扫描和文件系统操作，扫得快、内存占用低；Tauri 打包体积远小于 Electron，冷启动秒开；Vue 3 拿来堆 UI，视觉效果不输原生 App。作者宣传的对比数据是「同硬盘同目录，MangoDisk 20.6s vs 其他工具 26.5s」——不算特别夸张，但至少不慢。</p>
+<h2 id="它到底能干嘛">它到底能干嘛
+</h2><p>官方分了五个模块，我挨个说人话讲。</p>
+<p><strong>深度清理。</strong> 一次扫描系统缓存、浏览器缓存、临时文件、应用卸载残留。对开发者更狠：能识别 <code>node_modules</code>、Rust <code>target/</code>、Gradle 缓存、Xcode DerivedData、Python 虚拟环境、.NET 构建产物，以及本地跑的 Ollama、HuggingFace、<code>llama.cpp</code> 模型缓存。我 Mac 上一次性扫出 41GB 的开发垃圾——<code>node_modules</code> 占了 18GB，Xcode 12GB。</p>
+<p><strong>大文件清理。</strong> 扫全盘或指定文件夹，按类型和大小筛。这个功能其实 macOS 自带存储管理里就有，但 MangoDisk 的分类粒度和排序更顺手。</p>
+<p><strong>重复文件清理。</strong> 用内容哈希对比，不靠文件名——这个才是重点。文件名相同但内容不同的、或者内容相同但文件名不同的（比如 <code>IMG_1234.jpg</code> 和 <code>IMG_1234 副本.jpg</code> 和 <code>IMG_1234-2.jpg</code>），都能正确识别。而且智能选择会保证每一组至少留一份，不会手滑全删。</p>
+<p><strong>应用卸载 + 残留清理。</strong> 卸载应用时同步扫 <code>~/Library/Application Support</code>、<code>~/Library/Preferences</code>、<code>~/Library/Caches</code> 里的对应目录，避免 App 拖走了但配置文件、日志、缓存还在占 3-5GB 的情况。这块 Windows 上更有价值——大家都知道 Windows 的卸载有多脏。</p>
+<p><strong>磁盘空间分析（矩形图）。</strong> 就是常说的 TreeMap，用色块面积表示占用大小，颜色区分类型，能一层层钻进目录。这功能 macOS 上有 DaisyDisk（29.99 刀），Windows 上有 WinDirStat（免费但丑），MangoDisk 把它做进了同一个界面。</p>
+<h2 id="安装">安装
+</h2><p>macOS 最省事的是 Homebrew：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">brew install --cask harry0703/tap/mangodisk</span>
+</span></span></code></pre></div><p>不用 Homebrew 也行，去 GitHub Releases 或者 <a class="link" href="https://mangodisk.app"  target="_blank" rel="noopener"
+    >https://mangodisk.app</a> 下 DMG，拖到「应用程序」文件夹。</p>
+<p>Windows 更直接，Releases 下 <code>.exe</code> 安装包，双击下一步下一步。</p>
+<p>对了，还有 CLI：<code>mangodisk</code> 是桌面应用的命令行入口，从源码构建 CLI 后能跑扫描、清理、JSON 输出。适合塞进定时任务或 CI 脚本里做机器巡检，不过日常桌面用户不用管这个。</p>
+<h2 id="规则库怎么保证不误删">规则库怎么保证不误删
+</h2><p>清理工具最怕什么？误删配置、误删数据。作者在这一块的设计我看了 README，态度挺认真：</p>
+<p>MangoDisk 维护<strong>自己的</strong>跨平台清理规则库，不直接照搬第三方项目。Windows 规则会参考 Winapp2.ini（就是 CCleaner 那套开源规则集），但仅作为「研究线索」——每一条规则要进正式版本，必须做三项审查：</p>
+<ol>
+<li><strong>来源核对</strong>：路径用途和数据归属，去 Microsoft、Apple、软件厂商官方资料确认</li>
+<li><strong>边界确认</strong>：判断能不能安全重建，排除个人文件、应用私有数据、系统保护路径</li>
+<li><strong>实机验证</strong>：在真机 macOS 或 Windows 环境跑一遍，验证路径正确、清理结果和异常场景</li>
+</ol>
+<p>规则库全部在仓库里公开，修改记录可审计。执行清理前还会把内容列出来让你确认。</p>
+<p>这种「先审后做」的态度在国产开源清理工具里不多见——大部分同类项目都是把 Winapp2.ini 一把梭全塞进去，出了问题再改。安全边界这个事，我愿意为它多花一分钟等待。</p>
+<h2 id="我踩过的一个坑">我踩过的一个坑
+</h2><p>有个细节新用户容易忽略——首次扫描「深度清理」时，如果你装了本地 AI 模型（Ollama、LM Studio、ComfyUI），扫描结果里会出现「AI 模型缓存」条目，动辄十几 GB。</p>
+<p><strong>这些不是垃圾。</strong> 是你花时间和带宽拉下来的模型权重，删了下次还得重新下。MangoDisk 会把它们单独归类，默认不勾选，但如果你手贱全选删除按钮，就得从 HuggingFace 重新拉一次 <code>deepseek-r1-70b</code> 的 40GB 权重。我第一次差点手滑。</p>
+<p>好在清理执行前有二次确认，勾选项一列一列写清楚。养成「看一眼再点确认」的习惯即可。</p>
+<h2 id="局限--谁不适合">局限 &amp; 谁不适合
+</h2><p>诚实一点，说说它的短板：</p>
+<ul>
+<li><strong>移动设备不管。</strong> 只清桌面机磁盘，iOS/Android 数据线里那些相机胶卷、微信缓存管不了。</li>
+<li><strong>不做实时监控。</strong> 不像有些付费软件常驻后台随时清。MangoDisk 是主动扫描型，你得自己想起来点一下。</li>
+<li><strong>规则库还在成长。</strong> 371 star（截至 08-22）算是新项目，某些冷门国产软件的残留路径可能识别不到。遇到没扫到的，欢迎去 GitHub 提 issue。</li>
+<li><strong>中国大陆下载可能慢。</strong> GitHub Releases 走的是海外 CDN，网差的话建议开代理或者去官网找镜像。</li>
+</ul>
+<p>如果你是「电脑硬盘永远 90% 满、但不想学命令行、又不想花钱买软件」的那类用户——MangoDisk 就是给你写的。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/roguecleaner-windows-uninstall-residue-cleaner/"  target="_blank" rel="noopener"
+    >RogueCleaner：Windows 卸载残留清理工具</a></li>
+<li><a class="link" href="https://softon.top/software/windows-clipboard-image-bloat-slimpaste/"  target="_blank" rel="noopener"
+    >Windows 剪贴板图片膨胀，SlimPaste 帮你压回原尺寸</a></li>
+<li><a class="link" href="https://softon.top/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/"  target="_blank" rel="noopener"
+    >Windows 11 C 盘凭空少 500GB？追踪 KB5095093 更新的锅</a></li>
+<li><a class="link" href="https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/"  target="_blank" rel="noopener"
+    >Windows 软件假官网横行，识别与安全下载指南</a></li>
+</ul>
+<hr>
+<p>199 刀不是买不起，是不服气。当有人愿意在 GitHub 上把这套东西免费白送给你，还写了 Rust 保证扫得快、写了规则审查保证不误删——你该做的就是给它点个 star，装上，然后把那个每年提醒你续费的付费软件卸掉。</p>
+<p><strong>开源社区的意义之一：让付费软件的价格，回归到它们应该有的样子。</strong></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/mangodisk/">MangoDisk</a>
+        
+            <a href="/tags/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/">磁盘清理</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/">开源软件</a>
+        
+            <a href="/tags/macos/">MacOS</a>
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/tauri/">Tauri</a>
+        
+            <a href="/tags/rust/">Rust</a>
+        
+            <a href="/tags/cleanmymac/">CleanMyMac</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/motrix-2-0-beta-3-year-return-ai-agent-cli/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/roguecleaner-windows-uninstall-residue-cleaner/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国产流氓软件卸完还阴魂不散？这个 3MB 开源工具专挖 6 个藏身处（含一键回滚）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/windows-clipboard-image-bloat-slimpaste/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/windows-software-fake-sites-download-safety-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PowerToys 都有假官网了：Windows 装软件别再只靠搜索</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/winpodx-linux-run-windows-apps-container-freerdp-analysis/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 不装完整 Windows，能不能直接开 Excel？WinPodX 的答案没那么轻松</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/mangodisk-free-open-source-cleanmymac-alternative\/'; 
+        const pageTitle = 'CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS \u002b Windows 双平台）';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

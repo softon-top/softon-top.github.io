@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Firecrawl on softon.top</title>
+		<link>https://softon.top/tags/firecrawl/</link>
+		<description>Recent content in Firecrawl on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 06 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/firecrawl/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>2026 爬虫工具选型横评：Firecrawl、Crawl4AI、Scrapling、Scrapy、Crawlee 怎么选？</title>
+				<link>https://softon.top/software/2026-web-scraping-tools-comparison-ai-agent/</link>
+				<pubDate>Mon, 06 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/2026-web-scraping-tools-comparison-ai-agent/</guid>
+				<description>&lt;p&gt;2026 年再选爬虫工具，已经不能只看“能不能抓到网页”。&lt;/p&gt;&#xA;&lt;p&gt;如果你正在纠结 Firecrawl、Crawl4AI、Scrapling、Scrapy、Crawlee、Playwright、Selenium 这些主流爬虫工具到底怎么选，核心问题其实不是“哪个最强”，而是：&lt;strong&gt;你的爬虫最终要服务数据工程，还是服务 AI Agent / RAG / LLM 应用？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;过去，爬虫听起来很朴素。&lt;/p&gt;&#xA;&lt;p&gt;写个 &lt;code&gt;requests&lt;/code&gt;，套个 &lt;code&gt;BeautifulSoup&lt;/code&gt;，找到 CSS selector，把标题、价格、正文抠出来。像拿着小刀削苹果，动作不优雅，但够用。&lt;/p&gt;&#xA;&lt;p&gt;可到了 2026 年，这件事突然变复杂了。&lt;/p&gt;&#xA;&lt;p&gt;不是因为网页更难抓了——它一直难抓。真正变化的是：&lt;strong&gt;爬虫不再只是给数据库喂数据，它开始给 AI Agent、RAG、知识库和自动化工作流喂上下文。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这导致工具选择逻辑彻底变了。&lt;/p&gt;&#xA;&lt;p&gt;过去我们问：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;能不能抓到 HTML？速度快不快？能不能跑大规模？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;现在还要问：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;能不能直接输出干净 Markdown？能不能给 LLM 少喂垃圾 token？能不能处理 JS-heavy 页面？能不能 self-host？能不能接 MCP？页面改版后会不会立刻暴毙？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;我用 Tavily 搜了一轮 2026 年最新资料，又补查了 GitHub、PyPI 和几个项目 README。结论很有意思：爬虫生态已经明显分成了两派。&lt;/p&gt;&#xA;&lt;p&gt;一派是老世界的“工程爬虫”：Scrapy、Crawlee、Playwright、Selenium。它们解决的是&lt;strong&gt;抓取、调度、浏览器自动化、工程稳定性&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;另一派是新世界的“AI 爬虫”：Firecrawl、Crawl4AI、Scrapling、ScrapeGraphAI。它们解决的是&lt;strong&gt;网页到 Markdown / JSON / Agent context 的转换&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这两派不是谁取代谁，而是服务不同战场。选错工具，就像拿铲车进厨房切菜：不是不能动，是代价离谱。&lt;/p&gt;&#xA;&lt;p&gt;这篇横评会围绕几个真实问题展开：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2026 年主流爬虫工具有哪些？&lt;/li&gt;&#xA;&lt;li&gt;Firecrawl 和 Crawl4AI 有什么区别？&lt;/li&gt;&#xA;&lt;li&gt;Scrapling 这种自适应爬虫适合什么场景？&lt;/li&gt;&#xA;&lt;li&gt;Scrapy、Crawlee、Playwright 这些老牌/工程化工具还值不值得用？&lt;/li&gt;&#xA;&lt;li&gt;如果目标是 AI Agent、RAG 或 LLM 知识库，应该选 API 服务还是本地开源工具？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;先给结论2026-年爬虫工具怎么选&#34;&gt;先给结论：2026 年爬虫工具怎么选&#xA;&lt;/h2&gt;&lt;p&gt;如果只想要最短答案，我会这样选：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

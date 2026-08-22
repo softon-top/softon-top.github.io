@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>架构拆解 on softon.top</title>
+		<link>https://softon.top/tags/%E6%9E%B6%E6%9E%84%E6%8B%86%E8%A7%A3/</link>
+		<description>Recent content in 架构拆解 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 03 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%9E%B6%E6%9E%84%E6%8B%86%E8%A7%A3/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI编码Agent大爆发后，ECC凭什么204K星？四层架构拆解</title>
+				<link>https://softon.top/software/ecc-architecture-explained-204k-stars/</link>
+				<pubDate>Wed, 03 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ecc-architecture-explained-204k-stars/</guid>
+				<description>&lt;p&gt;GitHub Trending 榜单上，affaan-m/ECC 今日以 1,533⭐ 的单日增长跃升至第二名，累计 Star 已突破 204K。这个看似只是「Claude Code 插件集合」的项目，为何能在 AI Coding Agent 爆发的浪潮中脱颖而出？本文从架构角度拆解 ECC 的四层设计，揭示其如何成为跨平台 AI Agent 配置的事实标准。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一痛点ai-coding-agent-配置的混乱局面&#34;&gt;一、痛点：AI Coding Agent 配置的混乱局面&#xA;&lt;/h2&gt;&lt;p&gt;2026 年上半年，Claude Code、Cursor、Codex、OpenCode 等 AI Coding Agent 如雨后春笋般涌现。然而每个工具都有自己的一套配置格式：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Claude Code：&lt;code&gt;settings.json&lt;/code&gt; + &lt;code&gt;.claude/&lt;/code&gt; 目录&lt;/li&gt;&#xA;&lt;li&gt;Cursor：&lt;code&gt;hooks.json&lt;/code&gt; + &lt;code&gt;rules/&lt;/code&gt; 目录 + &lt;code&gt;.cursor/&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;Codex：&lt;code&gt;config.toml&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;OpenCode：&lt;code&gt;opencode.json&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这导致的直接后果是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;重复劳动&lt;/strong&gt;：团队在每个新项目都要重新配置相同的 TDD 工作流、安全检查、代码审查 Agent&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;工具绑定&lt;/strong&gt;：配置无法迁移，切换工具意味着从零开始&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;版本漂移&lt;/strong&gt;：即使同一工具，不同成员的配置也可能不一致&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;知识孤岛&lt;/strong&gt;：优秀的配置方案难以沉淀和共享&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;ECC 的核心命题就是：用一个版本控制的仓库，解决所有 AI Coding Agent 的配置标准化问题。&lt;/p&gt;&#xA;&lt;h2 id=&#34;二四层架构从底层到表层的渐进抽象&#34;&gt;二、四层架构：从底层到表层的渐进抽象&#xA;&lt;/h2&gt;&lt;p&gt;ECC 并不是简单地把各种配置文件堆在一起，而是通过四层架构逐步抽象，实现「写一次，到处运行」。&lt;/p&gt;&#xA;&lt;h3 id=&#34;第一层harness-native-operator-system核心引擎&#34;&gt;第一层：Harness-Native Operator System（核心引擎）&#xA;&lt;/h3&gt;&lt;p&gt;在 &lt;code&gt;.ecc/&lt;/code&gt; 目录（实际上是项目根目录下的特殊结构）中，ECC 定义了一套与具体工具无关的操作系统概念：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Work Items&lt;/strong&gt;：最小的工作单元，可以是功能需求、缺陷报告、技术债务等&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Operators&lt;/strong&gt;：能够处理特定类型 Work Items 的代理人，对应传统意义上的「Agent」&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Skills&lt;/strong&gt;：可复用的能力模块，如「代码审查」「安全扫描」「文档同步」&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Instincts&lt;/strong&gt;：触发规则，决定何时启动哪个 Operator 处理什么 Work Item&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Memory&lt;/strong&gt;：短期和长期记忆机制，支持跨任务上下文保持&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Harness Adapter&lt;/strong&gt;：将 ECC 的抽象概念映射到具体 AI Coding Agent 的插件系统&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这一层的关键创新是：&lt;strong&gt;把 AI Coding Agent 的行为模型化&lt;/strong&gt;。不再是写死的「当看到这个文件就运行这个命令」，而是基于工作项和操作符的反应式系统。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

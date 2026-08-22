@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="截图或复制网页图片后，为什么粘进聊天和文档反而重得离谱？问题常不在图片，而在 Windows 剪贴板交付给应用的像素数据。本文拆解膨胀原理、SlimPaste 的边界，以及哪些人值得用。">
+<title>Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装</title>
+
+<link rel='canonical' href='https://softon.top/software/windows-clipboard-image-bloat-slimpaste/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装">
+<meta property='og:description' content="截图或复制网页图片后，为什么粘进聊天和文档反而重得离谱？问题常不在图片，而在 Windows 剪贴板交付给应用的像素数据。本文拆解膨胀原理、SlimPaste 的边界，以及哪些人值得用。">
+<meta property='og:url' content='https://softon.top/software/windows-clipboard-image-bloat-slimpaste/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='剪贴板' /><meta property='article:tag' content='图片压缩' /><meta property='article:tag' content='SlimPaste' /><meta property='article:tag' content='飞书' /><meta property='article:tag' content='微信' /><meta property='article:tag' content='效率工具' /><meta property='article:published_time' content='2026-08-03T15:10:00&#43;08:00'/><meta property='article:modified_time' content='2026-08-03T15:10:00&#43;08:00'/>
+<meta name="twitter:title" content="Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装">
+<meta name="twitter:description" content="截图或复制网页图片后，为什么粘进聊天和文档反而重得离谱？问题常不在图片，而在 Windows 剪贴板交付给应用的像素数据。本文拆解膨胀原理、SlimPaste 的边界，以及哪些人值得用。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一张-80-kb-图片为什么能在剪贴板里长到-mb-级">一张 80 KB 图片，为什么能在剪贴板里长到 MB 级</a></li>
+    <li><a href="#slimpaste-做的不是自动压缩所有图片">SlimPaste 做的不是“自动压缩所有图片”</a></li>
+    <li><a href="#它解决的是协作摩擦不是磁盘焦虑">它解决的是协作摩擦，不是磁盘焦虑</a></li>
+    <li><a href="#压缩之前先判断这张图能不能压">压缩之前，先判断这张图能不能压</a></li>
+    <li><a href="#安装前要看两件事来源与权限">安装前要看两件事：来源与权限</a></li>
+    <li><a href="#值不值得装取决于你是否经常跳过另存为">值不值得装，取决于你是否经常跳过“另存为”</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/windows-clipboard-image-bloat-slimpaste/">Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-03T15:10:00&#43;08:00'>
+                    2026-08-03，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/windows-clipboard-image-bloat-slimpaste/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一张-80-kb-图片为什么能在剪贴板里长到-mb-级">一张 80 KB 图片，为什么能在剪贴板里长到 MB 级</a></li>
+    <li><a href="#slimpaste-做的不是自动压缩所有图片">SlimPaste 做的不是“自动压缩所有图片”</a></li>
+    <li><a href="#它解决的是协作摩擦不是磁盘焦虑">它解决的是协作摩擦，不是磁盘焦虑</a></li>
+    <li><a href="#压缩之前先判断这张图能不能压">压缩之前，先判断这张图能不能压</a></li>
+    <li><a href="#安装前要看两件事来源与权限">安装前要看两件事：来源与权限</a></li>
+    <li><a href="#值不值得装取决于你是否经常跳过另存为">值不值得装，取决于你是否经常跳过“另存为”</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>一张网页配图，原文件只有 80 KB。右键复制，粘进飞书、微信、WPS 或笔记里，转眼成了几 MB；连续贴几十张，聊天记录和文档像被悄悄灌了铅。</p>
+<p>这事最容易让人误会成：接收软件压缩太差，或者截图工具把图片搞坏了。</p>
+<p>真相往往藏在更早一步：<strong>图片进入 Windows 剪贴板时，文件不一定还以“原来的 JPG 或 PNG 文件”存在。它可能已被解码成一整块像素数据。</strong></p>
+<p>SlimPaste 盯上的正是这层隐形膨胀。它不是新的截图工具，也不是万能图片压缩器；它在你粘贴前，把剪贴板里的图片像素重新压成更轻的图片，再交给目标应用。这个思路很窄，但对高频贴图的人很实用。</p>
+<h2 id="一张-80-kb-图片为什么能在剪贴板里长到-mb-级">一张 80 KB 图片，为什么能在剪贴板里长到 MB 级
+</h2><p>先把“图片文件”和“图片像素”分开。</p>
+<p>JPG、PNG、WebP 是为了存储和传输而生的文件格式。它们会用压缩算法，把大量重复或人眼不敏感的信息收起来。因此一张尺寸不大、颜色变化不复杂的截图，可能只有几十 KB。</p>
+<p>但屏幕显示和图像编辑不能靠压缩包直接工作。程序需要先把它解码成每个像素的颜色值。以一张 <code>1920 × 1080</code> 图片为例，共有 207 万像素；若按每像素 4 字节存放红、绿、蓝和透明度：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">1920 × 1080 × 4</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">8,294,400 bytes</span>
+</span></span></code></pre></div><p>约 8 MB。这里不是说每次复制都会得到一个名为 <code>.bmp</code> 的 8 MB 文件，而是说剪贴板可向应用提供一份接近这个量级的原始位图数据。</p>
+<p>Windows 这样做并不荒谬。Word、PPT、Photoshop、画图等软件需要拿到可编辑的图像内容；同一份剪贴板还可能同时提供 PNG、DIB、HTML 等多种格式，供不同应用各取所需。兼容性换来了便利，也留下一个后果：<strong>接收端若直接围绕像素数据落盘，或重新编码策略不够节制，最终保存的图片就会比原图大很多。</strong></p>
+<p>所以，看到微信或文档里的图片很大，未必代表原图本来就大；看到最终文件后缀是 PNG 或 JPG，也不能反推剪贴板里没有原始位图。文件格式和内存里的像素表示，本来就是两回事。</p>
+<h2 id="slimpaste-做的不是自动压缩所有图片">SlimPaste 做的不是“自动压缩所有图片”
+</h2><p>SlimPaste 的工作方式很克制：正常 <code>Ctrl + V</code> 不动；需要轻量粘贴时，按 <code>Ctrl + Shift + V</code>。它读取剪贴板中的图片像素，使用 JPEGli 编码为高质量 JPG，把压缩后的图片以文件对象重新放回剪贴板，然后完成粘贴。</p>
+<p>这一点决定了它的价值，也决定了它的边界。</p>
+<p>它特别适合两种来源：</p>
+<ul>
+<li>截图后直接粘贴；</li>
+<li>浏览器里右键“复制图像”后直接粘贴。</li>
+</ul>
+<p>它不处理资源管理器里选中图片文件再按 <code>Ctrl + C</code> 的情况。后者复制的是文件引用或文件列表，原文件没有经历“解码成像素再交给接收端”的同一种路径；强行压缩反而可能改变你本来想保留的原图。</p>
+<p>这不是功能缺失，而是工具没有把“减小体积”和“破坏原始文件”混为一谈。一个值得信任的小工具，先说清不做什么，通常比宣称什么都能优化更重要。</p>
+<h2 id="它解决的是协作摩擦不是磁盘焦虑">它解决的是协作摩擦，不是磁盘焦虑
+</h2><p>如果你偶尔贴一张图，没必要为此常驻一个程序。真正会感到差异的人，通常在下面场景里：</p>
+<ul>
+<li>写需求、Bug 复现、操作手册，一天贴几十张截图；</li>
+<li>在飞书、微信、钉钉里反复发界面证据；</li>
+<li>用 Obsidian、Notion、WPS 维护含图笔记，后续还要同步到多台设备；</li>
+<li>经常从网页复制示意图，又不想每次都“另存为—打开压缩工具—再拖进去”。</li>
+</ul>
+<p>这里省下的不只是硬盘。大图会拖慢上传、同步、搜索和历史记录加载；团队文档里塞满未经处理的截图，过几个月往往会变成谁也不敢打开、也不敢迁移的胖文件。</p>
+<p>SlimPaste 把压缩动作塞进一个不同的快捷键，保留原本 <code>Ctrl + V</code> 的行为。这个设计很像给工作流加了一个“需要时才踩”的刹车：该保真时仍保真；只想让沟通材料轻一点时，再按压缩粘贴。</p>
+<h2 id="压缩之前先判断这张图能不能压">压缩之前，先判断这张图能不能压
+</h2><p>“肉眼无损”不等于所有图片都适合转 JPG。</p>
+<p>JPG 擅长照片、渐变、普通界面截图；但对小字号文字、细线、像素风图标、二维码、透明背景素材，可能出现边缘发糊、色块或透明通道丢失。尤其是要给开发文档、设计标注、印刷或后续编辑使用的图片，原图常比体积更重要。</p>
+<p>建议用一个很简单的判断：</p>
+<ul>
+<li><strong>聊天说明、日常记录、普通截图</strong>：优先压缩粘贴。</li>
+<li><strong>二维码、精细文字、设计稿局部、需要透明背景的素材</strong>：先看压缩结果；不对就用普通 <code>Ctrl + V</code>，或保留 PNG 原文件。</li>
+<li><strong>要长期归档、复用、二次编辑的原始素材</strong>：不要依赖剪贴板，直接保存原文件并按项目管理。</li>
+</ul>
+<p>换句话说，SlimPaste 适合给“沟通副本”减肥，不适合替代素材库。</p>
+<h2 id="安装前要看两件事来源与权限">安装前要看两件事：来源与权限
+</h2><p>SlimPaste 是开源、绿色、本地运行工具，使用 AutoHotkey 编译。它为了监听和触发全局快捷键，行为特征可能被部分杀毒软件误报。遇到提示时，不该养成“一律关杀毒”的习惯。</p>
+<p>更稳妥的做法是：</p>
+<ol>
+<li>从项目 GitHub 仓库或开发者明确指向的发布页下载，别从名称相近的下载站拿可执行文件。</li>
+<li>看源码、发布记录和 Issue；有能力就自行编译或校验发布文件。</li>
+<li>只在确认来源可信后，为该文件建立例外规则；不关闭整套防护，不给来路不明版本放行。</li>
+<li>先拿几类常用图片试一次：截图、网页图、二维码、透明 PNG。确认目标软件中画质、格式和粘贴行为都符合预期，再纳入日常工作流。</li>
+</ol>
+<p>工具越小，越容易被“反正没几 MB”降低警惕。恰好相反：剪贴板工具能接触到你频繁复制的内容，下载渠道和代码来源更该挑剔。</p>
+<h2 id="值不值得装取决于你是否经常跳过另存为">值不值得装，取决于你是否经常跳过“另存为”
+</h2><p>SlimPaste 的亮点不在算法名词，而在承认一个真实习惯：人们在聊天和写文档时就是会直接粘贴。让每个人每次都主动打开压缩器，等于默认这件事永远做不到。</p>
+<p>它把动作缩成 <code>Ctrl + Shift + V</code>，把成本留在真正需要时发生。对高频截图协作的人，这比换一个更复杂的图片管理器更贴近日常；对偶尔传图的人，系统自带方式已经足够，不必多装常驻程序。</p>
+<p>不要把它当成“Windows 图片变大”的根治术。它解决的是剪贴板到目标应用这段链路中的体积失控，不能修复已经塞进旧聊天记录和旧文档的图片，也不会替你判断每张图该不该损失透明度或细节。</p>
+<p>但如果你的飞书消息、工单和笔记里总有成堆截图，SlimPaste 值得试几天。它提醒了一件很容易被忽略的事：最占空间的东西，有时不是你下载的文件，而是你以为只是“随手粘了一下”的那张图。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/2026-free-screenshot-tools-comparison/" >2026 装机必备：5 款免费截图软件深度横评，谁是你的效率神器？</a></li>
+</ul>
+<h2 id="参考来源">参考来源
+</h2><ul>
+<li><a class="link" href="https://github.com/hiforrest/SlimPaste"  target="_blank" rel="noopener"
+    >SlimPaste 项目仓库</a></li>
+<li><a class="link" href="https://www.appinn.com/slimpaste/"  target="_blank" rel="noopener"
+    >小众软件：Windows 剪贴板复制图片后体积可能暴涨数百倍</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/%E5%89%AA%E8%B4%B4%E6%9D%BF/">剪贴板</a>
+        
+            <a href="/tags/%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/">图片压缩</a>
+        
+            <a href="/tags/slimpaste/">SlimPaste</a>
+        
+            <a href="/tags/%E9%A3%9E%E4%B9%A6/">飞书</a>
+        
+            <a href="/tags/%E5%BE%AE%E4%BF%A1/">微信</a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/windows-software-fake-sites-download-safety-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PowerToys 都有假官网了：Windows 装软件别再只靠搜索</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/chrome-tabs-tab-harbor-browser-control-room/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/winpodx-linux-run-windows-apps-container-freerdp-analysis/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 不装完整 Windows，能不能直接开 Excel？WinPodX 的答案没那么轻松</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/optimizerduck-windows-optimization-trust-revert/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">本地 AI 助手不该只是聊天框：Axiom 的多智能体流水线给 Windows 带来了什么</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/windows-clipboard-image-bloat-slimpaste\/'; 
+        const pageTitle = 'Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

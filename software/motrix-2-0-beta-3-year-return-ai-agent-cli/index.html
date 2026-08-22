@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="沉寂 3 年的开源下载工具 Motrix 突然放出 2.0.0 Turbo beta。它没有做小修小补,而是把 Electron 桌面壳、aria2 引擎、Server、CLI、插件市场全部推倒重来,还内置了给 Claude / OpenClaw 这类 AI Agent 使用的 Skill,让 AI 可以直接在终端里替你下载文件。">
+<title>装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</title>
+
+<link rel='canonical' href='https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键">
+<meta property='og:description' content="沉寂 3 年的开源下载工具 Motrix 突然放出 2.0.0 Turbo beta。它没有做小修小补,而是把 Electron 桌面壳、aria2 引擎、Server、CLI、插件市场全部推倒重来,还内置了给 Claude / OpenClaw 这类 AI Agent 使用的 Skill,让 AI 可以直接在终端里替你下载文件。">
+<meta property='og:url' content='https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Motrix' /><meta property='article:tag' content='下载工具' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='开源软件' /><meta property='article:tag' content='aria2' /><meta property='article:published_time' content='2026-08-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键">
+<meta name="twitter:description" content="沉寂 3 年的开源下载工具 Motrix 突然放出 2.0.0 Turbo beta。它没有做小修小补,而是把 Electron 桌面壳、aria2 引擎、Server、CLI、插件市场全部推倒重来,还内置了给 Claude / OpenClaw 这类 AI Agent 使用的 Skill,让 AI 可以直接在终端里替你下载文件。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#时隔-3-年不是补丁是推倒重来">时隔 3 年,不是补丁,是推倒重来</a></li>
+    <li><a href="#mdxp-是关键motrix-从软件变节点">MDXP 是关键:Motrix 从&quot;软件&quot;变&quot;节点&quot;</a></li>
+    <li><a href="#cli--agent-skillai-时代的下载器长这样">CLI + Agent Skill:AI 时代的下载器长这样</a></li>
+    <li><a href="#一个项目两条路motrix-next-vs-motrix-turbo">一个项目两条路:Motrix Next vs Motrix Turbo</a></li>
+    <li><a href="#现在能装吗">现在能装吗?</a></li>
+    <li><a href="#谁该现在关注这件事">谁该现在关注这件事</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/motrix-2-0-beta-3-year-return-ai-agent-cli/">装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-17T00:00:00Z'>
+                    2026-08-17，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#时隔-3-年不是补丁是推倒重来">时隔 3 年,不是补丁,是推倒重来</a></li>
+    <li><a href="#mdxp-是关键motrix-从软件变节点">MDXP 是关键:Motrix 从&quot;软件&quot;变&quot;节点&quot;</a></li>
+    <li><a href="#cli--agent-skillai-时代的下载器长这样">CLI + Agent Skill:AI 时代的下载器长这样</a></li>
+    <li><a href="#一个项目两条路motrix-next-vs-motrix-turbo">一个项目两条路:Motrix Next vs Motrix Turbo</a></li>
+    <li><a href="#现在能装吗">现在能装吗?</a></li>
+    <li><a href="#谁该现在关注这件事">谁该现在关注这件事</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>我第一次装 Motrix 是 2019 年。那时候我刚从 IDM 的授权码轮盘里逃出来,想找一个界面不油腻、不弹广告、又能吃磁力链接和 BT 种子的下载器。Motrix 一装上就是那种&quot;啊,这个就够了&quot;的感觉——干干净净一个仪表盘,一个添加按钮,一个速度曲线,<code>Aria2</code> 老引擎在底下稳稳跑,任务从来不掉链子。</p>
+<p>然后它就没了动静。</p>
+<p><strong>上一次 Motrix 发正式版本,是 2023 年</strong>。此后 GitHub 仓库像被按了暂停键,浏览器扩展慢慢腐烂,底层的 aria2 内核也停在了 2023 的版本号上不动。装机必备变成了装机遗物,大家都以为作者放弃了这个 5.2 万 star 的项目。</p>
+<p>社区急得直接开始了自救。有位博士研究生用 AI 把 Motrix 和 Aria2 整个啃了一遍,搞出了架构完全不同的 <a class="link" href="https://www.appinn.com/motrix-next/"  target="_blank" rel="noopener"
+    >Motrix Next</a>,用 Tauri 2 + Vue 3 + Pinia 重写外壳,底层换成了自己重构的 Aria2 Next,顺手补上了 ED2K 支持——一个开源项目沉寂到&quot;用户被逼着自己 fork 一版&quot;的地步,基本可以宣判临床死亡了。</p>
+<p><strong>结果 8 月 16 日,Motrix 作者 agalwood 突然放出了 2.0.0 Turbo beta。</strong></p>
+<h2 id="时隔-3-年不是补丁是推倒重来">时隔 3 年,不是补丁,是推倒重来
+</h2><p>拿到这个消息我第一反应不是&quot;有什么新功能&quot;,是&quot;能更新就是最大的功能&quot;。</p>
+<p>但打开 <a class="link" href="https://github.com/agalwood/Motrix/releases"  target="_blank" rel="noopener"
+    >release notes</a> 看完,我发现这不是那种憋了很久终于挤出来的小版本。<strong>v2.0.0 Turbo 是把 Motrix 从头到脚重构了一遍。</strong></p>
+<p>老的 1.x 是一个纯客户端下载器:一个 Electron 打包的桌面 UI,底下塞一个 aria2 二进制,通过 JSON-RPC 通信,能跨平台但架构相当&quot;直男&quot;。</p>
+<p>Turbo 版本的形态完全变了:</p>
+<ul>
+<li><strong>全新的桌面应用</strong>,支持可自定义仪表盘、深色模式,主要面向本地下载场景</li>
+<li><strong>统一的下载核心</strong>,桌面端和 Server 共享同一套下载引擎,支持 HTTP、FTP、BitTorrent、磁力链接、任务恢复、Tracker 更新、UPnP/NAT-PMP</li>
+<li><strong>独立的 Server 端</strong>,提供官方 Docker 镜像,可以直接扔到 NAS 或者小服务器上做常驻下载机</li>
+<li><strong>跨设备控制协议 MDXP</strong>,让 CLI、浏览器插件、桌面端可以互相通信,支持局域网自动发现和跨网络 device-code 配对</li>
+<li><strong>插件市场</strong>,把功能扩展从&quot;改代码 fork 一份&quot;变成&quot;装个插件&quot;</li>
+<li><strong>命令行工具 <code>@motrix/cli</code></strong></li>
+</ul>
+<p>看到这份清单我有点恍惚。Motrix 团队没有做一个&quot;更好的下载器&quot;,他们做了一个**&ldquo;下载器基础设施&rdquo;**——你可以在 NAS 上跑一个下载中心,在电脑上开桌面客户端,在浏览器点一下就把任务丢给远程的 Server,在终端里用命令行遥控整个系统,甚至让 AI 帮你按这些按钮。</p>
+<h2 id="mdxp-是关键motrix-从软件变节点">MDXP 是关键:Motrix 从&quot;软件&quot;变&quot;节点&quot;
+</h2><p>那份 release notes 里最不起眼、也最关键的一个词,叫 <strong>MDXP</strong>——Motrix Device eXchange Protocol,Motrix 自己搞的一套设备互联协议。</p>
+<p>以前你想让 Motrix 帮你下东西,只有一种姿势:打开桌面端,复制链接,粘贴,点确认。桌面端就是唯一的入口,别的什么都进不去。</p>
+<p>MDXP 直接把这条路拆了。现在 Motrix 变成了一个&quot;节点&quot;:</p>
+<ul>
+<li>家里 NAS 上跑一个 Motrix Server,永远开机,永远在下载</li>
+<li>办公室电脑打开桌面客户端,MDXP 会自动发现 NAS 上的 Server,配对之后就能远程管理它的任务队列</li>
+<li>手机浏览器里看到一个磁力链接,通过浏览器扩展直接把任务丢给远程 Server</li>
+<li>出门在外网也能通过 device-code 配对连回 NAS</li>
+</ul>
+<p>这套设计在 SSH / VPN 玩家眼里可能觉得&quot;不就是远程 API 嘛&quot;,但<strong>对普通用户,这解决的是一个非常真实的痛点</strong>:大文件下载和你人在哪儿这件事,应该解耦。以前想让下载器在 NAS 上跑,你得研究 aria2、qBittorrent、Transmission 各家远程配置,搞 basic auth、开端口、配反代,劝退。Motrix Turbo 相当于把这一堆手工活变成了&quot;打开 App 点连接&quot;。</p>
+<p><strong>这也是 Motrix 从桌面下载器,进化成&quot;个人下载云&quot;的转折点。</strong></p>
+<h2 id="cli--agent-skillai-时代的下载器长这样">CLI + Agent Skill:AI 时代的下载器长这样
+</h2><p>如果 MDXP 是给人用的遥控器,那 CLI 就是给 AI 用的。</p>
+<p>Turbo 版本里我最感兴趣的组件,是这个新出的 <code>@motrix/cli</code>。装法一句话:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">npm install -g @motrix/cli@latest</span>
+</span></span></code></pre></div><p>装完之后你有了一套完整的命令行工具:</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>命令</th>
+					<th>用途</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>motrix list [--status] [--limit] [--offset]</code></td>
+					<td>列出下载任务</td>
+			</tr>
+			<tr>
+					<td><code>motrix stats</code></td>
+					<td>聚合速度与任务计数</td>
+			</tr>
+			<tr>
+					<td><code>motrix open [--timeout]</code></td>
+					<td>启动本地桌面 app 并等待其 bridge 就绪</td>
+			</tr>
+			<tr>
+					<td><code>motrix add &lt;url&gt; --save-dir &lt;dir&gt; [--filename] [--header &quot;K: V&quot;] [--connections] [--proxy]</code></td>
+					<td>添加 HTTP(S) / FTP 下载</td>
+			</tr>
+			<tr>
+					<td><code>motrix add --magnet &lt;link&gt; --save-dir &lt;dir&gt; [--select 0,2]</code></td>
+					<td>添加 magnet 链接</td>
+			</tr>
+			<tr>
+					<td><code>motrix add --torrent &lt;file&gt; --save-dir &lt;dir&gt;</code></td>
+					<td>添加 <code>.torrent</code> 文件</td>
+			</tr>
+			<tr>
+					<td><code>motrix pause &lt;id&gt;</code></td>
+					<td>暂停任务</td>
+			</tr>
+			<tr>
+					<td><code>motrix resume &lt;id&gt;</code></td>
+					<td>恢复任务</td>
+			</tr>
+			<tr>
+					<td><code>motrix remove &lt;id&gt; [--delete-files]</code></td>
+					<td>移除任务</td>
+			</tr>
+			<tr>
+					<td><code>motrix watch [--task] [--stats]</code></td>
+					<td>以 NDJSON 流式输出进度</td>
+			</tr>
+			<tr>
+					<td><code>motrix pair [--name]</code></td>
+					<td>通过 device code 与 bridge 配对</td>
+			</tr>
+			<tr>
+					<td><code>motrix describe</code></td>
+					<td>打印 MDXP 工具目录</td>
+			</tr>
+			<tr>
+					<td>`motrix skill path</td>
+					<td>install [dir]`</td>
+			</tr>
+			<tr>
+					<td><code>motrix self-update [target] [--dry-run]</code></td>
+					<td>通过安装它的包管理器更新 CLI 自身</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>命令表看着朴素,但注意最后一列几行——<code>motrix skill install</code>、<code>motrix describe</code>、<code>motrix watch</code>——这几个是给 AI Agent 准备的。</p>
+<p>关键那一行是 <code>motrix skill install [dir]</code>。它做的事情非常简单:把 Motrix 内置的一份 <strong><code>SKILL.md</code></strong> 复制到目标目录,默认是 <code>~/.claude/skills/</code>。这份 SKILL.md 就是 Claude Code / OpenClaw 这类 Agent 框架里的 Skill 描述文件,告诉 AI &ldquo;你现在有一个叫 Motrix 的下载工具,以下是它的命令和用法&rdquo;。</p>
+<p>装完之后,你对着 Claude Code 或者 OpenClaw 说:</p>
+<ul>
+<li>&ldquo;帮我下载这个链接到 <code>~/Downloads/movies/</code>&rdquo;</li>
+<li>&ldquo;把当前所有活跃任务停一下&rdquo;</li>
+<li>&ldquo;看看家里 NAS 上下载得怎么样了&rdquo;</li>
+<li>&ldquo;刚才那个种子选前 3 个文件下载就行,其他跳过&rdquo;</li>
+</ul>
+<p>AI 会调用 <code>motrix add</code>、<code>motrix pause</code>、<code>motrix list</code>、<code>motrix pair</code> 等命令,自己拼参数、自己解析 NDJSON 输出、自己汇报进度。你从一个&quot;复制粘贴链接的操作工&quot;,变成了一个&quot;跟 AI 讲需求的甲方&quot;。</p>
+<p>**这是我第一次看到一个下载工具官方主动为 AI Agent 铺路。**iPlay、Aria2Fast、qBittorrent 都是 UI 优先思路,人操作 UI,UI 操作引擎。Motrix Turbo 把这条链路反过来:先做 CLI 和协议,再做 UI,让 AI 和人变成&quot;平权&quot;的两种客户端。这个 mental model 的调整,比 UI 上任何一处像素变化都重要。</p>
+<h2 id="一个项目两条路motrix-next-vs-motrix-turbo">一个项目两条路:Motrix Next vs Motrix Turbo
+</h2><p>聊完官方版,回头看社区的 Motrix Next,现在有点微妙。</p>
+<p>Motrix Next 走的是<strong>极简 + 现代化 UI 路线</strong>:Tauri 2 让安装包从 200M 缩到 20M 出头,内存占用相比 Electron 版本掉了一半以上,UI 做了 Material Design 3 的动效精修,ED2K 也补上了,浏览器扩展体验被大改。它面向的是&quot;我只需要一个漂亮、轻量、本地的下载器,越简单越好&quot;的用户。</p>
+<p>Motrix Turbo 走的是<strong>平台化 + AI Agent 路线</strong>:桌面壳依然是 Electron(相对更重),但配套了 Server、Docker、CLI、插件市场、跨设备协议,是一整套的下载中台。它面向的是&quot;我有 NAS,我有 AI 工作流,我要下载能力可编排&quot;的用户。</p>
+<p>两条路其实并不冲突。**Next 是一个更好的 Motrix,Turbo 是 Motrix 之外的一整个生态。**如果你只是想找个界面漂亮的下载器塞进 Windows,Next 更合适;如果你已经在跑 Home Assistant、Jellyfin、AI Agent 那种自建服务,Turbo 才是你要等的东西。</p>
+<p>从项目治理角度看,官方回归这件事本身价值巨大。Motrix Next 再好也是社区自救,长期维护有不确定性;官方一旦重新活过来,底下的 aria2 引擎(现在已经升到 <code>1.37.0-motrix.4</code>)、下载协议扩展、跨平台打包这些&quot;苦力活&quot;才有稳定的接盘人。</p>
+<h2 id="现在能装吗">现在能装吗?
+</h2><p>冷静的答案是:<strong>能装,但别把它当唯一的下载器用。</strong></p>
+<p>从 <a class="link" href="https://github.com/agalwood/Motrix/blob/main/docs/release-notes/2.0.0-beta.18.md"  target="_blank" rel="noopener"
+    >beta.18 的 release notes</a> 抠几个警告出来,官方自己说得很直白:</p>
+<ul>
+<li>这是预发布软件,安装前请备份现有 Motrix 应用数据和已下载文件</li>
+<li><strong>从 Motrix v1 数据迁移的路径尚未验证</strong>,不要拿你唯一一份 v1 数据来跑 beta</li>
+<li>建议在单独的操作系统账户、单独的机器,或者单独的 Docker 数据目录下并行测试</li>
+<li>Windows 安装包<strong>未签名</strong>,会触发 SmartScreen 警告,只从 GitHub 官方 prerelease 下载</li>
+<li>AppImage 和 Snap 在这个 beta 阶段不发布</li>
+<li>Windows arm64 和所有 32 位平台不提供</li>
+</ul>
+<p>我自己的建议方案是这样:</p>
+<ol>
+<li>现有 Motrix 1.x 别动。把它整个安装目录复制一份到备份盘,包括 <code>%APPDATA%/Motrix</code>(Windows)或 <code>~/Library/Application Support/Motrix</code>(macOS)。</li>
+<li>Turbo 装到不同用户 / 单独 macOS profile / 或者干脆用 Docker 镜像 <code>docker.io/motrixapp/motrix-server:2.0.0-beta.18</code> 起一个 Server 玩玩。</li>
+<li>CLI 直接装,不影响本地 Motrix 1.x。CLI 内置的 SKILL.md 装到 <code>~/.claude/skills/</code> 也是纯只读文件,可以随时删掉。</li>
+<li><strong>重要文件的下载任务不要放 Turbo 跑</strong>,断电、断网、崩溃这些边界情况在 beta 里都还没被验证透。</li>
+</ol>
+<h2 id="谁该现在关注这件事">谁该现在关注这件事
+</h2><ul>
+<li><strong>NAS 玩家</strong>:Server + Docker 镜像基本是量身定做,你终于有个能跑在 NAS 上、支持 HTTP/FTP/BT/磁力全协议、有官方长期维护、UI 又不是从 2005 年穿越回来的选择。</li>
+<li><strong>AI Agent 玩家</strong>:Claude Code、OpenClaw、Cline 这类客户端的用户可以直接把 Motrix 挂到工作流里,不用自己写 wrapper 脚本。</li>
+<li><strong>开发者</strong>:MDXP 协议、插件 SDK、CLI 三样都是可以拿来做集成的入口,官方还在补开发文档,现在切入门槛低。</li>
+<li><strong>只想找个下载器的普通用户</strong>:等正式版,或者先用 Motrix Next。beta 折腾成本对纯下载场景没有意义。</li>
+</ul>
+<p>Motrix 这次沉寂 3 年再回归,选择的方向本身值得一说——<strong>没有去追&quot;更快&quot;、&ldquo;更多协议&quot;这些老下载器的 KPI,而是承认&quot;下载&quot;这件事已经从桌面软件的一个功能,变成了 AI 工作流里的一个能力</strong>。CLI 优先、Server 独立、协议开放、Skill 内置,这四条组合起来看,你会发现它已经不是 2019 年那个只想做&quot;漂亮版 aria2&quot;的项目了。</p>
+<p>装机必备失踪 3 年,回来发现现在装机的都不是人了,是 Agent。这大概就是 2026 年了。</p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/localsend-1-18-0-cli-file-transfer-cross-platform/" >LocalSend 1.18.0 发布:沉寂 18 个月后官方补上 CLI 版本,跨平台文件传输迎来命令行时代</a></li>
+<li><a class="link" href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/" >DeepSeek Harness vs OpenClaw:两个&quot;类 Claude Code&quot;的 agent 框架到底该选哪个</a></li>
+<li><a class="link" href="/software/windows%e4%b8%8baria2-ariang%e5%ae%89%e8%a3%85%e9%85%8d%e7%bd%ae%e6%95%99%e7%a8%8b-%e6%89%93%e9%80%a0%e9%ab%98%e6%95%88%e5%85%a8%e8%83%bd%e4%b8%8b%e8%bd%bd%e7%a5%9e%e5%99%a8/" >Windows 下 Aria2 + AriaNg 安装配置教程,打造高效全能下载神器</a></li>
+<li><a class="link" href="/software/%e5%91%8a%e5%88%abidm%e6%94%b6%e8%b4%b9%e4%b8%8e%e7%a0%b4%e8%a7%a3%e7%83%a6%e6%81%bcneat-download-manager%e6%89%8d%e6%98%af%e7%9c%9f%e6%ad%a3%e7%9a%84%e4%b8%8b%e8%bd%bd%e7%a5%9e%e5%99%a8/" >告别 IDM 收费与破解烦恼,Neat Download Manager 才是真正的下载神器</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/motrix/">Motrix</a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/">下载工具</a>
+        
+            <a href="/tags/ai-agent/">AI Agent</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/">开源软件</a>
+        
+            <a href="/tags/aria2/">Aria2</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DeepSeek 甩出开源 Agent 框架 Harness，和我用了半年的 OpenClaw 有什么不一样？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightcrawler-mobile-ai-pentest-agent-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-workflow-cost-ledger-finops/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 也要记账：别盯着 Token 单价，先算清一件事到底花了多少钱</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-kill-switch-human-takeover/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">我造了一个关不掉的 AI Agent：自动化最危险的地方，不是它出错，而是它不听停</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/motrix-2-0-beta-3-year-return-ai-agent-cli\/'; 
+        const pageTitle = '装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

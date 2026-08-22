@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>成本分析 on softon.top</title>
+		<link>https://softon.top/tags/%E6%88%90%E6%9C%AC%E5%88%86%E6%9E%90/</link>
+		<description>Recent content in 成本分析 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 12 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%88%90%E6%9C%AC%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我用 Ollama 一个月只花 47 元，跑通 3 个大模型写代码，附成本清单</title>
+				<link>https://softon.top/software/ollama-coding-cost-47-yuan/</link>
+				<pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ollama-coding-cost-47-yuan/</guid>
+				<description>&lt;p&gt;你有没有遇到过这种情况——明明想用 AI 提升编程效率，却被 Copilot 的 10 美元/月、Cursor Pro 的 20 美元/月或 API 调用费用吓退？程序员的工具订阅正在悄然蚕食工资，而其实，有一种更安静、更私密、成本却低到惊人的方案：用 Ollama 在本地跑大语言模型，当你的专属 AI 编程助手。&lt;/p&gt;&#xA;&lt;p&gt;我最近做了一个月的实验：&lt;strong&gt;关闭所有付费 AI 服务，只用一台装有中旧显卡的电脑 + Ollama，跑通了 3 个不同的代码大模型，整月的电费和硬件折旧总计仅 47 元人民币&lt;/strong&gt;。下面我把硬件选型、功耗测量、模型选择与成本分解全程拆解给你看，看看你也能不能省下这笔“智商税”。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么要折腾本地部署&#34;&gt;为什么要折腾本地部署？&#xA;&lt;/h2&gt;&lt;p&gt;别误会，我不是反对付费工具。GitHub Copilot 确实强，Cursor 的 Tab 提示也香，但问题是：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;持续费用&lt;/strong&gt;：Copliot 个人版 10 美元/月，Cursor Pro 20 美元/月，算上汇率快 200 元人民币/月。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;隐私顾虑&lt;/strong&gt;：你的代码片段会被发送到服务器训练模型（即使他们说不存储，传输过程也总让人不安）。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络依赖&lt;/strong&gt;：公司网络不佳或需要离线时，这些工具就变成了摆设。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;增长的焦虑&lt;/strong&gt;：今天是 10 美元，明天可能涨到 15，后天捆绑更贵的企业套餐。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;相比之下，&lt;strong&gt;本地大模型的边际成本近乎为零&lt;/strong&gt;——你已经买好了显卡和电脑，多跑几小时模型，主要多消耗的只是电费。如果你恰好有一张闲置的中端游戏卡或工作站卡，把它变成 AI 编程助手，比订阅任何 SaaS 都更努力。&lt;/p&gt;&#xA;&lt;h2 id=&#34;我的硬件不需要顶级配置&#34;&gt;我的硬件：不需要顶级配置&#xA;&lt;/h2&gt;&lt;p&gt;我用的不是 4090 这样的旗舰卡，而是一张二手 RTX 2060 12GB（大约 800 元人民币入手），搭配：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;CPU：AMD Ryzen 5 5600X&lt;/li&gt;&#xA;&lt;li&gt;主板：B550&lt;/li&gt;&#xA;&lt;li&gt;内存：16GB DDR4 3200MHz&lt;/li&gt;&#xA;&lt;li&gt;系统盘：500GB NVMe SSD&lt;/li&gt;&#xA;&lt;li&gt;电源：550W 80+ 金牌&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这套配置在二手市场约 1500 元左右，但核心是显卡。RTX 2060 12GB 的显存足以运行 7B~13B 参数的模型（4-bit 量化），而对于代码生成，这类模型已经足够实用。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

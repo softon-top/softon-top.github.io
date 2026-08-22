@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="拆 jamesob 的 local-llm 仓库：$2k 双 3090 跑 Qwen3.6-27B、$40k 四卡 RTX PRO 6000 跑 GLM-5.2-594B，为什么真花的是 $55k、BIOS 藏了哪些静默降速坑、以及三年下来它到底比 Claude Opus API 便宜没有。">
+<title>本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</title>
+
+<link rel='canonical' href='https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶">
+<meta property='og:description' content="拆 jamesob 的 local-llm 仓库：$2k 双 3090 跑 Qwen3.6-27B、$40k 四卡 RTX PRO 6000 跑 GLM-5.2-594B，为什么真花的是 $55k、BIOS 藏了哪些静默降速坑、以及三年下来它到底比 Claude Opus API 便宜没有。">
+<meta property='og:url' content='https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='本地大模型' /><meta property='article:tag' content='LLM 硬件' /><meta property='article:tag' content='RTX 6000 Pro' /><meta property='article:tag' content='PCIe 交换机' /><meta property='article:tag' content='自建 AI' /><meta property='article:published_time' content='2026-08-20T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-20T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶">
+<meta name="twitter:description" content="拆 jamesob 的 local-llm 仓库：$2k 双 3090 跑 Qwen3.6-27B、$40k 四卡 RTX PRO 6000 跑 GLM-5.2-594B，为什么真花的是 $55k、BIOS 藏了哪些静默降速坑、以及三年下来它到底比 Claude Opus API 便宜没有。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一份被-18k-颗-star-抬上桌的账本">一份被 1.8k 颗 Star 抬上桌的账本</a></li>
+    <li><a href="#2k-入门档48gb-vram-够干什么">$2k 入门档：48GB VRAM 够干什么</a></li>
+    <li><a href="#20k-中间档作者留白的理由">$20k 中间档：作者留白的理由</a></li>
+    <li><a href="#40k-发烧档先把账算清楚">$40k 发烧档：先把账算清楚</a></li>
+    <li><a href="#你以为买硬件就完了三个静默降速坑">你以为买硬件就完了？三个静默降速坑</a>
+      <ul>
+        <li><a href="#坑-1bios-里的-pcie-分叉与链路降速">坑 1：BIOS 里的 PCIe 分叉与链路降速</a></li>
+        <li><a href="#坑-2内核参数里的-iommu-陷阱">坑 2：内核参数里的 IOMMU 陷阱</a></li>
+        <li><a href="#坑-3acs-不关1330-的-pcie-交换机白买">坑 3：ACS 不关，$1330 的 PCIe 交换机白买</a></li>
+      </ul>
+    </li>
+    <li><a href="#三年-tco-实算本地-vs-claude-opus-api">三年 TCO 实算：本地 vs Claude Opus API</a>
+      <ul>
+        <li><a href="#本地档账单">本地档账单</a></li>
+        <li><a href="#云-api-对比">云 API 对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#2k-档才是绝大多数人的入口">$2k 档才是绝大多数人的入口</a></li>
+    <li><a href="#结尾你到底该走哪条路">结尾：你到底该走哪条路</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/local-llm-hardware-tier-2k-40k-real-cost/">本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-20T00:00:00Z'>
+                    2026-08-20，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一份被-18k-颗-star-抬上桌的账本">一份被 1.8k 颗 Star 抬上桌的账本</a></li>
+    <li><a href="#2k-入门档48gb-vram-够干什么">$2k 入门档：48GB VRAM 够干什么</a></li>
+    <li><a href="#20k-中间档作者留白的理由">$20k 中间档：作者留白的理由</a></li>
+    <li><a href="#40k-发烧档先把账算清楚">$40k 发烧档：先把账算清楚</a></li>
+    <li><a href="#你以为买硬件就完了三个静默降速坑">你以为买硬件就完了？三个静默降速坑</a>
+      <ul>
+        <li><a href="#坑-1bios-里的-pcie-分叉与链路降速">坑 1：BIOS 里的 PCIe 分叉与链路降速</a></li>
+        <li><a href="#坑-2内核参数里的-iommu-陷阱">坑 2：内核参数里的 IOMMU 陷阱</a></li>
+        <li><a href="#坑-3acs-不关1330-的-pcie-交换机白买">坑 3：ACS 不关，$1330 的 PCIe 交换机白买</a></li>
+      </ul>
+    </li>
+    <li><a href="#三年-tco-实算本地-vs-claude-opus-api">三年 TCO 实算：本地 vs Claude Opus API</a>
+      <ul>
+        <li><a href="#本地档账单">本地档账单</a></li>
+        <li><a href="#云-api-对比">云 API 对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#2k-档才是绝大多数人的入口">$2k 档才是绝大多数人的入口</a></li>
+    <li><a href="#结尾你到底该走哪条路">结尾：你到底该走哪条路</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <blockquote>
+<p>你以为花 $40k 就能在自家客厅跑一台&quot;几乎等于 Claude Opus&quot;的机器？
+jamesob 用 21 次 commit 告诉你：这数字得先加个 15k 才够诚实。</p>
+</blockquote>
+<h2 id="一份被-18k-颗-star-抬上桌的账本">一份被 1.8k 颗 Star 抬上桌的账本
+</h2><p>前几天在 HN 头条上刷到一个仓库：<a class="link" href="https://github.com/jamesob/local-llm"  target="_blank" rel="noopener"
+    >jamesob/local-llm</a>。作者一句 AI 都没让写（他在 README 里特意标了），把自家 4 张 RTX PRO 6000 的开销、BIOS 配置、PCIe 交换机接线一股脑贴出来。Star 数一天涨到 1.8k，HelloGitHub 第 124 期把它列为唯一推荐。</p>
+<p>这类&quot;本地跑大模型&quot;的教程网上一抓一大把，为什么 jamesob 这份能出圈？</p>
+<p>因为它不是那种&quot;用 Ollama 一键装 Llama 3&quot;的糊弄文章。它做的是一件更贵、也更少人愿意做的事：<strong>把两条极端预算路径同时摊开，让你看清&quot;入门&quot;和&quot;发烧&quot;之间到底差了什么</strong>。</p>
+<p>$2k 一档，48GB VRAM，跑 Qwen3.6-27B。$40k 一档，384GB VRAM，跑 GLM-5.2-594B。中间那个 $20k 档？作者自己都写着 TODO——他没试过，也懒得瞎编。</p>
+<p>这种&quot;我只讲我亲手花过的钱&quot;的姿态，比任何&quot;2026 本地 LLM 终极指南&quot;都值钱。</p>
+<h2 id="2k-入门档48gb-vram-够干什么">$2k 入门档：48GB VRAM 够干什么
+</h2><p>先说结论：<strong>双 RTX 3090，48GB VRAM 总量，$2k 出头</strong>。</p>
+<p>作者推荐的模型是 Qwen3.6-27B。你可能觉得 27B 参数听起来平庸，但在 3090 这个价位段，它已经能覆盖大部分单人开发者的日常场景：写代码、改文档、做 RAG 检索、跑本地 agent。</p>
+<p>更有意思的是，作者在 $2k 档配了一套<strong>本地 STT（语音转文字）</strong>。用的模型叫 <code>cohere-transcribe</code>，比之前主流的 <code>whisper-large-v3</code> 更准。作者自己写了个跨平台的 <code>stt</code> harness，喊一声就把话录下来转成文字。</p>
+<p>为什么强调这个？因为<strong>语音输入是&quot;本地跑&quot;最有说服力的场景之一</strong>。</p>
+<p>想想你平时怎么和 AI 打字：写命令、写 prompt、写日报。如果这些东西的语音入口在云端，你的每一句&quot;随手念叨&quot;都在别人服务器里存了副本。而 STT 本地化之后，麦克风数据永远不出你家局域网。这不是安全洁癖，是<strong>基本的信息卫生</strong>。</p>
+<p>11GB VRAM 就能跑 STT，占用一张 3090 的一半。另一半留给 27B 主模型。这套配比，$2k 内搞定，几乎是消费级硬件跑 SOTA 本地 AI 的最低门槛。</p>
+<h2 id="20k-中间档作者留白的理由">$20k 中间档：作者留白的理由
+</h2><p>READY 里那句 &ldquo;(TODO)&rdquo; 特别耐人寻味。</p>
+<p>作者写的是：<strong>&ldquo;我没这段经验，帮不上什么忙。&rdquo;</strong></p>
+<p>他列了三条可能路径：2 张 RTX 6000 Pro、4 台 DGX Sparks 组网、Apple 硬件全家桶。但没有一条给出实测数据。</p>
+<p>这个价位段为什么是空白？我猜测有两个原因。</p>
+<p><strong>第一，$20k 卡在&quot;不划算&quot;的死角</strong>。往下拉到 $2k，你能享受消费卡的性价比。往上推到 $40k，你直接买到接近 Opus 级别的智能。中间这一档，硬件成本已经不便宜，但模型能力还是被 VRAM 卡脖子——上不去 400B 参数的大模型，下又比双 3090 贵一个数量级。</p>
+<p><strong>第二，$20k 的最优解太分裂</strong>。你可以买 2 张 RTX 6000 Pro（192GB VRAM），可以组 4 台 Mac Studio 512GB 统一内存，可以搞 DGX Spark 集群。每种路线的软件栈、驱动生态、社区支持完全不同，没有一个万能配方。</p>
+<p>这就是为什么 jamesob 干脆跳过。<strong>&ldquo;我不知道&quot;比&quot;我猜是这样&quot;值钱得多</strong>——这在技术博客里是稀有品德。</p>
+<h2 id="40k-发烧档先把账算清楚">$40k 发烧档：先把账算清楚
+</h2><p>来到重头戏。</p>
+<p>作者的 BOM 是：4 张 RTX PRO 6000 Blackwell（每张 96GB VRAM，共 384GB） + 上一代 EPYC 主板 + 128GB DDR4 + 双 1700W 电源 + c-payne PCIe4 交换机 + 一堆 M.2 存储。</p>
+<p>宣传口径写的是 $40k。真花了多少？</p>
+<p><strong>GPU 那栏：~$46,000。</strong></p>
+<p>作者自己在 README 里写了 &ldquo;I was lucky/dumb enough to buy 4x RTX Pro 6000s back when they were cheaper&rdquo;——他是早期低价买的。按 HN 网友 Aurornis 的现价算法：RTX 6000 Pro 现在 $12k 一张，4 张就是 <strong>$48k</strong>，加上主机、交换机、存储、电源合起来 <strong>$5.7k</strong>，真实总账是 <strong>$53k~55k</strong>。</p>
+<blockquote>
+<p>&ldquo;For those doing the math, this build is going to cost more like $50-55K.&rdquo;
+—— Aurornis, HN 评论区，2026-07</p>
+</blockquote>
+<p>这个真实账本比宣传的 $40k 高 25%~35%。<strong>不是作者骗你，是硬件涨价太快</strong>。这也是为什么&quot;本地跑 LLM&quot;的 TCO 分析必须每半年重新算一次——你去年做的 spreadsheet，今年已经过时。</p>
+<p>跑什么模型？作者用的是 <code>GLM-5.2-Int8Mix-NVFP4-REAP-594B</code>。REAP 是一种量化 + 剪枝的组合技，能让 594B 参数塞进 384GB VRAM 里。作者的实测吞吐是**~80 tokens/秒 @ 460k 上下文长度**。</p>
+<p>这是什么概念？460k 上下文差不多够塞进一本《三体》第一部的中文原文，一次性喂给模型问它&quot;帮我总结叶文洁的动机变化&rdquo;，然后 80 tok/s 就是它一秒吐 80 个字。<strong>响应速度比大部分云 API 还快</strong>，因为没有网络往返和排队。</p>
+<h2 id="你以为买硬件就完了三个静默降速坑">你以为买硬件就完了？三个静默降速坑
+</h2><p>如果这个仓库只讲&quot;买什么&quot;，那它就是一份贵价购物清单，没什么稀罕。</p>
+<p>真正让 jamesob 这份指南脱颖而出的，是他把**&ldquo;买回家之后为什么跑不起来&rdquo;**这一段写透了。</p>
+<h3 id="坑-1bios-里的-pcie-分叉与链路降速">坑 1：BIOS 里的 PCIe 分叉与链路降速
+</h3><p>主板是 ASRock Rack ROMED8-2T。默认 BIOS 会把插着 c-payne 交换机的那个 x16 槽自动分叉成 x8/x8，结果<strong>交换机的上行链路直接掉一半速度</strong>。</p>
+<p>你插上 GPU、开机、跑 <code>nvidia-smi</code>，看起来一切正常。跑推理，速度慢得莫名其妙。查了一圈发现是 BIOS 里 &ldquo;AMD PCIE Link Width&rdquo; 需要手动强制成 x16。</p>
+<p>更阴的是 PCIe 链路速度。Blackwell 是 Gen5 卡，c-payne 交换机是 Gen4。默认 Auto 协商时，Blackwell 的 Gen5 逻辑试图和 Gen4 交换机握手，有几率握失败<strong>然后回落到 Gen1（2.5GT/s）</strong>。是的，Gen1，比 USB 3.0 还慢。</p>
+<p>作者的解法是：BIOS 里手动锁定 Gen4，禁用 ASPM，禁用 SR-IOV，启用 Re-Size BAR。<strong>每一条都不改，你的 $50k 就在 Gen1 上跑推理</strong>，性能损失不是 10% 是 90%。</p>
+<h3 id="坑-2内核参数里的-iommu-陷阱">坑 2：内核参数里的 IOMMU 陷阱
+</h3><p><code>/etc/default/grub</code> 里的启动参数要加：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">GRUB_CMDLINE_LINUX_DEFAULT</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;iommu=off amd_iommu=off nomodeset&#34;</span>
+</span></span></code></pre></div><p>不加会怎样？NCCL（NVIDIA 的多卡通信库）<strong>在多 GPU allreduce 阶段直接挂死</strong>。你的推理进程会卡在初始化，日志里没有明显报错，就是不动。</p>
+<p>作者在 README 里加了一句：<code>Without iommu=off, NCCL hangs on multi-GPU P2P.</code> 一行字，救了后来者好几个小时的排查时间。</p>
+<h3 id="坑-3acs-不关1330-的-pcie-交换机白买">坑 3：ACS 不关，$1330 的 PCIe 交换机白买
+</h3><p>这是最刁的一个。</p>
+<p>作者花了 $1,330 买 c-payne 交换机，目的是让 4 张 GPU <strong>点对点直接通信</strong>，不用绕道 CPU。但 Linux 默认开启 ACS（Access Control Services）——这玩意会强制把 P2P 流量弹回 CPU 根端口，<strong>你的交换机就等于摆设</strong>。</p>
+<p>解法是写一个 systemd oneshot 服务，开机自动关 ACS：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">for BDF in $(lspci -d &#34;*:*:*&#34; | awk &#39;{print $1}&#39;); do</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">setpci -s ${BDF} f2a.w</span><span style="color:#f92672">=</span><span style="color:#e6db74">0000 &gt;/dev/null 2&gt;&amp;1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">done</span>
+</span></span></code></pre></div><p>关完之后 <code>nvidia-smi topo -m</code> 应该显示所有 GPU 之间是 <strong>PIX</strong>（switch internal），不是 PHB/NODE（穿过 CPU）。作者顺手写了个 <code>measure-gpu-speed.sh</code> 工具帮你验证。</p>
+<p>关掉 ACS 后，实测数据是：<strong>Gen4 x16 上行 30 GB/s，卡间 P2P 单向 27.5 GB/s、双向 50.4 GB/s，延迟 0.37~0.45 微秒</strong>。基本跑满 Gen4 线速。</p>
+<p>如果你没关 ACS，同样的硬件，P2P 带宽会腰斩甚至更狠，推理吞吐直接砍到一半。<strong>买家秀和买家坑，就差这一行 shell</strong>。</p>
+<h2 id="三年-tco-实算本地-vs-claude-opus-api">三年 TCO 实算：本地 vs Claude Opus API
+</h2><p>好了，硬件坑讲完了，回到最实际的问题：<strong>这套东西值不值得</strong>？</p>
+<p>我们用 $40k 档做基准，算三年账。</p>
+<h3 id="本地档账单">本地档账单
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项</th>
+					<th style="text-align: right">一次性</th>
+					<th style="text-align: right">每年</th>
+					<th style="text-align: right">三年合计</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>GPU（4×RTX 6000 Pro）</td>
+					<td style="text-align: right">$48,000</td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right">$48,000</td>
+			</tr>
+			<tr>
+					<td>主机 + 交换机 + 存储</td>
+					<td style="text-align: right">$5,700</td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right">$5,700</td>
+			</tr>
+			<tr>
+					<td>电费（1.4kW GPU + 300W 系统，按 $0.15/度 8h/天算）</td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right">$746</td>
+					<td style="text-align: right">$2,240</td>
+			</tr>
+			<tr>
+					<td>运维工时（月均 4h，$50/h）</td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right">$2,400</td>
+					<td style="text-align: right">$7,200</td>
+			</tr>
+			<tr>
+					<td>硬件贬值（3 年后残值按 30%）</td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right">-$16,110</td>
+			</tr>
+			<tr>
+					<td><strong>净支出</strong></td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right"></td>
+					<td style="text-align: right"><strong>~$47,030</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>三年花了大概 $47k，能得到什么？<strong>一台 24/7 属于你自己的 GLM-5.2 级模型</strong>，每秒 80 tokens，460k 上下文，数据不出本地。</p>
+<h3 id="云-api-对比">云 API 对比
+</h3><p>Claude Opus 4.1 现价：Input $15/M tokens，Output $75/M tokens。</p>
+<p>假设你每天用得比较狠：输入 500k tokens，输出 100k tokens。日成本大约 $15。</p>
+<p><strong>三年 = 365×3×$15 ≈ $16,425</strong>。</p>
+<p>云 API 三年花 $16k 就够。本地档扣掉残值三年 $47k。<strong>云比本地便宜 65%</strong>。</p>
+<p>看到这数字你可能会觉得：&ldquo;那本地就是智商税啊。&rdquo;</p>
+<p>慢着。这笔账里有几个变量：</p>
+<ul>
+<li><strong>数据敏感度</strong>：如果你每天喂给模型的都是客户合同、公司代码、患者病历，Anthropic 的 ToS 再友好，你也睡不着觉。这种情况下，本地 = 保险费。</li>
+<li><strong>调用频次</strong>：上面按每天 600k tokens 算，是个人开发者的水平。如果是团队 20 人共用，日均 12M tokens，云 API 就成了 <strong>$300/天</strong>，三年 $328k，本地立刻从&quot;贵&quot;变&quot;便宜&quot;。</li>
+<li><strong>私有微调</strong>：本地机器可以随时跑 fine-tuning、量化实验、REAP 剪枝。这些在闭源 API 上要么不支持要么天价。</li>
+</ul>
+<p><strong>结论</strong>：本地跑 SOTA 大模型，一年 $16k 的 API 账单都不到的人，别折腾；三年打算烧掉 $300k+ 云成本的团队，或者数据敏感到不能上云的场景，那 $50k 的硬件是笔便宜投资。</p>
+<h2 id="2k-档才是绝大多数人的入口">$2k 档才是绝大多数人的入口
+</h2><p>回过头看 jamesob 的两档设计，我个人的解读是：</p>
+<ul>
+<li><strong>$40k 档是&quot;炫技和验证&quot;</strong>——证明消费级硬件配合正确的软硬件配置，能压到 SOTA 边缘。</li>
+<li><strong>$2k 档才是&quot;给普通人用&quot;的</strong>——48GB VRAM、Qwen3.6-27B、本地 STT，覆盖 80% 场景，成本只有 4%。</li>
+</ul>
+<p>我自己现在也主要用 $2k 段位那种配置：一张 3090 + Ollama + Cherry Studio + 本地 whisper。日常写代码、跑 agent、做 RAG，够用。真需要写长篇内容或多模态，才切回云 API。</p>
+<p><strong>混合策略是最经济的</strong>：本地跑高频、低敏感度的任务；云端只处理低频、复杂推理的重活。</p>
+<p>这不是妥协，是<strong>成本工程</strong>。</p>
+<h2 id="结尾你到底该走哪条路">结尾：你到底该走哪条路
+</h2><p>如果你在纠结要不要本地跑大模型，问自己三个问题：</p>
+<ol>
+<li><strong>你的输入数据能不能公开出去？</strong> 不能 → 走本地；能 → 继续看下一题。</li>
+<li><strong>每年 API 账单会不会超过 $10k？</strong> 会 → 有本地化的经济动机；不会 → API 更省。</li>
+<li><strong>你愿不愿意花 20 小时调 BIOS 和内核？</strong> 愿意 → 直接冲；不愿意 → 老实付 Anthropic 月费。</li>
+</ol>
+<p>三个问题都答&quot;是&quot;，那 jamesob 这份 README 就是你的下一个周末项目。</p>
+<p>三个问题里有任何一个&quot;否&quot;，请把这笔 $50k 花在别的地方。</p>
+<p><strong>代码是逻辑的诗，硬件账本是现实的刀</strong>——本地跑大模型这件事，浪漫归浪漫，先算清楚账再动手。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/ollama-coding-cost-47-yuan/"  target="_blank" rel="noopener"
+    >Ollama 一年省了多少钱：47 块的本地 AI 编程账单实测</a></li>
+<li><a class="link" href="https://softon.top/software/ollama-cost-saving-real-test-2026/"  target="_blank" rel="noopener"
+    >Ollama 省钱指南 2026：本地跑 LLM 到底能省多少 API 费</a></li>
+<li><a class="link" href="https://softon.top/software/nightrun-usb-uefi-boot-local-llm-no-os/"  target="_blank" rel="noopener"
+    >Nightrun：一根 USB 启动本地大模型，不装系统也能跑</a></li>
+<li><a class="link" href="https://softon.top/software/lm-studio-bionic-local-open-model-agent/"  target="_blank" rel="noopener"
+    >LM Studio + Bionic：本地开源模型也能跑多智能体</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/">本地大模型</a>
+        
+            <a href="/tags/llm-%E7%A1%AC%E4%BB%B6/">LLM 硬件</a>
+        
+            <a href="/tags/rtx-6000-pro/">RTX 6000 Pro</a>
+        
+            <a href="/tags/pcie-%E4%BA%A4%E6%8D%A2%E6%9C%BA/">PCIe 交换机</a>
+        
+            <a href="/tags/%E8%87%AA%E5%BB%BA-ai/">自建 AI</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/nightcrawler-mobile-ai-pentest-agent-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lm-studio-bionic-local-open-model-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/local-llm-hardware-tier-2k-40k-real-cost\/'; 
+        const pageTitle = '本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

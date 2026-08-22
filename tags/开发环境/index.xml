@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>开发环境 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link>
+		<description>Recent content in 开发环境 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 20 May 2026 09:30:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</title>
+				<link>https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/</link>
+				<pubDate>Wed, 20 May 2026 09:30:00 +0800</pubDate>
+				<guid>https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;上周我在公司茶水间被同事截胡：「你那个 Claude Code 是不是开了挂？我让它读飞书文档，它说不会；我让它查我数据库，它说不会；我让它跑 Playwright 截图，它还说不会。这玩意儿不就是个穿着马甲的 GPT？」&lt;/p&gt;&#xA;&lt;p&gt;我笑了笑，打开他的 &lt;code&gt;~/.claude/&lt;/code&gt;，里面空空如也——一个 Skill 没装，一个 MCP 没配。&lt;/p&gt;&#xA;&lt;p&gt;这就像买了一台 ThinkPad 但只用浏览器打开 Word，怪不得他觉得不香。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;裸装的 Claude Code，本质上是个&lt;strong&gt;会写代码但什么外部世界都接触不到的实习生&lt;/strong&gt;。它能在你当前目录里 &lt;code&gt;read/write/edit/exec&lt;/code&gt;，但它读不到你的 Notion、连不上你的 Postgres、也跑不了 Playwright 自动化。&lt;/p&gt;&#xA;&lt;p&gt;而装好 &lt;strong&gt;32 个 Skills + 8 个 MCP&lt;/strong&gt; 之后，它会从「写代码的助手」一路升级到「全栈数字员工」——能查文档、能跑数据库、能画 Mermaid 图、能调浏览器，甚至能直接帮你发飞书消息。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章把整套配置流程、踩坑记录和实战场景一次讲透。读完你只需要复制粘贴，就能拥有一个真正长脑子的 Claude Code。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一为什么裸装的-claude-code不够用&#34;&gt;一、为什么裸装的 Claude Code「不够用」&#xA;&lt;/h2&gt;&lt;p&gt;先说一个反直觉的事实：&lt;strong&gt;Claude Code 默认能力其实很弱&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;它默认只有 &lt;code&gt;read / write / edit / exec / search&lt;/code&gt; 这几把刀，所有「外部知识」都得从你当前的代码仓库里现读。这意味着：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;你想让它写一个调用 Stripe 的支付模块？它得先猜 API、再让你纠错。&lt;/li&gt;&#xA;&lt;li&gt;你想让它帮你查昨天的飞书会议纪要？它会礼貌地说「我没有联网能力」。&lt;/li&gt;&#xA;&lt;li&gt;你想让它跑一段 SQL 验证数据？它只能写出 SQL 让你自己去跑。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这三个问题的解法不一样：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;问题类型&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;解法&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;关键词&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;缺少&lt;strong&gt;领域知识 / 操作流程&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Skill&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;写好的 Markdown 指令包&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;缺少&lt;strong&gt;外部系统访问&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;MCP Server&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;进程化的工具协议&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;缺少&lt;strong&gt;长期记忆&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Memory + Skill&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;持久化文件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;Skill 是「方法论」，MCP 是「连接器」&lt;/strong&gt;——这是整篇文章的核心认知。搞清楚这两者的边界，你就明白了为什么我装 32 个 Skill + 8 个 MCP 而不是反过来。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

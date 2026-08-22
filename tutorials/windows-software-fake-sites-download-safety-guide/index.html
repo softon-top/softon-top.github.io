@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="70 多个 Windows 常用软件被仿冒网站盯上后，问题不再是会不会分辨钓鱼邮件，而是如何安全地下载每一个安装包。">
+<title>PowerToys 都有假官网了：Windows 装软件别再只靠搜索</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="PowerToys 都有假官网了：Windows 装软件别再只靠搜索">
+<meta property='og:description' content="70 多个 Windows 常用软件被仿冒网站盯上后，问题不再是会不会分辨钓鱼邮件，而是如何安全地下载每一个安装包。">
+<meta property='og:url' content='https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='软件安全' /><meta property='article:tag' content='PowerToys' /><meta property='article:tag' content='下载安全' /><meta property='article:tag' content='反诈骗' /><meta property='article:published_time' content='2026-07-29T12:11:00&#43;08:00'/><meta property='article:modified_time' content='2026-07-29T12:11:00&#43;08:00'/>
+<meta name="twitter:title" content="PowerToys 都有假官网了：Windows 装软件别再只靠搜索">
+<meta name="twitter:description" content="70 多个 Windows 常用软件被仿冒网站盯上后，问题不再是会不会分辨钓鱼邮件，而是如何安全地下载每一个安装包。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#这次的危险不是一个假站而是一套获客模型">这次的危险，不是一个假站，而是一套获客模型</a></li>
+    <li><a href="#先纠正一个误区google-第一个结果不等于官方">先纠正一个误区：Google 第一个结果，不等于官方</a></li>
+    <li><a href="#windows-软件按这个优先级找">Windows 软件，按这个优先级找</a>
+      <ul>
+        <li><a href="#1-microsoft-store适合桌面工具和常见消费软件">1. Microsoft Store：适合桌面工具和常见消费软件</a></li>
+        <li><a href="#2-官方-github-组织页或-release-页面开源项目优先">2. 官方 GitHub 组织页或 Release 页面：开源项目优先</a></li>
+        <li><a href="#3-开发者在-githubstore软件内同时指向的官网">3. 开发者在 GitHub、Store、软件内同时指向的官网</a></li>
+        <li><a href="#4-包管理器适合愿意管理命令行的用户">4. 包管理器：适合愿意管理命令行的用户</a></li>
+      </ul>
+    </li>
+    <li><a href="#下载前-30-秒做完这五个检查">下载前 30 秒，做完这五个检查</a>
+      <ul>
+        <li><a href="#看域名不看页面气氛">看域名，不看页面气氛</a></li>
+        <li><a href="#看发布者不只看软件名">看发布者，不只看软件名</a></li>
+        <li><a href="#不要被官方下载四个字说服">不要被“官方下载”四个字说服</a></li>
+        <li><a href="#遇到下载器密码包关闭防护直接撤">遇到下载器、密码包、关闭防护，直接撤</a></li>
+        <li><a href="#看-windows-的警告别把它当烦人的弹窗">看 Windows 的警告，别把它当烦人的弹窗</a></li>
+      </ul>
+    </li>
+    <li><a href="#已经下载或运行过别急着格式化也别装作没事">已经下载或运行过，别急着格式化，也别装作没事</a></li>
+    <li><a href="#给常用软件建一张来源卡片比每次临时搜索靠谱">给常用软件建一张“来源卡片”，比每次临时搜索靠谱</a></li>
+    <li><a href="#软件安全的起点在点击下载之前">软件安全的起点，在点击下载之前</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/windows-software-fake-sites-download-safety-guide/">PowerToys 都有假官网了：Windows 装软件别再只靠搜索</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-07-29T12:11:00&#43;08:00'>
+                    2026-07-29，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/windows-software-fake-sites-download-safety-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#这次的危险不是一个假站而是一套获客模型">这次的危险，不是一个假站，而是一套获客模型</a></li>
+    <li><a href="#先纠正一个误区google-第一个结果不等于官方">先纠正一个误区：Google 第一个结果，不等于官方</a></li>
+    <li><a href="#windows-软件按这个优先级找">Windows 软件，按这个优先级找</a>
+      <ul>
+        <li><a href="#1-microsoft-store适合桌面工具和常见消费软件">1. Microsoft Store：适合桌面工具和常见消费软件</a></li>
+        <li><a href="#2-官方-github-组织页或-release-页面开源项目优先">2. 官方 GitHub 组织页或 Release 页面：开源项目优先</a></li>
+        <li><a href="#3-开发者在-githubstore软件内同时指向的官网">3. 开发者在 GitHub、Store、软件内同时指向的官网</a></li>
+        <li><a href="#4-包管理器适合愿意管理命令行的用户">4. 包管理器：适合愿意管理命令行的用户</a></li>
+      </ul>
+    </li>
+    <li><a href="#下载前-30-秒做完这五个检查">下载前 30 秒，做完这五个检查</a>
+      <ul>
+        <li><a href="#看域名不看页面气氛">看域名，不看页面气氛</a></li>
+        <li><a href="#看发布者不只看软件名">看发布者，不只看软件名</a></li>
+        <li><a href="#不要被官方下载四个字说服">不要被“官方下载”四个字说服</a></li>
+        <li><a href="#遇到下载器密码包关闭防护直接撤">遇到下载器、密码包、关闭防护，直接撤</a></li>
+        <li><a href="#看-windows-的警告别把它当烦人的弹窗">看 Windows 的警告，别把它当烦人的弹窗</a></li>
+      </ul>
+    </li>
+    <li><a href="#已经下载或运行过别急着格式化也别装作没事">已经下载或运行过，别急着格式化，也别装作没事</a></li>
+    <li><a href="#给常用软件建一张来源卡片比每次临时搜索靠谱">给常用软件建一张“来源卡片”，比每次临时搜索靠谱</a></li>
+    <li><a href="#软件安全的起点在点击下载之前">软件安全的起点，在点击下载之前</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>很多人装 Windows 软件时，流程几乎是肌肉记忆：打开搜索引擎，输入软件名，点第一个看起来最像官网的结果，下载，下一步下一步。</p>
+<p>过去这套流程不算优雅，但通常也不会立刻出事。现在不行了。</p>
+<p>7 月下旬，Wintoys 的开发者发现有人用近似域名搭了一个仿冒站。顺着域名注册信息往下挖，牵出的是一批超过 70 个的 Windows 软件仿冒站：PowerToys、CrystalDiskMark、EasyBCD、Wintoys、Lively Wallpaper、SignalRGB、WinUtil 等都在名单里。</p>
+<p>最让人后背发凉的点，不是骗子把页面做得多花哨，而是他们很懂“耐心”。部分站点在被发现时，下载按钮甚至仍指向 Microsoft Store 或真实项目页。它们先借正版下载建立信任、做搜索排名，等流量和信任攒够，再替换成带毒安装包。</p>
+<blockquote>
+<p>下载按钮这一次是安全的，不等于这个网站是安全的。</p>
+</blockquote>
+<p>这篇不教你背几十个真假域名。那种防法只是在和骗子比赛记忆力，注定会输。我们要把“找软件”的路径改掉，让假官网少一个能碰到你的机会。</p>
+<h2 id="这次的危险不是一个假站而是一套获客模型">这次的危险，不是一个假站，而是一套获客模型
+</h2><p>传统钓鱼常常很急：一封冒充银行的邮件，一个“账号即将冻结”的弹窗，一条催你点击的短链。它赌的是你在几十秒里慌张。</p>
+<p>软件仿冒站赌的则是另一个东西：<strong>你对搜索结果的默认信任。</strong></p>
+<p>它们通常会做三件事：</p>
+<ul>
+<li>注册和软件名高度接近的域名，比如把常见项目名加上 <code>.app</code>、<code>.net</code>，或插入连字符；</li>
+<li>抄走旧 Logo、产品介绍、截图和文档结构，再铺大量“教程”“更新日志”“下载指南”；</li>
+<li>用 SEO 把页面推到搜索结果前排，有时排在真实项目之前。</li>
+</ul>
+<p>用户看到的是熟悉的软件名、像模像样的介绍、一个醒目的 Download 按钮。页面甚至还写着“不隶属于官方，只提供文档和官方下载链接”。这句免责声明看上去谨慎，实际没有任何安全担保。</p>
+<p>Wintoys 相关仿冒域名被报告后，Cloudflare 曾对其中一个域名加上“疑似钓鱼”拦截页。但域名逐个举报、逐个处理，速度永远很难跑过批量注册。</p>
+<p>更关键的是：这类站点不需要一开始就投毒。它们先让你觉得“这个网站一直都能用”，才是最便宜的信任建设。</p>
+<h2 id="先纠正一个误区google-第一个结果不等于官方">先纠正一个误区：Google 第一个结果，不等于官方
+</h2><p>搜索引擎解决的是“谁和你的关键词最相关”，不是“谁对你的电脑最负责”。广告位、SEO、历史权重、页面内容，都会影响排序。软件名恰好又是最容易被抢占的关键词。</p>
+<p>所以，下面两句话都不成立：</p>
+<ul>
+<li>“排第一，肯定是官网。”</li>
+<li>“页面写得很专业，还能下载，肯定没问题。”</li>
+</ul>
+<p>尤其对 PowerToys、CrystalDiskMark 这类高频工具，攻击者根本不需要骗每个人。几千个搜索者中有几十个人把安装包从错误地方拿走，生意就成立了。</p>
+<p>这不是让你从此不用搜索，而是别把搜索结果页当作软件下载页。搜索可以拿来找<strong>项目线索</strong>，但下载动作应该落到可验证的官方渠道。</p>
+<h2 id="windows-软件按这个优先级找">Windows 软件，按这个优先级找
+</h2><p>每次需要装软件，不妨按下面顺序选来源。越靠前，越少需要你判断网页真假。</p>
+<h3 id="1-microsoft-store适合桌面工具和常见消费软件">1. Microsoft Store：适合桌面工具和常见消费软件
+</h3><p>如果软件在 Microsoft Store 有正式条目，优先从这里装。</p>
+<p>它不是绝对安全的乌托邦，但至少把域名仿冒、镜像下载站、捆绑下载器这几层风险挡在了外面。对于 PowerToys、Wintoys、Lively Wallpaper 一类 Windows 工具，这应该是第一站。</p>
+<p>要注意两件事：</p>
+<ul>
+<li>看发布者名称是否合理，不只看应用名称；</li>
+<li>不要因为 Store 搜不到，就去点搜索页最显眼的“免费下载”按钮。</li>
+</ul>
+<p>Store 没有，不代表软件不存在；只代表要进入下一层验证。</p>
+<h3 id="2-官方-github-组织页或-release-页面开源项目优先">2. 官方 GitHub 组织页或 Release 页面：开源项目优先
+</h3><p>很多开源软件的真正“下载页”根本不是独立官网，而是 GitHub Releases。</p>
+<p>这时要看的不是仓库名字像不像，而是仓库归属：</p>
+<ul>
+<li>组织或作者主页是否和项目长期绑定；</li>
+<li>Release 是否有持续版本历史，而不是刚注册、刚上传几个文件；</li>
+<li>README、官网、社交账号是否互相链接到同一个仓库；</li>
+<li>是否有清晰的 Release 说明、签名、校验值或可复现构建说明。</li>
+</ul>
+<p>别从搜索结果里找一个“GitHub 下载加速站”或“国内镜像站”就下。镜像并不是原罪，但你必须先确认它由项目方明确推荐，并能核对文件校验值。</p>
+<h3 id="3-开发者在-githubstore软件内同时指向的官网">3. 开发者在 GitHub、Store、软件内同时指向的官网
+</h3><p>闭源软件、驱动工具或商业软件，常常只能从官网获取。这时不要从搜索页直接相信那个域名，而是找一个<strong>交叉验证入口</strong>。</p>
+<p>例如：</p>
+<ul>
+<li>Microsoft Store 页面是否链接到它；</li>
+<li>GitHub 官方组织主页是否链接到它；</li>
+<li>软件现有安装包的“关于”页面是否指向它；</li>
+<li>开发者认证的社交账号是否长期使用该域名。</li>
+</ul>
+<p>一个域名只在搜索结果里出现，和一个域名被多个官方入口互相指向，可信度不是一个量级。</p>
+<h3 id="4-包管理器适合愿意管理命令行的用户">4. 包管理器：适合愿意管理命令行的用户
+</h3><p>Windows 的 <code>winget</code>、Scoop、Chocolatey 能把“在网页上找下载按钮”变成“从维护的包清单安装”。它们也不是零风险，但能显著减少误入仿冒站的概率。</p>
+<p>对熟悉命令行的人，<code>winget</code> 是一个实用起点：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">winget search Microsoft.PowerToys</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">winget show Microsoft.PowerToys</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">winget install Microsoft.PowerToys</span>
+</span></span></code></pre></div><p>第一步不是安装，是搜索；第二步不是盲信，是查看发布者、软件源和包标识；第三步才是安装。</p>
+<p>不要把网络论坛里复制来的包名直接粘进终端。命令行能减少网页骗局，但不能替你验证命令来源。</p>
+<h2 id="下载前-30-秒做完这五个检查">下载前 30 秒，做完这五个检查
+</h2><p>你不需要当安全工程师。以下五步足够筛掉绝大多数低成本仿冒。</p>
+<h3 id="看域名不看页面气氛">看域名，不看页面气氛
+</h3><p><code>powertoys.app</code>、<code>power-toys.com</code> 这类域名看着非常顺眼，恰恰是危险所在。</p>
+<p>确认域名时，先找官方项目明确写出的地址，再从那个地址进入下载页。不要反过来：先看到某个“像官网”的域名，再问它是不是官方。</p>
+<h3 id="看发布者不只看软件名">看发布者，不只看软件名
+</h3><p>软件名可以复制，发布者身份复制成本高得多。</p>
+<p>在 Store 看发布者；在 GitHub 看组织；在安装程序属性里看数字签名。若一个软件声称来自知名团队，安装包却显示未知发布者、签名异常或根本没有签名，立刻停。</p>
+<h3 id="不要被官方下载四个字说服">不要被“官方下载”四个字说服
+</h3><p>假站最爱写“Official Download”“100% Safe”“Latest Version”。这些词没有验证价值，和网页上的“欢迎光临”差不多。</p>
+<p>真正的证据是：来源能否被官方渠道交叉验证、安装包签名是否正确、哈希值是否能对上。</p>
+<h3 id="遇到下载器密码包关闭防护直接撤">遇到下载器、密码包、关闭防护，直接撤
+</h3><p>正常软件安装包不该要求你：</p>
+<ul>
+<li>先运行一个“下载器”再获取本体；</li>
+<li>解压带密码的压缩包；</li>
+<li>临时关闭 Defender、SmartScreen 或浏览器保护；</li>
+<li>输入管理员密码来“修复安装限制”。</li>
+</ul>
+<p>这些信号单独出现就值得警惕，组合出现时不需要再给它解释机会。</p>
+<h3 id="看-windows-的警告别把它当烦人的弹窗">看 Windows 的警告，别把它当烦人的弹窗
+</h3><p>SmartScreen、浏览器下载拦截、杀毒软件提示并不完美，误报也会发生。但它们是低成本、实时的最后一道刹车。</p>
+<p>“我确定这是软件安装包，所以先放行”这句话，常常就是攻击者希望你替他说的。</p>
+<h2 id="已经下载或运行过别急着格式化也别装作没事">已经下载或运行过，别急着格式化，也别装作没事
+</h2><p>如果你只是访问过可疑页面，没有下载文件，关掉页面即可；再检查浏览器有没有被要求安装扩展、通知权限或配置文件。</p>
+<p>如果下载了但还没运行：删除文件、清空下载目录，并用 Windows 安全中心做一次完整扫描。不要为了“研究一下”双击看看。</p>
+<p>如果已经运行过可疑安装包，处理顺序要更果断：</p>
+<ol>
+<li>断开网络，避免远程控制、凭据外传或继续下载载荷；</li>
+<li>用另一台可信设备修改重要账号密码，优先邮箱、微软账号、浏览器同步账号、支付和企业账号；</li>
+<li>用 Microsoft Defender 离线扫描或可信安全工具检查；</li>
+<li>检查最近安装的程序、浏览器扩展、启动项和远程控制软件；</li>
+<li>涉及工作电脑、加密货币钱包或企业账号时，立刻联系 IT 或安全负责人，不要自己“清理干净了”就继续用。</li>
+</ol>
+<p>恶意软件最危险的地方不是弹广告，而是它可能悄悄拿走浏览器 Cookie、保存的密码和远程控制权限。电脑看起来恢复正常，不代表账号没有在别处被接管。</p>
+<h2 id="给常用软件建一张来源卡片比每次临时搜索靠谱">给常用软件建一张“来源卡片”，比每次临时搜索靠谱
+</h2><p>真正省心的做法不是每次下载都临场判断，而是把你高频使用的十几款软件固定下来：浏览器、压缩工具、磁盘检测、截图、播放器、远控、开发工具。</p>
+<p>为它们保存一张自己的来源清单：</p>
+<ul>
+<li>软件名称；</li>
+<li>官方 Store 链接或 GitHub Release 链接；</li>
+<li>官方域名；</li>
+<li>发布者名称；</li>
+<li>是否有数字签名；</li>
+<li>更新方式。</li>
+</ul>
+<p>下次重装系统、给家人装机、换电脑迁移，就从这张表出发，而不是从搜索广告出发。</p>
+<p>这听起来有点麻烦，但它把每次装软件的五分钟不确定性，变成一次维护、长期受益。更重要的是，家人朋友问“这个软件去哪下”时，你终于可以发一个确定的链接，而不是说“你搜一下”。</p>
+<h2 id="软件安全的起点在点击下载之前">软件安全的起点，在点击下载之前
+</h2><p>这次 70 多个仿冒站提醒我们的，不是“Windows 不安全”，也不是“所有第三方软件都不能装”。问题在于，我们习惯把软件安全理解成安装完成后开杀毒扫描。</p>
+<p>其实决定风险的第一步，发生在更早：你把哪个域名当成了项目本人。</p>
+<p>从今天起，把“搜索软件名”换成“确认官方来源”，把“点第一个下载”换成“Store、官方 GitHub、官方交叉链接、包管理器”。这几个动作不能让风险归零，但会让大多数仿冒站失去唯一的生意入口。</p>
+<p>下载软件不是点一下按钮那么简单。它是在把一个陌生程序邀请进你的电脑。这个邀请，值得多花 30 秒核验。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8/">软件安全</a>
+        
+            <a href="/tags/powertoys/">PowerToys</a>
+        
+            <a href="/tags/%E4%B8%8B%E8%BD%BD%E5%AE%89%E5%85%A8/">下载安全</a>
+        
+            <a href="/tags/%E5%8F%8D%E8%AF%88%E9%AA%97/">反诈骗</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/winpodx-linux-run-windows-apps-container-freerdp-analysis/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 不装完整 Windows，能不能直接开 Excel？WinPodX 的答案没那么轻松</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/optimizerduck-windows-optimization-trust-revert/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">本地 AI 助手不该只是聊天框：Axiom 的多智能体流水线给 Windows 带来了什么</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/windows%E4%B8%8Baria2-ariang%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B-%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88%E5%85%A8%E8%83%BD%E4%B8%8B%E8%BD%BD%E7%A5%9E%E5%99%A8/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows下Aria2&#43;AriaNg安装配置教程 打造高效全能下载神器</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/windows-software-fake-sites-download-safety-guide\/'; 
+        const pageTitle = 'PowerToys 都有假官网了：Windows 装软件别再只靠搜索';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

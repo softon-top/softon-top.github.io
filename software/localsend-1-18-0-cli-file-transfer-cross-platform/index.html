@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="跨平台局域网传输神器 LocalSend 沉寂近一年半后放出 1.18.0：原生命令行支持、IPv6 监听、免装 App 从浏览器领文件、默认校验和。服务器、NAS、只有 SSH 的机器终于也能塞进这套生态。">
+<title>隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了</title>
+
+<link rel='canonical' href='https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了">
+<meta property='og:description' content="跨平台局域网传输神器 LocalSend 沉寂近一年半后放出 1.18.0：原生命令行支持、IPv6 监听、免装 App 从浏览器领文件、默认校验和。服务器、NAS、只有 SSH 的机器终于也能塞进这套生态。">
+<meta property='og:url' content='https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='LocalSend' /><meta property='article:tag' content='文件传输' /><meta property='article:tag' content='跨平台' /><meta property='article:tag' content='开源' /><meta property='article:tag' content='CLI' /><meta property='article:tag' content='AirDrop替代' /><meta property='article:published_time' content='2026-08-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-15T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了">
+<meta name="twitter:description" content="跨平台局域网传输神器 LocalSend 沉寂近一年半后放出 1.18.0：原生命令行支持、IPv6 监听、免装 App 从浏览器领文件、默认校验和。服务器、NAS、只有 SSH 的机器终于也能塞进这套生态。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#最重要的一件事命令行版本终于来了">最重要的一件事：命令行版本终于来了</a></li>
+    <li><a href="#ipv6-监听企业内网和移动网络的救星">IPv6 监听：企业内网和移动网络的救星</a></li>
+    <li><a href="#浏览器领文件接收端不装-app-也能收">「浏览器领文件」：接收端不装 App 也能收</a></li>
+    <li><a href="#校验和默认开传坏文件的年代过去了">校验和默认开：传坏文件的年代过去了</a></li>
+    <li><a href="#各平台的小甜点">各平台的小甜点</a></li>
+    <li><a href="#怎么装最新版">怎么装最新版</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/localsend-1-18-0-cli-file-transfer-cross-platform/">隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-15T00:00:00Z'>
+                    2026-08-15，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#最重要的一件事命令行版本终于来了">最重要的一件事：命令行版本终于来了</a></li>
+    <li><a href="#ipv6-监听企业内网和移动网络的救星">IPv6 监听：企业内网和移动网络的救星</a></li>
+    <li><a href="#浏览器领文件接收端不装-app-也能收">「浏览器领文件」：接收端不装 App 也能收</a></li>
+    <li><a href="#校验和默认开传坏文件的年代过去了">校验和默认开：传坏文件的年代过去了</a></li>
+    <li><a href="#各平台的小甜点">各平台的小甜点</a></li>
+    <li><a href="#怎么装最新版">怎么装最新版</a></li>
+    <li><a href="#一句话总结">一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>如果你的电脑桌面上、手机主屏上、公司办公机上都装着同一个青绿色小图标，那基本可以确定，你是那种「文件从来不发微信自己传自己」的选手。LocalSend 就是这批人手里的默认答案：跨 Windows、macOS、Linux、Android、iOS 五端，局域网直传，不走云、不压缩、不改名。</p>
+<p>但这两年用过来，多少有点尴尬。上一版有分量的更新还停在 2025 年 2 月，一晃过去一年半，日常里够用，也没啥新花样。直到 2026 年 8 月 11 日，1.18.0 突然更新，一次性把好几个「早就该做」的功能全端了出来。</p>
+<h2 id="最重要的一件事命令行版本终于来了">最重要的一件事：命令行版本终于来了
+</h2><p>在 LocalSend 的历代版本里，这次的头号亮点毫无悬念——<strong>CLI 支持</strong>。</p>
+<p>以前你想在一台没有图形界面的机器上收发文件，只有两个选项：一个是硬装个虚拟桌面把 App 拉起来，一个是老老实实用 <code>scp</code>。前者笨重，后者……你但凡跨过 Windows 和 macOS 折腾过 SSH key，就知道那是一场需要冥想的仪式。</p>
+<p>现在 CLI 版是这样跑的：进入交互模式，读取配置文件里的默认设备名、下载目录、监听端口，也可以在命令里覆盖；启动之后可以用热键发现附近设备、发文件、收文件；旁边同一网段的手机、笔记本会看到一台标注为 <code>CLI</code> 的设备躺在列表里。</p>
+<p>对我来说最有价值的两个场景：</p>
+<ul>
+<li><strong>NAS</strong>：想把手机拍的一段 4K 视频丢进 Jellyfin 的媒体目录，以前要么走 SMB 挂载，要么先上传到某个云盘再拉下来，现在直接手机点 LocalSend，选中那台 NAS 的 CLI 实例，几秒完事。</li>
+<li><strong>只有 SSH 的服务器</strong>：临时把日志文件、配置备份、一份 CSV 拉到手机看一眼——不用再折腾一次 <code>scp</code> + <code>pbcopy</code>。</li>
+</ul>
+<p>CLI 打包成独立的 tarball / exe，不需要装 GUI 版本作为前置依赖。这一点很重要，意味着 Docker 镜像、树莓派、iKuai 上的软路由都能轻装上阵。</p>
+<h2 id="ipv6-监听企业内网和移动网络的救星">IPv6 监听：企业内网和移动网络的救星
+</h2><p>第二个容易被忽略但同样关键的改动：<strong>1.18.0 开始支持 IPv6 监听</strong>。</p>
+<p>日常家用 Wi-Fi 用不出感觉，但只要你在下面这几种网络里试过传文件，就会知道这条更新的分量：</p>
+<ul>
+<li>公司大内网被切成一堆 VLAN，同一楼层不同交换机就跨不了子网</li>
+<li>咖啡厅 / 展会 Wi-Fi 开了「AP 隔离」，同一 SSID 下设备互不可见</li>
+<li>手机热点开 IPv6 转发，笔记本靠 tether 上网</li>
+</ul>
+<p>以前这种情况 LocalSend 直接摊手，因为设备发现走 UDP 多播。IPv6 支持之后，很多场景可以直接靠链路本地地址端到端通，不再需要一致的 IPv4 子网、也不用 VPN 兜底。企业办公和随身移动网络里，可用性直接上一个台阶。</p>
+<h2 id="浏览器领文件接收端不装-app-也能收">「浏览器领文件」：接收端不装 App 也能收
+</h2><p>Receive 页面新增了一个 <strong>Receive via link</strong> 按钮。</p>
+<p>打开之后 LocalSend 给你一串本机 IP 网址（也可以扫二维码），把这串链接甩给对方，对方在<strong>任何浏览器里</strong>打开就能上传文件到你的机器——不用注册、不用装 App，甚至可以是别人家不敢乱装软件的公司电脑。</p>
+<p>早期 LocalSend 就有「Share via link」发文件给浏览器的能力，这一版把反方向也补齐了。发和收都可以只用一端有 App，另一端只需要浏览器。对做技术支持、临时帮同事收资料的人来说，这是一条极稳的兜底通道。</p>
+<h2 id="校验和默认开传坏文件的年代过去了">校验和默认开：传坏文件的年代过去了
+</h2><p><code>checksum support (enable by default)</code>——1.18.0 默认为每一次传输启用<strong>校验和比对</strong>，收发两端算完 hash 对齐后才算成功。</p>
+<p>以前偶尔会有玄学：截图能开，PSD 打不开；ZIP 能列目录，解压第某个文件炸掉。九成是无线信号弱、路由带宽掉包导致文件写入不完整。默认打开 checksum 之后，这种情况会直接在传输完成时报错，而不是等你到目标机器上才发现「诶怎么打不开」。</p>
+<p>同时这一版把文件大小统一成 <strong>十进制单位（1 GB = 1000 MB）</strong>，跟 macOS、iOS、Android、Linux 对齐。这个是给强迫症用户的良药——以前 Windows 端和其他端显示 1.86 GB 和 2.0 GB，一直看着别扭。</p>
+<h2 id="各平台的小甜点">各平台的小甜点
+</h2><p>除了上面几条主线，1.18.0 塞了一堆平台专属的小改进：</p>
+<p><strong>Linux 端</strong>：终于<strong>支持 CJK 中文字体</strong>，UI 里出现中文/日文/韩文再也不是方块了；换成<strong>原生窗口装饰</strong>，去掉了那条 GTK3 大 header bar，视觉上一下子紧凑不少。</p>
+<p><strong>macOS 端</strong>：新增 <strong><code>Command+,</code> 打开设置</strong>（终于对齐 Mac 惯例）；Troubleshoot 页面多了「一键打开防火墙设置」按钮；应用启动名字从「Mac 用户看不懂的技术 hostname」换成了系统里那个「XX 的 MacBook Pro」；Dock icon 支持「App 没在跑时也能拖文本进去」。</p>
+<p><strong>Windows 端</strong>：LocalSend 加入了 <strong>Windows Share Sheet</strong>——在文件管理器里右键任意文件，选择「共享」，弹出的系统分享面板里直接能看到 LocalSend。这是我个人期待很久的一个改动。</p>
+<p><strong>Android 端</strong>：多了一块<strong>快捷面板磁贴</strong>，从状态栏下拉直接拉起 App；文件传输可以真正在后台跑，不用担心切个 App 就掉包。</p>
+<p>其他杂项：自定义主题颜色（拾色器）、慢速接收方也能更快传输、重复文件命名从 <code>file-1.txt</code> 改为 macOS 风格的 <code>file (1).txt</code>、修 Mac 的 Dock 拖拽和 Share Extension、修 Android「Share via link」下载不动的老 bug。</p>
+<h2 id="怎么装最新版">怎么装最新版
+</h2><p>三条路，看你在什么环境：</p>
+<p><strong>桌面端（Windows / macOS / Linux）</strong></p>
+<p>去 GitHub Release 页找对应平台的安装包：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">https://github.com/localsend/localsend/releases</span>
+</span></span></code></pre></div><p>Linux 上 <code>.deb</code> / <code>.rpm</code> / <code>.AppImage</code> 都有；macOS 有 <code>.dmg</code>；Windows 有安装包和便携版。</p>
+<p><strong>CLI 版</strong></p>
+<p>在同一个 Release 页里往下翻，找 CLI 专用的独立 tarball / exe，跟主 App 分开发布。装完直接 <code>localsend --help</code> 看参数。</p>
+<p><strong>移动端</strong></p>
+<ul>
+<li>Android：Google Play、F-Droid、GitHub Release 的 APK 三种渠道都行，注意 Play 版和自签版签名不一样，混装的话要卸载重装。</li>
+<li>iOS：App Store 直接搜 LocalSend。</li>
+</ul>
+<h2 id="一句话总结">一句话总结
+</h2><p>LocalSend 这次不是打补丁，是补了两个大洞（CLI 和 IPv6）、加了两个小惊喜（浏览器上传、默认校验和）、顺手打磨了每个平台的细节。原本它就是「跨平台传文件」这个赛道的默认答案，1.18.0 之后，服务器、NAS 和企业内网这几块之前不太吃的场景也一并覆盖上了。</p>
+<p>如果你还没装它，装一个；如果你已经装了，去更新。<strong>这一版的更新按钮，值得点。</strong></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/localsend/">LocalSend</a>
+        
+            <a href="/tags/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/">文件传输</a>
+        
+            <a href="/tags/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">开源</a>
+        
+            <a href="/tags/cli/">Cli</a>
+        
+            <a href="/tags/airdrop%E6%9B%BF%E4%BB%A3/">AirDrop替代</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/installerx-revived-android-apk-installer-mt-manager-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国产系统安装器折磨了我三年，直到我把它换成 InstallerX Revived</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/cursor-to-codex-two-weeks-real-feeling/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/roguecleaner-windows-uninstall-residue-cleaner/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国产流氓软件卸完还阴魂不散？这个 3MB 开源工具专挖 6 个藏身处（含一键回滚）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/egos-2000-teaching-os-2000-lines/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">2000 行代码写一个完整操作系统：egos-2000 源码拆解</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/localsend-1-18-0-cli-file-transfer-cross-platform\/'; 
+        const pageTitle = '隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 233 天 4 小时 · 105 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-08-22 12:19:13 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

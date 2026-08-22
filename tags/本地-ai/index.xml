@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>本地 AI on softon.top</title>
+		<link>https://softon.top/tags/%E6%9C%AC%E5%9C%B0-ai/</link>
+		<description>Recent content in 本地 AI on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 03 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%9C%AC%E5%9C%B0-ai/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>本地 AI 助手不该只是聊天框：Axiom 的多智能体流水线给 Windows 带来了什么</title>
+				<link>https://softon.top/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/</link>
+				<pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/</guid>
+				<description>&lt;p&gt;过去一年，桌面 AI 助手像雨后春笋一样冒出来。&lt;/p&gt;&#xA;&lt;p&gt;有的把自己做成聊天框，贴在屏幕右侧；有的接入快捷键，随时帮你总结网页；有的干脆学 Copilot，把 AI 塞进系统、浏览器、Office 和终端。看起来很热闹，但真正用过一段时间就会发现：&lt;strong&gt;大多数桌面 AI 助手，本质上还是一个“会聊天的搜索框”。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;你问，它答。你复制，它改。你给一段代码，它解释。体验不差，但离“助手”两个字还差一口气。&lt;/p&gt;&#xA;&lt;p&gt;真正的助手，不应该只会说话。它要能理解任务、拆解任务、调用工具、执行步骤、检查结果，还要在必要时停下来问你一句：这一步确定要做吗？&lt;/p&gt;&#xA;&lt;p&gt;这也是 Axiom 这个选题值得写的地方。&lt;/p&gt;&#xA;&lt;p&gt;它不是又一个“套壳聊天应用”。根据 Reddit &lt;code&gt;r/SideProject&lt;/code&gt; 原帖描述，Axiom 是一个 &lt;strong&gt;local-first Windows AI assistant&lt;/strong&gt;，也就是本地优先的 Windows AI 助手。更有意思的是，它没有把所有事情都塞给一个万能 Agent，而是设计成一个 &lt;strong&gt;three-role council pipeline&lt;/strong&gt;：&lt;code&gt;Architect&lt;/code&gt;、&lt;code&gt;Builder&lt;/code&gt;、&lt;code&gt;Critic&lt;/code&gt; 三个角色协作，再配合 calculator、Python/Java sandboxes、web 等工具代理完成任务。&lt;/p&gt;&#xA;&lt;p&gt;这听起来像小团队开会：有人画方案，有人动手干活，有人挑刺验收。&lt;/p&gt;&#xA;&lt;p&gt;而这件事，可能比“它能不能本地跑模型”更重要。&lt;/p&gt;&#xA;&lt;h2 id=&#34;桌面-ai-助手最大的问题太像聊天太不像工作流&#34;&gt;桌面 AI 助手最大的问题：太像聊天，太不像工作流&#xA;&lt;/h2&gt;&lt;p&gt;我们对 AI 助手的第一印象，被 ChatGPT 训练得太深了。&lt;/p&gt;&#xA;&lt;p&gt;一个输入框，一个回答区，一来一回。这个形态适合问答，也适合写作，但它天然不适合复杂任务。因为复杂任务从来不是“一问一答”能解决的，它更像一条施工流水线。&lt;/p&gt;&#xA;&lt;p&gt;比如你让 AI 帮你做一个小工具：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;先明确需求边界&lt;/li&gt;&#xA;&lt;li&gt;再判断用什么技术栈&lt;/li&gt;&#xA;&lt;li&gt;然后生成代码&lt;/li&gt;&#xA;&lt;li&gt;接着运行测试&lt;/li&gt;&#xA;&lt;li&gt;发现报错后修复&lt;/li&gt;&#xA;&lt;li&gt;最后给你一个可执行结果&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果这些步骤都由同一个模型在同一段上下文里完成，它很容易出现几个问题。&lt;/p&gt;&#xA;&lt;p&gt;第一个问题是&lt;strong&gt;角色混乱&lt;/strong&gt;。它一边当产品经理，一边当程序员，一边当测试，一边当审稿人。听起来全能，实际像一个人戴四顶帽子，忙到最后忘了自己刚才承诺过什么。&lt;/p&gt;&#xA;&lt;p&gt;第二个问题是&lt;strong&gt;错误不可见&lt;/strong&gt;。单 Agent 常常会把错误藏在流畅语言里。它会说“已经完成”，但文件没写；它会说“测试通过”，但其实没跑；它会说“已修复”，但只是换了一种报错。&lt;/p&gt;&#xA;&lt;p&gt;第三个问题是&lt;strong&gt;缺少制衡&lt;/strong&gt;。人类团队里，架构师、开发、测试本来就是互相拉扯的。拉扯不是内耗，而是质量控制。可单 Agent 的回答太顺滑了，顺滑到你很难知道它哪里开始偷懒。&lt;/p&gt;&#xA;&lt;p&gt;Axiom 的三角色流水线，恰好是在打这个痛点。&lt;/p&gt;&#xA;&lt;h2 id=&#34;architectbuildercritic把一个脑袋拆成三种责任&#34;&gt;Architect、Builder、Critic：把一个“脑袋”拆成三种责任&#xA;&lt;/h2&gt;&lt;p&gt;Axiom 原帖里提到的 &lt;code&gt;Architect&lt;/code&gt;、&lt;code&gt;Builder&lt;/code&gt;、&lt;code&gt;Critic&lt;/code&gt;，名字很直白。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;Architect&lt;/code&gt; 负责想清楚任务怎么做。它不急着写代码，而是先看目标、约束、路径和风险。用建筑比喻说，它不是先搬砖，而是先确认地基在哪里，承重墙不能动哪几面。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

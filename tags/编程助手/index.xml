@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>编程助手 on softon.top</title>
+		<link>https://softon.top/tags/%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B/</link>
+		<description>Recent content in 编程助手 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 12 Jun 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我用 Ollama 一个月只花 47 元，跑通 3 个大模型写代码，附成本清单</title>
+				<link>https://softon.top/software/ollama-coding-cost-47-yuan/</link>
+				<pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ollama-coding-cost-47-yuan/</guid>
+				<description>&lt;p&gt;你有没有遇到过这种情况——明明想用 AI 提升编程效率，却被 Copilot 的 10 美元/月、Cursor Pro 的 20 美元/月或 API 调用费用吓退？程序员的工具订阅正在悄然蚕食工资，而其实，有一种更安静、更私密、成本却低到惊人的方案：用 Ollama 在本地跑大语言模型，当你的专属 AI 编程助手。&lt;/p&gt;&#xA;&lt;p&gt;我最近做了一个月的实验：&lt;strong&gt;关闭所有付费 AI 服务，只用一台装有中旧显卡的电脑 + Ollama，跑通了 3 个不同的代码大模型，整月的电费和硬件折旧总计仅 47 元人民币&lt;/strong&gt;。下面我把硬件选型、功耗测量、模型选择与成本分解全程拆解给你看，看看你也能不能省下这笔“智商税”。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么要折腾本地部署&#34;&gt;为什么要折腾本地部署？&#xA;&lt;/h2&gt;&lt;p&gt;别误会，我不是反对付费工具。GitHub Copilot 确实强，Cursor 的 Tab 提示也香，但问题是：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;持续费用&lt;/strong&gt;：Copliot 个人版 10 美元/月，Cursor Pro 20 美元/月，算上汇率快 200 元人民币/月。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;隐私顾虑&lt;/strong&gt;：你的代码片段会被发送到服务器训练模型（即使他们说不存储，传输过程也总让人不安）。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络依赖&lt;/strong&gt;：公司网络不佳或需要离线时，这些工具就变成了摆设。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;增长的焦虑&lt;/strong&gt;：今天是 10 美元，明天可能涨到 15，后天捆绑更贵的企业套餐。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;相比之下，&lt;strong&gt;本地大模型的边际成本近乎为零&lt;/strong&gt;——你已经买好了显卡和电脑，多跑几小时模型，主要多消耗的只是电费。如果你恰好有一张闲置的中端游戏卡或工作站卡，把它变成 AI 编程助手，比订阅任何 SaaS 都更努力。&lt;/p&gt;&#xA;&lt;h2 id=&#34;我的硬件不需要顶级配置&#34;&gt;我的硬件：不需要顶级配置&#xA;&lt;/h2&gt;&lt;p&gt;我用的不是 4090 这样的旗舰卡，而是一张二手 RTX 2060 12GB（大约 800 元人民币入手），搭配：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;CPU：AMD Ryzen 5 5600X&lt;/li&gt;&#xA;&lt;li&gt;主板：B550&lt;/li&gt;&#xA;&lt;li&gt;内存：16GB DDR4 3200MHz&lt;/li&gt;&#xA;&lt;li&gt;系统盘：500GB NVMe SSD&lt;/li&gt;&#xA;&lt;li&gt;电源：550W 80+ 金牌&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这套配置在二手市场约 1500 元左右，但核心是显卡。RTX 2060 12GB 的显存足以运行 7B~13B 参数的模型（4-bit 量化），而对于代码生成，这类模型已经足够实用。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>DeepSeek-V4-Pro vs GLM-5.1 代码生成横向对比：谁才是程序员的得力助手？</title>
+				<link>https://softon.top/software/deepseek-v4-pro-vs-glm-5-1-codegen-comparison/</link>
+				<pubDate>Fri, 29 May 2026 20:00:00 +0800</pubDate>
+				<guid>https://softon.top/software/deepseek-v4-pro-vs-glm-5-1-codegen-comparison/</guid>
+				<description>&lt;p&gt;去年我曾用 GLM-4 做过一次 AI 编程助手的尝试，结果是：写个简单的 CRUD 接口还能凑合，稍微复杂点的业务逻辑就开始瞎猜。当时的感受就像给实习生分配任务——他总是能交出些东西，但你得花更多时间去检查、修改。&lt;/p&gt;&#xA;&lt;p&gt;今年 DeepSeek-V4-Pro 和 GLM-5.1 相继发布，宣传都说在代码理解和生成上有质的飞跃。我不想只看官方榜单，想亲自在真实项目里试一试：它们到底能帮我们省多少力？在什么情况下该用哪个？&lt;/p&gt;&#xA;&lt;p&gt;本文把我在同一台机器上、同样的评测集合（HumanEval、MBPP）以及两个私有项目上的实测结果摊开来说。不是简单的排名，而是想告诉你：&lt;strong&gt;在你的具体场景里，该如何选型？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;一为什么我们需要横向对比&#34;&gt;一、为什么我们需要横向对比？&#xA;&lt;/h2&gt;&lt;p&gt;市面上太多「 XXX 模型在 HumanEval 上达到了 85% 」的新闻标题。但作为开发者，我们更关心：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;它能否直接生成可用的业务代码，还是需要大量修改？&lt;/li&gt;&#xA;&lt;li&gt;在我们常用的语言（Python、JavaScript、Go）里表现如何？&lt;/li&gt;&#xA;&lt;li&gt;推理速度和显存占用是否能接受？&lt;/li&gt;&#xA;&lt;li&gt;在私有代码库上做微调或提示词工程后，效果提升有多大？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;单纯看榜单无法回答这些问题。于是我决定做一个&lt;strong&gt;可复现的横向对比&lt;/strong&gt;：相同硬件、相同提示词框架、相同评测任务，只换模型。&lt;/p&gt;&#xA;&lt;h2 id=&#34;二实验设置公平才有意义&#34;&gt;二、实验设置：公平才有意义&#xA;&lt;/h2&gt;&lt;p&gt;为了让结果有说服力，我控制了以下变量：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;变量&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;取值&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;硬件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;1× RTX 4090 (24GB VRAM) + Intel i9-13900K&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;框架&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;vLLM 0.5.3，Tensor Parallelism=1&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;提示词&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;统模板：&lt;code&gt;你是一个精通 {language} 的程序员。请根据以下描述生成代码：{prompt}&lt;/code&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;采样参数&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;temperature=0.2, top_p=0.95, max_tokens=512&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;评测集合&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;HumanEval (Python)、MBPP (Python)、私有项目 A (JavaScript)、私有项目 B (Go)&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;指标&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;通过率（Pass@1）、平均延迟（token/s）、峰值显存占用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;注意：所有模型均采用官方发布的 4-bit 量化版本（DeepSeek-V4-Pro-4bit、GLM-5.1-4bit），以确保在同一张卡上能够跑满批次。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;21-私有项目背景&#34;&gt;2.1 私有项目背景&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;项目 A&lt;/strong&gt;：一个基于 Express 的中后台管理系统，涉及权限控制、数据校验、异常处理。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;项目 B&lt;/strong&gt;：一个用 Go 写的微服务框架，包含 gRPC 接口、Consul 注册、链路追踪。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;我从每个项目中随机抽取了 20 个典型功能点作为测试 prompt，确保涵盖中间件、业务逻辑、数据访问等多个方面。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

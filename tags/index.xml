@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CleanMyMac</title>
+				<link>https://softon.top/tags/cleanmymac/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cleanmymac/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MacOS</title>
+				<link>https://softon.top/tags/macos/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/macos/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MangoDisk</title>
+				<link>https://softon.top/tags/mangodisk/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/mangodisk/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Rust</title>
+				<link>https://softon.top/tags/rust/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/rust/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Tauri</title>
+				<link>https://softon.top/tags/tauri/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/tauri/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Windows</title>
+				<link>https://softon.top/tags/windows/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/windows/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>开源软件</title>
+				<link>https://softon.top/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>磁盘清理</title>
+				<link>https://softon.top/tags/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>LLM 硬件</title>
+				<link>https://softon.top/tags/llm-%E7%A1%AC%E4%BB%B6/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/llm-%E7%A1%AC%E4%BB%B6/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>PCIe 交换机</title>
+				<link>https://softon.top/tags/pcie-%E4%BA%A4%E6%8D%A2%E6%9C%BA/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/pcie-%E4%BA%A4%E6%8D%A2%E6%9C%BA/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RTX 6000 Pro</title>
+				<link>https://softon.top/tags/rtx-6000-pro/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/rtx-6000-pro/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>本地大模型</title>
+				<link>https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>自建 AI</title>
+				<link>https://softon.top/tags/%E8%87%AA%E5%BB%BA-ai/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E8%87%AA%E5%BB%BA-ai/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI Agent</title>
+				<link>https://softon.top/tags/ai-agent/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Aria2</title>
+				<link>https://softon.top/tags/aria2/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/aria2/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Motrix</title>
+				<link>https://softon.top/tags/motrix/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/motrix/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>下载工具</title>
+				<link>https://softon.top/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Agent Framework</title>
+				<link>https://softon.top/tags/agent-framework/</link>
+				<pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/agent-framework/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Cordis</title>
+				<link>https://softon.top/tags/cordis/</link>
+				<pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cordis/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>DeepSeek</title>
+				<link>https://softon.top/tags/deepseek/</link>
+				<pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/deepseek/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

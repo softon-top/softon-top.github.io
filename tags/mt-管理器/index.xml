@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>MT 管理器 on softon.top</title>
+		<link>https://softon.top/tags/mt-%E7%AE%A1%E7%90%86%E5%99%A8/</link>
+		<description>Recent content in MT 管理器 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 14 Aug 2026 14:30:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/mt-%E7%AE%A1%E7%90%86%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>国产系统安装器折磨了我三年，直到我把它换成 InstallerX Revived</title>
+				<link>https://softon.top/software/installerx-revived-android-apk-installer-mt-manager-comparison/</link>
+				<pubDate>Fri, 14 Aug 2026 14:30:00 +0800</pubDate>
+				<guid>https://softon.top/software/installerx-revived-android-apk-installer-mt-manager-comparison/</guid>
+				<description>&lt;p&gt;前几天想给家里老人的红米装个旧版微信,理由是新版把老年人常用的入口挪没了。&lt;/p&gt;&#xA;&lt;p&gt;一顿操作下来:MIUI 安装器先弹&amp;quot;该应用来源不安全&amp;quot;,允许了;接着又弹&amp;quot;版本低于已安装版本,无法安装&amp;quot;,允许降级?没这个开关;最后弹&amp;quot;该应用未通过小米安全扫描,建议卸载&amp;quot;,然后&lt;strong&gt;默认按钮变成&amp;quot;卸载&amp;quot;&lt;/strong&gt;。我一路点&amp;quot;仍然安装&amp;quot;,系统就一路加大字体、加红警告、把&amp;quot;仍然安装&amp;quot;按钮做得比&amp;quot;取消&amp;quot;小一半。&lt;/p&gt;&#xA;&lt;p&gt;那一刻我突然意识到——&lt;strong&gt;装个 APK 而已,凭什么要跟系统斗智斗勇。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;回来翻了下当年的记录:2023 年折腾 MIUI 就用过 InstallerX,后来作者归档,项目沉了两年。这次搜索发现,社区把它捡了起来,名字叫 &lt;strong&gt;InstallerX Revived&lt;/strong&gt;,还在 GitHub 挂着 GPL v3。8.5K Telegram 订阅,一直在更。&lt;/p&gt;&#xA;&lt;p&gt;装上用了两周,基本可以下结论:&lt;strong&gt;国产系统安装器这个战场,InstallerX Revived 目前是唯一没有对手的方案。&lt;/strong&gt; 但它不是所有场景的万金油,和老牌工具 MT 管理器有明确的职责边界。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章拆三件事:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;为什么系统自带安装器让人抓狂&lt;/strong&gt;——把痛点具体化,不是玄学吐槽&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;InstallerX Revived 到底解决了什么&lt;/strong&gt;——4 档授权器 + 5 种安装流 + 3 个杀手锏&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;和 MT 管理器怎么分工&lt;/strong&gt;——一个改 APK,一个装 APK,别混用&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;系统自带安装器的三大罪状&#34;&gt;系统自带安装器的三大罪状&#xA;&lt;/h2&gt;&lt;p&gt;先说清楚:如果你用的是原生 Android(Pixel、原生 AOSP、部分海外 ROM),日常装 APK 其实没啥问题。&lt;strong&gt;受苦最深的是国产深度定制系统用户&lt;/strong&gt;——MIUI/HyperOS、ColorOS、OriginOS、OneUI、MagicOS,尤其是 HyperOS 和 ColorOS 最近两年。&lt;/p&gt;&#xA;&lt;p&gt;具体罪状三条:&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;罪状一:格式支持稀烂。&lt;/strong&gt; 系统自带安装器只认单个 APK。APKS、APKM、XAPK 这些&lt;strong&gt;分包格式&lt;/strong&gt;(把主包和资源包分开的现代 Android 应用分发格式)一律不认。你从 APKMirror、APKPure 下载的应用,90% 是分包格式,系统安装器直接拒收。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;罪状二:安装限制越来越多。&lt;/strong&gt; 联网扫描、包名黑名单、TargetSDK 强制检查、&amp;ldquo;未知来源&amp;quot;链式启动等等。国产系统在&amp;quot;安全&amp;quot;名义下,把很多本该属于用户的选择权收走了。想装个 3 年前的旧版应用?&amp;ldquo;目标 SDK 版本过低,建议卸载&amp;rdquo;。想批量装 20 个应用?对不起,一个一个点。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
