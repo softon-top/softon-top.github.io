@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="yorukot/superfile 22813 star、v1.6.0、Go + Bubble Tea 写的现代终端文件管理器：多面板、图片预览、20+ 主题。装了三个 TUI 文件管理器折腾一周，聊聊 superfile 到底该给谁用，跟 Yazi、Ranger 相比强在哪、弱在哪。">
+<title>22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger</title>
+
+<link rel='canonical' href='https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger">
+<meta property='og:description' content="yorukot/superfile 22813 star、v1.6.0、Go + Bubble Tea 写的现代终端文件管理器：多面板、图片预览、20+ 主题。装了三个 TUI 文件管理器折腾一周，聊聊 superfile 到底该给谁用，跟 Yazi、Ranger 相比强在哪、弱在哪。">
+<meta property='og:url' content='https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='superfile' /><meta property='article:tag' content='tui' /><meta property='article:tag' content='file-manager' /><meta property='article:tag' content='terminal' /><meta property='article:tag' content='yazi' /><meta property='article:tag' content='ranger' /><meta property='article:tag' content='productivity' /><meta property='article:published_time' content='2026-08-25T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-25T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger">
+<meta name="twitter:description" content="yorukot/superfile 22813 star、v1.6.0、Go + Bubble Tea 写的现代终端文件管理器：多面板、图片预览、20+ 主题。装了三个 TUI 文件管理器折腾一周，聊聊 superfile 到底该给谁用，跟 Yazi、Ranger 相比强在哪、弱在哪。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger\"",
+  "description": "\"yorukot/superfile 22813 star、v1.6.0、Go + Bubble Tea 写的现代终端文件管理器：多面板、图片预览、20+ 主题。装了三个 TUI 文件管理器折腾一周，聊聊 superfile 到底该给谁用，跟 Yazi、Ranger 相比强在哪、弱在哪。\"",
+  "url": "\"https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/\"",
+  "datePublished": "2026-08-25T00:00:00Z",
+  "dateModified": "2026-08-25T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/\""
+  },
+  "keywords": "\"superfile, tui, file-manager, terminal, yazi, ranger, productivity\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger\"",
+      "item": "\"https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#superfile-到底是个什么东西">superfile 到底是个什么东西</a></li>
+    <li><a href="#三个真正值得聊的功能">三个真正值得聊的功能</a>
+      <ul>
+        <li><a href="#一多面板这才是核心杀手锏">一、多面板：这才是核心杀手锏</a></li>
+        <li><a href="#二图片预览请先看清楚你的终端支不支持">二、图片预览：请先看清楚你的终端支不支持</a></li>
+        <li><a href="#三20-内置主题颜值这事儿不能省">三、20+ 内置主题：颜值这事儿不能省</a></li>
+      </ul>
+    </li>
+    <li><a href="#对比选型superfile-vs-yazi-vs-ranger">对比选型：superfile vs Yazi vs Ranger</a></li>
+    <li><a href="#谁不该用-superfile">谁不该用 superfile</a></li>
+    <li><a href="#5-分钟上手跨平台安装">5 分钟上手：跨平台安装</a></li>
+    <li><a href="#值得记住的默认键位">值得记住的默认键位</a></li>
+    <li><a href="#我的最终结论">我的最终结论</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/superfile-tui-file-manager-vs-yazi-ranger/">22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-25T00:00:00Z'>
+                    2026-08-25，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：14分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#superfile-到底是个什么东西">superfile 到底是个什么东西</a></li>
+    <li><a href="#三个真正值得聊的功能">三个真正值得聊的功能</a>
+      <ul>
+        <li><a href="#一多面板这才是核心杀手锏">一、多面板：这才是核心杀手锏</a></li>
+        <li><a href="#二图片预览请先看清楚你的终端支不支持">二、图片预览：请先看清楚你的终端支不支持</a></li>
+        <li><a href="#三20-内置主题颜值这事儿不能省">三、20+ 内置主题：颜值这事儿不能省</a></li>
+      </ul>
+    </li>
+    <li><a href="#对比选型superfile-vs-yazi-vs-ranger">对比选型：superfile vs Yazi vs Ranger</a></li>
+    <li><a href="#谁不该用-superfile">谁不该用 superfile</a></li>
+    <li><a href="#5-分钟上手跨平台安装">5 分钟上手：跨平台安装</a></li>
+    <li><a href="#值得记住的默认键位">值得记住的默认键位</a></li>
+    <li><a href="#我的最终结论">我的最终结论</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>我曾经很长一段时间不理解「终端文件管理器」这个物种。</p>
+<p><code>ls</code>、<code>cd</code>、<code>mv</code>、<code>cp</code> 我一年打上万次，肌肉记忆快到不需要思考。装个 TUI 上去，看似多了个花哨界面，实际上要多学一套快捷键，还多一层进程。这不叫效率工具，这叫多此一举。</p>
+<p>直到那天我在服务器上要在四个目录之间倒腾一批日志：<code>/var/log/nginx/</code>、<code>/opt/app/logs/</code>、<code>~/analysis/</code>、<code>~/report/</code>。终端开了四个 tab，一顿 <code>cd</code> + <code>ls</code> 之后我发现自己已经忘了刚才那个 nginx 目录是哪个 tab 了。</p>
+<p>那一刻我才明白：<strong>GUI 文件管理器解决的问题不是「操作文件」，是「同时看到多个文件夹的状态」。</strong> 双开、三开、四开面板，眼睛能一眼扫过去，脑子不用维护一个「我当前在哪个目录」的栈。</p>
+<p>这个问题在 SSH 场景下没有 GUI 兜底。于是我开始翻 TUI 文件管理器。装了三个：<strong>superfile</strong>、<strong>Yazi</strong>、<strong>Ranger</strong>。今天这篇专门聊 superfile —— 一颗 GitHub 22813 star、v1.6.0、Go 写的新贵。</p>
+<blockquote>
+<p>项目地址：<code>github.com/yorukot/superfile</code>
+官网：<code>superfile.dev</code>
+Star 数：22813（截至 2026-08-25）
+最新版本：v1.6.0（2026-06-07 发布）
+License：MIT</p>
+</blockquote>
+<h2 id="superfile-到底是个什么东西">superfile 到底是个什么东西
+</h2><p>先说人话版本：<strong>一个能让你在终端里像用 macOS Finder / Windows 文件资源管理器一样操作文件的工具</strong>。</p>
+<p>技术版本：Go 1.21+ 写的 TUI 文件管理器，UI 层用的是 charmbracelet 家的 <code>Bubble Tea</code> 框架 —— 这个框架在 Go 圈是 TUI 事实标准，出了 <code>gum</code>、<code>glow</code>、<code>crush</code> 一堆漂亮东西，<code>superfile</code> 是同一家族的血脉。</p>
+<p>跑起来长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">$ spf</span>
+</span></span></code></pre></div><p>一条命令进去，你会看到左边是文件树，中间是当前目录的文件列表，右边是预览面板 —— 光标停在图片文件上，右侧直接把图缩略图渲染在终端里；停在 Markdown 上，直接语法高亮预览；停在代码文件上，也是彩色高亮。</p>
+<p><strong>这不是给运维老哥用的</strong>。这是给「装了一堆 dotfiles、每天在 kitty / WezTerm / Ghostty 里过日子」的现代开发者用的。它的定位从命名就能看出来 —— <code>super</code> 是溢美之词，<code>file</code> 是本分。它不追求 nnn 那种「二进制小到能塞进救援 U 盘」的极简，也不学 Ranger 那种「Vim 键位敬老院」的传统。它想做的是：<strong>让终端里的文件夹长得跟你的 GUI 一样漂亮</strong>。</p>
+<h2 id="三个真正值得聊的功能">三个真正值得聊的功能
+</h2><h3 id="一多面板这才是核心杀手锏">一、多面板：这才是核心杀手锏
+</h3><p>TUI 文件管理器里，绝大多数都是「单面板 + Tab 切换」的思路 —— Ranger 是这样，Yazi 早期也是。superfile 的默认布局是<strong>可任意分裂的多面板</strong>：</p>
+<ul>
+<li><code>Ctrl+N</code> 新开一个面板</li>
+<li><code>Tab</code> 在面板之间切换</li>
+<li><code>Ctrl+W</code> 关闭当前面板</li>
+<li>面板之间可以直接复制、移动、对比文件</li>
+</ul>
+<p>回到我开头那个场景 —— 四个日志目录来回跳，用 superfile 就是四个面板并排，光标扫一遍全看清楚。这一个功能就值回学习成本。</p>
+<p>启动时也可以直接把要打开的目录列出来：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">spf ~ ~/proj1 ~/Pictures /tmp</span>
+</span></span></code></pre></div><p>四个面板一次开好。</p>
+<h3 id="二图片预览请先看清楚你的终端支不支持">二、图片预览：请先看清楚你的终端支不支持
+</h3><p>这里必须泼一盆冷水。superfile 官网列了一张终端兼容表，我把关键的抄下来：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>终端</th>
+					<th>协议</th>
+					<th>图片预览</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>kitty</strong></td>
+					<td>Kitty protocol</td>
+					<td>✅ 支持</td>
+			</tr>
+			<tr>
+					<td><strong>WezTerm</strong></td>
+					<td>Kitty protocol</td>
+					<td>✅ 支持</td>
+			</tr>
+			<tr>
+					<td><strong>Ghostty</strong></td>
+					<td>Kitty protocol</td>
+					<td>✅ 支持</td>
+			</tr>
+			<tr>
+					<td>iTerm2</td>
+					<td>Inline images</td>
+					<td>❌ 不支持</td>
+			</tr>
+			<tr>
+					<td>Konsole</td>
+					<td>Inline images</td>
+					<td>❌ 不支持</td>
+			</tr>
+			<tr>
+					<td>VSCode 集成终端</td>
+					<td>Inline images</td>
+					<td>❌ 不支持</td>
+			</tr>
+			<tr>
+					<td>Tabby / Hyper</td>
+					<td>Inline images</td>
+					<td>❌ 不支持</td>
+			</tr>
+			<tr>
+					<td>foot / Black Box</td>
+					<td>Sixel</td>
+					<td>❌ 不支持</td>
+			</tr>
+			<tr>
+					<td>Windows Terminal</td>
+					<td>-</td>
+					<td>❌ 不支持</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>看清楚这个坑：<strong>只有走 Kitty graphics protocol 的三个终端能真图片预览</strong>。iTerm2 明明有 inline images 协议、Windows Terminal 也在支持 Sixel，但 superfile 目前都还没适配。</p>
+<p>如果你的终端不在名单里，光标停在 <code>.jpg</code> 上，你会看到什么？—— 一个 ANSI 色块拼出来的低分辨率马赛克。superfile 叫这个是 &ldquo;graceful fallback&rdquo;，用户看到的实际感受是「哦，跟不预览也差不多」。</p>
+<p><strong>这是我给 superfile 打分时扣分最多的地方</strong>。官方 GitHub Discussion（#1196）里，「多协议图片预览」已经是排名最高的用户诉求。目前的解法是等 kitty 协议之外的 inline image 协议一个一个补进来 —— 从我翻到的开发者回复看，这活儿在做，但没时间表。</p>
+<p><strong>结论</strong>：如果你还在用 iTerm2 或 Windows Terminal，别为了图片预览来 superfile。要么先换终端（kitty / WezTerm / Ghostty 都是好东西），要么去用 Yazi（它的图片预览兼容协议多得多）。</p>
+<h3 id="三20-内置主题颜值这事儿不能省">三、20+ 内置主题：颜值这事儿不能省
+</h3><p>superfile 内置 20+ 主题：Catppuccin、Nord、Tokyo Night、Dracula、Gruvbox、Rose Pine —— 你能想到的流行主题基本齐了。</p>
+<p>这条乍看是花活儿。但如果你已经花了半天时间给 Neovim、Alacritty、tmux 调 Catppuccin Mocha 一套配色，那 superfile 直接给你现成的、能对齐整套 dotfiles 视觉体系的主题 —— 这就叫<strong>存量兼容红利</strong>。</p>
+<p>对比一下：Ranger 想改配色，你得手写 <code>rifle.conf</code> + <code>colorscheme.py</code>；Yazi 好一点，Lua 写 <code>theme.toml</code>；superfile 是配置文件里一行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">theme</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;catppuccin-mocha&#34;</span>
+</span></span></code></pre></div><h2 id="对比选型superfile-vs-yazi-vs-ranger">对比选型：superfile vs Yazi vs Ranger
+</h2><p>这三个是当前 TUI 文件管理器赛道最主要的选手。我三个都装了、都用了至少一周。核心差异我压缩成一张表：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>superfile</th>
+					<th>Yazi</th>
+					<th>Ranger</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>语言</td>
+					<td>Go + Bubble Tea</td>
+					<td>Rust + Lua</td>
+					<td>Python</td>
+			</tr>
+			<tr>
+					<td>UI 风格</td>
+					<td>现代 · 多面板</td>
+					<td>现代 · 双栏</td>
+					<td>经典 · Vim 味</td>
+			</tr>
+			<tr>
+					<td>图片预览</td>
+					<td>❌ 仅 Kitty 协议</td>
+					<td>✅ Kitty/Sixel/iTerm2/Konsole 全支持</td>
+					<td>⚠️ 靠外部脚本（Uberzug）</td>
+			</tr>
+			<tr>
+					<td>I/O 模型</td>
+					<td>同步</td>
+					<td>全异步</td>
+					<td>同步</td>
+			</tr>
+			<tr>
+					<td>大目录性能（10k+ 文件）</td>
+					<td>一般</td>
+					<td>优秀</td>
+					<td>明显卡</td>
+			</tr>
+			<tr>
+					<td>主题生态</td>
+					<td>20+ 内置</td>
+					<td>Lua 主题</td>
+					<td>Python 手写</td>
+			</tr>
+			<tr>
+					<td>插件系统</td>
+					<td>起步中</td>
+					<td>Lua + 官方 pkg manager</td>
+					<td>Python 生态成熟</td>
+			</tr>
+			<tr>
+					<td>学习曲线</td>
+					<td>简单</td>
+					<td>中等</td>
+					<td>陡（Vim 前提）</td>
+			</tr>
+			<tr>
+					<td>二进制体积</td>
+					<td>中</td>
+					<td>中</td>
+					<td>需 Python 环境</td>
+			</tr>
+			<tr>
+					<td>GitHub star</td>
+					<td>22.8k</td>
+					<td>~33k</td>
+					<td>~16k</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>Yazi 在纯技术指标上更强</strong>：Rust 异步 I/O、图片预览兼容广、大目录不卡、Lua 插件系统成熟。如果只看性能和图片预览，Yazi 是当前 2026 年的 TUI 文件管理器天花板。</p>
+<p><strong>Ranger 是老兵</strong>：Python 生态成熟、Vim 键位、<code>rifle.conf</code> 玩得溜的老用户根本换不动。但它是同步 I/O，几万文件的目录会明显卡；图片预览要外挂 Uberzug，配起来一整晚。</p>
+<p><strong>superfile 的位置在哪？</strong></p>
+<p>一句话：<strong>入门门槛最低、UI 观感最好、对「不想学 Vim 键位、又不想为图片预览折腾一晚上」的开发者最友好</strong>。</p>
+<p>具体点：</p>
+<ul>
+<li><strong>你是从 GUI 文件管理器迁移过来的</strong>（macOS Finder、Total Commander 双面板迷）→ 选 superfile，多面板体验直接对齐 GUI 直觉</li>
+<li><strong>你是资深 Vim / Ranger 用户</strong>、<code>hjkl</code> 已经是本能反射 → 别换，Ranger / Yazi 更符合你</li>
+<li><strong>你要处理巨大目录（几十万文件）</strong> → 选 Yazi，异步 I/O 优势明显</li>
+<li><strong>你在 kitty / WezTerm / Ghostty 里过日子</strong> → superfile 完全够用，且颜值最高</li>
+<li><strong>你在 Windows Terminal 或 iTerm2 里</strong> → 图片预览这条腿断，考虑 Yazi</li>
+</ul>
+<h2 id="谁不该用-superfile">谁不该用 superfile
+</h2><p>写文章总喜欢吹优点，我反着来 —— 三种人别浪费时间：</p>
+<p><strong>1. SSH 到几十台服务器的运维</strong></p>
+<p>你要的是「装机秒速部署、二进制 &lt;1MB、离线可用」。superfile 的 Go 二进制虽然不算大，但对比 nnn 的 C 代码还是重。这个场景 nnn 永远是王。</p>
+<p><strong>2. 老终端遗产用户</strong></p>
+<p>你的 iTerm2 已经陪你走过五年、快捷键、状态栏、主题全定制好了 —— 你不会为了 superfile 的图片预览换终端，也不会容忍它降级到 ANSI 马赛克。你的替代方案是 Yazi。</p>
+<p><strong>3. Vim 深度用户</strong></p>
+<p>你的 muscle memory 已经写死在 <code>hjkl</code> + <code>y</code> + <code>p</code> 上。superfile 的默认键位是自造的一套（可完全 remap，但要花时间）。你换掉 Ranger 的心理成本比迁移出 Neovim 还高。</p>
+<p><strong>如果以上三条你都不是</strong> —— 那你就是 superfile 的目标用户。</p>
+<h2 id="5-分钟上手跨平台安装">5 分钟上手：跨平台安装
+</h2><p>superfile 提供了全平台一键脚本，我把命令抄下来（选一条跑就行）：</p>
+<p><strong>macOS + Linux（bash 脚本）</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">bash -c &#34;$(curl -sLo- https://superfile.netlify.app/install.sh)&#34;</span>
+</span></span></code></pre></div><p><strong>Homebrew</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">brew install superfile</span>
+</span></span></code></pre></div><p><strong>Arch Linux</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">sudo pacman -S superfile</span>
+</span></span></code></pre></div><p><strong>Windows（PowerShell）</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">powershell -ExecutionPolicy Bypass -Command &#34;Invoke-Expression ((New-Object System.Net.WebClient).DownloadString(&#39;https://superfile.netlify.app/install.ps1&#39;))&#34;</span>
+</span></span></code></pre></div><p><strong>Nix</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">nix profile install github:yorukot/superfile#superfile</span>
+</span></span></code></pre></div><p>装完之后直接：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">spf</span>
+</span></span></code></pre></div><p>即可启动。第一次运行会在 <code>~/.config/superfile/</code>（Linux/macOS）或 <code>%APPDATA%\superfile\</code>（Windows）下生成配置文件夹，主题、快捷键、pinned 目录都在这。</p>
+<h2 id="值得记住的默认键位">值得记住的默认键位
+</h2><p>superfile 的键位不难，我列几个第一天就要会的：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>操作</th>
+					<th>键位</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>上下移动</td>
+					<td><code>↑</code> <code>↓</code> 或 <code>k</code> <code>j</code></td>
+			</tr>
+			<tr>
+					<td>进入 / 退出目录</td>
+					<td><code>→</code> <code>←</code> 或 <code>l</code> <code>h</code></td>
+			</tr>
+			<tr>
+					<td>新开面板</td>
+					<td><code>Ctrl+N</code></td>
+			</tr>
+			<tr>
+					<td>切换面板</td>
+					<td><code>Tab</code></td>
+			</tr>
+			<tr>
+					<td>关闭面板</td>
+					<td><code>Ctrl+W</code></td>
+			</tr>
+			<tr>
+					<td>复制</td>
+					<td><code>c</code></td>
+			</tr>
+			<tr>
+					<td>剪切（移动）</td>
+					<td><code>x</code></td>
+			</tr>
+			<tr>
+					<td>粘贴</td>
+					<td><code>p</code></td>
+			</tr>
+			<tr>
+					<td>删除</td>
+					<td><code>d</code></td>
+			</tr>
+			<tr>
+					<td>重命名</td>
+					<td><code>r</code></td>
+			</tr>
+			<tr>
+					<td>多选</td>
+					<td><code>Space</code></td>
+			</tr>
+			<tr>
+					<td>模糊搜索</td>
+					<td><code>/</code></td>
+			</tr>
+			<tr>
+					<td>Pin 当前目录</td>
+					<td><code>P</code></td>
+			</tr>
+			<tr>
+					<td>帮助</td>
+					<td><code>?</code></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><code>hjkl</code> 默认就绑好了，Vim 党迁移成本不高。真正需要重新学的其实是<strong>面板管理那几个 <code>Ctrl</code> 组合键</strong>。</p>
+<h2 id="我的最终结论">我的最终结论
+</h2><p>superfile 不是 TUI 文件管理器里技术最强的，那是 Yazi。它也不是生态最深的，那是 Ranger。</p>
+<p>但 superfile 是<strong>目前把「颜值 + 多面板 + 跨平台易上手」三件事同时做到位的唯一选手</strong>。22k star 不是白攒的 —— 它的绝大多数用户，大概率就是我这种「不想学 Vim 键位、又厌倦了 GUI 文件管理器、又不想折腾一晚上配置」的开发者。</p>
+<p>一周之后我的选择是：<strong>superfile 留在装机脚本里，Yazi 保留在需要爆炸性能的场景，Ranger 已经卸载</strong>。</p>
+<p><strong>如果你只想装一个终端文件管理器，且你的终端是 kitty / WezTerm / Ghostty 之一</strong> —— 直接装 superfile，别犹豫。</p>
+<p><strong>如果你还在用 iTerm2 或 Windows Terminal</strong> —— 先解决终端问题，或者先看看 Yazi。</p>
+<p>代码是逻辑的诗，工具是效率的翼。选对工具，比多学十个技巧值钱。</p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/"  target="_blank" rel="noopener"
+    >LocalSend 1.18.0 CLI：跨平台传文件不再要 GUI</a></li>
+<li><a class="link" href="https://softon.top/software/witr-cli-process-causality-tool/"  target="_blank" rel="noopener"
+    >witr：CLI 进程因果关系可视化工具</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/"  target="_blank" rel="noopener"
+    >Claude Code 开源替代盘点：OpenCode、Aider、Cline、Continue</a></li>
+<li><a class="link" href="https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/"  target="_blank" rel="noopener"
+    >Motrix 2.0 beta：三年沉寂后的回归 + AI Agent CLI 集成</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/superfile/">Superfile</a>
+        
+            <a href="/tags/tui/">Tui</a>
+        
+            <a href="/tags/file-manager/">File-Manager</a>
+        
+            <a href="/tags/terminal/">Terminal</a>
+        
+            <a href="/tags/yazi/">Yazi</a>
+        
+            <a href="/tags/ranger/">Ranger</a>
+        
+            <a href="/tags/productivity/">Productivity</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/peekdesktop-windows-macos-show-desktop-feature/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PeekDesktop：Windows 终于有了 macOS 点击壁纸显示桌面</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/superfile-tui-file-manager-vs-yazi-ranger\/'; 
+        const pageTitle = '22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

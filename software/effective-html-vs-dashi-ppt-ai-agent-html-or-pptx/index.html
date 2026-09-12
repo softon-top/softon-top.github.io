@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="同一份需求，一半人让 AI 出 HTML 页，一半人让 AI 出 PPTX。effective-html 和 dashi-ppt-skill 各撑一边。这一周我把两个 skill 都拉下来，用同一份融资复盘、同一份产品原型、同一份代码评审跑一遍，得出一个可操作的选型决策树。">
+<title>AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测</title>
+
+<link rel='canonical' href='https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测">
+<meta property='og:description' content="同一份需求，一半人让 AI 出 HTML 页，一半人让 AI 出 PPTX。effective-html 和 dashi-ppt-skill 各撑一边。这一周我把两个 skill 都拉下来，用同一份融资复盘、同一份产品原型、同一份代码评审跑一遍，得出一个可操作的选型决策树。">
+<meta property='og:url' content='https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='ai-agent' /><meta property='article:tag' content='skill' /><meta property='article:tag' content='html-prototype' /><meta property='article:tag' content='pptx' /><meta property='article:tag' content='claude-code' /><meta property='article:tag' content='codex' /><meta property='article:published_time' content='2026-08-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-31T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测">
+<meta name="twitter:description" content="同一份需求，一半人让 AI 出 HTML 页，一半人让 AI 出 PPTX。effective-html 和 dashi-ppt-skill 各撑一边。这一周我把两个 skill 都拉下来，用同一份融资复盘、同一份产品原型、同一份代码评审跑一遍，得出一个可操作的选型决策树。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测\"",
+  "description": "\"同一份需求，一半人让 AI 出 HTML 页，一半人让 AI 出 PPTX。effective-html 和 dashi-ppt-skill 各撑一边。这一周我把两个 skill 都拉下来，用同一份融资复盘、同一份产品原型、同一份代码评审跑一遍，得出一个可操作的选型决策树。\"",
+  "url": "\"https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/\"",
+  "datePublished": "2026-08-31T00:00:00Z",
+  "dateModified": "2026-08-31T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/\""
+  },
+  "keywords": "\"ai-agent, skill, html-prototype, pptx, claude-code, codex\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测\"",
+      "item": "\"https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一个真实的分歧ai-帮我做了个东西我不知道该开哪个软件看它">一个真实的分歧：AI 帮我做了个东西，我不知道该开哪个软件看它</a></li>
+    <li><a href="#先摆结论html-赢-sessionpptx-赢-archive">先摆结论：HTML 赢 session，PPTX 赢 archive</a></li>
+    <li><a href="#effective-html把-ai-的输出变成一份能扔进浏览器就看的东西">effective-html：把 AI 的输出变成一份能扔进浏览器就看的东西</a></li>
+    <li><a href="#dashi-ppt-skill把-ai-的输出变成一份能扔进-keynote-就改的东西">dashi-ppt-skill：把 AI 的输出变成一份能扔进 Keynote 就改的东西</a></li>
+    <li><a href="#一样的输入两套-skill-分别跑一遍">一样的输入，两套 skill 分别跑一遍</a>
+      <ul>
+        <li><a href="#场景-1技术评审报告">场景 1：技术评审报告</a></li>
+        <li><a href="#场景-2架构原型">场景 2：架构原型</a></li>
+        <li><a href="#场景-3董事会汇报">场景 3：董事会汇报</a></li>
+      </ul>
+    </li>
+    <li><a href="#从架构本质看为什么-html-和-pptx-会长成两个物种">从架构本质看：为什么 HTML 和 PPTX 会长成两个物种</a></li>
+    <li><a href="#一个可操作的选型决策树">一个可操作的选型决策树</a></li>
+    <li><a href="#装法快速对比">装法快速对比</a></li>
+    <li><a href="#一起用真实工作流示范">一起用：真实工作流示范</a></li>
+    <li><a href="#一个反直觉的观察skill-生态正在解决-markdown-一家独大的问题">一个反直觉的观察：skill 生态正在解决 Markdown 一家独大的问题</a></li>
+    <li><a href="#一些坑提前告诉你">一些坑，提前告诉你</a></li>
+    <li><a href="#什么时候两个-skill-都不用">什么时候两个 skill 都不用</a></li>
+    <li><a href="#快速回顾">快速回顾</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/">AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-31T00:00:00Z'>
+                    2026-08-31，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：17分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一个真实的分歧ai-帮我做了个东西我不知道该开哪个软件看它">一个真实的分歧：AI 帮我做了个东西，我不知道该开哪个软件看它</a></li>
+    <li><a href="#先摆结论html-赢-sessionpptx-赢-archive">先摆结论：HTML 赢 session，PPTX 赢 archive</a></li>
+    <li><a href="#effective-html把-ai-的输出变成一份能扔进浏览器就看的东西">effective-html：把 AI 的输出变成一份能扔进浏览器就看的东西</a></li>
+    <li><a href="#dashi-ppt-skill把-ai-的输出变成一份能扔进-keynote-就改的东西">dashi-ppt-skill：把 AI 的输出变成一份能扔进 Keynote 就改的东西</a></li>
+    <li><a href="#一样的输入两套-skill-分别跑一遍">一样的输入，两套 skill 分别跑一遍</a>
+      <ul>
+        <li><a href="#场景-1技术评审报告">场景 1：技术评审报告</a></li>
+        <li><a href="#场景-2架构原型">场景 2：架构原型</a></li>
+        <li><a href="#场景-3董事会汇报">场景 3：董事会汇报</a></li>
+      </ul>
+    </li>
+    <li><a href="#从架构本质看为什么-html-和-pptx-会长成两个物种">从架构本质看：为什么 HTML 和 PPTX 会长成两个物种</a></li>
+    <li><a href="#一个可操作的选型决策树">一个可操作的选型决策树</a></li>
+    <li><a href="#装法快速对比">装法快速对比</a></li>
+    <li><a href="#一起用真实工作流示范">一起用：真实工作流示范</a></li>
+    <li><a href="#一个反直觉的观察skill-生态正在解决-markdown-一家独大的问题">一个反直觉的观察：skill 生态正在解决 Markdown 一家独大的问题</a></li>
+    <li><a href="#一些坑提前告诉你">一些坑，提前告诉你</a></li>
+    <li><a href="#什么时候两个-skill-都不用">什么时候两个 skill 都不用</a></li>
+    <li><a href="#快速回顾">快速回顾</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="一个真实的分歧ai-帮我做了个东西我不知道该开哪个软件看它">一个真实的分歧：AI 帮我做了个东西，我不知道该开哪个软件看它
+</h2><p>上周我给某个团队做技术评审，要出三样东西：</p>
+<ul>
+<li>一份<strong>评审报告</strong>（结论 + 分数 + 建议）</li>
+<li>一版<strong>接管后的架构原型</strong>（几个组件重排，接口讲清楚）</li>
+<li>一份<strong>面向管理层的汇报稿</strong>（十几页，视觉稍微像点样子）</li>
+</ul>
+<p>我把需求丢进 Claude Code，让它自己挑手段。它给我出了三个截然不同的产物：报告是一个 <code>report.html</code>，架构是一个 <code>prototype.html</code>，汇报稿是一个 <code>deck.pptx</code>。</p>
+<p>我盯着这三个文件愣了 30 秒。</p>
+<p><strong>AI 到底该给我什么格式？</strong> 是 HTML？是 PPTX？还是不带格式的 Markdown？</p>
+<p>这问题看着蠢，但踩过坑的人都懂。给错格式，返工的时间比重写还长。</p>
+<p>这周我把 GitHub 上目前呼声最高的两个 skill 拉下来对比着跑了一周：</p>
+<ul>
+<li><a class="link" href="https://github.com/plannotator/effective-html"  target="_blank" rel="noopener"
+    ><code>plannotator/effective-html</code></a>（2.7k 星，主打 HTML 各种形态的 artifacts）</li>
+<li><a class="link" href="https://github.com/chuspeeism/dashi-ppt-skill"  target="_blank" rel="noopener"
+    ><code>chuspeeism/dashi-ppt-skill</code></a>（6.3k 星，主打<strong>可编辑的</strong>真 PPTX）</li>
+</ul>
+<p>它们分别代表两派看待&quot;AI 交付物&quot;的哲学。我拿同一份输入让它们跑同样的活，最后得出一个可操作的选型决策树。这篇写给同样在 skill 生态里犹豫要装哪一个的你。</p>
+<h2 id="先摆结论html-赢-sessionpptx-赢-archive">先摆结论：HTML 赢 session，PPTX 赢 archive
+</h2><p>急着做决定的先看这个。剩下的正文是&quot;我怎么得到这个结论的&quot;。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>交付物</th>
+					<th>生命周期</th>
+					<th>优选格式</th>
+					<th>首选 skill</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>代码评审、状态看板、状态巡检</td>
+					<td>打开-扫一眼-关掉</td>
+					<td>HTML</td>
+					<td>effective-html</td>
+			</tr>
+			<tr>
+					<td>交互式原型、可点可拖的 demo</td>
+					<td>会议中演示</td>
+					<td>HTML</td>
+					<td>effective-html</td>
+			</tr>
+			<tr>
+					<td>内部技术架构图 / 时序图</td>
+					<td>塞进 wiki 或 PR</td>
+					<td>HTML（自包含）</td>
+					<td>effective-html</td>
+			</tr>
+			<tr>
+					<td>客户提案、董事会汇报</td>
+					<td>邮件转发、归档</td>
+					<td>PPTX</td>
+					<td>dashi-ppt-skill</td>
+			</tr>
+			<tr>
+					<td>教学讲义、培训材料</td>
+					<td>反复修订</td>
+					<td>PPTX</td>
+					<td>dashi-ppt-skill</td>
+			</tr>
+			<tr>
+					<td>规范文档、SOP</td>
+					<td>版本管理 + 引用</td>
+					<td>Markdown</td>
+					<td>都不用</td>
+			</tr>
+			<tr>
+					<td>Agent 之间传递的数据</td>
+					<td>机器解析</td>
+					<td>JSON / MCP</td>
+					<td>都不用</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>一句话：<strong>HTML 是给会话的，PPTX 是给归档的，Markdown 是给版本的</strong>。</p>
+<h2 id="effective-html把-ai-的输出变成一份能扔进浏览器就看的东西">effective-html：把 AI 的输出变成一份能扔进浏览器就看的东西
+</h2><p><code>effective-html</code> 的思路特别克制。它不是一个&quot;AI PPT 生成器&quot;，也不是一个&quot;AI 图表工具&quot;。它就是<strong>六个 skill 的组合</strong>，每个 skill 专门干一件事：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>Skill</th>
+					<th>干嘛用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>html</code></td>
+					<td>兜底路由，不确定要什么就走它</td>
+			</tr>
+			<tr>
+					<td><code>design-artifact</code></td>
+					<td>提供创意方向，但不强推固定风格</td>
+			</tr>
+			<tr>
+					<td><code>html-wireframe</code></td>
+					<td>低保真线框图，故意不做精，逼评审专注结构</td>
+			</tr>
+			<tr>
+					<td><code>html-prototype</code></td>
+					<td>可交互的原型，带状态、键盘、响应式</td>
+			</tr>
+			<tr>
+					<td><code>html-plan</code></td>
+					<td>计划、路线图、发布节奏，保留原始承诺</td>
+			</tr>
+			<tr>
+					<td><code>html-diagram</code></td>
+					<td>架构图、时序图、状态图</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>每一个产物都是一个单独的 <code>.html</code> 文件</strong>——CSS 内联、JS 内联、图标 SVG 内联，没有外部依赖。你双击 <code>file://</code> 就能打开，也可以直接扔进邮件、Slack、PR。</p>
+<p>这一点你要品一下。传统的&quot;AI 出可视化&quot;逻辑是：AI 给你 JSON，你走 D3、走 Chart.js、走 Mermaid 渲染。中间隔了一道&quot;你得跑个环境&quot;的门槛。effective-html 把这个门槛砍了——<strong>AI 直接吐一个能开的 HTML</strong>，把渲染逻辑内嵌到产物本身。</p>
+<p>用它的正确姿势不是&quot;装了它然后每次都调&quot;。README 里说得很实在：</p>
+<blockquote>
+<p>You can use this repo without installing anything. Treat it as a reference first and an installable skill collection second.</p>
+</blockquote>
+<p>翻译过来：<strong>它是一套写给模型看的方法论文档，装不装无所谓，让 Claude Code / Codex 能读到就行</strong>。这跟 Matt Pocock 那套 skills 工程化的思路是一路的（参见站内《<a class="link" href="/tutorials/matt-pocock-skills-engineering-vibe-coding/" >Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一</a>》）。</p>
+<h2 id="dashi-ppt-skill把-ai-的输出变成一份能扔进-keynote-就改的东西">dashi-ppt-skill：把 AI 的输出变成一份能扔进 Keynote 就改的东西
+</h2><p><code>dashi-ppt-skill</code> 站在另一端。它认定<strong>汇报场景就是需要 PPTX</strong>——不因为 PPTX 有多好用，而是因为对面的老板、客户、评委只会打开 PPTX。</p>
+<p>它的核心设计是<strong>先生成一个自带控制台的 HTML 版 PPT，你在浏览器里改，改到满意再导出成真 PPTX</strong>。中间的 HTML 只是编辑器，最终交付物是 PowerPoint 原生节点——文字可编辑、图形可拖动、字体可替换。</p>
+<p>我在《<a class="link" href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/" >让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</a>》里已经把它单独拆过一遍，这里不重复。核心亮点四条：</p>
+<ul>
+<li>12 套主题、1020 个版式页面</li>
+<li>每页自带控制台，滑杆调布局、点击换配色</li>
+<li>headless Chrome 逐页导出真 PPTX，图表是原生形状不是图片</li>
+<li>一份 15 页 PPT 大约 15 万 token，用 Claude Max 订阅零边际成本</li>
+</ul>
+<p>这不是&quot;AI 生 PPT&quot;这套老路，这是<strong>把编辑权交回给你</strong>的新路。</p>
+<h2 id="一样的输入两套-skill-分别跑一遍">一样的输入，两套 skill 分别跑一遍
+</h2><p>我拿三份真实素材，让两个 skill 分别产出，比较结果。</p>
+<h3 id="场景-1技术评审报告">场景 1：技术评审报告
+</h3><p><strong>输入</strong>：一份 4200 字的第三方系统技术评审记录，包含 12 个评分维度、5 个风险项、3 条建议。</p>
+<p><strong>effective-html 产出</strong>（走 <code>html</code> skill）：一份单页 <code>review.html</code>。</p>
+<p>打开就是一个类似 GitHub PR 页面的评审报告：左侧是维度列表，中间是评分卡片，右侧是可折叠的证据链接。每个风险项点开是一小段引用+定位。分数用 SVG 圆环画的，颜色按级别自动变。全文 240 KB，双击打开秒开。</p>
+<p><strong>dashi-ppt-skill 产出</strong>（生 12 页 PPT）：一份 <code>review.pptx</code>。</p>
+<p>12 页里前两页是封面和目录，中间十页每页讲一个维度，最后两页是风险和建议。视觉是&quot;冷白调研风&quot;主题，字号规整，表格分类清晰。文件 3.8 MB。</p>
+<p><strong>我更愿意收到哪份？</strong> 如果只是内部同事看，我选 HTML——快、直接、能搜索、能 Ctrl+F。如果要邮件转发给上级评审委员会，我选 PPTX——他们已经习惯在 PPT 上划重点。</p>
+<p><strong>赢家</strong>：这一场看用户。effective-html 输在&quot;上级习惯 PPT&quot;这个非技术因素上。</p>
+<h3 id="场景-2架构原型">场景 2：架构原型
+</h3><p><strong>输入</strong>：一句话——&ldquo;帮我把这个单体后端拆成 3 个微服务，画一个可点击的原型，让评审能理解服务之间的调用&rdquo;。</p>
+<p><strong>effective-html 产出</strong>（走 <code>html-prototype</code>）：一份 <code>architecture.html</code>。</p>
+<p>这一次差距拉开了。打开是一张架构图，3 个服务节点可以点击。点一个服务，右侧滑出这个服务的接口列表、DB 依赖、上下游关系。点接口能看到示例 request/response（AI 编的假数据但格式正确）。悬停调用线会高亮相关链路。全部原生 JS + SVG。</p>
+<p><strong>dashi-ppt-skill 产出</strong>：8 页静态图。</p>
+<p>每一页画一部分：整体拓扑一页、服务 A 详情一页、服务 A 接口列表一页……评审要点服务 A 得翻 3 页。所有交互都不存在——PPT 天生就是静态的。</p>
+<p><strong>赢家</strong>：effective-html 完胜。<strong>交互性是原型的灵魂</strong>，PPT 是拍板前的辅助工具，不是评审载体。</p>
+<h3 id="场景-3董事会汇报">场景 3：董事会汇报
+</h3><p><strong>输入</strong>：一份 6800 字的季度融资复盘。要求 12 页以内，观感稳重，能打印。</p>
+<p><strong>effective-html 产出</strong>：一份长条式 HTML 报告。</p>
+<p>技术上完美——响应式、深色模式、里面还嵌了 SVG 图表。<strong>但董事会 5 个人有 3 个在 iPhone 上看</strong>，长条 HTML 在手机上滑动体验不错，可打印性差；有 2 个要求把材料&quot;发到我邮箱&quot;，HTML 附件很多老派邮箱客户端会屏蔽。</p>
+<p><strong>dashi-ppt-skill 产出</strong>：12 页 PPT。</p>
+<p>董事会常见格式，视觉稳重，字数控制得住，图表原生形状——他们打开 Keynote 想改数字就能改。打印一份塞档案袋也没问题。</p>
+<p><strong>赢家</strong>：dashi-ppt-skill 完胜。<strong>归档、传阅、修订的场景，PPTX 依然是既有工作流的锚点</strong>。</p>
+<h2 id="从架构本质看为什么-html-和-pptx-会长成两个物种">从架构本质看：为什么 HTML 和 PPTX 会长成两个物种
+</h2><p>打完对比赛，你可能会问：为什么不能有一个 skill 同时把两件事都干了？</p>
+<p>因为它们的<strong>产物哲学</strong>根本不同。</p>
+<p><strong>HTML 是活的</strong>：</p>
+<ul>
+<li>打开即渲染，DOM/JS 就是运行时</li>
+<li>天然响应式，同一份文件手机电脑都能看</li>
+<li>交互是原生能力，不用额外工具</li>
+<li>分享靠一个 URL 或者一个附件</li>
+<li><strong>一次性消费</strong>：看完关掉就完了，很少有人存</li>
+</ul>
+<p><strong>PPTX 是死的</strong>：</p>
+<ul>
+<li>打开需要专门软件（Keynote/PowerPoint/WPS）</li>
+<li>每一页是一个固定尺寸的画布，非响应式</li>
+<li>交互只有&quot;点下一页&quot;</li>
+<li>分享靠附件转发</li>
+<li><strong>反复修订</strong>：你会打开三次、五次、十次改里面的字</li>
+</ul>
+<p>Thariq Shihipar 在《The unreasonable effectiveness of HTML》里有句话概括得很准：</p>
+<blockquote>
+<p>HTML wins the session. Markdown wins the archive.</p>
+</blockquote>
+<p>我把它扩展一下：</p>
+<blockquote>
+<p><strong>HTML 赢会话，PPTX 赢归档，Markdown 赢版本，JSON 赢机器。</strong></p>
+</blockquote>
+<p><code>effective-html</code> 押的是&quot;会话&quot;这一半——快速可视化、原型演示、诊断看板。<code>dashi-ppt-skill</code> 押的是&quot;归档&quot;这一半——正式汇报、教学讲义、可传阅材料。</p>
+<p>它们看起来在&quot;打架&quot;，其实是在瓜分市场。<strong>你的选型不是二选一，而是按场景配对</strong>。</p>
+<h2 id="一个可操作的选型决策树">一个可操作的选型决策树
+</h2><p>给你一份我这一周攒下来的决策树，直接拿去用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">你要交付的东西：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├─ 一次性演示 / 会议中演示</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  ├─ 需要交互（点击、拖动、切换视图）→ effective-html: html-prototype</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  ├─ 只是给结构 → effective-html: html-wireframe</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  └─ 只是给概念图 → effective-html: html-diagram</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├─ 邮件发出去 + 归档</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  ├─ 观感稳重、可打印、能反复改字 → dashi-ppt-skill</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  ├─ 客户/董事会/正式评审 → dashi-ppt-skill</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  └─ 团队周会汇报 → effective-html: html（长条式报告页更省时间）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├─ 文档 / 规范 / SOP</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  └─ 直接让 AI 出 Markdown，进 Git 库</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├─ Agent 之间的数据传递</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│  └─ JSON / MCP，别走人类可读格式</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">│</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">└─ 教学材料 / 培训课件</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">└─ dashi-ppt-skill（因为培训师后续要反复本地修订）</span>
+</span></span></code></pre></div><h2 id="装法快速对比">装法快速对比
+</h2><p><strong>effective-html</strong>：装或不装都行，官方推荐先把它当参考手册用。</p>
+<p>如果一定要装：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 装整套</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx skills add plannotator/effective-html</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 只装 html-prototype</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">npx skills add plannotator/effective-html --skill html-prototype</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Claude Code 插件方式</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/plugin marketplace add plannotator/effective-html</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/plugin install plannotator-effective-html@effective-html</span>
+</span></span></code></pre></div><p><strong>dashi-ppt-skill</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">npx dashi-ppt-skill@latest</span>
+</span></span></code></pre></div><p>一条命令，Agent 会自己拉依赖（Puppeteer 那一堆），大概 90 秒。国内网络加镜像：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">npx --registry</span><span style="color:#f92672">=</span><span style="color:#e6db74">https://registry.npmmirror.com dashi-ppt-skill@latest</span>
+</span></span></code></pre></div><h2 id="一起用真实工作流示范">一起用：真实工作流示范
+</h2><p>skill 之间不打架，可以配合。我给你我这一周实际跑通的<strong>融资尽调 + 尽调汇报</strong>双 skill 工作流：</p>
+<p><strong>Step 1（尽调阶段）</strong>：让 AI 拆分标的公司资料。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用 effective-html 的 html-plan 给我出一份 3 周尽调时间表，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">每一周的关键动作可展开，用不同颜色标出团队分工。</span>
+</span></span></code></pre></div><p>产出：一份 <code>dd-plan.html</code>，团队每个人扫一眼就上手。</p>
+<p><strong>Step 2（数据分析阶段）</strong>：让 AI 出中间产物。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用 effective-html 的 html-diagram 画一张标的公司的资金流向图，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">把关联方交易用红色标出。</span>
+</span></span></code></pre></div><p>产出：一份 <code>money-flow.html</code>，评审会上直接投屏。</p>
+<p><strong>Step 3（对外汇报阶段）</strong>：切换到 PPTX。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用 dashi-ppt-skill 把 dd-plan.html 和 money-flow.html 里的关键</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">结论整合成 15 页 PPT，主题选 theme07 冷白调研风，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">观感稳重，最后一页是签字页。</span>
+</span></span></code></pre></div><p>产出：一份 <code>dd-report.pptx</code>，客户手里能改字、能打印、能存档。</p>
+<p><strong>Step 4（存档）</strong>：让 AI 出 Markdown。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">把这次尽调最终结论按公司内部 SOP 模板整理成 Markdown，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">准备提交到 Git 的 due-diligence-reports/ 目录。</span>
+</span></span></code></pre></div><p>产出：一份 <code>2026-Q3-target-xxx.md</code>，进版本库供未来引用。</p>
+<p>一场尽调，<strong>四种格式各司其职</strong>。这才是 Agent Skill 该有的用法——不是&quot;哪个格式最好&quot;，是&quot;哪个格式在哪个环节最好&quot;。</p>
+<h2 id="一个反直觉的观察skill-生态正在解决-markdown-一家独大的问题">一个反直觉的观察：skill 生态正在解决 Markdown 一家独大的问题
+</h2><p>过去两年，几乎所有的 AI 产物默认都是 Markdown。你问 GPT/Claude 任何问题，它默认给你带表格、带列表、带代码块的 Markdown。</p>
+<p><strong>为什么会这样？</strong> 因为 8K token 时代（GPT-4 刚发布那阵），Markdown 是最省 token 的表达方式。ChatGPT 的界面又天然渲染 Markdown，形成了默认路径依赖。</p>
+<p><strong>这个默认现在不合理了</strong>：</p>
+<ul>
+<li>上下文窗口从 8K 涨到 200K，token 密度不再是核心矛盾</li>
+<li>模型的前端设计能力大幅上升，出一份完整 HTML 只比 Markdown 多花 30% token</li>
+<li>Agent 有 shell 权限，能跑 headless Chrome、能操作真 PPTX，产物形态不必受聊天窗口限制</li>
+</ul>
+<p><strong>skill 生态就是这波变化的产物</strong>。effective-html 押 HTML、dashi-ppt-skill 押 PPTX、还有一堆押 SVG / 视频 / PDF 的 skill——它们的共同点是：<strong>跳出 Markdown 默认，让 AI 用最合适的格式交付</strong>。</p>
+<p>这跟站内《<a class="link" href="/software/claude-code-skills-mcp-workflow-deconstruction/" >Skill 记方法论，MCP 调外部 API：一次拆解</a>》里那个&quot;skill 是方法论、MCP 是外部能力&quot;的判断是同一个脉络——<strong>skill 让 Agent 知道该以什么形态交付活儿</strong>。</p>
+<h2 id="一些坑提前告诉你">一些坑，提前告诉你
+</h2><p><strong>effective-html 的坑</strong></p>
+<ol>
+<li><strong>不装反而不好用</strong>。README 说&quot;可以不装当参考文档&quot;，但我实测 Claude Code 3.5 不装的时候，产出的 HTML 品质不稳定；装了之后 skill 里的样例代码会被拉进上下文，产出突然就&quot;对味&quot;了。</li>
+<li><strong>HTML 在 iOS Mail 里会被折叠</strong>。别的邮件客户端也可能拒收 <code>&lt;script&gt;</code>，如果你必须靠邮件传递，考虑先转成 PDF。</li>
+<li><strong>中文字体没做特殊处理</strong>。默认字体在 macOS/Windows 混合环境下会飘，改 <code>system-ui, sans-serif</code> 兜底比较稳。</li>
+</ol>
+<p><strong>dashi-ppt-skill 的坑</strong></p>
+<ol>
+<li><strong>Node 版本不能低于 20</strong>，18 会挂在 <code>Unsupported engine</code>。</li>
+<li><strong>Linux 服务器上要显式指定 Chrome 路径</strong>：<code>export CHROME_PATH=/usr/bin/chromium</code>。</li>
+<li><strong>中文字体错位</strong>要选主题 theme01/07/09，或者直接跟 Agent 说&quot;用系统自带字体生成&quot;。</li>
+</ol>
+<h2 id="什么时候两个-skill-都不用">什么时候两个 skill 都不用
+</h2><p>也有情况这两个 skill 都是过度设计：</p>
+<ul>
+<li><strong>你只是问一个技术问题</strong>：让 AI 直接答就行，别硬要它出 HTML/PPT。</li>
+<li><strong>产物会被机器读</strong>：走 JSON、走 MCP，别走给人看的格式。</li>
+<li><strong>产物要进版本库长期维护</strong>：Markdown 天然赢，因为 diff 好读。</li>
+<li><strong>产物只是一次性的对话中间态</strong>：默认 Markdown，别浪费 token 走可视化。</li>
+</ul>
+<p>Skill 是<strong>用来把 Agent 引导到正确交付形态</strong>的机制，不是&quot;每次都调&quot;的必需品。装归装，用不用你说了算。</p>
+<h2 id="快速回顾">快速回顾
+</h2><ul>
+<li><strong>effective-html</strong>：2.7k 星，六个 HTML skill 组合，专治&quot;会话中要一份能立刻看的东西&quot;。</li>
+<li><strong>dashi-ppt-skill</strong>：6.3k 星，一条命令装，专治&quot;要发出去归档的正式 PPT&quot;。</li>
+<li><strong>选型口诀</strong>：会话给 HTML，归档给 PPTX，版本给 Markdown，机器给 JSON。</li>
+<li><strong>组合用</strong>：一场尽调可以四种格式各司其职，不必二选一。</li>
+<li><strong>skill 生态的价值</strong>：让 AI 跳出 Markdown 默认，用最合适的形态交付。</li>
+</ul>
+<p>如果你已经在用 Claude Code 或 Codex，两个 skill 都装上，占硬盘不到 100 MB，用一周你会有很清晰的直觉——<strong>什么活儿该让 AI 出 HTML，什么活儿该让 AI 出 PPTX</strong>。</p>
+<p>这份直觉，比多学十个新工具还值钱。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/" >让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</a></li>
+<li><a class="link" href="/software/claude-code-skills-mcp-workflow-deconstruction/" >Skill 记方法论，MCP 调外部 API：Claude Code 工作流一次拆解</a></li>
+<li><a class="link" href="/tutorials/matt-pocock-skills-engineering-vibe-coding/" >Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一</a></li>
+<li><a class="link" href="/ai/ai-agent-runtime-vs-framework/" >AI Agent Runtime vs Framework：一个被很多人搞混的关键区分</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">Ai-Agent</a>
+        
+            <a href="/tags/skill/">Skill</a>
+        
+            <a href="/tags/html-prototype/">Html-Prototype</a>
+        
+            <a href="/tags/pptx/">Pptx</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/claude-video-ai-see-video-three-paths/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx\/'; 
+        const pageTitle = 'AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

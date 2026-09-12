@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="6.3k 星的 dashi-ppt-skill，把文档丢给 AI Agent 就能生成一份网页版可编辑 PPT，改完还能一键导出成真 PPTX。装、用、导出、成本一次讲完。">
+<title>让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测">
+<meta property='og:description' content="6.3k 星的 dashi-ppt-skill，把文档丢给 AI Agent 就能生成一份网页版可编辑 PPT，改完还能一键导出成真 PPTX。装、用、导出、成本一次讲完。">
+<meta property='og:url' content='https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Skill' /><meta property='article:tag' content='PPT' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Codex' /><meta property='article:published_time' content='2026-08-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-28T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测">
+<meta name="twitter:description" content="6.3k 星的 dashi-ppt-skill，把文档丢给 AI Agent 就能生成一份网页版可编辑 PPT，改完还能一键导出成真 PPTX。装、用、导出、成本一次讲完。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测\"",
+  "description": "\"6.3k 星的 dashi-ppt-skill，把文档丢给 AI Agent 就能生成一份网页版可编辑 PPT，改完还能一键导出成真 PPTX。装、用、导出、成本一次讲完。\"",
+  "url": "\"https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/\"",
+  "datePublished": "2026-08-28T00:00:00Z",
+  "dateModified": "2026-08-28T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/\""
+  },
+  "keywords": "\"AI Agent, Skill, PPT, Claude Code, Codex\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测\"",
+      "item": "\"https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一个熟悉的场景ai-帮我做了-ppt但改不动">一个熟悉的场景：AI 帮我做了 PPT，但改不动</a></li>
+    <li><a href="#它跟别的-ai-生-ppt-工具差在哪">它跟别的 AI 生 PPT 工具差在哪</a></li>
+    <li><a href="#环境准备不到-3-分钟">环境准备（不到 3 分钟）</a></li>
+    <li><a href="#装一条命令">装：一条命令</a></li>
+    <li><a href="#一次真实的-ppt-生成流程">一次真实的 PPT 生成流程</a>
+      <ul>
+        <li><a href="#第一步给需求">第一步：给需求</a></li>
+        <li><a href="#第二步选主题">第二步：选主题</a></li>
+        <li><a href="#第三步agent-自动组稿">第三步：Agent 自动组稿</a></li>
+        <li><a href="#第四步随手改">第四步：随手改</a></li>
+        <li><a href="#第五步导出">第五步：导出</a></li>
+      </ul>
+    </li>
+    <li><a href="#成本一份-15-页-ppt-花了我多少-token">成本：一份 15 页 PPT 花了我多少 token</a></li>
+    <li><a href="#踩过的三个坑">踩过的三个坑</a></li>
+    <li><a href="#dashi-vs-同类-skill什么时候用哪个">dashi vs 同类 Skill：什么时候用哪个</a></li>
+    <li><a href="#什么场景不适合">什么场景不适合</a></li>
+    <li><a href="#一个小观察为什么-skill-生-ppt-突然火了">一个小观察：为什么 Skill 生 PPT 突然火了</a></li>
+    <li><a href="#快速回顾">快速回顾</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-08-28T00:00:00Z'>
+                    2026-08-28，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：16分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一个熟悉的场景ai-帮我做了-ppt但改不动">一个熟悉的场景：AI 帮我做了 PPT，但改不动</a></li>
+    <li><a href="#它跟别的-ai-生-ppt-工具差在哪">它跟别的 AI 生 PPT 工具差在哪</a></li>
+    <li><a href="#环境准备不到-3-分钟">环境准备（不到 3 分钟）</a></li>
+    <li><a href="#装一条命令">装：一条命令</a></li>
+    <li><a href="#一次真实的-ppt-生成流程">一次真实的 PPT 生成流程</a>
+      <ul>
+        <li><a href="#第一步给需求">第一步：给需求</a></li>
+        <li><a href="#第二步选主题">第二步：选主题</a></li>
+        <li><a href="#第三步agent-自动组稿">第三步：Agent 自动组稿</a></li>
+        <li><a href="#第四步随手改">第四步：随手改</a></li>
+        <li><a href="#第五步导出">第五步：导出</a></li>
+      </ul>
+    </li>
+    <li><a href="#成本一份-15-页-ppt-花了我多少-token">成本：一份 15 页 PPT 花了我多少 token</a></li>
+    <li><a href="#踩过的三个坑">踩过的三个坑</a></li>
+    <li><a href="#dashi-vs-同类-skill什么时候用哪个">dashi vs 同类 Skill：什么时候用哪个</a></li>
+    <li><a href="#什么场景不适合">什么场景不适合</a></li>
+    <li><a href="#一个小观察为什么-skill-生-ppt-突然火了">一个小观察：为什么 Skill 生 PPT 突然火了</a></li>
+    <li><a href="#快速回顾">快速回顾</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="一个熟悉的场景ai-帮我做了-ppt但改不动">一个熟悉的场景：AI 帮我做了 PPT，但改不动
+</h2><p>上周汇报，我把 8000 字的调研文档喂给某在线 AI 生 PPT 工具，10 秒钟出了 15 页。视觉花哨，图表齐全，看起来能交差。</p>
+<p>真到自己修图、换字，噩梦开始了：</p>
+<ul>
+<li>页面是导出成图片的，一段小字都不能改，只能整页删掉重生成</li>
+<li>图表数据不能编辑，AI 编的数字跟原文对不上，只能自己截图外面画好再贴回去</li>
+<li>换主题？重新生成一次，之前改过的内容全丢</li>
+<li>想要 PPTX 版本？升级到年费 999 的会员才能导出，导出的还是一堆图片贴在 PPTX 里，一样改不动</li>
+</ul>
+<p>那一晚我加班到两点，最后回到 Keynote 手搓。心里骂：<strong>AI 生 PPT 的产物如果不能改，就等于没生</strong>。</p>
+<p>这周被同事塞了一个 GitHub 上 6.3k 星、评论区还挺乐观的 Skill：<a class="link" href="https://github.com/chuspeeism/dashi-ppt-skill"  target="_blank" rel="noopener"
+    >chuspeeism/dashi-ppt-skill</a>。名字叫「大师 PPT」。看介绍很唬人：</p>
+<blockquote>
+<p>一个真正适合职场人的 PPT Skill。把文档丢给你的 AI Agent，每一页都自带编辑控制台的 PPT Skill——不满意的地方直接在浏览器里改，改完还能一键导出成真实的、可编辑的 PPTX。</p>
+</blockquote>
+<p>关键词就一个：<strong>改</strong>。每页自带控制台，能就地改字、换图、调布局、换配色，最后导出的是<strong>真的可编辑 PPTX</strong>——不是把网页截图塞进去那种。</p>
+<p>抱着&quot;又是 GitHub 上刷星刷出来的 AI PPT 项目&quot;的心态，我在自己的 Codex 和 Claude Code 上装了一遍，用它生成 3 份真实的 PPT（一份融资复盘、一份行业研究、一份内部培训），跑通了导出。这篇写给同样被 AI 生 PPT 坑过的你。</p>
+<h2 id="它跟别的-ai-生-ppt-工具差在哪">它跟别的 AI 生 PPT 工具差在哪
+</h2><p>先直接摆结论。市面上 AI 生 PPT 大致三类：</p>
+<p><strong>第一类：在线 SaaS</strong>（Gamma、AiPPT、闪击 PPT 一类）</p>
+<ul>
+<li>优点：3 秒出稿</li>
+<li>缺点：文本图片化、图表死板、改不动、导出要会员、内容要上传服务器</li>
+</ul>
+<p><strong>第二类：AI 生 Markdown / JSON，再走 pandoc / Slidev 转 PPTX</strong></p>
+<ul>
+<li>优点：文本本身可编辑</li>
+<li>缺点：版式极简，不像正经 PPT，图表基本没有，需要自己熟 Markdown 语法</li>
+</ul>
+<p><strong>第三类：Agent Skill 直生 HTML/PPTX</strong>（dashi-ppt-skill 这一类）</p>
+<ul>
+<li>每页是 HTML + JS 组件，可以点开就地编辑</li>
+<li>图表、动画、控制台一起随包出稿</li>
+<li>命令行一键导出成真 PPTX，PPTX 里的文字进 PowerPoint 后仍然可编辑</li>
+<li>内容全程本地跑，文档不出机器</li>
+</ul>
+<p>dashi-ppt-skill 就是第三类里目前星最多、版式最全的一个（12 套主题、1020 个版式页面）。</p>
+<p><strong>它的核心设计我总结成一句话</strong>：<strong>先生成一个能编辑的 HTML 版 PPT，改到满意再导出成 PPTX</strong>。中间的 HTML 就是你的编辑器。</p>
+<p>这个思路比传统 AI 生 PPT 高明的地方在于——<strong>不是把编辑器丢给你去改 AI 的成品，而是把编辑能力直接编进每一页</strong>。每页右侧一个滑杆控制台，滑一下模块从 3 个变 5 个，点一下配色从蓝换绿，比 PowerPoint 手改还快。</p>
+<h2 id="环境准备不到-3-分钟">环境准备（不到 3 分钟）
+</h2><p>它是个 Skill，不是独立 App。你需要一个能读文件、写文件、跑 shell 的 AI Agent 作宿主。官方实测支持：</p>
+<ul>
+<li>Claude Code（推荐，长文档处理稳）</li>
+<li>Codex CLI（可以调用生图能力补图）</li>
+<li>豆包（需要启动办公模式）</li>
+<li>Marvis / Workbuddy / Dumate / Qclaw（把 skill 文件放任意位置、读 <code>SKILL.md</code> 就行）</li>
+<li>Cursor / 其他本地 Agent（需要文件读写 + shell 权限）</li>
+</ul>
+<p><strong>普通网页版 Chatbot（比如 ChatGPT 网页版）不行</strong>——生成器要跑本地 Node.js。</p>
+<p>系统层面就两个硬要求：</p>
+<ol>
+<li><strong>Node.js 20+ 和 npm</strong></li>
+<li><strong>Chrome / Chromium / Edge</strong>（导出 PPTX 和 PDF 时用来 headless 渲染）</li>
+</ol>
+<p>Chrome 你机器上大概率已经有了。Node 版本用 <code>node -v</code> 检查一下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">node -v</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 想装或升级：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># macOS: brew install node@20</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Linux: nvm install 20 &amp;&amp; nvm use 20</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Windows: winget install OpenJS.NodeJS.LTS</span>
+</span></span></code></pre></div><p>到这一步环境就齐了。</p>
+<h2 id="装一条命令">装：一条命令
+</h2><p>打开你的 AI Agent（我这里以 Claude Code 举例），直接说：</p>
+<blockquote>
+<p>帮我装 skill：<code>npx dashi-ppt-skill@latest</code></p>
+</blockquote>
+<p>Agent 会自动去跑这条命令。如果你在国内网络，让它加镜像：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">npx --registry</span><span style="color:#f92672">=</span><span style="color:#e6db74">https://registry.npmmirror.com dashi-ppt-skill@latest</span>
+</span></span></code></pre></div><p>我实测第一次装大约 90 秒，主要在拉 Puppeteer 相关依赖。之后每次跑同一条命令是&quot;原地更新&quot;，已装的依赖会保留。</p>
+<p>装完的位置在你 Agent 的默认 skill 目录里。以 Claude Code 为例，通常在 <code>~/.claude/skills/dashi-ppt/</code> 下。你也可以让 Agent 帮你 <code>ls</code> 确认。</p>
+<h2 id="一次真实的-ppt-生成流程">一次真实的 PPT 生成流程
+</h2><p>我拿一份 6800 字的<strong>融资复盘文档</strong>当输入，实测下来 Agent 走了 5 个步骤，全程需要我做的只有回答几个问题。</p>
+<h3 id="第一步给需求">第一步：给需求
+</h3><p>我在 Claude Code 里丢文档，然后说：</p>
+<blockquote>
+<p>用 dashi-ppt-skill 做一份 PPT。文档在 @funding-postmortem.md。受众是我们的董事会，篇幅控制在 15 页以内，重点讲教训和下一步。</p>
+</blockquote>
+<p>Agent 读完文档，问了三个澄清问题：</p>
+<ol>
+<li>想突出哪个结论？</li>
+<li>是否要图表（比如漏斗、时间线）？</li>
+<li>有没有指定风格倾向（专业感/活泼/暗色）？</li>
+</ol>
+<p>回答完，进入第二步。</p>
+<h3 id="第二步选主题">第二步：选主题
+</h3><p>Skill 会在终端里丢出 12 套主题预览（用 Ascii 缩略 + 主题名称）：</p>
+<ul>
+<li>theme01 轻拟态风、theme02 炫光紫绿风、theme03 深浅代码风</li>
+<li>theme04 玻璃糖果风、theme05 色谱图表风、theme06 深色图谱风</li>
+<li>theme07 冷白调研风、theme08 黑金实验风、theme09 深蓝杂志风</li>
+<li>theme10 金色指数风、theme11 高能增长风、theme12 声波霓虹风</li>
+</ul>
+<p>融资复盘我选了 <strong>theme07 冷白调研风</strong>——不出彩但董事会喜欢。</p>
+<h3 id="第三步agent-自动组稿">第三步：Agent 自动组稿
+</h3><p>这一步全自动，Agent 会：</p>
+<ol>
+<li>把长文档拆成 15 页的<strong>结构化字段</strong>（每页的角色是&quot;封面/目录/指标/趋势/对比/流程/风险/结尾&quot;等 20 种页面角色之一）</li>
+<li>挑出对应版式（图表页会自动选到雷达图、瀑布图、漏斗图之一）</li>
+<li>填充文案 + 预留图片占位符</li>
+<li>启动本地预览服务</li>
+</ol>
+<p>大概 3 分钟后，浏览器自动打开 <code>http://localhost:xxxx</code>，一份完整的 15 页 HTML 版 PPT 就出来了。</p>
+<h3 id="第四步随手改">第四步：随手改
+</h3><p>这一步是 dashi 的杀手锏。每一页的右侧都挂着一个控制台面板，最少 20 个可调维度：</p>
+<ul>
+<li><strong>模块数量</strong>：滑杆一拖，页面里的 3 个数据卡片变 5 个（AI 自动重排布局）</li>
+<li><strong>布局切换</strong>：下拉选&quot;左图右文/上图下文/纯网格&quot;等 5-8 种版式</li>
+<li><strong>页面重点</strong>：改&quot;数字优先/文字优先/图表优先&quot;，页面重心自动重排</li>
+<li><strong>配色</strong>：主题内预设 4-6 套配色，一键切换</li>
+<li><strong>翻页动画</strong>：9 种切换动画随选</li>
+</ul>
+<p><strong>文字编辑</strong>：任意文本点一下就变成可编辑框，改完自动保存到本地文件。</p>
+<p><strong>图片替换</strong>：点击图片占位符，弹出选择框，拖拽本地图片进去即可。上传会自动压缩，我实测 5MB 的图变成 180KB。</p>
+<p>我第 6 页的漏斗图 AI 编的数字不准（&ldquo;注册转化 42%&ldquo;实际是 38%），点开数字就地改成 38%，2 秒钟搞定。这在传统 AI 生 PPT 里几乎是不可能的。</p>
+<p>改动全部自动保存，不用 Ctrl+S。</p>
+<h3 id="第五步导出">第五步：导出
+</h3><p>改到满意，跟 Agent 说：</p>
+<blockquote>
+<p>用 dashi-ppt-skill 导出这份 PPT 为 PPTX，输出到桌面。</p>
+</blockquote>
+<p>Agent 会跑一个 headless Chrome，逐页把 HTML 转成 PowerPoint 原生节点。10 页大约 30 秒，15 页我这里跑了 48 秒。</p>
+<p>产出文件我在 macOS 上用 Keynote 打开、Windows 上用 PowerPoint 2019 打开，<strong>文字都是可编辑的原生文本框</strong>，不是图片。图表在 Keynote 里显示为原生形状组合，可以继续调。字体如果本地没有，PowerPoint 会自动替换。</p>
+<p>这是我最惊喜的一点——<strong>其他 AI PPT 工具导出的 PPTX 打开经常是&quot;这一页是一张大图片&rdquo;，dashi 这里是真的能改</strong>。</p>
+<h2 id="成本一份-15-页-ppt-花了我多少-token">成本：一份 15 页 PPT 花了我多少 token
+</h2><p>官方 README 说 10 页大约 10 万 token。我实测融资复盘 15 页，从组稿到定稿改了 3 轮：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>Token 消耗</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>读文档 + 澄清问题</td>
+					<td>~8k</td>
+			</tr>
+			<tr>
+					<td>组稿 + 生成 HTML</td>
+					<td>~85k</td>
+			</tr>
+			<tr>
+					<td>第 1 轮改（换主题）</td>
+					<td>~25k</td>
+			</tr>
+			<tr>
+					<td>第 2 轮改（重排 3 页）</td>
+					<td>~35k</td>
+			</tr>
+			<tr>
+					<td>第 3 轮改（调数据、换 4 张图）</td>
+					<td>~18k</td>
+			</tr>
+			<tr>
+					<td>导出 PPTX</td>
+					<td>~2k</td>
+			</tr>
+			<tr>
+					<td><strong>合计</strong></td>
+					<td><strong>~173k</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>用 Claude 3.5 Sonnet 大约 0.5 美元，用 GPT-4o mini 大约 0.15 美元。按 Codex 的 5 小时窗口额度算，一天生 5-6 份 PPT 不成问题。</p>
+<p>如果你走 Claude Code 的 Max 订阅，基本零边际成本。</p>
+<h2 id="踩过的三个坑">踩过的三个坑
+</h2><p><strong>坑 1：Node 版本不够，<code>npx</code> 报错</strong></p>
+<p>我的一台老 Mac 上 Node 是 18.19，跑 <code>npx dashi-ppt-skill@latest</code> 报 <code>Unsupported engine</code>。升级到 20 就好了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">brew unlink node &amp;&amp; brew install node@20</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">brew link node@20 --force --overwrite</span>
+</span></span></code></pre></div><p><strong>坑 2：Chrome 找不到，PPTX 导出失败</strong></p>
+<p>Linux 服务器上跑，报错 <code>Failed to launch chrome</code>。解决方案是显式指定路径：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">export CHROME_PATH</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/bin/chromium</span>
+</span></span></code></pre></div><p>或者在 macOS 上：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">export CHROME_PATH</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/Applications/Google Chrome.app/Contents/MacOS/Google Chrome&#34;</span>
+</span></span></code></pre></div><p>写进 shell rc 一次搞定。</p>
+<p><strong>坑 3：导出 PPTX 中文字体错位</strong></p>
+<p>Windows 上导出成 PPTX，打开发现&quot;思源黑体&quot;变成&quot;宋体&rdquo;。原因是导出用的是 headless Chrome 渲染，Chrome 里能看的字体到 PowerPoint 就没了。</p>
+<p>解决：跟 Agent 说&quot;用 macOS/Windows 系统自带字体（比如 PingFang SC / 微软雅黑）生成 PPT&quot;，或者手动改 skill 目录下的字体配置。稳妥做法是<strong>主题选择时避开炫技字体</strong>（theme01/07/09 用系统字体较多）。</p>
+<h2 id="dashi-vs-同类-skill什么时候用哪个">dashi vs 同类 Skill：什么时候用哪个
+</h2><p>Skill 生态里生 PPT 的项目不止 dashi 一个。我按需求分类：</p>
+<p><strong>dashi-ppt-skill</strong>（6.3k 星）</p>
+<ul>
+<li>强项：可编辑度最高、版式最多（1020 个）、图表最全</li>
+<li>弱项：视觉相对&quot;稳&quot;，不适合追求极致视觉设计的场景</li>
+<li>适合：行业研究、融资复盘、竞品分析、内部汇报——<strong>要能改的稿子</strong></li>
+</ul>
+<p><strong>codex-ppt-skill</strong>（5.3k 星）</p>
+<ul>
+<li>强项：走 GPT-Image-2 生图，页面视觉最新最艳</li>
+<li>弱项：改动难度更高（很多是生成后的图片元素）</li>
+<li>适合：新品发布、路演融资、封面海报——<strong>要好看多过要能改</strong></li>
+</ul>
+<p><strong>ppt-master</strong>（4.7 万星）</p>
+<ul>
+<li>强项：走 python-pptx 直生原生 PPTX，跳过 HTML 中间态</li>
+<li>弱项：视觉相对朴素，编辑体验依赖 PowerPoint 本体</li>
+<li>适合：政务、事业单位、学术会议——<strong>产物必须是标准 PPTX</strong></li>
+</ul>
+<p><strong>Mck-ppt-design-skill</strong>（麦肯锡风）</p>
+<ul>
+<li>强项：咨询公司扁平设计，70 个版式模式</li>
+<li>弱项：只有一种风格</li>
+<li>适合：咨询提案、战略报告——<strong>目标读者认这个视觉调性</strong></li>
+</ul>
+<p>我个人的选择顺序：<strong>日常汇报 → dashi</strong>、<strong>新品/融资路演 → codex</strong>、<strong>政务学术 → ppt-master</strong>。</p>
+<h2 id="什么场景不适合">什么场景不适合
+</h2><p>Skill 再牛，也不是万能。以下场景我建议直接手搓：</p>
+<ul>
+<li><strong>需要逐像素定制视觉</strong>（品牌年报、发布会 keynote）：Skill 的版式是模板化的，追求&quot;一点儿都不能不一样&quot;就别指望 AI</li>
+<li><strong>超长 PPT 100+ 页</strong>：一次组稿的 token 消耗会翻好几倍，而且 Agent 上下文可能吃不下</li>
+<li><strong>需要嵌 3D 模型、复杂动画</strong>：dashi 的翻页动画够用，但 PowerPoint 的 3D 变换、Morph 一类 dashi 导出的 PPTX 里没有</li>
+<li><strong>老板明天要</strong>：装 + 试 + 熟练至少半小时，第一次上手不如 Keynote 手搓快</li>
+</ul>
+<h2 id="一个小观察为什么-skill-生-ppt-突然火了">一个小观察：为什么 Skill 生 PPT 突然火了
+</h2><p>GitHub 上&quot;ai-ppt&quot;话题下过去半年爆了。我数了下 dashi-ppt-skill 一个项目就有 20 多个类似的 fork/参考版本。这波兴起的时间点，恰好跟 Claude Code / Codex 把 <strong>Skill 机制</strong>做成一等公民对得上。</p>
+<p>传统 AI 生 PPT 工具想给你一个&quot;最终成品&quot;，逻辑是<strong>输入 → 黑盒 → 输出</strong>。用户只能接受或整体重来。</p>
+<p>Skill 的思路是<strong>给 Agent 一套工具 + 一套流程</strong>，让 Agent 一步步跟你协作。用户在过程中就能干预，产物本身也是&quot;可协作物&quot;——HTML + 控制台。这种交互方式，比&quot;AI 一次给你一个成品&quot;更接近人的正常工作流。</p>
+<p>我猜未来 6 个月，你会看到更多类似的 Skill 涌出来——PDF 处理、数据分析、图表设计——本质都是<strong>把生成过程本身开放给用户编辑</strong>。</p>
+<h2 id="快速回顾">快速回顾
+</h2><ul>
+<li>装：<code>npx dashi-ppt-skill@latest</code>（国内加 npmmirror 镜像）</li>
+<li>环境：Node 20+ 和 Chrome/Chromium/Edge</li>
+<li>用：AI Agent 里说&quot;用 dashi-ppt-skill 做 PPT&quot;，丢文档，选主题</li>
+<li>编辑：每页右侧控制台，滑杆调布局、点击改文字、拖拽换图</li>
+<li>导出：说一句&quot;导出成 PPTX&quot;，headless Chrome 转真原生 PPTX</li>
+<li>成本：一份 15 页 PPT 约 15-18 万 token</li>
+<li>定位：<strong>要能改的稿子</strong>，不是<strong>要最炫的稿子</strong></li>
+</ul>
+<p>如果你也被 AI 生 PPT 的&quot;改不动&quot;折磨过，这一个周末的实测给我的最大心得是：<strong>Agent Skill 这条路正在把 AI 生成物从&quot;成品&quot;变成&quot;工作台&quot;</strong>。 而 dashi-ppt-skill 就是目前把这个理念落地得最完整的一个 PPT Skill。</p>
+<p>值得装一个试试。反正 <code>npx</code> 一句话，用不上删掉也不留痕迹。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/claude-code-skills-mcp-workflow-deconstruction/"  target="_blank" rel="noopener"
+    >Claude Code Skills + MCP 工作流拆解</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-32-skills-8-mcp-full-setup/"  target="_blank" rel="noopener"
+    >Claude Code 32 Skills + 8 MCP 全套配置</a></li>
+<li><a class="link" href="https://softon.top/tutorials/matt-pocock-skills-engineering-vibe-coding/"  target="_blank" rel="noopener"
+    >Matt Pocock 的 Skills Engineering 与 Vibe Coding</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-open-source-alternatives-opencode-aider-cline-continue/"  target="_blank" rel="noopener"
+    >Claude Code 开源替代品对比：OpenCode / Aider / Cline / Continue</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-token-cost-cut-7-tips/"  target="_blank" rel="noopener"
+    >Claude Code Token 成本砍半的 7 个技巧</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">Ai-Agent</a>
+        
+            <a href="/tags/skill/">Skill</a>
+        
+            <a href="/tags/ppt/">PPT</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/cursor-to-codex-two-weeks-real-feeling/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/hi-ai-agent-real-cost-latency/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/wikipedia-68000-tokens-ai-agent-webfetch-cost/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一个 Wikipedia 页面吃掉 68000 tokens：AI Agent 的网页读取成本黑洞</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/matt-pocock-skills-engineering-vibe-coding/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/anydoc-firecrawl-open-source-document-to-markdown/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AnyDoc 实测：14 种文档 4 毫秒转 Markdown，Firecrawl 这套开源方案凭什么把 MarkItDown 和 Pandoc 甩开一个数量级</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/dashi-ppt-skill-ai-agent-editable-pptx-full-guide\/'; 
+        const pageTitle = '让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

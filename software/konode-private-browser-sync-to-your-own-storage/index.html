@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Chrome 自带同步常年失灵，Floccus 只搬书签。Konode 是开源浏览器扩展，把书签、打开的标签页、历史、扩展一次性同步到你自己的 WebDAV / Nextcloud / GitHub / Google Drive，支持可选端到端加密、4 种冲突策略，无需注册任何账号。我实测踩坑记录与 4 类同步工具选型对比。">
+<title>换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘</title>
+
+<link rel='canonical' href='https://softon.top/software/konode-private-browser-sync-to-your-own-storage/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘">
+<meta property='og:description' content="Chrome 自带同步常年失灵，Floccus 只搬书签。Konode 是开源浏览器扩展，把书签、打开的标签页、历史、扩展一次性同步到你自己的 WebDAV / Nextcloud / GitHub / Google Drive，支持可选端到端加密、4 种冲突策略，无需注册任何账号。我实测踩坑记录与 4 类同步工具选型对比。">
+<meta property='og:url' content='https://softon.top/software/konode-private-browser-sync-to-your-own-storage/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Konode' /><meta property='article:tag' content='浏览器同步' /><meta property='article:tag' content='书签' /><meta property='article:tag' content='标签页' /><meta property='article:tag' content='WebDAV' /><meta property='article:tag' content='Nextcloud' /><meta property='article:tag' content='GitHub' /><meta property='article:tag' content='开源' /><meta property='article:tag' content='隐私' /><meta property='article:published_time' content='2026-09-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-12T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘">
+<meta name="twitter:description" content="Chrome 自带同步常年失灵，Floccus 只搬书签。Konode 是开源浏览器扩展，把书签、打开的标签页、历史、扩展一次性同步到你自己的 WebDAV / Nextcloud / GitHub / Google Drive，支持可选端到端加密、4 种冲突策略，无需注册任何账号。我实测踩坑记录与 4 类同步工具选型对比。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘\"",
+  "description": "\"Chrome 自带同步常年失灵，Floccus 只搬书签。Konode 是开源浏览器扩展，把书签、打开的标签页、历史、扩展一次性同步到你自己的 WebDAV / Nextcloud / GitHub / Google Drive，支持可选端到端加密、4 种冲突策略，无需注册任何账号。我实测踩坑记录与 4 类同步工具选型对比。\"",
+  "url": "\"https://softon.top/software/konode-private-browser-sync-to-your-own-storage/\"",
+  "datePublished": "2026-09-12T00:00:00Z",
+  "dateModified": "2026-09-12T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/konode-private-browser-sync-to-your-own-storage/\""
+  },
+  "keywords": "\"Konode, 浏览器同步, 书签, 标签页, WebDAV, Nextcloud, GitHub, 开源, 隐私\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘\"",
+      "item": "\"https://softon.top/software/konode-private-browser-sync-to-your-own-storage/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么浏览器自带同步不顶用">为什么浏览器自带同步不顶用？</a></li>
+    <li><a href="#konode-到底搬哪些数据">Konode 到底搬哪些数据？</a></li>
+    <li><a href="#后端怎么选我踩过的账本">后端怎么选？我踩过的账本</a></li>
+    <li><a href="#加密开关决定谁看得到你的数据">加密开关，决定谁看得到你的数据</a></li>
+    <li><a href="#同步冲突怎么解">同步冲突怎么解？</a></li>
+    <li><a href="#当前版本的坑2026-09">当前版本的坑（2026-09）</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/konode-private-browser-sync-to-your-own-storage/">换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-12T00:00:00Z'>
+                    2026-09-12，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：8分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/konode-private-browser-sync-to-your-own-storage/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么浏览器自带同步不顶用">为什么浏览器自带同步不顶用？</a></li>
+    <li><a href="#konode-到底搬哪些数据">Konode 到底搬哪些数据？</a></li>
+    <li><a href="#后端怎么选我踩过的账本">后端怎么选？我踩过的账本</a></li>
+    <li><a href="#加密开关决定谁看得到你的数据">加密开关，决定谁看得到你的数据</a></li>
+    <li><a href="#同步冲突怎么解">同步冲突怎么解？</a></li>
+    <li><a href="#当前版本的坑2026-09">当前版本的坑（2026-09）</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>换电脑第一件事：重新登录，把书签、插件、打开的标签页一样一样搬过去。Chrome 自带同步常年掉线，Floccus 只搬书签，xBrowserSync 依赖别人服务器。AI 时代书签本身都不重要了，<strong>已打开的标签页和浏览历史</strong>才是你的工作现场。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Konode 是开源（MPL-2.0）浏览器扩展，同步书签 / 打开标签页 / 历史 / 扩展 4 类数据，直接写进你<strong>自己的存储</strong>（WebDAV、Nextcloud、GitHub、Google Drive、pCloud、Koofr、Fastmail），无任何 Konode 账号</li>
+<li>支持可选端到端加密（AES-256-GCM）：加密开，存储商只能看乱码；加密关，存储商能读明文</li>
+<li>后端选 GitHub 时每次同步产生一个 commit，可人工 diff / 回滚——书签的&quot;版本管理&quot;</li>
+<li>不搬密码、不搬 Cookie；密码走 KeePass / Bitwarden，是 Konode 有意的设计取舍</li>
+<li>4 种冲突策略，推荐&quot;最后一次写入为准&quot;；1.3.0 版 Firefox 有 WebDAV bug，1.3.1 修复但未发布，可源码编译临时用</li>
+</ul>
+</blockquote>
+<h2 id="为什么浏览器自带同步不顶用">为什么浏览器自带同步不顶用？
+</h2><p>Chrome 自带同步的逻辑是：所有数据进 Google 服务器，换设备登录 Google 账号拉回来。听着简单，实际三座坑：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>坑</th>
+					<th>实际表现</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>跨浏览器不通用</td>
+					<td>Edge 用微软账号同步，Chrome 用 Google，两套体系互相不通。同一公司电脑（Edge）与家用电脑（Chrome）之间搬不了</td>
+			</tr>
+			<tr>
+					<td>同步范围受限</td>
+					<td>打开的标签页只在&quot;来自其他设备&quot;里露个脸，历史同步受口令限制，扩展个性化配置基本不归它管</td>
+			</tr>
+			<tr>
+					<td>数据去向</td>
+					<td>全部落 Google / Mozilla 服务器。对自托管党、隐私敏感用户，这是直接否决理由</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>Floccus、xBrowserSync 这类第三方工具解决了&quot;跨浏览器&quot;，但只搬书签，而且依赖各自的同步服务器（国外服务器国内常连不上）。</p>
+<p>Konode 的思路反过来：<strong>没有 Konode 服务器，数据直接写进你指定的存储，自己端对端加密</strong>。</p>
+<h2 id="konode-到底搬哪些数据">Konode 到底搬哪些数据？
+</h2><p>安装扩展后按向导配置。同步范围分两类：</p>
+<ul>
+<li><strong>默认同步</strong>：书签（完整文件夹结构，增删移动重排都跟）</li>
+<li><strong>可选开启（各需单独确认）</strong>：已打开的标签页（会话快照，换设备一键恢复）、浏览历史（同步 + 去重）、扩展列表（只显示&quot;这台设备缺哪些扩展&quot;，不会远程安装扩展）</li>
+</ul>
+<p>注意两点边界：</p>
+<ol>
+<li><strong>不搬密码、不搬 Cookie、不搬表单数据</strong>。Konode 定位是&quot;浏览器场景同步&quot;不是&quot;凭据管理&quot;，密码请交给 KeePass / Bitwarden / 系统钥匙串。</li>
+<li>打开标签页恢复是&quot;快照&quot;——新设备不会自动帮你把 142 个标签全打开，是你自己点恢复。青小蛙在 appinn 那篇实测里就吃过这亏：&ldquo;一不小心就让 Firefox 一次性打开了 142 个标签页，一个一个关掉累死人&rdquo;。</li>
+</ol>
+<h2 id="后端怎么选我踩过的账本">后端怎么选？我踩过的账本
+</h2><p>Konode 的存储后端有 7 类官方卡片 + 1 类通用 WebDAV：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>后端</th>
+					<th>特点</th>
+					<th>我实测 / 调研结论</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>WebDAV（通用，含 Synology / kDrive / 任意自建）</td>
+					<td>走 WebDAV 端点，NAS 党最顺手</td>
+					<td>配 app password（开 2FA 时尤其重要），别用主账号密码</td>
+			</tr>
+			<tr>
+					<td>Nextcloud / ownCloud</td>
+					<td>走 WebDAV，文件落你已有服务器</td>
+					<td>同上，建议 app password</td>
+			</tr>
+			<tr>
+					<td>Google Drive</td>
+					<td>只申请 <code>drive.file</code> 窄 scope，只能碰 Konode 自己创建的文件</td>
+					<td>不想为同步专门开网盘的话最省事</td>
+			</tr>
+			<tr>
+					<td>GitHub</td>
+					<td>指定<strong>单个私有仓库</strong> + fine-grained token，每次同步 = 1 个 commit</td>
+					<td>书签天然带版本历史，可 diff / 手动回滚，极客向；仓库必须私有 + 加密开</td>
+			</tr>
+			<tr>
+					<td>pCloud</td>
+					<td>WebDAV 端点粘进去，写进一个文件夹，不动其余 Drive</td>
+					<td>欧洲 / 美国机房可选</td>
+			</tr>
+			<tr>
+					<td>Koofr / Fastmail</td>
+					<td>各自 WebDAV 端点</td>
+					<td>已有服务直接复用</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我个人排序：<strong>有 NAS 走 WebDAV（app password）&gt; 极客向走 GitHub 私有仓 + 加密 &gt; 只想省事走 Google Drive（drive.file scope）</strong>。</p>
+<h2 id="加密开关决定谁看得到你的数据">加密开关，决定谁看得到你的数据
+</h2><p>Konode 的加密是<strong>可选</strong>的，在设置向导里选，选完之前不会上传任何数据。开 AES-256-GCM 后，存储端只能看到密文——appinn 实测把书签同步到 Koofr 开了加密，文件在网盘里直接是乱码。</p>
+<p>三方能碰到你的同步数据，权限表长这样：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>参与方</th>
+					<th>加密关</th>
+					<th>加密开</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>你自己（任意已登录设备 + 你设的口令）</td>
+					<td>可读</td>
+					<td>可读</td>
+			</tr>
+			<tr>
+					<td>存储商（Google / GitHub / 你的 WebDAV 服务器）</td>
+					<td>可读明文</td>
+					<td>只读密文</td>
+			</tr>
+			<tr>
+					<td>Konode 扩展本身（开源可审计）</td>
+					<td>经手明文</td>
+					<td>经手，但本地加密后出去就是密文</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>凭据（存储账号 token）存在浏览器扩展存储，不出设备。</p>
+<h2 id="同步冲突怎么解">同步冲突怎么解？
+</h2><p>Konode 提供 4 种冲突策略，设置里可选。最常用：<strong>最后一次写入为准（last-write-wins）</strong>——两台设备同时改同一书签，时间戳晚的赢。其他策略（合并、手动、保留本地等）适合多设备重度编辑书签的场景，日常单主力机不用纠结。</p>
+<p>书签同步是自动的，几乎实时（本地变更后等待几秒再上传，避免频繁操作打爆后端）。</p>
+<h2 id="当前版本的坑2026-09">当前版本的坑（2026-09）
+</h2><ul>
+<li><strong>Firefox 1.3.0 有 WebDAV bug</strong>：任何配置都会报&quot;未获得访问 WebDAV 服务器的权限&quot;。1.3.1 已修复但未发布。变通：源码 <code>git clone https://github.com/konabe-studio/konode.git &amp;&amp; npm install &amp;&amp; npm run build:firefox</code>，产物 <code>dist-firefox/</code> 在 <code>about:debugging</code> 里&quot;临时载入附加组件&quot;指 <code>manifest.json</code>。</li>
+<li>不加密 + 公开仓库 = 你的书签 / 历史明文躺在 GitHub，选 GitHub 后端务必<strong>私有仓 + 加密开</strong>双保险。</li>
+<li>Chrome 商店评分 5.0（6 ratings），项目还早；扩展本身开源 MPL-2.0，代码可审计。</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: Konode 能同步密码吗？</strong></p>
+<p>A: 不能。它只同步书签、打开标签页、历史、扩展列表。密码和 Cookie 归凭据管理器（KeePass / Bitwarden / 系统钥匙串），这是有意的设计边界。</p>
+<p><strong>Q2: 和 Chrome 自带同步最大区别？</strong></p>
+<p>A: 数据不进 Google 服务器，直接写你指定的存储（WebDAV / GitHub / Drive 等），可选端到端加密，且支持 Chrome 与 Firefox 跨内核互相同步——Chrome 自带同步做不到跨浏览器。</p>
+<p><strong>Q3: 和 Floccus / xBrowserSync 比呢？</strong></p>
+<p>A: Floccus / xBrowserSync 主要搬书签（xBrowserSync 能加描述标签），Konode 额外搬打开标签页、历史、扩展列表；Floccus 也支持 WebDAV/Nextcloud/Git 后端，但 Konode 的 GitHub commit 版本历史 + 可选全量加密是差异化点。只在意书签、已有 Floccus 就够用。</p>
+<p><strong>Q4: 需要注册 Konode 账号吗？</strong></p>
+<p>A: 不需要。也没有 Konode 云端服务器。你只配置自己的存储后端，数据全在自己手里。</p>
+<p><strong>Q5: 换设备后打开标签页会自己弹出来吗？</strong></p>
+<p>A: 不会。会话以快照存储，在新设备手动点&quot;恢复&quot;才打开。建议恢复前先看一眼快照里有多少标签，避免一次性铺开上百个。</p>
+<p><strong>Q6: 我只有公司电脑 + 家里电脑，没 NAS，最省事方案？</strong></p>
+<p>A: 装扩展 → 后端选 Google Drive（自动申请 <code>drive.file</code> 窄权限，只碰 Konode 建的文件夹）→ 开加密。两台设备装同一扩展、登同一 Drive，完事。</p>
+<p><strong>Q7: 142 个标签页事故是我一个人的问题吗？</strong></p>
+<p>A: 恢复标签页是&quot;全量打开&quot;语义，快照存多少恢复多少。大快照先挑着恢复，或者平时就清一清标签页。appinn 原文作者实测踩的就是这个。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/konode/">Konode</a>
+        
+            <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%AD%A5/">浏览器同步</a>
+        
+            <a href="/tags/%E4%B9%A6%E7%AD%BE/">书签</a>
+        
+            <a href="/tags/%E6%A0%87%E7%AD%BE%E9%A1%B5/">标签页</a>
+        
+            <a href="/tags/webdav/">WebDAV</a>
+        
+            <a href="/tags/nextcloud/">Nextcloud</a>
+        
+            <a href="/tags/github/">Github</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">开源</a>
+        
+            <a href="/tags/%E9%9A%90%E7%A7%81/">隐私</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DeepSeek 甩出开源 Agent 框架 Harness，和我用了半年的 OpenClaw 有什么不一样？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/localsend-1-18-0-cli-file-transfer-cross-platform/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/installerx-revived-android-apk-installer-mt-manager-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国产系统安装器折磨了我三年，直到我把它换成 InstallerX Revived</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/konode-private-browser-sync-to-your-own-storage\/'; 
+        const pageTitle = '换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

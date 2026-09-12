@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Sageling 是一款给非开发者的 macOS 本地 AI 助手，用 MLX in-process 跑 Qwen 3.5 9B，模型嵌进 app 而不是走 localhost API。治疗师病历、老师批作业、律师文书都不出机。硬件门槛 Apple Silicon + 16GB。这篇拆架构、对比 Ollama/LM Studio、讲清楚谁该装谁不该装。">
+<title>Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B</title>
+
+<link rel='canonical' href='https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B">
+<meta property='og:description' content="Sageling 是一款给非开发者的 macOS 本地 AI 助手，用 MLX in-process 跑 Qwen 3.5 9B，模型嵌进 app 而不是走 localhost API。治疗师病历、老师批作业、律师文书都不出机。硬件门槛 Apple Silicon + 16GB。这篇拆架构、对比 Ollama/LM Studio、讲清楚谁该装谁不该装。">
+<meta property='og:url' content='https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='Sageling' /><meta property='article:tag' content='MLX' /><meta property='article:tag' content='Qwen' /><meta property='article:tag' content='本地 AI' /><meta property='article:tag' content='Mac' /><meta property='article:tag' content='隐私' /><meta property='article:tag' content='Ollama' /><meta property='article:tag' content='LM Studio' /><meta property='article:published_time' content='2026-09-07T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-07T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B">
+<meta name="twitter:description" content="Sageling 是一款给非开发者的 macOS 本地 AI 助手，用 MLX in-process 跑 Qwen 3.5 9B，模型嵌进 app 而不是走 localhost API。治疗师病历、老师批作业、律师文书都不出机。硬件门槛 Apple Silicon + 16GB。这篇拆架构、对比 Ollama/LM Studio、讲清楚谁该装谁不该装。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B\"",
+  "description": "\"Sageling 是一款给非开发者的 macOS 本地 AI 助手，用 MLX in-process 跑 Qwen 3.5 9B，模型嵌进 app 而不是走 localhost API。治疗师病历、老师批作业、律师文书都不出机。硬件门槛 Apple Silicon + 16GB。这篇拆架构、对比 Ollama/LM Studio、讲清楚谁该装谁不该装。\"",
+  "url": "\"https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/\"",
+  "datePublished": "2026-09-07T00:00:00Z",
+  "dateModified": "2026-09-07T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/\""
+  },
+  "keywords": "\"Sageling, MLX, Qwen, 本地 AI, Mac, 隐私, Ollama, LM Studio\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B\"",
+      "item": "\"https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么非开发者用不起也用不敢云-ai">为什么非开发者用不起，也用不敢云 AI？</a></li>
+    <li><a href="#sageling-到底跟-ollamalm-studio-差在哪">Sageling 到底跟 Ollama、LM Studio 差在哪？</a></li>
+    <li><a href="#mlx-in-process-到底啥意思架构一层一层拆">MLX in-process 到底啥意思？架构一层一层拆</a></li>
+    <li><a href="#硬件门槛卡在哪16-gb-mac-真够吗">硬件门槛卡在哪：16 GB Mac 真够吗？</a></li>
+    <li><a href="#隐私铁律治疗师老师律师能不能用">隐私铁律：治疗师、老师、律师能不能用？</a></li>
+    <li><a href="#我实测下来推断9b-模型能干什么干不了什么">我实测下来（推断），9B 模型能干什么、干不了什么？</a></li>
+    <li><a href="#那-sageling-值得装吗三种人不适合">那 Sageling 值得装吗？三种人不适合</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/">Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-07T00:00:00Z'>
+                    2026-09-07，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：16分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么非开发者用不起也用不敢云-ai">为什么非开发者用不起，也用不敢云 AI？</a></li>
+    <li><a href="#sageling-到底跟-ollamalm-studio-差在哪">Sageling 到底跟 Ollama、LM Studio 差在哪？</a></li>
+    <li><a href="#mlx-in-process-到底啥意思架构一层一层拆">MLX in-process 到底啥意思？架构一层一层拆</a></li>
+    <li><a href="#硬件门槛卡在哪16-gb-mac-真够吗">硬件门槛卡在哪：16 GB Mac 真够吗？</a></li>
+    <li><a href="#隐私铁律治疗师老师律师能不能用">隐私铁律：治疗师、老师、律师能不能用？</a></li>
+    <li><a href="#我实测下来推断9b-模型能干什么干不了什么">我实测下来（推断），9B 模型能干什么、干不了什么？</a></li>
+    <li><a href="#那-sageling-值得装吗三种人不适合">那 Sageling 值得装吗？三种人不适合</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>Claude Cowork、ChatGPT Team、Cursor Business，一个月 20 美元起，谁付得起？付得起的又一半不敢往里贴东西——治疗师的会谈记录、老师批的学生作业、律师起草的动议，一句“数据可能被用来改进模型”就够让人手抖。</p>
+<p>Sageling 昨天在 Hacker News 上冒出来（Show HN，2 points，冷启动），瞄的就是这块夹在“付不起”和“不敢用”中间的空白：Mac 端本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B，模型直接嵌进 app，一句网络都不打。</p>
+<p>我看了官网和 HN 帖子，结合我用 Ollama、LM Studio、Claude Code 那一堆家伙的经验，觉得这条路子跟站上以前写过的本地 AI 都不太一样。今天就拆一拆。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Sageling 面向非开发者，MLX in-process 跑 Qwen 3.5 9B，8 GB 模型首次下载后完全离线可用</li>
+<li>走的不是 Ollama / LM Studio 那套“本地 API + 前端调”的路子，模型直接编进 app，砍掉一层 localhost 服务</li>
+<li>硬件门槛：Apple Silicon Mac + ≥16 GB 统一内存 + macOS 13 及以上</li>
+<li>目标场景：治疗师病历、老师批作业、律师文书、包含敏感信息的日常工作</li>
+<li>免费下载，不上传对话文件，记忆以纯文本存本地磁盘，可读可编辑可删</li>
+</ul>
+</blockquote>
+<h2 id="为什么非开发者用不起也用不敢云-ai">为什么非开发者用不起，也用不敢云 AI？
+</h2><p>我朋友里那批不写代码的——一个做心理治疗，一个大学助教改考卷，还有个做劳动仲裁——她们对 AI 的印象基本停留在“能不能帮我写个邮件”。</p>
+<p>问她们为什么不上 Claude Cowork、ChatGPT Plus，答案高度一致：</p>
+<ul>
+<li><strong>贵</strong>：20 美元一个月，用两次就觉得亏；上限一到就催升级到 200 美元</li>
+<li><strong>心里没底</strong>：一份治疗记录、一份学生成绩单、一份合同草稿，谁敢往云端灌？平台隐私声明写得再漂亮，训练用不用、员工能不能看、数据存哪个国家，这些普通人根本弄不清</li>
+</ul>
+<p>Sageling 的作者在 HN 上把这两个痛点讲得直白（<a class="link" href="https://news.ycombinator.com/item?id=49569136"  target="_blank" rel="noopener"
+    >Show HN 原帖</a>）：</p>
+<blockquote>
+<ol>
+<li>Well, I don&rsquo;t wanna pay a bunch of money for it, and the $20 plans run out real fast.</li>
+<li>I&rsquo;m dealing with sensitive info (student grades, therapy notes, legal work, etc) and I don&rsquo;t wanna give it to anyone.</li>
+</ol>
+</blockquote>
+<p>这两句话套在中国用户身上一样成立。你把 API key 塞给 Cursor 就等于把项目源码交给模型商，把公司报表贴给 ChatGPT 就等于把财务数据搬出内网，把病人档案传给云端就是直接违规。</p>
+<p><strong>本地 AI 不是新东西，Ollama、LM Studio 都能跑</strong>。但那些是给会写代码的人玩的——你得懂什么叫“模型下载”“量化版本”“API 端口”“system prompt”。让一个心理治疗师去装 Ollama、拉模型、写 prompt，是一次劝退。</p>
+<p>Sageling 想解决的就是这个“最后一米”：把 MLX 引擎、模型、agent 框架、UI 全打包成一个 dmg，双击安装，跟装 Notion 一样。</p>
+<h2 id="sageling-到底跟-ollamalm-studio-差在哪">Sageling 到底跟 Ollama、LM Studio 差在哪？
+</h2><p>这是我最想拆的点。表面上看都是“Mac 本地跑开源模型”，架构差别其实很大。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>Ollama</th>
+					<th>LM Studio</th>
+					<th>Sageling</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>引擎</td>
+					<td>llama.cpp（可选 MLX 预览）</td>
+					<td>llama.cpp / MLX 二选一</td>
+					<td>MLX（in-process）</td>
+			</tr>
+			<tr>
+					<td>模型交付方式</td>
+					<td>CLI 拉，本地服务化</td>
+					<td>GUI 拉，本地服务化</td>
+					<td>首次启动下载 ~8 GB，直接嵌进 app</td>
+			</tr>
+			<tr>
+					<td>对外接口</td>
+					<td>OpenAI 兼容 API @ 11434</td>
+					<td>OpenAI 兼容 API 可选</td>
+					<td>无（in-process 调用，不开端口）</td>
+			</tr>
+			<tr>
+					<td>目标用户</td>
+					<td>开发者</td>
+					<td>半技术玩家</td>
+					<td>完全的非开发者</td>
+			</tr>
+			<tr>
+					<td>Agent 能力</td>
+					<td>没有（要自己拼 harness）</td>
+					<td>没有（自己接 client）</td>
+					<td>内置 harness + skills，直接用</td>
+			</tr>
+			<tr>
+					<td>隐私边界</td>
+					<td>本地进程，但监听端口</td>
+					<td>本地进程，但监听端口</td>
+					<td>完全不开网络端口</td>
+			</tr>
+			<tr>
+					<td>上手曲线</td>
+					<td>命令行</td>
+					<td>图形界面但要选模型</td>
+					<td>双击装完就问</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>关键差异在**“in-process”这三个字**。Ollama 和 LM Studio 的思路是把模型跑成一个本地服务（listen 在 127.0.0.1:11434 之类），你的前端 app、你的 IDE 插件、你的脚本，通过 HTTP 去调它。这个架构的好处是解耦，坏处是：</p>
+<ol>
+<li>用户要装两个东西——服务 + 前端</li>
+<li>端口暴露有攻击面（本机上其他程序都能连）</li>
+<li>序列化开销：每次请求要把 prompt/context 打成 JSON，模型输出再拼回来</li>
+</ol>
+<p>Sageling 走的是另一条路：<strong>MLX 引擎作为库直接嵌进 app 进程</strong>。用户没有“服务”这个概念，模型加载后就是 app 的一部分，调用是函数调用不是 HTTP，网络端口一个都不开。</p>
+<p>站上以前写过一篇 <a class="link" href="https://softon.top/software/lm-studio-bionic-local-open-model-agent/"  target="_blank" rel="noopener"
+    >LM Studio Bionic</a>，那个方向是把 LM Studio 当 agent 后端；<a class="link" href="https://softon.top/software/ollama-cost-saving-real-test-2026/"  target="_blank" rel="noopener"
+    >Ollama 省钱实测</a> 是把 Ollama 塞到 Claude Code 里当便宜替身。这两条路子本质上都还是**“开发者视角的本地化”**——省钱、可控、但还是给会写代码的人用的。</p>
+<p>Sageling 是第一次把这套东西面向<strong>根本不会打开终端</strong>的用户打包。</p>
+<h2 id="mlx-in-process-到底啥意思架构一层一层拆">MLX in-process 到底啥意思？架构一层一层拆
+</h2><p>MLX 是 Apple 官方 2023 年底开源的机器学习框架，专为 Apple Silicon 的统一内存架构做过优化（内存不复制、CPU/GPU 共享 buffer）。llama.cpp 也支持 Metal 后端能跑，但 MLX 在 Apple Silicon 上通常吞吐更高、内存占用更省。</p>
+<p><strong>传统本地 AI app 的调用链</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户 UI  →  HTTP Client  →  localhost:11434  →  Ollama server  →  llama.cpp  →  Metal GPU</span>
+</span></span></code></pre></div><p>至少五层，跨进程通信两次（UI/Ollama、Ollama/llama.cpp 有时也算），每次请求都要经过 socket + JSON。</p>
+<p><strong>Sageling 的 in-process 调用链（推断，未公开源码）</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">用户 UI  →  MLX Python 绑定或 Swift MLX  →  Metal GPU</span>
+</span></span></code></pre></div><p>同一个进程地址空间，函数直接调，没有 HTTP、没有 JSON、没有 socket。</p>
+<p>好处：</p>
+<ul>
+<li><strong>零延迟叠加</strong>：模型响应第一个 token 到 UI 显示，中间没有额外 IPC 开销</li>
+<li><strong>无端口暴露</strong>：本机的其他程序（包括恶意 app）都碰不到这个模型</li>
+<li><strong>打包简单</strong>：不需要“先装 Ollama 再装 UI”</li>
+</ul>
+<p>代价：</p>
+<ul>
+<li><strong>强耦合</strong>：换引擎、换模型格式，都要 app 层配合改</li>
+<li><strong>升级不独立</strong>：MLX 出新版，Sageling 也得跟着发新版</li>
+<li><strong>调试黑盒</strong>：出问题日志都在 app 里，用户不像 Ollama 那样能 <code>curl localhost:11434</code> 单测</li>
+</ul>
+<p>对开发者来说，独立 API 服务更灵活。对普通用户来说，<strong>“看不见的东西才是好东西”</strong>——一个 app 图标，双击，能用，坏了删掉，这个心智模型 Ollama 给不了。</p>
+<h2 id="硬件门槛卡在哪16-gb-mac-真够吗">硬件门槛卡在哪：16 GB Mac 真够吗？
+</h2><p>官网写得清楚：<strong>Apple Silicon Mac + ≥16 GB 统一内存 + macOS 13 及以上</strong>，首次运行下载约 8 GB 模型。</p>
+<p>Qwen 3.5 9B 4-bit 量化后大约 5-6 GB 权重，加上 KV cache、上下文缓存、MLX runtime 本身，实际运行时占用一般在 10-13 GB 之间浮动。16 GB Mac 剩给系统和其他 app 的空间就只剩 3-6 GB。</p>
+<p>我按站上以前那篇 <a class="link" href="https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/"  target="_blank" rel="noopener"
+    >本地 LLM 硬件分层实算</a> 的经验，给几个档位标一下：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>机型</th>
+					<th>内存</th>
+					<th>跑 Sageling 体验（推断）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>M1 / M2 MacBook Air 16 GB</td>
+					<td>16 GB</td>
+					<td>能跑，但同时开 Chrome + Slack + Zoom 会开始 swap，风扇拉满</td>
+			</tr>
+			<tr>
+					<td>M2 / M3 MacBook Pro 24 GB</td>
+					<td>24 GB</td>
+					<td>舒服档，日常多任务不受影响</td>
+			</tr>
+			<tr>
+					<td>M3 / M4 Pro 32 GB</td>
+					<td>32 GB</td>
+					<td>富裕档，模型常驻内存不掉页</td>
+			</tr>
+			<tr>
+					<td>M4 Max / Studio 64 GB+</td>
+					<td>64 GB+</td>
+					<td>溢出档，未来还能升级到更大模型</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>我的建议</strong>：如果你 Mac 是 16 GB 起步款、平时 Chrome 常开 30 个标签，装 Sageling 前先看看活动监视器的“内存压力”是不是常年黄色。是的话别装，装了要么慢要么整机卡。</p>
+<p>24 GB 是一个真正的舒适起点。9B 模型跑起来 tok/s 在 M2/M3 系列上大约 15-30 tok/s（我用 Ollama 跑同尺寸模型的经验估算，MLX 版本理论上更快一点），基本能做到“说完就开始出字”。</p>
+<h2 id="隐私铁律治疗师老师律师能不能用">隐私铁律：治疗师、老师、律师能不能用？
+</h2><p>这是 Sageling 官网 FAQ 花了最多笔墨的地方。我按“合规场景”把它拆开：</p>
+<p><strong>HIPAA（美国医疗隐私法）</strong></p>
+<ul>
+<li>你可以在 HIPAA 覆盖的诊所用</li>
+<li>但你自己还是要维护 HIPAA 合规的整机环境（磁盘加密、屏保锁、备份策略、访问日志）</li>
+<li>不需要跟 Sageling 签 BAA（业务伙伴协议），因为它拿不到你的患者数据</li>
+</ul>
+<p><strong>FERPA（美国学生隐私法）</strong></p>
+<ul>
+<li>学生作业留在你 Mac 上，从来不上传</li>
+<li>学校 IT 政策才是关键——很多学校不允许在办公电脑装非白名单软件</li>
+</ul>
+<p><strong>律师-委托人保密</strong></p>
+<ul>
+<li>模型在你 Mac 上跑，不发给任何第三方</li>
+<li>“无第三方在环”这一点在律师伦理审查里通常够用</li>
+</ul>
+<p><strong>中国的语境</strong>：《个人信息保护法》《数据安全法》《医疗健康信息标准》——Sageling 这种“完全本地”的架构合规成本最低。但你得自己保证：</p>
+<ul>
+<li>电脑不丢</li>
+<li>全盘加密（FileVault 一定开）</li>
+<li>定期备份到自己控制的介质</li>
+<li>不要把 Sageling 装在共用电脑上</li>
+</ul>
+<p><strong>Sageling 官网原话</strong>：</p>
+<blockquote>
+<p>No. Your conversations, files, and memories stay on your Mac, and Sageling calls no outside AI service. The network is used only when a job needs the web, for downloads, and for a rating you choose to send.</p>
+</blockquote>
+<p>翻译：会话、文件、记忆都不出 Mac，Sageling 不调外部 AI 服务。网络只在三种情况下用——你让它上网查东西、下载模型、你主动发送评分。</p>
+<p>这三条例外我特意标出来：<strong>它不是零网络，是“默认零网络 + 明确按需使用”</strong>。用户教育没做到位，还是有可能不小心让它上一次网。</p>
+<h2 id="我实测下来推断9b-模型能干什么干不了什么">我实测下来（推断），9B 模型能干什么、干不了什么？
+</h2><p>Sageling 刚上，我还没上手（等 dmg 下下来再补一版实测帖）。但 Qwen 3.5 9B 我在 Ollama 里跑过一段时间，边界感大致有：</p>
+<p><strong>能干得挺好的</strong></p>
+<ul>
+<li>邮件起草、修辞润色、语法检查</li>
+<li>会议记录整理成条目</li>
+<li>短文本翻译（中英日常语境）</li>
+<li>结构化输入（把一段乱话变 JSON、变表格）</li>
+<li>简单的文档问答（几千字 PDF 内的信息查询）</li>
+<li>待办拆解和日历规划</li>
+</ul>
+<p><strong>能干但要看运气</strong></p>
+<ul>
+<li>长文档摘要（&gt;1 万字开始漏细节）</li>
+<li>代码写作（简单脚本可以，复杂业务逻辑幻觉多）</li>
+<li>数据分析（能列步骤，但算出来的具体数字信不过）</li>
+<li>复杂 RAG（要看 harness 怎么切 chunk）</li>
+</ul>
+<p><strong>干不了或者别指望</strong></p>
+<ul>
+<li>严肃的法律/医疗建议（模型规模到不了那个知识密度）</li>
+<li>精确的多步推理（数学证明、编译原理级别的问题）</li>
+<li>与 GPT-5 / Claude Opus 一档的“创意 + 严谨”写作</li>
+</ul>
+<p>Sageling 的定位其实很聪明：<strong>它不跟 Claude Cowork 抢那种“帮我做深度分析”的活儿，抢的是“帮我做重复劳动”的活儿</strong>。官网上举的例子——写病历、批作业、雇视频师，都是模板化程度高、对模型顶层能力要求不高的场景。</p>
+<p>9B 模型 + 好 harness + 明确任务 = 能干活。这个组合被 Sageling 团队押对了。</p>
+<h2 id="那-sageling-值得装吗三种人不适合">那 Sageling 值得装吗？三种人不适合
+</h2><p>先说不适合的：</p>
+<ol>
+<li><strong>你是重度 Claude/GPT 用户，日活消息 &gt;100 条</strong>：9B 的天花板会让你难受，你会不断回去开云 API</li>
+<li><strong>你的 Mac 内存只有 8 GB / 你还在用 Intel Mac</strong>：跑不动，Sageling 硬件门槛卡死了 Intel</li>
+<li><strong>你想用它写代码</strong>：可以，但站上写过的 <a class="link" href="https://softon.top/tutorials/openclaw-six-advanced-techniques-from-chatbot-to-digital-employee/"  target="_blank" rel="noopener"
+    >Claude Code + Skills</a> 那种复杂 agent 工作流，9B 目前撑不起来</li>
+</ol>
+<p>适合的：</p>
+<ul>
+<li><strong>你处理敏感数据</strong>（病历、成绩、合同、财务），必须留在本地</li>
+<li><strong>你不会写代码</strong>，Ollama / LM Studio 的“先装服务再装 UI”让你头疼</li>
+<li><strong>你想让 AI 干日常重复活</strong>，不追求 SOTA 智商</li>
+<li><strong>你想第一次尝试本地 AI</strong>，愿意用 8 GB 硬盘 + 一次下载换一个私有助手</li>
+</ul>
+<p><strong>免费下载</strong>这一点特别值得说：不注册、不试用期、不砍功能。作者赌的是“先让你用上、后面再想商业化”，跟 Ollama / LM Studio 的早期打法很像。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: Sageling 是开源的吗？</strong></p>
+<p>A: 官网和 HN 帖子都没提到开源。目前看是免费闭源 Mac app，模型部分用 Qwen 3.5 9B（Qwen 系列本身 Apache 2.0）。如果你要求全栈可审计，等它开源再说，或者用 Ollama + Open WebUI 组合替代。</p>
+<p><strong>Q2: 首次下载 8 GB 模型能挑吗？</strong></p>
+<p>A: 官网没提可选。默认给的就是 Qwen 3.5 9B 一个包，普通用户不用做选型决策。这是刻意的产品取舍——不给选，用户就不会纠结。想选模型的，去 LM Studio。</p>
+<p><strong>Q3: Sageling 支持中文吗？</strong></p>
+<p>A: Qwen 系列是中文母语模型，中文能力比同尺寸的 Llama、Mistral 好很多。日常中文写作、邮件、翻译都够用。这是 Sageling 选 Qwen 而不选 Llama 3 8B 的一个大理由。</p>
+<p><strong>Q4: 跟 Claude Cowork 比，Sageling 差多少？</strong></p>
+<p>A: 差一个数量级。Claude Sonnet 参数量在几百 B 级别，Sageling 才 9B。硬指标（推理、长文、复杂任务）没得比。但 Sageling 有两个 Claude 永远给不了的东西——<strong>免费无上限 + 完全私有</strong>。选谁看你要什么。</p>
+<p><strong>Q5: 我能给 Sageling 接自己的知识库吗？</strong></p>
+<p>A: 官网提了“memories”是纯文本存本地磁盘的，可读可编辑可删。这暗示有内置的记忆/知识层。是不是标准 RAG、能不能接大文档库，得等实测。目前定位是“个人助手”不是“企业知识库”。</p>
+<p><strong>Q6: 网络断了 Sageling 还能用吗？</strong></p>
+<p>A: 能，这是核心卖点。模型下载完之后，飞机上、山里、办公室断网都不影响。只有你主动让它上网查东西或者更新模型时才需要联网。</p>
+<p><strong>Q7: 我 Mac 只有 16 GB，跑起来会不会卡到没法办公？</strong></p>
+<p>A: 会有影响。9B 模型 4-bit 常驻内存大概 10-13 GB，同时开 Chrome / Slack / Zoom 会开始压缩内存、频繁 swap，风扇转起来。想舒服跑 Sageling + 日常工作，24 GB 是起点，32 GB 稳。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/"  target="_blank" rel="noopener"
+    >本地 LLM 硬件分层：2K 到 40K 真实成本实算</a></li>
+<li><a class="link" href="https://softon.top/software/lm-studio-bionic-local-open-model-agent/"  target="_blank" rel="noopener"
+    >LM Studio Bionic：把本地开源模型当 agent 后端</a></li>
+<li><a class="link" href="https://softon.top/software/ollama-cost-saving-real-test-2026/"  target="_blank" rel="noopener"
+    >Ollama 省钱实测：Claude Code 换本地模型的账本</a></li>
+<li><a class="link" href="https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/"  target="_blank" rel="noopener"
+    >OKF Agent Memory vs Mem0 / Letta：本地记忆的三条路</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/sageling/">Sageling</a>
+        
+            <a href="/tags/mlx/">MLX</a>
+        
+            <a href="/tags/qwen/">Qwen</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0-ai/">本地 AI</a>
+        
+            <a href="/tags/mac/">Mac</a>
+        
+            <a href="/tags/%E9%9A%90%E7%A7%81/">隐私</a>
+        
+            <a href="/tags/ollama/">Ollama</a>
+        
+            <a href="/tags/lm-studio/">LM Studio</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/win11-onedrive-photos-force-install-uninstall/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">微软偷偷给 Win11 塞了个会扫脸的照片 App，还卸不掉 —— 手动清除全流程</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lm-studio-bionic-local-open-model-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/optimizerduck-windows-optimization-trust-revert/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/local-ai-assistant-axiom-windows-multi-agent-pipeline/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">本地 AI 助手不该只是聊天框：Axiom 的多智能体流水线给 Windows 带来了什么</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/sageling-local-ai-agent-mac-mlx-qwen-in-process\/'; 
+        const pageTitle = 'Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>移动安全 on softon.top</title>
+		<link>https://softon.top/tags/%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8/</link>
+		<description>Recent content in 移动安全 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 10 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</title>
+				<link>https://softon.top/software/nightcrawler-mobile-ai-pentest-agent-real-test/</link>
+				<pubDate>Mon, 10 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/nightcrawler-mobile-ai-pentest-agent-real-test/</guid>
+				<description>&lt;p&gt;先说结论，好让你决定要不要往下读。&lt;/p&gt;&#xA;&lt;p&gt;Nightcrawler 是一个真项目，不是概念视频，也不是套皮 Demo。它把一个 1.2B 参数的模型跑在一部 OnePlus 8 的 Adreno GPU 上，让这个小模型去挑目标、选工具、执行命令、匹配 CVE、写结构化报告。整个过程不联网、不调 API、不走云推理。作者自己家网络里挂着跑了 3 个月。&lt;/p&gt;&#xA;&lt;p&gt;也就是说，&lt;strong&gt;&amp;ldquo;手机 AI 黑客工具箱&amp;quot;这件事，第一次不是营销话术，是能编译能跑的开源代码。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;但——注意这个&amp;quot;但&amp;rdquo;——它不是漫威片里那种一按按钮就拿到域控的东西。作者自己在 Hacker News 上明说：模型输出一条能用的命令的概率大概 &lt;strong&gt;50%&lt;/strong&gt;。剩下 50% 都靠工程胶水兜住。&lt;/p&gt;&#xA;&lt;p&gt;所以这篇文章想干一件事：把 Nightcrawler 的架构、真实性能、能做什么不能做什么，以及为什么它值得被认真讨论，讲清楚。&lt;strong&gt;是&amp;quot;真家伙还是极客玩具&amp;quot;这个问题，答案取决于你从哪个维度看&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;幻想兜里的-ai-黑客&#34;&gt;幻想：兜里的 AI 黑客&#xA;&lt;/h2&gt;&lt;p&gt;想象一下这个画面。&lt;/p&gt;&#xA;&lt;p&gt;你坐在咖啡馆，手里一部普通安卓。你打开一个 App，输入一个 IP 段（当然是你自己家的），点&amp;quot;开始&amp;quot;。手机屏幕暗着放兜里，你继续喝咖啡。半小时后拿出来一看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;扫到了 8 台在线主机&lt;/li&gt;&#xA;&lt;li&gt;认出 3 台跑着老版本 nginx&lt;/li&gt;&#xA;&lt;li&gt;从本地 CVE 库里匹配到 2 个高危漏洞&lt;/li&gt;&#xA;&lt;li&gt;生成了一份 Markdown 结构的报告，写了每一步为什么这么做&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;没有云、没有订阅、没有把你的内网流量喂给 OpenAI&lt;/strong&gt;。整个过程是那部 12GB 内存的老手机自己完成的。&lt;/p&gt;&#xA;&lt;p&gt;这是 Nightcrawler 想推销的画面。听着像 UP 主标题党？我第一反应也是。但翻完 GitHub 仓库、Hacker News 作者亲自答疑的 comment、以及第三方媒体的独立报道后，我把结论收窄成一句话：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;画面是真的，但每个像素都比营销号说的粗糙&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;想清楚这句话，剩下的内容才有意义。&lt;/p&gt;&#xA;&lt;h2 id=&#34;硬件账本二手手机能不能扛住&#34;&gt;硬件账本：二手手机能不能扛住&#xA;&lt;/h2&gt;&lt;p&gt;我们先算一笔硬件账，这是理解 Nightcrawler 最快的一条路。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

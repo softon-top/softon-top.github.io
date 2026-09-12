@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Cordis on softon.top</title>
+		<link>https://softon.top/tags/cordis/</link>
+		<description>Recent content in Cordis on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 16 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/cordis/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>DeepSeek 甩出开源 Agent 框架 Harness，和我用了半年的 OpenClaw 有什么不一样？</title>
+				<link>https://softon.top/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/</link>
+				<pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/</guid>
+				<description>&lt;p&gt;8 月 13 日晚上，DeepSeek 一边发通告说 V4-Pro API 从 17 号开始涨价，高峰段最狠 12 倍。一边把自家做的 Agent 框架 &lt;strong&gt;DeepSeek Harness (&lt;code&gt;dsh&lt;/code&gt;)&lt;/strong&gt; 甩到 GitHub 上，MIT 协议，随便用。&lt;/p&gt;&#xA;&lt;p&gt;几个小时，&lt;code&gt;deepseek-ai/deepseek-harness&lt;/code&gt; 冲上 3.3 万 star。等我第二天早上刷到，已经 10.5 万了。&lt;/p&gt;&#xA;&lt;p&gt;我当时正用 OpenClaw 在跑一堆 skill，看到 Harness 的第一反应是：&lt;strong&gt;这不就是我这套东西的另一种做法？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;于是花了半天把 &lt;code&gt;dsh&lt;/code&gt; 装起来跑，顺便和 OpenClaw 摆到一起比。结论先说：它们看起来像近亲，实际是两个物种。想清楚差别，再决定要不要切。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一句-npx-就跑起来的东西凭什么值得看&#34;&gt;一句 &lt;code&gt;npx&lt;/code&gt; 就跑起来的东西，凭什么值得看？&#xA;&lt;/h2&gt;&lt;p&gt;Harness 的启动简单到反常识：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;npx @deepseek-ai/dsh web&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Node.js 项目，默认起在 &lt;code&gt;http://localhost:3018&lt;/code&gt;，浏览器一开就是它自带的 Web UI。想跟源码走：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;git clone https://github.com/deepseek-ai/deepseek-harness&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cd deepseek-harness&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pnpm install&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pnpm run build&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pnpm dsh web&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;装完连 DeepSeek 官方 API，也能挂 OpenAI、Anthropic、GLM、Kimi，模型作为「plugin」被抽象掉了。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

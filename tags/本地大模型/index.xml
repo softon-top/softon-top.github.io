@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>本地大模型 on softon.top</title>
+		<link>https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+		<description>Recent content in 本地大模型 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 20 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</title>
+				<link>https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;你以为花 $40k 就能在自家客厅跑一台&amp;quot;几乎等于 Claude Opus&amp;quot;的机器？&#xA;jamesob 用 21 次 commit 告诉你：这数字得先加个 15k 才够诚实。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;一份被-18k-颗-star-抬上桌的账本&#34;&gt;一份被 1.8k 颗 Star 抬上桌的账本&#xA;&lt;/h2&gt;&lt;p&gt;前几天在 HN 头条上刷到一个仓库：&lt;a class=&#34;link&#34; href=&#34;https://github.com/jamesob/local-llm&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;jamesob/local-llm&lt;/a&gt;。作者一句 AI 都没让写（他在 README 里特意标了），把自家 4 张 RTX PRO 6000 的开销、BIOS 配置、PCIe 交换机接线一股脑贴出来。Star 数一天涨到 1.8k，HelloGitHub 第 124 期把它列为唯一推荐。&lt;/p&gt;&#xA;&lt;p&gt;这类&amp;quot;本地跑大模型&amp;quot;的教程网上一抓一大把，为什么 jamesob 这份能出圈？&lt;/p&gt;&#xA;&lt;p&gt;因为它不是那种&amp;quot;用 Ollama 一键装 Llama 3&amp;quot;的糊弄文章。它做的是一件更贵、也更少人愿意做的事：&lt;strong&gt;把两条极端预算路径同时摊开，让你看清&amp;quot;入门&amp;quot;和&amp;quot;发烧&amp;quot;之间到底差了什么&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;$2k 一档，48GB VRAM，跑 Qwen3.6-27B。$40k 一档，384GB VRAM，跑 GLM-5.2-594B。中间那个 $20k 档？作者自己都写着 TODO——他没试过，也懒得瞎编。&lt;/p&gt;&#xA;&lt;p&gt;这种&amp;quot;我只讲我亲手花过的钱&amp;quot;的姿态，比任何&amp;quot;2026 本地 LLM 终极指南&amp;quot;都值钱。&lt;/p&gt;&#xA;&lt;h2 id=&#34;2k-入门档48gb-vram-够干什么&#34;&gt;$2k 入门档：48GB VRAM 够干什么&#xA;&lt;/h2&gt;&lt;p&gt;先说结论：&lt;strong&gt;双 RTX 3090，48GB VRAM 总量，$2k 出头&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</title>
+				<link>https://softon.top/software/nightcrawler-mobile-ai-pentest-agent-real-test/</link>
+				<pubDate>Mon, 10 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/nightcrawler-mobile-ai-pentest-agent-real-test/</guid>
+				<description>&lt;p&gt;先说结论，好让你决定要不要往下读。&lt;/p&gt;&#xA;&lt;p&gt;Nightcrawler 是一个真项目，不是概念视频，也不是套皮 Demo。它把一个 1.2B 参数的模型跑在一部 OnePlus 8 的 Adreno GPU 上，让这个小模型去挑目标、选工具、执行命令、匹配 CVE、写结构化报告。整个过程不联网、不调 API、不走云推理。作者自己家网络里挂着跑了 3 个月。&lt;/p&gt;&#xA;&lt;p&gt;也就是说，&lt;strong&gt;&amp;ldquo;手机 AI 黑客工具箱&amp;quot;这件事，第一次不是营销话术，是能编译能跑的开源代码。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;但——注意这个&amp;quot;但&amp;rdquo;——它不是漫威片里那种一按按钮就拿到域控的东西。作者自己在 Hacker News 上明说：模型输出一条能用的命令的概率大概 &lt;strong&gt;50%&lt;/strong&gt;。剩下 50% 都靠工程胶水兜住。&lt;/p&gt;&#xA;&lt;p&gt;所以这篇文章想干一件事：把 Nightcrawler 的架构、真实性能、能做什么不能做什么，以及为什么它值得被认真讨论，讲清楚。&lt;strong&gt;是&amp;quot;真家伙还是极客玩具&amp;quot;这个问题，答案取决于你从哪个维度看&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;幻想兜里的-ai-黑客&#34;&gt;幻想：兜里的 AI 黑客&#xA;&lt;/h2&gt;&lt;p&gt;想象一下这个画面。&lt;/p&gt;&#xA;&lt;p&gt;你坐在咖啡馆，手里一部普通安卓。你打开一个 App，输入一个 IP 段（当然是你自己家的），点&amp;quot;开始&amp;quot;。手机屏幕暗着放兜里，你继续喝咖啡。半小时后拿出来一看：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;扫到了 8 台在线主机&lt;/li&gt;&#xA;&lt;li&gt;认出 3 台跑着老版本 nginx&lt;/li&gt;&#xA;&lt;li&gt;从本地 CVE 库里匹配到 2 个高危漏洞&lt;/li&gt;&#xA;&lt;li&gt;生成了一份 Markdown 结构的报告，写了每一步为什么这么做&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;没有云、没有订阅、没有把你的内网流量喂给 OpenAI&lt;/strong&gt;。整个过程是那部 12GB 内存的老手机自己完成的。&lt;/p&gt;&#xA;&lt;p&gt;这是 Nightcrawler 想推销的画面。听着像 UP 主标题党？我第一反应也是。但翻完 GitHub 仓库、Hacker News 作者亲自答疑的 comment、以及第三方媒体的独立报道后，我把结论收窄成一句话：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;画面是真的，但每个像素都比营销号说的粗糙&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;想清楚这句话，剩下的内容才有意义。&lt;/p&gt;&#xA;&lt;h2 id=&#34;硬件账本二手手机能不能扛住&#34;&gt;硬件账本：二手手机能不能扛住&#xA;&lt;/h2&gt;&lt;p&gt;我们先算一笔硬件账，这是理解 Nightcrawler 最快的一条路。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</title>
+				<link>https://softon.top/software/nightrun-usb-uefi-boot-local-llm-no-os/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/nightrun-usb-uefi-boot-local-llm-no-os/</guid>
+				<description>&lt;h2 id=&#34;deepseek-又要涨价了你还敢把公司代码贴进云端-llm-吗&#34;&gt;DeepSeek 又要涨价了，你还敢把公司代码贴进云端 LLM 吗？&#xA;&lt;/h2&gt;&lt;p&gt;昨天 The Information 爆出一条新闻：DeepSeek 计划对 API 进行&amp;quot;significant&amp;quot;级别涨价。&lt;/p&gt;&#xA;&lt;p&gt;看到这条消息，我第一反应不是骂人。而是打开自己的 &lt;code&gt;.bashrc&lt;/code&gt;，看了一眼里面那一串明文的 &lt;code&gt;OPENAI_API_KEY&lt;/code&gt;、&lt;code&gt;ANTHROPIC_API_KEY&lt;/code&gt;、&lt;code&gt;DEEPSEEK_API_KEY&lt;/code&gt;，然后叹了口气。&lt;/p&gt;&#xA;&lt;p&gt;云端大模型这条路，我们其实一直知道有三个&amp;quot;随时会被捏&amp;quot;的把柄：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;价格&lt;/strong&gt;：厂商说涨就涨，你连议价空间都没有&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;审查&lt;/strong&gt;：Prompt 里出现敏感词，接口直接 429 或返回空&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;隐私&lt;/strong&gt;：你贴进去的每一句代码、每一份财务报表，都在别人的服务器上留了副本&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;理性上我们都知道该&amp;quot;本地化&amp;quot;。但本地化的门槛……你懂的：装 Linux、配 CUDA、拉 Ollama、下模型、写 systemd。折腾到深夜三点，本地 LLM 终于跑通了，第二天你就发现——&lt;strong&gt;这台机器你还得当开发机用，装了 QQ 微信 Chrome VSCode，本地 LLM 那点内存和显存优势瞬间烟消云散。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;有没有一种方案，能把&amp;quot;本地大模型&amp;quot;和&amp;quot;日常使用的电脑&amp;quot;物理隔开，又不用买第二台机器？&lt;/p&gt;&#xA;&lt;p&gt;前天在小众软件 appinn 上刷到一个骚东西，我盯着它标题看了半分钟：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;NIGHTRUN — 无需操作系统，用 U 盘启动的本地大模型客户端。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;拔盘即走，插盘就跑，全程不加载任何 OS。&lt;/p&gt;&#xA;&lt;p&gt;我以为是标题党。翻了 GitHub、翻了 CNX Software 的评测、翻了作者的技术文档。&lt;/p&gt;&#xA;&lt;p&gt;不是标题党。是真骚。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么叫不加载操作系统&#34;&gt;什么叫&amp;quot;不加载操作系统&amp;quot;&#xA;&lt;/h2&gt;&lt;p&gt;先摆事实。NIGHTRUN 的 GitHub 仓库地址是 &lt;code&gt;github.com/hardrave/NIGHTRUN&lt;/code&gt;，MIT 协议，Rust 写的，星标数还不高（毕竟是 8 月 6 日刚在 appinn 首发的新玩意），但技术设计非常猛。&lt;/p&gt;&#xA;&lt;p&gt;它的工作方式，一句话概括：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;一个 UEFI 应用（BOOTAA64.EFI）直接从 U 盘启动，读取量化模型加载进内存，然后把磁盘&amp;quot;封印&amp;quot;，进入聊天界面。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</title>
+				<link>https://softon.top/software/lm-studio-bionic-local-open-model-agent/</link>
+				<pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/lm-studio-bionic-local-open-model-agent/</guid>
+				<description>&lt;p&gt;过去两年，本地大模型工具最像什么？&lt;/p&gt;&#xA;&lt;p&gt;像一个性能很强、但只会坐在客厅中央等你发问的朋友。你给它一个 prompt，它认真回答；你换一个模型，它换一种语气；你折腾量化、上下文、GPU 占用，最后得到一个漂亮的聊天窗口。&lt;/p&gt;&#xA;&lt;p&gt;问题是，&lt;strong&gt;聊天窗口不是工作流&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;真正工作时，我们不只是“问一句、答一句”。我们要读项目目录、改代码、整理文档、比对合同、翻 PDF、写表格、把脑子里的混乱想法通过语音倒出来，再让工具帮我们落成可编辑的文件。传统 LM Studio 做得很好的，是“把模型跑起来”；但 2026 年的本地 AI 如果还停在“模型播放器”，就像把一台高性能工作站只拿来放 MP3。&lt;/p&gt;&#xA;&lt;p&gt;所以 LM Studio Bionic 这个选题有意思。&lt;/p&gt;&#xA;&lt;p&gt;它不是又发布了一个模型，也不是给聊天框换皮。按照 LM Studio 官方博客的说法，Bionic 是 &lt;strong&gt;“the AI agent for open models”&lt;/strong&gt;：面向开放模型的 AI Agent，用来处理 coding、research、documents、files 这类真实工作。它支持本地模型，也能把更重的任务切到 LM Studio Secure Cloud 上的前沿开源模型，同时承诺 Zero Data Retention，不训练用户数据。&lt;/p&gt;&#xA;&lt;p&gt;这件事真正值得写，不是因为“LM Studio 多了一个新功能”，而是因为它像一个信号：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本地 AI 正在从“跑模型”进入“跑工作流”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;lm-studio-过去解决的是模型能不能跑bionic-想解决模型能不能干活&#34;&gt;LM Studio 过去解决的是“模型能不能跑”，Bionic 想解决“模型能不能干活”&#xA;&lt;/h2&gt;&lt;p&gt;很多人第一次接触 LM Studio，大概率不是因为 Agent，而是因为它把本地大模型的入门门槛降得足够低。&lt;/p&gt;&#xA;&lt;p&gt;以前你想在本地跑模型，要知道 Hugging Face、GGUF、量化位宽、llama.cpp、Metal、CUDA、上下文长度、显存估算。每个词都像地下城入口。LM Studio 把这些复杂度包进图形界面：搜索模型、下载模型、加载模型、开一个 OpenAI-compatible API server，然后聊天。&lt;/p&gt;&#xA;&lt;p&gt;这一步很重要。它解决的是“模型能不能在我电脑上活过来”。&lt;/p&gt;&#xA;&lt;p&gt;但模型活过来之后，第二个问题马上出现：&lt;strong&gt;它能不能真正参与工作？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;一个本地模型如果只能在聊天框里回答问题，那它离“生产力工具”还有一层玻璃。它看不到你的文件结构，不能安全地修改项目，不能把文档处理结果落地，不能在你写作或编程时主动嵌进流程。你必须不断复制、粘贴、整理、确认，像一个人肉 API 网关。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

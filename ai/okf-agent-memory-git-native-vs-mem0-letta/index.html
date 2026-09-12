@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="OKF Agent Memory 昨晚冲上 HN 榜首。它主张 AI Coding Agent 的记忆应该住在 Git 里，用 Markdown 加 BM25 索引把向量库和 SaaS Blob 一起干掉。我把它和 mem0、Letta、agentmemory、以及 OpenClaw 自己天天在用的 memory/YYYY-MM-DD.md 放在一起对比，看这个 <300µs、零外部依赖的方案，是真在解决问题，还是又一个新库。">
+<title>OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？</title>
+
+<link rel='canonical' href='https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？">
+<meta property='og:description' content="OKF Agent Memory 昨晚冲上 HN 榜首。它主张 AI Coding Agent 的记忆应该住在 Git 里，用 Markdown 加 BM25 索引把向量库和 SaaS Blob 一起干掉。我把它和 mem0、Letta、agentmemory、以及 OpenClaw 自己天天在用的 memory/YYYY-MM-DD.md 放在一起对比，看这个 <300µs、零外部依赖的方案，是真在解决问题，还是又一个新库。">
+<meta property='og:url' content='https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='ai-agent' /><meta property='article:tag' content='memory' /><meta property='article:tag' content='claude-code' /><meta property='article:tag' content='cursor' /><meta property='article:tag' content='mcp' /><meta property='article:tag' content='hn-top' /><meta property='article:published_time' content='2026-09-06T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-06T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？">
+<meta name="twitter:description" content="OKF Agent Memory 昨晚冲上 HN 榜首。它主张 AI Coding Agent 的记忆应该住在 Git 里，用 Markdown 加 BM25 索引把向量库和 SaaS Blob 一起干掉。我把它和 mem0、Letta、agentmemory、以及 OpenClaw 自己天天在用的 memory/YYYY-MM-DD.md 放在一起对比，看这个 <300µs、零外部依赖的方案，是真在解决问题，还是又一个新库。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？\"",
+  "description": "\"OKF Agent Memory 昨晚冲上 HN 榜首。它主张 AI Coding Agent 的记忆应该住在 Git 里，用 Markdown 加 BM25 索引把向量库和 SaaS Blob 一起干掉。我把它和 mem0、Letta、agentmemory、以及 OpenClaw 自己天天在用的 memory/YYYY-MM-DD.md 放在一起对比，看这个 \\u003c300µs、零外部依赖的方案，是真在解决问题，还是又一个新库。\"",
+  "url": "\"https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/\"",
+  "datePublished": "2026-09-06T00:00:00Z",
+  "dateModified": "2026-09-06T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/\""
+  },
+  "keywords": "\"ai-agent, memory, claude-code, cursor, mcp, hn-top\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？\"",
+      "item": "\"https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么-agent-记忆的黑箱化让越来越多人受不了">为什么 Agent 记忆的黑箱化让越来越多人受不了？</a></li>
+    <li><a href="#okf-agent-memory-具体做了什么不一样的事">OKF Agent Memory 具体做了什么不一样的事？</a></li>
+    <li><a href="#okf-和别家方案的账单差在哪里">OKF 和别家方案的账单差在哪里？</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#结合-openclaw-用它有意义吗">结合 OpenClaw 用它有意义吗？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/okf-agent-memory-git-native-vs-mem0-letta/">OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-06T00:00:00Z'>
+                    2026-09-06，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么-agent-记忆的黑箱化让越来越多人受不了">为什么 Agent 记忆的黑箱化让越来越多人受不了？</a></li>
+    <li><a href="#okf-agent-memory-具体做了什么不一样的事">OKF Agent Memory 具体做了什么不一样的事？</a></li>
+    <li><a href="#okf-和别家方案的账单差在哪里">OKF 和别家方案的账单差在哪里？</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#结合-openclaw-用它有意义吗">结合 OpenClaw 用它有意义吗？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>昨晚 HN 榜首是一个叫 OKF Agent Memory 的项目，主张一句话：<strong>Agent 的长期记忆应该住在 Git 里，不该住在别家公司的向量库里</strong>。我打开它文档的第一反应，是有点熟——因为我用 OpenClaw 每天在做的事，就是把记忆写进 <code>memory/YYYY-MM-DD.md</code> 和 <code>MEMORY.md</code>。这套 Git-native 思路根本不是新东西，只是 OKF 第一次把它工程化、给了个专门的搜索引擎。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>OKF Agent Memory：Go 写的 CLI，用 In-Memory BM25 索引 Markdown 文件，搜索延迟 &lt;300µs，冷启动 &lt;4ms，零外部依赖，Apache-2.0</li>
+<li>对手 mem0 / Letta / Zep 走&quot;向量库 + Postgres/Neo4j&quot;路线，检索延迟 150-800ms，还要 API 费用</li>
+<li>OKF 的核心不是&quot;更快&quot;，而是<strong>把 Agent 的记忆变成 Git 里的可 diff、可 blame、可 rollback 的一等公民</strong></li>
+<li>OpenClaw 的 <code>memory/YYYY-MM-DD.md</code> + <code>MEMORY.md</code> 早就是这个思路，只是没上索引；OKF 补了这一块</li>
+<li>谁该上：写代码的 Agent、企业合规场景、不想被 SaaS 绑架的团队。谁别上：需要多用户人格记忆、跨会话情感对话的产品</li>
+</ul>
+</blockquote>
+<h2 id="为什么-agent-记忆的黑箱化让越来越多人受不了">为什么 Agent 记忆的黑箱化让越来越多人受不了？
+</h2><p>主流&quot;Agent 记忆&quot;方案长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">你的对话 → 向量化 embedding → 塞进 Pinecone/Postgres/Qdrant → 检索时相似度匹配</span>
+</span></span></code></pre></div><p>看着高级，实操上有三个我踩过的坑：</p>
+<p><strong>第一，你看不到它记了啥。</strong> Pinecone 里存的是一堆浮点数，你翻它的表看不出 Agent 到底记住了&quot;我上周说了 JWT 用 RS256&quot;还是&quot;我上周说了 JWT 用 HS256&quot;。出问题只能靠调 prompt 复现。</p>
+<p><strong>第二，改一条记忆要动一次数据库。</strong> 想让 Agent 忘掉某个错误决策？你得写 SQL 或调 API。不是&quot;删一行文本&quot;这么简单。</p>
+<p><strong>第三，你的记忆被绑死在一个 SaaS 上。</strong> 换个记忆服务，等于让 Agent 失忆重建。企业合规更麻烦——审计问&quot;这个决策 Agent 是何时学到的&quot;，你没法回答。</p>
+<p>Reddit 上有个开发者写了个帖子叫 <a class="link" href="https://www.reddit.com/r/AI_Agents/comments/1mw4jvp/2_years_building_agent_memory_systems_ended_up"  target="_blank" rel="noopener"
+    >《2 years building agent memory systems, ended up just using Git》</a>，一句话概括了这波觉醒：</p>
+<blockquote>
+<p>我能知道它是&quot;什么时候&quot;学到某件事的（git blame），我能&quot;回到过去&quot;看它当时知道什么（git checkout），我能&quot;看看它这半年怎么变了&quot;（git diff）。</p>
+</blockquote>
+<h2 id="okf-agent-memory-具体做了什么不一样的事">OKF Agent Memory 具体做了什么不一样的事？
+</h2><p>它把记忆存成一堆 Markdown 文件，每个文件带一段 YAML frontmatter 表明&quot;是谁写的、可信度多少、什么时候写的&quot;：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">$ okf bootstrap .   # 在项目里初始化</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">$ okf search &#34;jwt auth flow&#34; knowledge</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Score: 4.82</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">architecture/auth-decision.md</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Trust: verified</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Author: human:lead@okf-memory.dev</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Summary: Use RSA-256 JWTs with 15m expiration</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">⚡ Retrieved in 268.4µs via In-Memory BM25</span>
+</span></span></code></pre></div><p>三个我觉得值得说的设计点：</p>
+<p><strong>In-Memory BM25</strong>：全站 Markdown 一次性 slurp 进内存，用 BM25 算相关度。没有向量化步骤，没有 GPU，没有 embedding API 费用。代价是内存占用会随知识库增大——他们号称能扛&quot;数万文档级别&quot;，超过这个量级还是得回向量库。</p>
+<p><strong>Trust 字段</strong>：每条记忆都带 <code>verified:</code> 或 <code>generated:</code> 标记，区分&quot;人类写的&quot;和&quot;Agent 自己写的&quot;。这是我一直觉得 OpenClaw 的 memory 缺的那一层——现在我的 <code>memory/YYYY-MM-DD.md</code> 里，AI 自己记的和我确认过的是混在一起的。</p>
+<p><strong>stdio MCP Server</strong>：不是 REST 服务。Claude Code、Cursor、Windsurf 直接通过 MCP 拉记忆，不需要开 HTTP 端口，不需要单独部署守护进程。</p>
+<h2 id="okf-和别家方案的账单差在哪里">OKF 和别家方案的账单差在哪里？
+</h2><p>我把主流 Agent Memory 方案摊开对比了一下：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>存储</th>
+					<th>检索延迟</th>
+					<th>外部依赖</th>
+					<th>运行成本</th>
+					<th>Git 原生</th>
+					<th>开源协议</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>OKF Agent Memory</strong></td>
+					<td>Markdown</td>
+					<td>&lt;300µs</td>
+					<td>无</td>
+					<td>0</td>
+					<td>✅</td>
+					<td>Apache-2.0</td>
+			</tr>
+			<tr>
+					<td><strong>mem0</strong></td>
+					<td>Postgres + Pinecone</td>
+					<td>150-800ms</td>
+					<td>向量库 + Postgres</td>
+					<td>Embedding + DB</td>
+					<td>❌</td>
+					<td>Apache-2.0</td>
+			</tr>
+			<tr>
+					<td><strong>Letta</strong></td>
+					<td>Postgres + vector</td>
+					<td>~200ms</td>
+					<td>Postgres</td>
+					<td>DB 托管</td>
+					<td>❌</td>
+					<td>部分开源</td>
+			</tr>
+			<tr>
+					<td><strong>Zep / Graphiti</strong></td>
+					<td>Neo4j 时序图</td>
+					<td>~500ms</td>
+					<td>Neo4j</td>
+					<td>图库托管</td>
+					<td>❌</td>
+					<td>开源</td>
+			</tr>
+			<tr>
+					<td><strong>agentmemory</strong> (rohitg00)</td>
+					<td>本地 SQLite</td>
+					<td>&lt;10ms</td>
+					<td>无</td>
+					<td>0</td>
+					<td>部分</td>
+					<td>Apache-2.0</td>
+			</tr>
+			<tr>
+					<td><strong>CLAUDE.md 手工塞</strong></td>
+					<td>Markdown</td>
+					<td>0（全塞进 context）</td>
+					<td>无</td>
+					<td>Context bloat</td>
+					<td>✅</td>
+					<td>—</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>数字来自各家自己的文档和 benchmark（不同数据集，不能一对一比，只看数量级）。</p>
+<p>一个不太起眼但很重要的差异：<strong>OpenClaw 每天在用的方案，其实就是&quot;CLAUDE.md 手工塞&quot;那一行</strong>。我的 <code>memory/YYYY-MM-DD.md</code> + <code>MEMORY.md</code> 就是最朴素的 Git-native 记忆，靠 heartbeat 定期整理。OKF 相当于给这套朴素方案加了个搜索引擎和一份格式规范（OKF v0.2）。</p>
+<h2 id="我实测下来的账本">我实测下来的账本
+</h2><p>按我在 OpenClaw 上跑一年多 Agent 的经验，选型账本大致这样：</p>
+<ul>
+<li><strong>Token 账</strong>：CLAUDE.md 全塞进 context 的模式，5000 字知识库 = 每次调用多 5000 token。按 Sonnet 3.5 定价 $3/M input，每天调 200 次 = $3/天 = 每年 $1095。OKF 用 BM25 只返回相关片段，能砍到 500 token 左右，年账省到 $110 左右。<strong>性价比翻十倍</strong>。</li>
+<li><strong>迁移成本</strong>：OKF 是 Markdown + YAML，换任何 Agent 都能读。mem0 换到 Letta 需要重新 embed 一遍。</li>
+<li><strong>调试成本</strong>：OKF 出问题 <code>git log</code> 一敲就看到&quot;这条记忆是啥时候被 Agent 改的&quot;。mem0 得写 Python 脚本查库。</li>
+<li><strong>规模天花板</strong>：OKF 官方给的舒适区是&quot;单项目、数万文档&quot;。真到组织级、跨项目、需要跨用户人格的场景，还是得回向量库。</li>
+</ul>
+<h2 id="结合-openclaw-用它有意义吗">结合 OpenClaw 用它有意义吗？
+</h2><p>我认真想了一晚上，答案是：<strong>现在还不合适，未来两个月可能会试</strong>。</p>
+<p>OpenClaw 的 memory 目前长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">memory/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── 2026-09-06.md    # 今日日志</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">├── 2026-09-05.md</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">└── ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MEMORY.md            # 长期精华</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AGENTS.md            # 工作规约</span>
+</span></span></code></pre></div><p>这套已经是 Git-native 了，也是 Markdown。差的是<strong>索引</strong>——每次 Agent 冷启动都要把 MEMORY.md 全文塞进 context，浪费 token。理论上 OKF 的 BM25 + MCP 就能补上这个洞。</p>
+<p>但有两个坑要先解决：</p>
+<p><strong>第一，OKF 强制 OKF v0.2 格式</strong>，我现有的 memory/*.md 得改 frontmatter。900 篇 daily log + 一堆 MEMORY.md 改一遍，工程量不小。</p>
+<p><strong>第二，OpenClaw 有自己的 memory_search 工具</strong>，OKF 加进来是补充还是替代还没想清楚。</p>
+<p>等 OKF 出到 v0.3 或者 OpenClaw 官方给个 memory adapter，我大概率会接上。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: OKF 和 CLAUDE.md / AGENTS.md 有本质区别吗？</strong></p>
+<p>A: 有。CLAUDE.md 靠&quot;整个塞进 context&quot;喂 Agent，token 成本随知识量线性涨。OKF 靠 BM25 只喂相关片段，token 成本近似恒定。存储层都是 Markdown + Git，检索层完全不一样。</p>
+<p><strong>Q2: 为什么不直接用 Pinecone 或 Qdrant？</strong></p>
+<p>A: 可以用，但代价是引入一个外部服务、每次调用要付 embedding 费、记忆变成向量看不见。BM25 的召回率对代码类知识（关键词密集、术语精确）其实比向量匹配还稳，向量匹配的优势在&quot;语义模糊查询&quot;。</p>
+<p><strong>Q3: 我是个人开发者，值得为记忆搞这么复杂吗？</strong></p>
+<p>A: 不值得。个人项目直接 <code>AGENTS.md</code> + <code>memory/YYYY-MM-DD.md</code> 手工写就够了，OpenClaw 就是这套。等你觉得&quot;每次冷启动 Agent 都要读一堆废话&quot;或&quot;想让 Claude Code 记住上个月的架构决策&quot;时，再考虑加索引层。</p>
+<p><strong>Q4: OKF 持中文吗？</strong></p>
+<p>A: BM25 的中文分词依赖 tokenizer。OKF v0.1 文档没明确提中文支持，我猜要么走 unicode 分字（效果差），要么等 v0.2 加 jieba/ik-analyzer 之类的中文分词器。目前建议英文项目先试。</p>
+<p><strong>Q5: 它和 agentmemory (rohitg00) 那个 95.2% 分数的项目哪个强？</strong></p>
+<p>A: agentmemory 走的是本地 SQLite + 多种 MCP 工具，54 个 memory tool，重点是&quot;Agent 自动捕获记忆&quot;。OKF 走的是&quot;结构化 Markdown + 极致检索延迟&quot;，重点是&quot;人机共写、可审计&quot;。两个哲学不同，前者偏工程完成度，后者偏工程原教旨。</p>
+<p><strong>Q6: 换 IDE / Agent 会不会数据丢失？</strong></p>
+<p>A: 这是 OKF 最大的卖点。所有数据是 Markdown 文件，跟你的代码住在一起，换 Claude Code、Cursor、Windsurf、OpenClaw 都能读——只要那个 Agent 支持 MCP。SaaS 方案换家就得重新 embed。</p>
+<p><strong>Q7: 企业场景真的能用吗？</strong></p>
+<p>A: 有戏。企业合规最难过的一关是&quot;这个 AI 决策是基于什么信息做的&quot;，OKF 直接 <code>git blame</code> 出来，比向量库查审计日志容易得多。但企业级还需要 SSO、RBAC、多租户，OKF v0.1 不带这些，得等 Cloud 版本或者自己套一层。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/" >DeepSeek 甩出开源 Agent 框架 Harness，和我用了半年的 OpenClaw 有什么不一样？</a></li>
+<li><a class="link" href="/ai/ai-agent-workflow-cost-ledger-finops/" >AI Agent 也要记账：别盯着 Token 单价，先算清一件事到底花了多少钱</a></li>
+<li><a class="link" href="/software/claude-code-skills-mcp-workflow-deconstruction/" >Claude Code 多 Skill / MCP 实际工作流拆解</a></li>
+<li><a class="link" href="/ai/local-llm-hardware-tier-2k-40k-real-cost/" >本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ai-agent/">Ai-Agent</a>
+        
+            <a href="/tags/memory/">Memory</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/cursor/">Cursor</a>
+        
+            <a href="/tags/mcp/">Mcp</a>
+        
+            <a href="/tags/hn-top/">Hn-Top</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/claude-video-ai-see-video-three-paths/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/okf-agent-memory-git-native-vs-mem0-letta\/'; 
+        const pageTitle = 'OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

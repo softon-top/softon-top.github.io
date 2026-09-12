@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tauri on softon.top</title>
+		<link>https://softon.top/tags/tauri/</link>
+		<description>Recent content in Tauri on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/tauri/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS &#43; Windows 双平台）</title>
+				<link>https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/</guid>
+				<description>&lt;p&gt;先讲个真实故事。&lt;/p&gt;&#xA;&lt;p&gt;我 Mac 的 512GB SSD 用了两年，前几天点开「关于本机 → 存储」，系统那一栏红彤彤地写着 187GB。我确信我没装过 187GB 的系统文件。翻遍了 &lt;code&gt;~/Library/Caches&lt;/code&gt;、&lt;code&gt;~/Developer&lt;/code&gt;、&lt;code&gt;.docker&lt;/code&gt;、&lt;code&gt;.gradle&lt;/code&gt;、Xcode DerivedData——最后累到想直接掏钱买 CleanMyMac。&lt;/p&gt;&#xA;&lt;p&gt;打开官网一看，&lt;code&gt;$149.95/年&lt;/code&gt;，或者 &lt;code&gt;$199.95&lt;/code&gt; 买断（还得升级付费）。199 刀，够我买两包咖啡豆用一整年了。&lt;/p&gt;&#xA;&lt;p&gt;于是我又去搜有没有免费替代。这一搜，就撞见了昨天在阮一峰 Weekly 上被作者自荐的 &lt;strong&gt;MangoDisk（芒果磁盘清理）&lt;/strong&gt;——GPL-3.0 开源、macOS + Windows 双平台通吃、Tauri 2 + Rust 内核、界面颜值在线，Trendshift 上 Rust 榜进过日榜前 11。&lt;/p&gt;&#xA;&lt;p&gt;装完试了两小时，我基本可以说：&lt;strong&gt;这就是 CleanMyMac 的免费替代品，而且 Windows 用户第一次有了对得起颜值的选项。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;项目地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/harry0703/MangoDisk&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;https://github.com/harry0703/MangoDisk&lt;/a&gt;&#xA;官网：&lt;a class=&#34;link&#34; href=&#34;https://mangodisk.app&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;https://mangodisk.app&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么值得一试&#34;&gt;为什么值得一试&#xA;&lt;/h2&gt;&lt;p&gt;先说结论，不绕弯。MangoDisk 在这三个维度赢：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;1. 双平台，尤其救 Windows 用户。&lt;/strong&gt; macOS 有 CleanMyMac、DaisyDisk、OmniDiskSweeper，就算免费也有 Dusty、GrandPerspective。Windows 这边呢？CCleaner 被 Avast 收购之后各种全家桶弹窗，WinDirStat 十几年没大更新界面像 XP，BleachBit 又太糙。MangoDisk 一套 UI 同时跑 macOS 和 Windows，Windows 用户终于不用在难看和不安全之间二选一。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;2. 免费开源 + 不用登录 + 不联网。&lt;/strong&gt; GPL-3.0，源码在 GitHub 全公开，规则库也公开在仓库里可审计。打开就用，不注册、不弹窗、不推服务。对付费软件那种「先扫描后收钱、订阅到期就变砖」的套路免疫。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

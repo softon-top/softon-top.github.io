@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="PowerToys 0.101 上线 Window Hopper，Alt+反引号只在当前应用的多窗口之间循环切换。这是 Windows 用户等了很多年才等来的功能，macOS 上叫 Cmd+`，用过就回不去。">
+<title>Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓</title>
+
+<link rel='canonical' href='https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓">
+<meta property='og:description' content="PowerToys 0.101 上线 Window Hopper，Alt+反引号只在当前应用的多窗口之间循环切换。这是 Windows 用户等了很多年才等来的功能，macOS 上叫 Cmd+`，用过就回不去。">
+<meta property='og:url' content='https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='PowerToys' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='Window Hopper' /><meta property='article:tag' content='macOS' /><meta property='article:tag' content='快捷键' /><meta property='article:tag' content='效率工具' /><meta property='article:published_time' content='2026-09-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-03T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓">
+<meta name="twitter:description" content="PowerToys 0.101 上线 Window Hopper，Alt+反引号只在当前应用的多窗口之间循环切换。这是 Windows 用户等了很多年才等来的功能，macOS 上叫 Cmd+`，用过就回不去。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓\"",
+  "description": "\"PowerToys 0.101 上线 Window Hopper，Alt+反引号只在当前应用的多窗口之间循环切换。这是 Windows 用户等了很多年才等来的功能，macOS 上叫 Cmd+`，用过就回不去。\"",
+  "url": "\"https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/\"",
+  "datePublished": "2026-09-03T00:00:00Z",
+  "dateModified": "2026-09-03T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/\""
+  },
+  "keywords": "\"PowerToys, Windows, Window Hopper, macOS, 快捷键, 效率工具\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓\"",
+      "item": "\"https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#window-hopperwindows-版的-cmd">Window Hopper：Windows 版的 Cmd+`</a></li>
+    <li><a href="#为什么这个功能这么晚才来">为什么这个功能这么&quot;晚&quot;才来</a></li>
+    <li><a href="#不只是-window-hopper">不只是 Window Hopper</a>
+      <ul>
+        <li><a href="#command-palette-有紧凑模式了">Command Palette 有紧凑模式了</a></li>
+        <li><a href="#advanced-paste-用上了本地-ai">Advanced Paste 用上了本地 AI</a></li>
+        <li><a href="#shortcut-guide-内嵌了搜索">Shortcut Guide 内嵌了搜索</a></li>
+        <li><a href="#mouse-highlighter-现在有涟漪效果">Mouse Highlighter 现在有涟漪效果</a></li>
+        <li><a href="#quick-accent-支持长按输入">Quick Accent 支持长按输入</a></li>
+      </ul>
+    </li>
+    <li><a href="#怎么安装怎么升级">怎么安装、怎么升级</a></li>
+    <li><a href="#一个小小的调整建议">一个小小的调整建议</a></li>
+    <li><a href="#那些第三方工具怎么办">那些第三方工具怎么办</a></li>
+    <li><a href="#一个更大的信号">一个更大的信号</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/">Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-03T00:00:00Z'>
+                    2026-09-03，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#window-hopperwindows-版的-cmd">Window Hopper：Windows 版的 Cmd+`</a></li>
+    <li><a href="#为什么这个功能这么晚才来">为什么这个功能这么&quot;晚&quot;才来</a></li>
+    <li><a href="#不只是-window-hopper">不只是 Window Hopper</a>
+      <ul>
+        <li><a href="#command-palette-有紧凑模式了">Command Palette 有紧凑模式了</a></li>
+        <li><a href="#advanced-paste-用上了本地-ai">Advanced Paste 用上了本地 AI</a></li>
+        <li><a href="#shortcut-guide-内嵌了搜索">Shortcut Guide 内嵌了搜索</a></li>
+        <li><a href="#mouse-highlighter-现在有涟漪效果">Mouse Highlighter 现在有涟漪效果</a></li>
+        <li><a href="#quick-accent-支持长按输入">Quick Accent 支持长按输入</a></li>
+      </ul>
+    </li>
+    <li><a href="#怎么安装怎么升级">怎么安装、怎么升级</a></li>
+    <li><a href="#一个小小的调整建议">一个小小的调整建议</a></li>
+    <li><a href="#那些第三方工具怎么办">那些第三方工具怎么办</a></li>
+    <li><a href="#一个更大的信号">一个更大的信号</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>先说一个每天都在发生的场景。</p>
+<p>你在 Chrome 里同时开着三个窗口：一个是文档，一个是 GitHub，一个是查资料的十几个标签页。你想从&quot;文档&quot;切到&quot;GitHub&quot;那个窗口，按下 <code>Alt + Tab</code>。</p>
+<p>结果呢？桌面上所有开着的东西全冒出来了——两个 VS Code、一个微信、一个 QQ、一个网易云、一个 Excel、一个 Steam。你要在这一大堆缩略图里眯着眼找那个 GitHub 图标。找到了，松手，切过去。</p>
+<p>三秒。看起来不长。</p>
+<p>但是这个动作你一天做几十次。每次切浏览器窗口都要看一眼整个桌面，每次切资源管理器都要在十几个窗口里&quot;扫雷&quot;。这种低效是隐性的，你不会觉得难受，你只会觉得&quot;好像有点累&quot;。</p>
+<p><code>Alt + Tab</code> 的设计从 Windows 3.0 就是这样。三十多年了。它按应用不分组、按窗口不分应用，一视同仁全平铺。</p>
+<p>macOS 早就有解法：<code>Cmd + Tab</code> 切应用，<code>Cmd + </code>（反引号）切当前应用的多个窗口。两个键管两件事，泾渭分明。用过 Mac 的人回到 Windows，第一件事就是问&quot;这个功能哪去了&quot;。</p>
+<p><strong>答案是：没有。第三方工具补丁式实现过，但一直没有官方方案。</strong></p>
+<p>直到 2026 年 8 月 25 日，微软发布 PowerToys 0.101。</p>
+<h2 id="window-hopperwindows-版的-cmd">Window Hopper：Windows 版的 Cmd+`
+</h2><p>PowerToys 0.101 里最重要的新增就是 <strong>Window Hopper</strong>——这个名字翻译过来叫&quot;窗口跳跃&quot;，本质就是给 Windows 补上了那个 macOS 已经用了几十年的功能。</p>
+<p>它的工作方式一句话说完：</p>
+<blockquote>
+<p><code>Alt + </code>（反引号，键盘 Tab 上面那个键）在当前应用的多个窗口之间循环切换。</p>
+</blockquote>
+<p>关键就在&quot;当前应用&quot;这四个字。</p>
+<p>举个例子：</p>
+<ul>
+<li>你在 Chrome 的某个窗口里，按 <code>Alt + </code>`，只有其他 Chrome 窗口出来，微信 QQ VS Code 全部不打扰你</li>
+<li>你在 File Explorer 里，按 <code>Alt + </code>`，只有其他文件夹窗口出来，浏览器视野被隔离</li>
+<li>你在 Windows Terminal 里同时开了四个 tab 的多窗口，按 <code>Alt + </code>`，就在这四个终端之间转</li>
+</ul>
+<p><strong>它不是替代 <code>Alt + Tab</code>。它是给 <code>Alt + Tab</code> 打了个补丁。</strong></p>
+<p><code>Alt + Tab</code> 继续管跨应用切换，Window Hopper 管应用内切换。两个键分工明确，一个负责&quot;我要换个软件干活&quot;，一个负责&quot;我要换个同类窗口继续这个软件干活&quot;。</p>
+<p>这就是 macOS 的哲学。用户在做什么事情，比用户在用什么软件更重要。</p>
+<h2 id="为什么这个功能这么晚才来">为什么这个功能这么&quot;晚&quot;才来
+</h2><p>按理说这不是难做的功能。Window Hopper 底层无非就是：</p>
+<ol>
+<li>枚举当前进程（或者 process family）的所有顶层窗口</li>
+<li>按最近使用顺序排一下</li>
+<li>快捷键触发时弹一个小切换器</li>
+</ol>
+<p>技术上没有任何障碍。macOS 三十年前就这么做了。第三方工具比如 <strong>AltSnap</strong>、<strong>AquaSnap</strong>、<strong>Groupy</strong> 也都做过类似效果，Groupy 甚至还收费卖了很多年。</p>
+<p>真正的问题是<strong>微软自己不觉得这是问题</strong>。</p>
+<p>Windows 的原生窗口模型和 macOS 从一开始就不一样。macOS 把&quot;应用&quot;当一等公民（一个应用可以没有窗口但还开着），Windows 把&quot;窗口&quot;当一等公民（关掉窗口通常就等于退出应用）。这种基因决定了 macOS 天然要考虑&quot;同一应用的多窗口如何切&quot;，Windows 就没这个必要。</p>
+<p>结果是：Windows 用户默认习惯了在几十个平铺的缩略图里扫描目标，用了几十年，几乎没人抱怨。直到大家开始双屏、超宽屏，同时开五六个 Chrome、三四个 VS Code、七八个资源管理器，才发现这个默认交互实在扛不住了。</p>
+<p>PowerToys 团队在 0.101 里补上这个坑，某种程度上是承认了：<strong>当年抄 macOS 抄错了地方，<code>Alt + Tab</code> 该重构了</strong>。</p>
+<h2 id="不只是-window-hopper">不只是 Window Hopper
+</h2><p>Window Hopper 是头条，但 0.101 这次一并塞进来的东西还挺多，值得单独拎出来说几个我认为最实用的。</p>
+<h3 id="command-palette-有紧凑模式了">Command Palette 有紧凑模式了
+</h3><p>Command Palette 是 PowerToys 里那个&quot;按 <code>Win + Alt + Space</code> 弹出的搜索框&quot;，功能类似 macOS 的 Spotlight 或 Alfred，可以打开程序、算数学题、跑插件命令。</p>
+<p>之前它是一个中等尺寸的浮层，占屏幕不小。0.101 加了 <strong>Compact Mode（紧凑模式）</strong>，把这个面板缩得非常小，只留搜索框和最少的候选。适合超宽屏用户或者不喜欢弹窗遮挡视线的人。</p>
+<h3 id="advanced-paste-用上了本地-ai">Advanced Paste 用上了本地 AI
+</h3><p>Advanced Paste 允许你把剪贴板内容&quot;变形&quot;再粘贴——比如把 Markdown 转成纯文本、把 JSON 格式化、让 AI 给你翻译或改写。以前它默认走的是云 API。</p>
+<p>0.101 加了 <strong>Phi Silica</strong> 作为本地推理提供者，前提是你有 Copilot+ PC（也就是带 NPU 的 ARM 设备或最新 Intel Core Ultra）。它意味着：</p>
+<blockquote>
+<p>剪贴板里的内容不用出你的电脑就能完成 AI 转换。</p>
+</blockquote>
+<p>对处理公司内部文档、敏感截图、私人聊天记录的人是刚需。</p>
+<h3 id="shortcut-guide-内嵌了搜索">Shortcut Guide 内嵌了搜索
+</h3><p>按住 <code>Win</code> 键一会不放，会弹出所有 Windows 快捷键的图鉴，这是 v0.100 就加的功能。0.101 给它加了搜索框——你不用再肉眼扫图鉴找&quot;最小化窗口&quot;是哪个组合了，直接搜关键词。</p>
+<h3 id="mouse-highlighter-现在有涟漪效果">Mouse Highlighter 现在有涟漪效果
+</h3><p>之前定位鼠标要么开高对比度指针，要么用 PowerToys 的 Mouse Highlighter 把整个屏幕暗下来只让鼠标周围亮。0.101 加了 <strong>Ripple 涟漪效果</strong>：每次点击时鼠标位置出现一圈扩散的波纹，可以调大小、强度、持续时间。</p>
+<p>对做视频教程、直播讲课、屏幕演示的人非常友好——观众不用再猜&quot;你到底点了哪里&quot;。</p>
+<h3 id="quick-accent-支持长按输入">Quick Accent 支持长按输入
+</h3><p>Quick Accent 是给你输入带音标的字符（比如 é、ñ、ü）的工具。之前是按住字母 + 按空格键的方式。0.101 加了 <strong>Press-and-hold 模式</strong>：像 iOS 长按字母那样，按住字母不放就弹选项，方向键/空格选，松开插入。用惯手机键盘的人会觉得自然。</p>
+<h2 id="怎么安装怎么升级">怎么安装、怎么升级
+</h2><p>如果你已经装了 PowerToys，打开设置里的&quot;检查更新&quot;直接升到 0.101 就行。没装过的话，两条路：</p>
+<p><strong>方式一：Microsoft Store</strong></p>
+<p>打开 Store 搜 &ldquo;PowerToys&rdquo;，认准发行商是 <strong>Microsoft Corporation</strong>，装完自动加入 Windows 更新流。</p>
+<p><strong>方式二：GitHub Release</strong></p>
+<p>去 <a class="link" href="https://github.com/microsoft/PowerToys/releases"  target="_blank" rel="noopener"
+    >github.com/microsoft/PowerToys/releases</a> 找 0.101 的最新版本（写作时是 0.101.2362.0），下载对应架构的 <code>.exe</code>：</p>
+<ul>
+<li><code>PowerToysUserSetup-0.101.xxxx.x-x64.exe</code> — 你 90% 的情况选这个</li>
+<li><code>PowerToysUserSetup-0.101.xxxx.x-arm64.exe</code> — 骁龙笔记本、Surface Pro X 之类</li>
+</ul>
+<p>装完之后进设置，滚到 <strong>Window Hopper</strong>，打开开关。默认快捷键是 <code>Alt + </code>`（Alt + 反引号），觉得别扭可以改成任何你顺手的组合。</p>
+<p><strong>Insider 通道</strong>：0.101 还重做了更新体验，现在正式支持 Stable 和 Insider 两条通道。想抢先玩测试版特性的可以切到 Insider，愿意求稳的默认 Stable 不动。</p>
+<h2 id="一个小小的调整建议">一个小小的调整建议
+</h2><p>反引号 ``` 这个键在 US 键盘上位置还行（Tab 键上面），但在 AZERTY 键盘或者某些国家/地区键盘上不太顺手。中文键盘倒是没大问题。</p>
+<p>如果你右手常年握鼠标，左手按 <code>Alt + </code>` 又要伸食指到键盘左上角，其实有点别扭。我个人推荐改成：</p>
+<ul>
+<li><code>Ctrl + ~</code> 或 <code>Ctrl + </code>`（如果没和其他快捷键冲突）</li>
+<li><code>Alt + Q</code> （左手位置更舒服）</li>
+<li><code>Win + </code>` （利用 Win 键做区隔）</li>
+</ul>
+<p>改的路径：PowerToys 设置 → Window Hopper → Activation shortcut → 点一下自己按新组合。</p>
+<h2 id="那些第三方工具怎么办">那些第三方工具怎么办
+</h2><p>在 Window Hopper 出现前，Windows 上补这个功能的路子主要是：</p>
+<ul>
+<li><strong>AltSnap</strong>（免费开源）：主打窗口拖拽和吸附，附带一些切换功能，但不专门做&quot;同应用切换&quot;</li>
+<li><strong>AquaSnap</strong>（免费/付费）：吸附增强，切换体验一般</li>
+<li><strong>Groupy</strong>（Stardock，收费约 $10）：把不同窗口组成标签页，某种意义上更强，但改变了原生窗口模型</li>
+<li><strong>VirtuaWin / bug.n</strong>：更极客的窗口平铺方案</li>
+</ul>
+<p>如果你只是想要&quot;应用内切换&quot;这一个功能，Window Hopper 直接替代所有第三方方案。它是官方出品、没广告、开源、免费、集成在 PowerToys 里，安装维护成本几乎为零。</p>
+<p>如果你还需要<strong>窗口标签化</strong>（多个窗口合并成 Chrome 那种标签页形态），Groupy 依然有价值。但如果 Groupy 的唯一用途在你这里就是&quot;应用内切换&quot;，可以卸掉了。</p>
+<h2 id="一个更大的信号">一个更大的信号
+</h2><p>Window Hopper 单看是一个小功能。放到 PowerToys 这五六年的进化线上看，它代表的是一个方向：</p>
+<p><strong>微软终于开始正视 Windows 交互层的&quot;细节积重&quot;了。</strong></p>
+<p>过去二十年，Windows 团队做的最大工作是&quot;加东西&quot;：加 Cortana、加 Widgets、加 Copilot、加 AI Recall。这些是宏叙事级别的功能，用来支撑发布会 keynote 的东西。</p>
+<p>但用户每天真正在乎的其实是这类东西：</p>
+<ul>
+<li><code>Alt + Tab</code> 能不能更聪明</li>
+<li>一次能不能同时 rename 一堆文件</li>
+<li>剪贴板能不能记住上一份内容</li>
+<li>图片能不能直接右键 resize</li>
+<li>鼠标能不能大屏时找得到</li>
+<li>快捷键能不能有个总览图</li>
+</ul>
+<p>而这些&quot;每天都在乎&quot;的东西，从 Windows 官方系统里几乎从来没得到过正视。所有解法都来自民间工具或者 PowerToys 团队这种&quot;半官方半社区&quot;的产品。</p>
+<p>PowerToys 从 Windows 95 时代那个&quot;额外工具集&quot;重启到现在的第六年，慢慢在做一件事：<strong>把 Windows 里那些本该原生就有的功能一个个补回来。</strong></p>
+<ul>
+<li>FancyZones 补的是分屏</li>
+<li>PowerRename 补的是批量重命名</li>
+<li>Text Extractor 补的是 macOS 的文字提取</li>
+<li>PeekDesktop（第三方，非 PowerToys）补的是 macOS 的显示桌面</li>
+<li>现在 Window Hopper 补的是 <code>Cmd + </code>`</li>
+</ul>
+<p>一句话总结：<strong>Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓。</strong></p>
+<p>如果你还没装 PowerToys，趁这次更新装上。它不会让你的电脑变得更快，但会让你每天多几十次&quot;这个操作居然这么顺&quot;的小惊喜。</p>
+<p>而那些&quot;操作变顺&quot;的时刻累加起来，就是效率工具存在的全部意义。</p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/peekdesktop-windows-macos-show-desktop-feature/"  target="_blank" rel="noopener"
+    >PeekDesktop：把 macOS 的&quot;显示桌面&quot;手势搬到 Windows</a></li>
+<li><a class="link" href="https://softon.top/software/2026-top-8-chrome-extensions-productivity/"  target="_blank" rel="noopener"
+    >Windows 装机 8 款效率扩展，Chrome 党绕不开</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/powertoys/">PowerToys</a>
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/window-hopper/">Window Hopper</a>
+        
+            <a href="/tags/macos/">MacOS</a>
+        
+            <a href="/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/">快捷键</a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/mangodisk-free-open-source-cleanmymac-alternative/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS &#43; Windows 双平台）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/windows-clipboard-image-bloat-slimpaste/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 复制图片为何从几十 KB 变几 MB：剪贴板这层隐形膨胀，SlimPaste 值不值得装</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/windows-software-fake-sites-download-safety-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PowerToys 都有假官网了：Windows 装软件别再只靠搜索</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/roguecleaner-windows-uninstall-residue-cleaner/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国产流氓软件卸完还阴魂不散？这个 3MB 开源工具专挖 6 个藏身处（含一键回滚）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/chrome-tabs-tab-harbor-browser-control-room/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Chrome 标签越开越乱？Tab Harbor 把新标签页变成你的浏览器控制台</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/powertoys-0101-window-hopper-macos-alt-tab-same-app\/'; 
+        const pageTitle = 'Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

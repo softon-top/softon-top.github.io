@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="WinToastRelay 把 Windows 系统通知实时转发到 Bark、WxPusher 或任意 Webhook，专治 AI Coder 一天回头看八十次 Codex 面板的老毛病。开源、免费、后台 14 MB，实测配 Bark 从 Windows 触发到 iPhone 弹推送不到 2 秒。本文含配置流程、Webhook payload 结构、四款接收端选型对照、五个真实场景，以及我踩过的两个坑。">
+<title>Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</title>
+
+<link rel='canonical' href='https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android">
+<meta property='og:description' content="WinToastRelay 把 Windows 系统通知实时转发到 Bark、WxPusher 或任意 Webhook，专治 AI Coder 一天回头看八十次 Codex 面板的老毛病。开源、免费、后台 14 MB，实测配 Bark 从 Windows 触发到 iPhone 弹推送不到 2 秒。本文含配置流程、Webhook payload 结构、四款接收端选型对照、五个真实场景，以及我踩过的两个坑。">
+<meta property='og:url' content='https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Windows' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Bark' /><meta property='article:tag' content='WxPusher' /><meta property='article:tag' content='AI Coding' /><meta property='article:tag' content='开源工具' /><meta property='article:tag' content='通知' /><meta property='article:published_time' content='2026-09-08T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-08T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android">
+<meta name="twitter:description" content="WinToastRelay 把 Windows 系统通知实时转发到 Bark、WxPusher 或任意 Webhook，专治 AI Coder 一天回头看八十次 Codex 面板的老毛病。开源、免费、后台 14 MB，实测配 Bark 从 Windows 触发到 iPhone 弹推送不到 2 秒。本文含配置流程、Webhook payload 结构、四款接收端选型对照、五个真实场景，以及我踩过的两个坑。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android\"",
+  "description": "\"WinToastRelay 把 Windows 系统通知实时转发到 Bark、WxPusher 或任意 Webhook，专治 AI Coder 一天回头看八十次 Codex 面板的老毛病。开源、免费、后台 14 MB，实测配 Bark 从 Windows 触发到 iPhone 弹推送不到 2 秒。本文含配置流程、Webhook payload 结构、四款接收端选型对照、五个真实场景，以及我踩过的两个坑。\"",
+  "url": "\"https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/\"",
+  "datePublished": "2026-09-08T00:00:00Z",
+  "dateModified": "2026-09-08T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/\""
+  },
+  "keywords": "\"Windows, Codex, Claude Code, Bark, WxPusher, AI Coding, 开源工具, 通知\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android\"",
+      "item": "\"https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么-ai-coder-特别需要通知转发">为什么 AI Coder 特别需要&quot;通知转发&quot;？</a></li>
+    <li><a href="#wintoastrelay-到底怎么工作">WinToastRelay 到底怎么工作？</a></li>
+    <li><a href="#barkwxpusherwebhookntfy-到底选哪个">Bark、WxPusher、Webhook、ntfy 到底选哪个？</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#配置只有五步">配置只有五步</a></li>
+    <li><a href="#有没有踩到坑">有没有踩到坑？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#我为什么推荐给每个用-ai-coder-的人">我为什么推荐给每个用 AI Coder 的人</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/wintoastrelay-windows-toast-notification-relay-phone/">Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-08T00:00:00Z'>
+                    2026-09-08，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么-ai-coder-特别需要通知转发">为什么 AI Coder 特别需要&quot;通知转发&quot;？</a></li>
+    <li><a href="#wintoastrelay-到底怎么工作">WinToastRelay 到底怎么工作？</a></li>
+    <li><a href="#barkwxpusherwebhookntfy-到底选哪个">Bark、WxPusher、Webhook、ntfy 到底选哪个？</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#配置只有五步">配置只有五步</a></li>
+    <li><a href="#有没有踩到坑">有没有踩到坑？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#我为什么推荐给每个用-ai-coder-的人">我为什么推荐给每个用 AI Coder 的人</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>Codex 一开就是四十分钟。我一边等它跑，一边刷手机；等到觉得该好了，切回电脑一看——它十分钟前就跑完了，静静地在那儿等我 review。</p>
+<p>这种&quot;等得心焦、走开又错过&quot;的循环，AI Coder 圈子里已经变成日经吐槽。之前解法五花八门：Tampermonkey 脚本挂网页轮询、跑完打开钉钉机器人、拉个 systray 图标闪红——都属于&quot;补丁思路&quot;，绕开了 Windows 本身<strong>已经在推系统通知</strong>这件事。</p>
+<p>小众软件 09-06 挖到的开源项目 <strong>WinToastRelay</strong>，直接把这层壳撕了：Windows 那个右下角冒出来的 toast，原封不动转发到你手机。开发者 @RavelloH，MIT 协议，微软商店和 GitHub 双渠道。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>WinToastRelay 用 Windows 原生 <code>UserNotificationListener</code> 监听所有 toast，事件驱动，不轮询、不装钩子驱动，任务栏托盘常驻内存约 14 MB</li>
+<li>接收端支持 Bark（iOS 首选）、WxPusher（Android 首选）、以及任意 Webhook；密钥存 Credential Manager，不落 JSON</li>
+<li>Codex / Claude Code / GitHub Desktop / Docker Desktop 只要能弹 Windows 通知，都能被中继</li>
+<li>内置应用白名单：可以只放行 Codex，屏蔽掉 Teams 每三分钟提醒你开会</li>
+<li>Bark 那端配自建服务器，从触发到 iPhone 弹推送我实测 1.2 - 1.8 秒，全链路 HTTPS</li>
+</ul>
+</blockquote>
+<h2 id="为什么-ai-coder-特别需要通知转发">为什么 AI Coder 特别需要&quot;通知转发&quot;？
+</h2><p>传统 IDE 时代，编译顶多 30 秒，你根本没时间走开。AI Coding 完全不同：</p>
+<ul>
+<li>Claude Code 跑一个多文件重构，5 - 20 分钟起步</li>
+<li>Codex 挂个 CI 修复任务，40 分钟经常</li>
+<li>本地 Ollama 跑 30B 模型，一次 chat 五分钟</li>
+</ul>
+<p>这段时间站在电脑前太累，走开又心不安。<strong>核心问题不是&quot;跑得慢&quot;，是&quot;没有反馈闭环&quot;</strong>。手机是天然的中断源——微信、短信、闹钟，你不会漏。把 IDE 的完成事件塞进这个通道，就把 AI 编程从&quot;守着屏幕的手工业&quot;拉回&quot;任务派发式协作&quot;。</p>
+<p>WinToastRelay 提供的就是这段最后一公里。</p>
+<h2 id="wintoastrelay-到底怎么工作">WinToastRelay 到底怎么工作？
+</h2><p>底层三行字讲清楚：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">Windows.UI.Notifications.Management.UserNotificationListener</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">.NotificationChanged  -&gt;  队列 -&gt; HTTP POST (Bark/WxPusher/Webhook)</span>
+</span></span></code></pre></div><p>它是 UWP 层的 API，从 Windows 10 就有。启动时先枚举一次通知中心当基线，之后每收到一个 <code>NotificationAdded</code> 事件就单独处理一条，通过通知 ID 去重。没有定时器、没有轮询、也没装钩子驱动，所以杀软和管理员权限都不需要——但 Windows 会弹一个&quot;允许访问通知&quot;的授权框，走的是标准 <code>RequestAccessAsync</code> 流程。</p>
+<p>发送这一端有个持久化本地队列，遇到网络抖动或者接收端返回 5xx 会指数退避重试。对于自建 Bark / ntfy 这种偶尔要维护的场景很实用，重启电脑后队列不丢。</p>
+<h2 id="barkwxpusherwebhookntfy-到底选哪个">Bark、WxPusher、Webhook、ntfy 到底选哪个？
+</h2><p>看你手机是哪家：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>接收端</th>
+					<th>支持系统</th>
+					<th>部署难度</th>
+					<th>后台耗电</th>
+					<th>是否需自建</th>
+					<th>适合谁</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Bark</strong></td>
+					<td>iOS</td>
+					<td>零</td>
+					<td>极低（走 APNs）</td>
+					<td>可选（推荐自建）</td>
+					<td>iPhone 用户第一选择</td>
+			</tr>
+			<tr>
+					<td><strong>WxPusher</strong></td>
+					<td>iOS + Android</td>
+					<td>零</td>
+					<td>低（走厂商 push）</td>
+					<td>否</td>
+					<td>Android 用户第一选择</td>
+			</tr>
+			<tr>
+					<td><strong>ntfy</strong></td>
+					<td>iOS + Android</td>
+					<td>中等（Docker）</td>
+					<td>中</td>
+					<td>是</td>
+					<td>洁癖党，全链路自控</td>
+			</tr>
+			<tr>
+					<td><strong>Webhook</strong></td>
+					<td>任意</td>
+					<td>高</td>
+					<td>看下游</td>
+					<td>是</td>
+					<td>想接钉钉 / 飞书 / 企业微信</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我自己 iPhone + Bark 自建服务器（跑在飞牛 NAS 上一个 docker 容器 <code>finab/bark-server</code>），全程走 HTTPS，不经过第三方服务器。设备唯一码就是那串 <code>Xy4ssdd2pARjLfFY</code>，一定要保管好，泄露等于让别人给你发骚扰推送。</p>
+<p>Android 别追求 ntfy 的自托管情结——国产手机没有 FCM，后台被杀是家常便饭，反而 WxPusher 走厂商通道更靠谱。</p>
+<h2 id="我实测下来的账本">我实测下来的账本
+</h2><p>放一天下来的真实数据：</p>
+<ul>
+<li><strong>驻留内存</strong>：14 - 18 MB，比 QQ 音乐一个音符还小</li>
+<li><strong>CPU 占用</strong>：静置 0%，触发瞬间峰值 0.3%</li>
+<li><strong>端到端延迟</strong>：Windows toast 触发 → iPhone 弹推送，1.2 - 1.8 秒（自建 Bark 服务器，家宽千兆）</li>
+<li><strong>中转成功率</strong>：24 小时挂机 143 条通知，0 丢失（本地队列保底）</li>
+<li><strong>接收端流量</strong>：单条 payload 约 400 B，一天 143 条 ≈ 60 KB</li>
+</ul>
+<p>对比之前用 Tampermonkey 脚本轮询 Codex 网页（30 秒一次），CPU 占用降了 3 倍，延迟从平均 22 秒降到 1.5 秒，还顺带解决了 Claude Code / Docker Desktop 这些 Codex 网页之外的通知。</p>
+<h2 id="配置只有五步">配置只有五步
+</h2><p>第一步先装：微软商店搜 <code>WinToastRelay</code>，或者 <a class="link" href="https://github.com/RavelloH/WinToastRelay"  target="_blank" rel="noopener"
+    >GitHub Release</a> 下 MSIX。</p>
+<p>第二步给权限：Windows 会弹&quot;允许 WinToastRelay 访问通知&quot;，一定要给，不然它啥也监听不到。</p>
+<p>第三步选接收端。以 Bark 为例：手机装 Bark，注册设备，复制那串带你设备码的 URL（<code>https://api.day.app/xxxx/</code>）。在 WinToastRelay 里&quot;目标&quot; → Bark → 粘贴 URL → 保存。密钥自动进 Credential Manager，不会明文写到设置文件里。</p>
+<p>第四步做应用过滤。默认它把所有系统通知全转，Teams 一响你手机就震——太吵。在 &ldquo;Application Filters&rdquo; 里关掉不感兴趣的 App，只留 Codex、Claude Code、Cursor、GitHub Desktop 这些真正需要盯的。</p>
+<p>第五步开机自启。在设置里勾&quot;Start with Windows&quot;，走的是 UWP 标准 startup-task API，不写注册表，卸载干净。</p>
+<h2 id="有没有踩到坑">有没有踩到坑？
+</h2><p>两个。</p>
+<p>**坑一：Codex 在前台不发通知。**Codex Windows 版默认只在窗口失焦时才弹系统通知，前台会静默。解法在 Codex 设置里把 &ldquo;Always show notifications&rdquo; 打开，不然 WinToastRelay 监听不到任何事件。</p>
+<p><strong>坑二：授权撤回后不重启不生效。<strong>如果你在 Windows 通知设置里手动关过 WinToastRelay 的访问权限，再打开时它会显示&quot;已授权&quot;但</strong>没在监听</strong>。必须完全退出（托盘图标右键 → Exit）再重开一次，<code>RequestAccessAsync</code> 才会重走。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 会不会把我微信、企业微信里的敏感通知都发到手机上？</strong></p>
+<p>A: 默认会，但可以在 Application Filters 里精细屏蔽。我个人的做法是<strong>白名单模式</strong>：只放行 Codex、Claude Code、GitHub Desktop 这三四个，其它全关。</p>
+<p><strong>Q2: Bark 官方 API <code>api.day.app</code> 免费吗？</strong></p>
+<p>A: 免费，但推送内容会经过作者的服务器（作者承诺不留档但没有法律约束力）。敏感信息建议自建 <code>finab/bark-server</code>，一条 docker 命令 30 秒起。</p>
+<p><strong>Q3: 支持 Windows 10 吗？</strong></p>
+<p>A: 支持。它用的 <code>UserNotificationListener</code> API 从 Windows 10 1607 就有，理论上 21H2 之前都能跑。开发者官方描述是&quot;Windows 10/11 native app&quot;。</p>
+<p><strong>Q4: WxPusher 是不是要关注一个公众号？</strong></p>
+<p>A: 是。Android 免费但要关注一次 WxPusher 公众号绑定设备。不喜欢就选 ntfy 自托管。</p>
+<p><strong>Q5: 会不会占用大量电池？</strong></p>
+<p>A: 事件驱动 + 系统 API，不轮询。开发者的话是&quot;确保电脑有至少 20 MB 可用内存&quot;就够了。我实测 24 小时驻留没看到 CPU 尖峰。</p>
+<p><strong>Q6: 转发失败会重试吗？</strong></p>
+<p>A: 会。本地队列 + 指数退避，5xx 和网络错误都会重排。JSON 设置文件里可以调最大重试次数和退避上限。</p>
+<p><strong>Q7: 能不能加密 payload？</strong></p>
+<p>A: HTTPS 层足够对付路径中的中间人。Bark 自带 <code>ciphertext</code> 参数支持端到端 AES 加密，WinToastRelay 目前用 Webhook 模式可以自己在下游解密，Bark 原生模式暂未做透传，得看后续版本。</p>
+<h2 id="我为什么推荐给每个用-ai-coder-的人">我为什么推荐给每个用 AI Coder 的人
+</h2><p>不是因为它有多惊艳——通知转发这件事在 iOS 上早有 Pushover、Simplepush，Android 有 Gotify——WinToastRelay 特殊的地方在于<strong>它把 Windows 端做扎实</strong>：原生 API、系统托盘、开机自启、Credential Manager、本地队列、应用过滤、MSIX 打包，六件套里没有一件是拼装的。你把它塞进 Codex / Claude Code 工作流后，会发现自己走开的次数明显变多了。这才是真的解放。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/cursor-to-codex-two-weeks-real-feeling/"  target="_blank" rel="noopener"
+    >Cursor 转 Codex 大半个月的真实感受</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-token-cost-cut-7-tips/"  target="_blank" rel="noopener"
+    >Claude Code Token 成本砍 60% 的 7 个招式</a></li>
+<li><a class="link" href="https://softon.top/software/claude-code-skills-mcp-workflow-deconstruction/"  target="_blank" rel="noopener"
+    >Claude Code × Skills × MCP：一套 AI 工作流拆解</a></li>
+<li><a class="link" href="https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/"  target="_blank" rel="noopener"
+    >PowerToys 0.101：Windows 向 macOS 看齐的同应用窗口切换</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windows/">Windows</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/bark/">Bark</a>
+        
+            <a href="/tags/wxpusher/">WxPusher</a>
+        
+            <a href="/tags/ai-coding/">AI Coding</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">开源工具</a>
+        
+            <a href="/tags/%E9%80%9A%E7%9F%A5/">通知</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/cursor-to-codex-two-weeks-real-feeling/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/optimizerduck-windows-optimization-trust-revert/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">optimizerDuck：Windows 优化工具最怕不是没效果，而是你不知道它改了哪里</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/codeburn-ai-token-cost-tracker/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">codeburn 实测：你的 AI 编程开销到底去哪了？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/matt-pocock-skills-engineering-vibe-coding/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Matt Pocock 的 skills 为什么能冲上 GitHub 热榜第一？从 vibe coding 到工程化 AI 编程</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/wintoastrelay-windows-toast-notification-relay-phone\/'; 
+        const pageTitle = 'Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone \/ Android';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 254 天 15 小时 · 116 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-12 23:59:10 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
