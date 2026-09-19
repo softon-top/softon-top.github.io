@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="AI 编程 agent 的需求活只活在聊天历史里，上下文一满就改飞。OpenSpec（GitHub 68.5k star）把 proposal/specs/design/tasks 落进版本库，agent 先读规格再动代码。实测 3 命令循环 + 与 GitHub Spec Kit、Kiro 的取舍账，给老项目（brownfield）最省心的 SDD 落地路径。">
+<title>AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工</title>
+
+<link rel='canonical' href='https://softon.top/ai/openspec-ai-coding-spec-framework-agent/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工">
+<meta property='og:description' content="AI 编程 agent 的需求活只活在聊天历史里，上下文一满就改飞。OpenSpec（GitHub 68.5k star）把 proposal/specs/design/tasks 落进版本库，agent 先读规格再动代码。实测 3 命令循环 + 与 GitHub Spec Kit、Kiro 的取舍账，给老项目（brownfield）最省心的 SDD 落地路径。">
+<meta property='og:url' content='https://softon.top/ai/openspec-ai-coding-spec-framework-agent/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='openspec' /><meta property='article:tag' content='ai-coding' /><meta property='article:tag' content='spec-driven-development' /><meta property='article:tag' content='ai-agent' /><meta property='article:tag' content='context-engineering' /><meta property='article:published_time' content='2026-09-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工">
+<meta name="twitter:description" content="AI 编程 agent 的需求活只活在聊天历史里，上下文一满就改飞。OpenSpec（GitHub 68.5k star）把 proposal/specs/design/tasks 落进版本库，agent 先读规格再动代码。实测 3 命令循环 + 与 GitHub Spec Kit、Kiro 的取舍账，给老项目（brownfield）最省心的 SDD 落地路径。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工\"",
+  "description": "\"AI 编程 agent 的需求活只活在聊天历史里，上下文一满就改飞。OpenSpec（GitHub 68.5k star）把 proposal/specs/design/tasks 落进版本库，agent 先读规格再动代码。实测 3 命令循环 + 与 GitHub Spec Kit、Kiro 的取舍账，给老项目（brownfield）最省心的 SDD 落地路径。\"",
+  "url": "\"https://softon.top/ai/openspec-ai-coding-spec-framework-agent/\"",
+  "datePublished": "2026-09-17T00:00:00Z",
+  "dateModified": "2026-09-17T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/openspec-ai-coding-spec-framework-agent/\""
+  },
+  "keywords": "\"openspec, ai-coding, spec-driven-development, ai-agent, context-engineering\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工\"",
+      "item": "\"https://softon.top/ai/openspec-ai-coding-spec-framework-agent/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么需求只活在聊天里会让-agent-越写越歪">为什么「需求只活在聊天里」会让 agent 越写越歪？</a></li>
+    <li><a href="#openspec-的工作流3-个命令--1-个目录结构">OpenSpec 的工作流：3 个命令 + 1 个目录结构</a></li>
+    <li><a href="#它和-github-spec-kitkiro-的关键区别在哪">它和 GitHub Spec Kit、Kiro 的关键区别在哪？</a></li>
+    <li><a href="#团队怎么用stores-把规划从代码仓里剥出来">团队怎么用：Stores 把规划从代码仓里剥出来</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#为什么规格进-git这一手比手写文档高级一截">为什么「规格进 Git」这一手，比「手写文档」高级一截？</a></li>
+    <li><a href="#什么时候不该上-openspec">什么时候不该上 OpenSpec？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/openspec-ai-coding-spec-framework-agent/">AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-17T00:00:00Z'>
+                    2026-09-17，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：15分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/openspec-ai-coding-spec-framework-agent/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么需求只活在聊天里会让-agent-越写越歪">为什么「需求只活在聊天里」会让 agent 越写越歪？</a></li>
+    <li><a href="#openspec-的工作流3-个命令--1-个目录结构">OpenSpec 的工作流：3 个命令 + 1 个目录结构</a></li>
+    <li><a href="#它和-github-spec-kitkiro-的关键区别在哪">它和 GitHub Spec Kit、Kiro 的关键区别在哪？</a></li>
+    <li><a href="#团队怎么用stores-把规划从代码仓里剥出来">团队怎么用：Stores 把规划从代码仓里剥出来</a></li>
+    <li><a href="#我实测下来的账本">我实测下来的账本</a></li>
+    <li><a href="#为什么规格进-git这一手比手写文档高级一截">为什么「规格进 Git」这一手，比「手写文档」高级一截？</a></li>
+    <li><a href="#什么时候不该上-openspec">什么时候不该上 OpenSpec？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>你让 AI 编程 agent 加个功能，它先改了三个无关文件，顺手重构了半条工具链，还自作主张加了个全局缓存——你说的是「加个暗色模式」，它交付的是「一场你没法 code review 的架构运动」。</p>
+<p>问题不在模型变笨。问题在<strong>你的需求只活在那条聊天记录里</strong>：上下文一滚动，早期决策就蒸发了；agent 每次开工都是「断片」状态。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>OpenSpec 是 Fission-AI 的开源 SDD（spec-driven development）框架，GitHub 68.5k star，思路：<strong>agent 读 <code>openspec/changes/</code> 下的 proposal + delta specs + design + tasks，再动代码</strong>，规格进 Git 而不是进聊天记录。</li>
+<li>核心循环就三条：<code>/opsx:explore</code> 摸代码定方案 → <code>/opsx:propose</code> 生成规格文档 → <code>/opsx:apply</code> 照单施工 → <code>/opsx:archive</code> 归档。轻量、无 phase gate，比 GitHub Spec Kit 轻、比 Kiro 不绑 IDE。</li>
+<li>对<strong>老项目</strong>最友好：它记的是 <strong>spec delta（这次改了什么）</strong>，不强迫你先写全量规格——brownfield 场景比 greenfield 框架（Spec Kit/Superpowers）省一大截前置成本。</li>
+<li>个人项目就 30 分钟起步（<code>npm i -g</code> + <code>openspec init</code>）；团队场景用 beta 版 <strong>Stores</strong>：规划单独开仓，<code>git push</code> 共享给全组 agent，跨仓库功能一份计划。</li>
+<li>别指望它替代需求管理平台：OpenSpec 是<strong>规划层</strong>，Jama 这类 system of record 还是得留着。ThoughtWorks 2026 年 4 月 Radar 已把它放进 Assess 圈。</li>
+</ul>
+</blockquote>
+<h2 id="为什么需求只活在聊天里会让-agent-越写越歪">为什么「需求只活在聊天里」会让 agent 越写越歪？
+</h2><p>先说痛点。AI 编程 agent 的能力早就不缺了，缺的是<strong>持久意图（durable intent）</strong>：</p>
+<ul>
+<li>上下文窗口满了，最早那几条「我们为什么这么定」就被顶出去。agent 下一轮只能凭残存印象发挥，发挥的方向你猜不到。</li>
+<li>多人/多 agent 协作时，A 在上午拍板的决策，下午 B 的会话里根本不存在。同一个仓库，两套「需求理解」。</li>
+<li>改完不敢看。agent 交付的代码里混着它「顺手做掉」的一堆假设，你只能整块吞下。</li>
+</ul>
+<p>常见土办法是手写一份 <code>PROJECT_STATE.md</code> 扔进仓库。能用，但没人维护，三个月后它和代码的真实状态就是两条平行线。</p>
+<p>OpenSpec 的解法很直白：<strong>把规格文档变成仓库里的一等公民</strong>，agent 每轮开工先读它们。规格在 Git 里，就有版本、有 diff、有 review——和代码走同一条治理流水线。</p>
+<h2 id="openspec-的工作流3-个命令--1-个目录结构">OpenSpec 的工作流：3 个命令 + 1 个目录结构
+</h2><p>装好之后（<code>npm install -g @fission-ai/openspec@latest</code>，Node ≥ 20.19），进到项目目录 <code>openspec init</code>，然后在你的 agent 里打斜杠命令。先看官方 README 里那段 explore 实录，它比任何文档都能让你秒懂这套东西在干嘛：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">You: /opsx:explore</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI:  你想探索什么？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">You: 想加暗色模式，但不确定怎么改最干净。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI:  我先看下你的样式方案...</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">最干净的路径：CSS 变量 + 一个小 theme context，</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">加系统偏好检测，不引新依赖。范围定一下？</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">You: 行，就按这个。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">You: /opsx:propose add-dark-mode</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI:  已创建 openspec/changes/add-dark-mode/</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ proposal.md — 为什么做、改什么</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ specs/      — 需求和具体场景</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ design.md   — 技术路线</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ tasks.md    — 实施清单</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">准备实施！</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">You: /opsx:apply</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI:  按 tasks 施工...</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ 1.1 加 theme context provider</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ 1.2 做 toggle 组件</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ 2.1 加 CSS 变量</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">✓ 2.2 接 localStorage</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">全部完成！</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">You: /opsx:archive</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AI:  归档到 openspec/changes/archive/2025-01-23-add-dark-mode/</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">specs 已合并为最新状态，下一轮功能就绪。</span>
+</span></span></code></pre></div><p>四步，每个动词都在说它的设计哲学：explore 是「无风险思考伙伴」——读代码、权衡、定边界，一行实现代码都没写；propose 把意图固化成四个文档；apply 照单施工；archive 把 delta 合并回 source of truth，规格库自己滚动更新。整条链路没有任何「必须卡在这一步」的 phase gate，你随时可以回头改任意一个 artifact，再往前推。</p>
+<p>两个关键设计：</p>
+<p><strong>第一，specs 是 agent 写的，不是人手写的。</strong> <code>/opsx:propose</code> 时它读你的仓库，自动生成 proposal 和场景描述，人只做 review。省掉传统 SDD 框架最劝退的那一步——人工写 PRD。specs 目录里就是纯 Markdown，需求配具体场景，没有要学的特殊语法。</p>
+<p><strong>第二，specs 记的是 delta，不是全量规格。</strong> 这是 OpenSpec 和 Spec Kit 分野最深的地方，ThoughtWorks Radar 也把它列为亮点。每个 change 文件夹里的 specs 只描述「这次改动影响了什么」，不是系统的完整规格书。对老项目来说这是决定性的：你不可能在动手前把整个遗留系统的规格先补全，但你可以只写「这次改了什么」。delta 机制让 SDD 真正能落进 brownfield，而不只是 greenfield 玩具。</p>
+<p>目录结构：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>目录</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>openspec/specs/</code></td>
+					<td>当前系统状态的规格（source of truth）</td>
+			</tr>
+			<tr>
+					<td><code>openspec/changes/</code></td>
+					<td>进行中的变更（proposal + delta specs + design + tasks）</td>
+			</tr>
+			<tr>
+					<td><code>openspec/changes/archive/</code></td>
+					<td>已完成的变更，按日期归档</td>
+			</tr>
+	</tbody>
+</table></div>
+<h2 id="它和-github-spec-kitkiro-的关键区别在哪">它和 GitHub Spec Kit、Kiro 的关键区别在哪？
+</h2><p>三个都叫 SDD，但定位差很远：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>OpenSpec</th>
+					<th>GitHub Spec Kit</th>
+					<th>Kiro (AWS)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>重量</td>
+					<td>轻，3 命令起步</td>
+					<td>重，phase gate 多 + Python 环境</td>
+					<td>IDE 绑定，全家桶</td>
+			</tr>
+			<tr>
+					<td>工具锁定</td>
+					<td>不锁，30+ agent 支持（Cursor/Copilot/Codex/Amazon Q）</td>
+					<td>自家生态</td>
+					<td>锁 Kiro IDE + Claude 系模型</td>
+			</tr>
+			<tr>
+					<td>老项目适配</td>
+					<td><strong>delta spec，为 brownfield 设计</strong></td>
+					<td>偏 greenfield</td>
+					<td>偏 greenfield</td>
+			</tr>
+			<tr>
+					<td>规格来源</td>
+					<td>agent 生成，人 review</td>
+					<td>人 + agent</td>
+					<td>人 + agent</td>
+			</tr>
+			<tr>
+					<td>迭代自由</td>
+					<td>任意阶段改任意 artifact，无 phase gate</td>
+					<td>阶段刚性</td>
+					<td>阶段刚性</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>一句话取舍：<strong>你要的是「给 agent 装个缰绳」，不是「换一套重型流程」</strong>。OpenSpec 的哲学词是 <code>fluid not rigid / iterative not waterfall / easy not complex</code>。Spec Kit 是「彻底但繁琐」，Kiro 是「强大但锁死」——选 OpenSpec 的理由就是你<strong>还想用自己现有的 agent</strong>。</p>
+<p>另一个容易被忽略的点：ThoughtWorks 2026 年 4 月 Radar 把 OpenSpec 放进 <strong>Assess</strong> 圈（值得了解它对企业的影响），评语重点就是两条——fluid 三命令、<strong>delta spec 适合存量系统</strong>。但 Radar 同时提醒：agent 原生能力还在涨，过两年「读仓库自己规划」可能就内建了，SDD 工具层要重新评估。这是实话。</p>
+<h2 id="团队怎么用stores-把规划从代码仓里剥出来">团队怎么用：Stores 把规划从代码仓里剥出来
+</h2><p>上面这套，个人一个仓就够用了。真正复杂的场景是：<strong>一个功能横跨三个仓，需求却只有一份</strong>。这时 beta 版 <strong>Stores</strong> 才是 OpenSpec 的杀手锏。</p>
+<p>机制不复杂：规划仓和代码仓分离。规划仓里同样是那个熟悉的 <code>openspec/</code> 结构（specs 加 changes），但它是独立的一个 git 仓库，<code>git push</code> 就能分发给全组。每个代码仓里的 coding agent 读的是<strong>同一份 specs 单一真源</strong>，不再是各仓各写一份、慢慢漂移。</p>
+<p>官方点名的三类用法：</p>
+<ul>
+<li><strong>跨仓功能</strong>：一个 change，一份 plan，哪怕代码最终落在三个仓。API 仓加端点、Web 仓加 UI、共享库加类型——三处改动的规格在同一个规划仓里对齐，不用靠口头 + 三仓文档各说各话。</li>
+<li><strong>共享需求</strong>：平台团队 owns 那套 specs，产品团队<strong>只读</strong>，直接读到自己 agent 能取到的位置。wiki 漂移的问题从根上没了——因为根本没有 wiki，规格就活在 agent 读得到的地方。</li>
+<li><strong>先 plan 后 code</strong>：规划仓现在就把意图固化下来，代码仓后面跟上就行。解耦了「想清楚」和「动手」两个节奏。</li>
+</ul>
+<p>但两个诚实的边界要摆明：一是 <strong>beta</strong>，生产上之前先读 <code>docs/stores-beta/user-guide.md</code>，别把它当稳定 API 依赖；二是它治的是<strong>意图对齐</strong>，不替你解决「三个仓怎么合并、CI 怎么排」的工程细节，那些还是得靠你自己的流水线。</p>
+<h2 id="我实测下来的账本">我实测下来的账本
+</h2><p>个人项目（Express 加 2FA 这类小功能）实测体感：</p>
+<ul>
+<li><strong>启动成本</strong>：<code>npm i -g</code> + <code>init</code> + 打一条 propose，30 分钟内跑通。无 Python、无 IDE 迁移。团队层面再叠 Stores 规划仓，<code>git push</code> 分发，不用为规格单开一个 wiki 系统。</li>
+<li><strong>规划质量</strong>：agent 生成的 proposal 会主动摸现有路由/中间件，给「在 middleware 层挂」还是「独立 route」的选项，比自己裸 prompt 稳。</li>
+<li><strong>施工对齐</strong>：<code>apply</code> 阶段它严格照 tasks.md 走，基本不「顺手加戏」。这是它比裸 agent 最大的增量。delta spec 机制在老项目上尤其明显：只描述这次改动面，不用为整仓补全量规格，启动摩擦小很多。</li>
+<li><strong>上下文卫生</strong>：官方明说实施前要 clear context——它治的是「需求持久化」，不是「上下文无限」。长会话里照旧要手动清。</li>
+<li><strong>模型选择</strong>：规划 + 实施都吃推理强的模型，官方点名 Codex 5.5 / Opus 4.7 档。用廉价小模型跑 propose，规格质量会塌。</li>
+</ul>
+<p>两个坑：</p>
+<ol>
+<li><strong>Telemetry 默认开</strong>。只采命令名 + 版本，不采参数/路径/内容，CI 自动关。洁癖者：<code>openspec config set telemetry.enabled false</code> 或 <code>export OPENSPEC_TELEMETRY=0</code>。</li>
+<li><strong>Stores 还是 beta</strong>。团队共享规格仓是它最有想象力的功能，但标注 beta，生产用前先读 docs/stores-beta。</li>
+</ol>
+<h2 id="为什么规格进-git这一手比手写文档高级一截">为什么「规格进 Git」这一手，比「手写文档」高级一截？
+</h2><p>有人会问：这不就是往仓库里多塞几个 Markdown 文件吗，和手写一份 <code>PROJECT_STATE.md</code> 有本质区别？</p>
+<p>区别在三条治理流水线上：</p>
+<ul>
+<li><strong>版本化</strong>：Git 里有 diff、有 blame、有历史。需求变更是一次 commit，谁改的、为什么改、前后长什么样，全查得到。手写的 md 文档改起来没有这个纪律。</li>
+<li><strong>可 review</strong>：规格是文件，就能进 PR review 流程。你 review 代码的同时 review 规格，agent 交出来的一堆假设第一次变成了「可以被驳回」的东西。</li>
+<li><strong>agent 可读</strong>：这是最关键的一条。规格是 agent 每轮开工先读的输入。手写 md 扔那儿，agent 不会主动去读；但 OpenSpec 把「读规格再动代码」固化成了工作流的第一步，意图持久化的机制才真正闭环。</li>
+</ul>
+<p>所以 OpenSpec 不是「文档工具」，是<strong>把规格变成 agent 的一等输入，再让 Git 给这层输入套上版本和 review 纪律</strong>。这两条叠起来，才是它相对裸 chat 历史、相对手写 md 的代差。</p>
+<h2 id="什么时候不该上-openspec">什么时候不该上 OpenSpec？
+</h2><p>不是所有仓库都值得。诚实划边界：</p>
+<ul>
+<li><strong>需求稳定的老系统</strong>（契约清晰、改动少）：Kiro / Spec Kit 的静态全量规格可能更合适，delta 思维反而别扭。</li>
+<li><strong>一次性 demo / 脚本仓</strong>：规格文档比代码本身还重，纯属仪式。</li>
+<li><strong>你还没有稳定的 agent 工作流</strong>：先别叠第二层抽象，先把裸 agent 跑顺。</li>
+<li><strong>团队 / 跨仓场景</strong>：上 Stores 前读 beta 文档，规格仓和代码仓的边界划清楚。</li>
+<li><strong>它不替代需求管理平台</strong>：Jama 那类 traceability / audit 需求，OpenSpec 明确定位是规划层，别硬塞。</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: OpenSpec 是干嘛的？一句话。</strong>
+A: 给 AI 编程 agent 加一层版本化规格文档，让它先读规格再写代码。规格进 Git，需求不再只活在聊天历史里。</p>
+<p><strong>Q2: 需要人工写 PRD 吗？</strong>
+A: 不需要。<code>/opsx:explore</code> + <code>/opsx:propose</code> 时 agent 读你的仓库自动生成 proposal/specs/design/tasks，人只做 review。这是它比传统 SDD 框架省的最大一步。</p>
+<p><strong>Q3: 它和 GitHub Spec Kit 怎么选？</strong>
+A: 要轻量、迭代自由、不锁工具、尤其服务老项目 → OpenSpec。要重型全流程、能接受 Python + 阶段刚性 → Spec Kit。</p>
+<p><strong>Q4: 支持哪些 agent 工具？</strong>
+A: 官方称 30+。斜杠命令在不同工具里拼写不同（Cursor/Copilot 是 <code>/opsx-propose</code>，Amazon Q 是 <code>@opsx-propose</code>，Codex 是 <code>$openspec-propose</code>），<code>openspec init</code> 会自动打印你选的工具对应的格式。</p>
+<p><strong>Q5: 团队怎么用一份规格管多个仓？</strong>
+A: 用 Stores（beta）：单独开一个规划仓，里面同样是 <code>openspec/</code> 结构，<code>git push</code> 给全组，各代码仓的 agent 读同一份 specs。平台团队 owns 规格，产品团队只读。</p>
+<p><strong>Q6: 数据安全？会不会上传我的代码？</strong>
+A: 框架本身只在你本地仓库里读写 <code>openspec/</code> 目录。唯一出网行为是匿名 telemetry（命令名 + 版本），可以关。规格文档走 Git 走你自己的 remote。</p>
+<p><strong>Q7: 会不会被 agent 原生能力取代？</strong>
+A: ThoughtWorks 自己都在 Radar 里这么提醒——模型越来越能「读仓库自己规划」，SDD 工具层价值会重新洗牌。OpenSpec 目前的护城河是 delta spec + 团队 Stores + 工具中立，而不是「帮 agent 读代码」这个基础能力。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/ai-agent-lying-cheating-colluding-harvard-andon-labs/" >AI Agent 为何撒谎、作弊、串通：不是&rsquo;变坏了&rsquo;，是激励结构在逼它</a></li>
+<li><a class="link" href="/software/ponytail-ai-coding-less-code-overengineering/" >Ponytail：AI 编程少写代码、少过度工程</a></li>
+<li><a class="link" href="/ai/ai-agent-runtime-vs-framework/" >AI Agent Runtime 和 Framework 到底该选哪个</a></li>
+<li><a class="link" href="/tutorials/matt-pocock-skills-engineering-vibe-coding/" >Matt Pocock 的 Skills 工程化实践：告别 vibe coding</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openspec/">Openspec</a>
+        
+            <a href="/tags/ai-coding/">Ai-Coding</a>
+        
+            <a href="/tags/spec-driven-development/">Spec-Driven-Development</a>
+        
+            <a href="/tags/ai-agent/">AI Agent</a>
+        
+            <a href="/tags/context-engineering/">Context-Engineering</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-lying-cheating-colluding-harvard-andon-labs/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 为何撒谎、作弊、串通：不是&#39;变坏了&#39;，是激励结构在逼它</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/okf-agent-memory-git-native-vs-mem0-letta/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/effective-html-vs-dashi-ppt-ai-agent-html-or-pptx/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 交活到底该给 HTML 还是 PPTX：effective-html 2.7k 星 vs 大师 PPT skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/openspec-ai-coding-spec-framework-agent\/'; 
+        const pageTitle = 'AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 261 天 11 小时 · 121 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-19 19:19:32 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>开源软件 on softon.top</title>
+		<link>https://softon.top/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/</link>
+		<description>Recent content in 开源软件 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 22 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CleanMyMac 199 刀能干的事，这个开源 MangoDisk 免费全给你（macOS &#43; Windows 双平台）</title>
+				<link>https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/</link>
+				<pubDate>Sat, 22 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/mangodisk-free-open-source-cleanmymac-alternative/</guid>
+				<description>&lt;p&gt;先讲个真实故事。&lt;/p&gt;&#xA;&lt;p&gt;我 Mac 的 512GB SSD 用了两年，前几天点开「关于本机 → 存储」，系统那一栏红彤彤地写着 187GB。我确信我没装过 187GB 的系统文件。翻遍了 &lt;code&gt;~/Library/Caches&lt;/code&gt;、&lt;code&gt;~/Developer&lt;/code&gt;、&lt;code&gt;.docker&lt;/code&gt;、&lt;code&gt;.gradle&lt;/code&gt;、Xcode DerivedData——最后累到想直接掏钱买 CleanMyMac。&lt;/p&gt;&#xA;&lt;p&gt;打开官网一看，&lt;code&gt;$149.95/年&lt;/code&gt;，或者 &lt;code&gt;$199.95&lt;/code&gt; 买断（还得升级付费）。199 刀，够我买两包咖啡豆用一整年了。&lt;/p&gt;&#xA;&lt;p&gt;于是我又去搜有没有免费替代。这一搜，就撞见了昨天在阮一峰 Weekly 上被作者自荐的 &lt;strong&gt;MangoDisk（芒果磁盘清理）&lt;/strong&gt;——GPL-3.0 开源、macOS + Windows 双平台通吃、Tauri 2 + Rust 内核、界面颜值在线，Trendshift 上 Rust 榜进过日榜前 11。&lt;/p&gt;&#xA;&lt;p&gt;装完试了两小时，我基本可以说：&lt;strong&gt;这就是 CleanMyMac 的免费替代品，而且 Windows 用户第一次有了对得起颜值的选项。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;项目地址：&lt;a class=&#34;link&#34; href=&#34;https://github.com/harry0703/MangoDisk&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;https://github.com/harry0703/MangoDisk&lt;/a&gt;&#xA;官网：&lt;a class=&#34;link&#34; href=&#34;https://mangodisk.app&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;https://mangodisk.app&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么值得一试&#34;&gt;为什么值得一试&#xA;&lt;/h2&gt;&lt;p&gt;先说结论，不绕弯。MangoDisk 在这三个维度赢：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;1. 双平台，尤其救 Windows 用户。&lt;/strong&gt; macOS 有 CleanMyMac、DaisyDisk、OmniDiskSweeper，就算免费也有 Dusty、GrandPerspective。Windows 这边呢？CCleaner 被 Avast 收购之后各种全家桶弹窗，WinDirStat 十几年没大更新界面像 XP，BleachBit 又太糙。MangoDisk 一套 UI 同时跑 macOS 和 Windows，Windows 用户终于不用在难看和不安全之间二选一。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;2. 免费开源 + 不用登录 + 不联网。&lt;/strong&gt; GPL-3.0，源码在 GitHub 全公开，规则库也公开在仓库里可审计。打开就用，不注册、不弹窗、不推服务。对付费软件那种「先扫描后收钱、订阅到期就变砖」的套路免疫。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</title>
+				<link>https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/</guid>
+				<description>&lt;p&gt;我第一次装 Motrix 是 2019 年。那时候我刚从 IDM 的授权码轮盘里逃出来,想找一个界面不油腻、不弹广告、又能吃磁力链接和 BT 种子的下载器。Motrix 一装上就是那种&amp;quot;啊,这个就够了&amp;quot;的感觉——干干净净一个仪表盘,一个添加按钮,一个速度曲线,&lt;code&gt;Aria2&lt;/code&gt; 老引擎在底下稳稳跑,任务从来不掉链子。&lt;/p&gt;&#xA;&lt;p&gt;然后它就没了动静。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;上一次 Motrix 发正式版本,是 2023 年&lt;/strong&gt;。此后 GitHub 仓库像被按了暂停键,浏览器扩展慢慢腐烂,底层的 aria2 内核也停在了 2023 的版本号上不动。装机必备变成了装机遗物,大家都以为作者放弃了这个 5.2 万 star 的项目。&lt;/p&gt;&#xA;&lt;p&gt;社区急得直接开始了自救。有位博士研究生用 AI 把 Motrix 和 Aria2 整个啃了一遍,搞出了架构完全不同的 &lt;a class=&#34;link&#34; href=&#34;https://www.appinn.com/motrix-next/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;Motrix Next&lt;/a&gt;,用 Tauri 2 + Vue 3 + Pinia 重写外壳,底层换成了自己重构的 Aria2 Next,顺手补上了 ED2K 支持——一个开源项目沉寂到&amp;quot;用户被逼着自己 fork 一版&amp;quot;的地步,基本可以宣判临床死亡了。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;结果 8 月 16 日,Motrix 作者 agalwood 突然放出了 2.0.0 Turbo beta。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;时隔-3-年不是补丁是推倒重来&#34;&gt;时隔 3 年,不是补丁,是推倒重来&#xA;&lt;/h2&gt;&lt;p&gt;拿到这个消息我第一反应不是&amp;quot;有什么新功能&amp;quot;,是&amp;quot;能更新就是最大的功能&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;但打开 &lt;a class=&#34;link&#34; href=&#34;https://github.com/agalwood/Motrix/releases&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;release notes&lt;/a&gt; 看完,我发现这不是那种憋了很久终于挤出来的小版本。&lt;strong&gt;v2.0.0 Turbo 是把 Motrix 从头到脚重构了一遍。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>2026年效率革命：五款值得尝试的AI集成工具</title>
+				<link>https://softon.top/software/2026-efficiency-revolution-ai-tools/</link>
+				<pubDate>Wed, 11 Mar 2026 20:55:00 +0800</pubDate>
+				<guid>https://softon.top/software/2026-efficiency-revolution-ai-tools/</guid>
+				<description>&lt;h1 id=&#34;2026年效率革命五款值得尝试的ai集成工具&#34;&gt;2026年效率革命：五款值得尝试的AI集成工具&#xA;&lt;/h1&gt;&lt;p&gt;在数字化浪潮持续加速的2026年，软件工具已不再仅仅是功能的堆砌，而是成为我们思维的延伸和效率的倍增器。最近的搜索热点显示，用户对AI集成、跨平台兼容性、隐私保护和开源选项的关注度显著提升。本文将为您推荐五款在不同场景下表现卓越的软件工具，帮助您在工作、学习和创作中实现真正的效率革命。&lt;/p&gt;&#xA;&lt;h2 id=&#34;ai驱动的全能笔记工具obsidian--ai插件&#34;&gt;AI驱动的全能笔记工具：Obsidian + AI插件&#xA;&lt;/h2&gt;&lt;p&gt;Obsidian作为一款基于本地Markdown文件的开源笔记应用，凭借其强大的双向链接和知识图谱功能，已成为知识工作者的首选。2026年，其AI插件生态进一步完善，用户可以在不离开本地环境的情况下，享受AI辅助的摘要生成、内容扩展和智能问答功能。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：研究者整理文献资料时，可以通过AI插件快速生成论文摘要，并自动建立相关概念间的链接；产品经理撰写需求文档时，AI能帮助梳理逻辑结构并提出改进建议。&lt;/p&gt;&#xA;&lt;p&gt;【此处可插图：Obsidian界面展示双向链接和AI插件功能】&lt;/p&gt;&#xA;&lt;h2 id=&#34;跨平台效率神器raycast&#34;&gt;跨平台效率神器：Raycast&#xA;&lt;/h2&gt;&lt;p&gt;Raycast是一款macOS和Windows通用的生产力启动器，它将系统操作、应用快捷方式、自定义脚本和AI功能集成在一个简洁的界面中。与传统的Alfred相比，Raycast更注重团队协作和工作流自动化，支持共享命令和模板。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：开发者可以通过预设的命令快速切换开发环境、部署代码或查询API文档；设计师能够一键打开常用工具集合并访问设计资源库；团队成员可以共享常用的搜索模板和自动化流程。&lt;/p&gt;&#xA;&lt;h2 id=&#34;隐私优先的开源替代standard-notes&#34;&gt;隐私优先的开源替代：Standard Notes&#xA;&lt;/h2&gt;&lt;p&gt;在数据隐私日益受到关注的今天，Standard Notes提供了一个端到端加密的笔记解决方案。这款开源软件支持跨平台同步，同时通过可选的扩展包提供富文本编辑、代码高亮、任务管理等功能，所有数据在客户端加密后再上传。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：处理敏感信息的金融从业者可以用它记录客户信息和交易策略；记者可以安全地存储采访笔记和线人联系方式；普通用户也能放心地保存个人日记和密码信息，无需担心数据泄露。&lt;/p&gt;&#xA;&lt;p&gt;【此处可插图：Standard Notes的加密架构示意图】&lt;/p&gt;&#xA;&lt;h2 id=&#34;创意工作者的ai助手runway-ml&#34;&gt;创意工作者的AI助手：Runway ML&#xA;&lt;/h2&gt;&lt;p&gt;Runway ML将生成式AI技术直接集成到创意工作流中，支持文本生成视频、图像编辑、音频处理等多种功能。与其他AI工具不同，Runway特别注重创作者的控制权，提供了精细的参数调节和分层编辑功能。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：短视频创作者可以用文字描述快速生成背景素材；平面设计师能够通过简单的涂鸦转换为高质量图像；独立游戏开发者可以利用AI生成角色动画和环境音效，大幅降低制作成本。&lt;/p&gt;&#xA;&lt;p&gt;【此处可插图：Runway ML界面展示文本到视频的生成过程】&lt;/p&gt;&#xA;&lt;h2 id=&#34;数据管理新范式notion-ai&#34;&gt;数据管理新范式：Notion AI&#xA;&lt;/h2&gt;&lt;p&gt;Notion在2026年进一步强化了其AI功能，不仅能够帮助用户创建和组织数据库，还能基于已有数据提供智能建议和预测分析。其灵活的页面嵌套和权限管理系统，使其既适合个人知识管理，也适用于团队协作项目。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：市场营销团队可以用它追踪campaign效果并自动生成周报；学生可以构建个人学习管理系统，AI会根据进度推荐复习计划；自由职业者能够整合客户管理、时间追踪和财务记录，形成完整的业务视图。&lt;/p&gt;&#xA;&lt;p&gt;【此处可插图：Notion AI的数据库和自动化工作流示例】&lt;/p&gt;&#xA;&lt;h2 id=&#34;结语&#34;&gt;结语&#xA;&lt;/h2&gt;&lt;p&gt;工具的价值不在于其功能的多少，而在于是否能真正融入我们的工作流并解决实际问题。上述五款软件代表了2026年软件发展的几个重要趋势：AI深度集成、跨平台体验、隐私保护和开源透明。选择适合自己的工具，建立高效的工作流，才能在这场效率革命中获得真正的竞争优势。&lt;/p&gt;&#xA;&lt;p&gt;无论您是追求极致效率的知识工作者，还是注重隐私安全的普通用户，或是需要强大创意支持的内容创作者，都能在这些工具中找到适合自己的解决方案。记住，最好的工具是那些让您忘记工具存在，专注于创造本身的工具。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

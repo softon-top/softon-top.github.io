@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="以开源极简本地 Agent Otis 为切口，用人民币口径实算本地自托管 vs 云端 API 的三年总成本：RTX 4090 每月约 749 元、企业级双卡 8700 元每月、开源托管 API 约 0.65-0.79 元每百万 token。给出盈亏平衡点、隐藏成本清单和 24GB 内存门槛，帮你在动手前先算清账。">
+<title>云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</title>
+
+<link rel='canonical' href='https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）">
+<meta property='og:description' content="以开源极简本地 Agent Otis 为切口，用人民币口径实算本地自托管 vs 云端 API 的三年总成本：RTX 4090 每月约 749 元、企业级双卡 8700 元每月、开源托管 API 约 0.65-0.79 元每百万 token。给出盈亏平衡点、隐藏成本清单和 24GB 内存门槛，帮你在动手前先算清账。">
+<meta property='og:url' content='https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='Otis' /><meta property='article:tag' content='本地大模型' /><meta property='article:tag' content='LLM 成本' /><meta property='article:tag' content='self-hosted' /><meta property='article:tag' content='API 费用' /><meta property='article:tag' content='盈亏平衡' /><meta property='article:published_time' content='2026-09-16T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-16T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）">
+<meta name="twitter:description" content="以开源极简本地 Agent Otis 为切口，用人民币口径实算本地自托管 vs 云端 API 的三年总成本：RTX 4090 每月约 749 元、企业级双卡 8700 元每月、开源托管 API 约 0.65-0.79 元每百万 token。给出盈亏平衡点、隐藏成本清单和 24GB 内存门槛，帮你在动手前先算清账。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）\"",
+  "description": "\"以开源极简本地 Agent Otis 为切口，用人民币口径实算本地自托管 vs 云端 API 的三年总成本：RTX 4090 每月约 749 元、企业级双卡 8700 元每月、开源托管 API 约 0.65-0.79 元每百万 token。给出盈亏平衡点、隐藏成本清单和 24GB 内存门槛，帮你在动手前先算清账。\"",
+  "url": "\"https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/\"",
+  "datePublished": "2026-09-16T00:00:00Z",
+  "dateModified": "2026-09-16T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/\""
+  },
+  "keywords": "\"Otis, 本地大模型, LLM 成本, self-hosted, API 费用, 盈亏平衡\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）\"",
+      "item": "\"https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么本地省钱是错觉">为什么&quot;本地=省钱&quot;是错觉？</a></li>
+    <li><a href="#otis-是什么先对齐讨论对象">Otis 是什么？先对齐讨论对象</a></li>
+    <li><a href="#人民币成本账三条路线的完整口径">人民币成本账：三条路线的完整口径</a>
+      <ul>
+        <li><a href="#路线一个人消费级本地rtx-4090-档">路线一：个人消费级本地（RTX 4090 档）</a></li>
+        <li><a href="#路线二云端-api按-token-付">路线二：云端 API（按 token 付）</a></li>
+        <li><a href="#路线三企业级自托管2a100-档供对照">路线三：企业级自托管（2×A100 档，供对照）</a></li>
+      </ul>
+    </li>
+    <li><a href="#盈亏平衡点到底在哪">盈亏平衡点到底在哪？</a></li>
+    <li><a href="#隐藏成本清单你一定会漏的四笔">隐藏成本清单：你一定会漏的四笔</a></li>
+    <li><a href="#那-otis-这类工具还有什么价值">那 Otis 这类工具还有什么价值？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                Mcp
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/">云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-16T00:00:00Z'>
+                    2026-09-16，星期三</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：9分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么本地省钱是错觉">为什么&quot;本地=省钱&quot;是错觉？</a></li>
+    <li><a href="#otis-是什么先对齐讨论对象">Otis 是什么？先对齐讨论对象</a></li>
+    <li><a href="#人民币成本账三条路线的完整口径">人民币成本账：三条路线的完整口径</a>
+      <ul>
+        <li><a href="#路线一个人消费级本地rtx-4090-档">路线一：个人消费级本地（RTX 4090 档）</a></li>
+        <li><a href="#路线二云端-api按-token-付">路线二：云端 API（按 token 付）</a></li>
+        <li><a href="#路线三企业级自托管2a100-档供对照">路线三：企业级自托管（2×A100 档，供对照）</a></li>
+      </ul>
+    </li>
+    <li><a href="#盈亏平衡点到底在哪">盈亏平衡点到底在哪？</a></li>
+    <li><a href="#隐藏成本清单你一定会漏的四笔">隐藏成本清单：你一定会漏的四笔</a></li>
+    <li><a href="#那-otis-这类工具还有什么价值">那 Otis 这类工具还有什么价值？</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>前阵子 Show HN 上一个叫 <strong>Otis</strong> 的开源项目很对我的胃口：一个极简 AI Agent，安装时根据你的硬件自动推荐本地模型、自动下载、直接跑起来，还能接 Ollama、LM Studio、Nvidia PAIR。官方口径是&quot;隐私优先、开箱即用&quot;。</p>
+<p>听着很美。但&quot;开箱即用&quot;四个字背后藏着一笔账：<strong>你的电费、显卡折旧、模型维护、没 SLA 的风险，全算你自己头上</strong>。</p>
+<p>所以我决定不动手装，先把账算完。本文用人民币口径，把本地自托管和云端 API 两条路三年的总成本拆开对一遍，看看&quot;本地=省钱&quot;这个直觉到底站不站得住。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>个人消费级（RTX 4090）本地月成本约 <strong>¥749</strong>，只有日均 token 量超过 200-300 万才可能比 OpenAI 系 API 便宜</li>
+<li>托管开源 API（DeepInfra/Groq/Together 这一档）约 <strong>¥0.65-0.79/百万 token</strong>，是个人本地自托管之前的正确中间站</li>
+<li>企业级自托管（2×A100）月成本约 <strong>¥8700</strong>，三年 ¥31 万+，盈亏点推到日均 1500-2000 万 token，个人根本碰不到</li>
+<li>本地部署的真实成本 = 硬件摊销 + 电费 + 维护 + 无 SLA，隐藏成本吃硬件摊销的 20%-40%，很多人第一年会算错</li>
+<li>Otis 这类工具的价值不在省钱，在于<strong>把本地 Agent 的启动门槛从&quot;折腾一周&quot;压到&quot;点一下安装&quot;</strong>，适不适合你取决于你的 token 量和隐私需求</li>
+</ul>
+</blockquote>
+<h2 id="为什么本地省钱是错觉">为什么&quot;本地=省钱&quot;是错觉？
+</h2><p>先摆一个最反直觉的事实：<strong>本地 LLM 的标价是 0 元/百万 token，但这不是 0 成本，是成本被摊到你自己的硬件和电费里了</strong>。</p>
+<p>云端 API 的商业模式是：你按 token 付钱，我负责 GPU、冷却、运维、SLA。你付的钱里已经包含了这些成本，还带了利润。</p>
+<p>本地部署是反过来：GPU 你买，电费你交，宕机你修，模型升级你测。单价看似为零，实际上每个 token 都在从你的显卡寿命和电表上&quot;扣钱&quot;。</p>
+<p>所以真正的比较不是&quot;0 vs 0.7 元/百万&quot;，而是：<strong>三年里，我的 token 总量 × 云端单价，和我（硬件折旧 + 电费 + 维护时间）的总和，哪个大</strong>。</p>
+<h2 id="otis-是什么先对齐讨论对象">Otis 是什么？先对齐讨论对象
+</h2><p>写账本之前先说清楚我查到的 Otis 事实（来源：Hacker News 帖 49696084 + Reddit r/LocalLLM 开发者原帖，2026-09 前后发布）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>事实</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>定位</td>
+					<td>极简本地 + 托管开源模型 Agent，隐私优先设计</td>
+			</tr>
+			<tr>
+					<td>安装行为</td>
+					<td>按本机硬件推荐模型，自动下载，默认走 llama.cpp 推理</td>
+			</tr>
+			<tr>
+					<td>兼容运行时</td>
+					<td>Ollama、LM Studio、Nvidia PAIR</td>
+			</tr>
+			<tr>
+					<td>作者自述门槛</td>
+					<td>本地模型建议 24GB+ 内存（RAM/显存）体验才舒服</td>
+			</tr>
+			<tr>
+					<td>模型建议</td>
+					<td>24GB 档配 Qwen 系 27B 左右；轻任务可降级 Gemma 系</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我特别在意&quot;自动推荐 + 自动下载&quot;这一点：它解决的是本地部署里最劝退的环节——<strong>你根本不知道该装哪个模型</strong>。但注意，它解决的是启动门槛，不解决成本问题。你点完安装，电表就开始走了。</p>
+<h2 id="人民币成本账三条路线的完整口径">人民币成本账：三条路线的完整口径
+</h2><p>以下数字基于 2026 年中的公开成本分析（SitePoint 2026 TCO 报告、vensas.de 自托管成本测算、Groq/DeepInfra 托管价），汇率按 1 USD ≈ 7.2 元、1 EUR ≈ 7.8 元，国内民用电按 0.5 元/kWh 口径。</p>
+<h3 id="路线一个人消费级本地rtx-4090-档">路线一：个人消费级本地（RTX 4090 档）
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>成本项</th>
+					<th>月成本（约）</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>硬件摊销</td>
+					<td>¥550</td>
+					<td>整机 ¥3.3 万档（4090 + 平台），按 24-36 个月摊</td>
+			</tr>
+			<tr>
+					<td>电费</td>
+					<td>¥80-150</td>
+					<td>1.5kW × 7×24 小时 × 0.5 元/kWh 量级，视利用率</td>
+			</tr>
+			<tr>
+					<td>模型管理/维护</td>
+					<td>¥50-100</td>
+					<td>拉新模型、测兼容性、修问题的时间折算</td>
+			</tr>
+			<tr>
+					<td><strong>月合计</strong></td>
+					<td><strong>≈ ¥749</strong></td>
+					<td>即&quot;约 100 美元/月&quot;的中国口径</td>
+			</tr>
+			<tr>
+					<td><strong>三年合计</strong></td>
+					<td><strong>≈ ¥2.2 万</strong></td>
+					<td>未计时间成本</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>关键：<strong>这套跑 7B-14B 量化模型完全够用，27B 就要看脸（内存带宽）</strong>。Otis 作者那句&quot;24GB+ 才舒服&quot;翻译过来就是：16GB 的 4090 能跑，但上下文一长就喘。</p>
+<h3 id="路线二云端-api按-token-付">路线二：云端 API（按 token 付）
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>档位</th>
+					<th>价格（人民币口径）</th>
+					<th>三年 300 万 token/天的成本（约）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>旗舰 API（OpenAI/Anthropic 混用）</td>
+					<td>¥2.5-6/百万 token</td>
+					<td>¥270 万-650 万</td>
+			</tr>
+			<tr>
+					<td>开源托管 API（DeepInfra/Groq/Together）</td>
+					<td><strong>¥0.65-0.79/百万 token</strong></td>
+					<td>¥70 万-87 万</td>
+			</tr>
+			<tr>
+					<td>国产主力 API（DeepSeek 系走量）</td>
+					<td>¥0.1-0.3/百万 token</td>
+					<td>¥11 万-33 万</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>旗舰档我单列只为说明：<strong>只有高价值任务才值得花钱用旗舰</strong>，日常 Agent 跑量用中间档或国产走量档。</p>
+<h3 id="路线三企业级自托管2a100-档供对照">路线三：企业级自托管（2×A100 档，供对照）
+</h3><p>月成本约 <strong>¥8700</strong>（硬件摊销 ¥4000 + 电力制冷 ¥1800 + 运维 ¥1500 + 场地杂项 ¥4000 量级），三年约 <strong>¥31 万</strong>。它的盈亏平衡点在<strong>日均 1500-2000 万 token</strong>，这是稳定高 GPU 利用率才能达到的区间，个人和小团队基本碰不到。</p>
+<h2 id="盈亏平衡点到底在哪">盈亏平衡点到底在哪？
+</h2><p>把三条线放一起算，结论很硬：</p>
+<ul>
+<li><strong>个人 4090 本地 vs 旗舰 API</strong>：日均 200-300 万 token 之上，本地才开始便宜。绝大多数个人开发者日均 token 量在这个数字的 1/10 以下，<strong>本地第一年几乎一定不划算</strong>。</li>
+<li><strong>本地 vs 开源托管 API</strong>：要推到日均 1500-2000 万 token 才打平。也就是说，<strong>托管开源 API 才是本地自托管之前的正确姿势</strong>——¥0.7/百万 token，你连电费都不用付，SLA 还有人管。</li>
+<li><strong>本地 vs 国产走量 API</strong>：这个比值最好看，国产 API 单价已经压到 ¥0.1-0.3/百万，本地部署的盈亏点被推到更高处。&ldquo;本地=省钱&quot;在国内电价 + 国产 API 双重挤压下，<strong>个人场景基本不成立</strong>。</li>
+</ul>
+<blockquote>
+<p>本地部署真正成立的场景就三类：数据不出网（合规/隐私硬需求）、日均量真的大过盈亏点、或者你就是想玩（那就不叫成本，叫爱好）。</p>
+</blockquote>
+<h2 id="隐藏成本清单你一定会漏的四笔">隐藏成本清单：你一定会漏的四笔
+</h2><p>对照上面所有测算，再乘一个系数——<strong>隐藏成本约吃掉硬件摊销的 20%-40%</strong>：</p>
+<ol>
+<li><strong>电费波动</strong>：模型跑满和待机差一个数量级，散热差的房间夏天电费翻倍</li>
+<li><strong>模型迭代税</strong>：开源模型 6-8 周一个版本，每个版本你要重新测、重新量化、重新配 Agent</li>
+<li><strong>宕机无 SLA</strong>：云端挂了有人赔，本地挂了你自己查显存温度</li>
+<li><strong>上下文成本</strong>：Agent 场景 token 量随工具调用暴涨，本地跑 Agent 的 token 消耗是聊天的 5-10 倍，盈亏点要按 Agent 实际量算</li>
+</ol>
+<h2 id="那-otis-这类工具还有什么价值">那 Otis 这类工具还有什么价值？
+</h2><p>诚实说：<strong>它不解决&quot;本地更贵&quot;这个事实，它解决的是&quot;本地更难启动&quot;这个事实</strong>。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>价值点</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>门槛压缩</td>
+					<td>从&quot;选模型+装运行时+调格式一周&quot;压到&quot;点安装&rdquo;</td>
+			</tr>
+			<tr>
+					<td>统一体验</td>
+					<td>本地/托管开源模型一个入口，切模型不用换 Agent</td>
+			</tr>
+			<tr>
+					<td>隐私硬需求</td>
+					<td>敏感数据不出网时，成本是溢价不是障碍</td>
+			</tr>
+			<tr>
+					<td>成本透明化</td>
+					<td>它推荐了模型，就该让你看到&quot;你选了 27B 还是 14B，电表会怎么走&quot;</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我的判断：Otis 的正确用户画像是<strong>有明确隐私需求、或者 token 量过盈亏点的团队</strong>，而不是&quot;想省 API 钱的个人&quot;。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 个人跑本地 Agent 到底每月花多少？</strong></p>
+<p>A: 4090 档约 ¥749/月（硬件摊销 + 电费 + 维护），36 个月约 ¥2.2 万。24GB 显存/内存以下体验会打折。</p>
+<p><strong>Q2: 本地 LLM 0 元/百万 token 是不是真省钱？</strong></p>
+<p>A: 不是。成本转移到硬件折旧和电费。个人日均 token 量低于 200-300 万时，本地第一年基本打不过云端 API。</p>
+<p><strong>Q3: 什么情况下本地部署才划算？</strong></p>
+<p>A: 三类：数据合规要求不出网；日均稳定过盈亏点（4090 档约 200-300 万 token/天）；自托管企业级（双 A100）要到 1500-2000 万 token/天。</p>
+<p><strong>Q4: 开源托管 API 是什么，和自托管什么关系？</strong></p>
+<p>A: DeepInfra/Groq/Together 这一档，约 ¥0.65-0.79/百万 token，免运维有 SLA。是&quot;上自托管之前&quot;的中间站，量没那么大就先用它。</p>
+<p><strong>Q5: Otis 和 LM Studio/Ollama 什么区别？</strong></p>
+<p>A: Ollama/LM Studio 是模型运行时，Otis 是 Agent 层——它按你的硬件推荐并下载模型，默认走 llama.cpp，也支持 Ollama/LM Studio/Nvidia PAIR。</p>
+<p><strong>Q6: 电费按什么口径算合理？</strong></p>
+<p>A: 国内 0.5 元/kWh（民用电 0.4-0.6 区间）。1.5kW 持续满载 7 小时/天约 ¥50/月；满载 24 小时约 ¥150/月。</p>
+<p><strong>Q7: 国产 API（如 DeepSeek 走量档）会不会让本地更没戏？</strong></p>
+<p>A: 会。¥0.1-0.3/百万 token 的单价把本地盈亏点又推高一截。本地部署的主张应从&quot;省钱&quot;改口为&quot;隐私 + 可控 + 断网可用&quot;。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/local-llm-hardware-tier-2k-40k-real-cost/" >本地大模型硬件分档实算：2k 到 4 万，钱都花在哪儿</a></li>
+<li><a class="link" href="/ai/hi-ai-agent-real-cost-latency/" >AI Agent 真实成本与延迟：跑一周的真实账单</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/otis/">Otis</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B/">本地大模型</a>
+        
+            <a href="/tags/llm-%E6%88%90%E6%9C%AC/">LLM 成本</a>
+        
+            <a href="/tags/self-hosted/">Self-Hosted</a>
+        
+            <a href="/tags/api-%E8%B4%B9%E7%94%A8/">API 费用</a>
+        
+            <a href="/tags/%E7%9B%88%E4%BA%8F%E5%B9%B3%E8%A1%A1/">盈亏平衡</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/local-llm-hardware-tier-2k-40k-real-cost/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightcrawler-mobile-ai-pentest-agent-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightrun-usb-uefi-boot-local-llm-no-os/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lm-studio-bionic-local-open-model-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LM Studio Bionic：本地大模型终于不只会聊天，它开始长出 Agent 的手脚</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/otis-local-agent-vs-cloud-api-rmb-cost-ledger\/'; 
+        const pageTitle = '云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 261 天 11 小时 · 121 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-19 19:19:32 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

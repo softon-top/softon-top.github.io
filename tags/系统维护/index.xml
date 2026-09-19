@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>系统维护 on softon.top</title>
+		<link>https://softon.top/tags/%E7%B3%BB%E7%BB%9F%E7%BB%B4%E6%8A%A4/</link>
+		<description>Recent content in 系统维护 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E7%B3%BB%E7%BB%9F%E7%BB%B4%E6%8A%A4/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Windows 装机别乱下工具了：tubatools 把硬件检测、装系统、清垃圾、跑分装进一个箱子</title>
+				<link>https://softon.top/software/tubatools-windows-hardware-diagnostic-toolbox/</link>
+				<pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/tubatools-windows-hardware-diagnostic-toolbox/</guid>
+				<description>&lt;p&gt;每次给家人装 Windows，或者帮朋友验二手主机，我都得挨个找 CPU-Z、AIDA64、FurMark、CrystalDiskMark、Ventoy、Dism++。找完一遍，下载页广告比软件还多，还容易误装个全家桶。图吧工具箱 WinUI3 版（tubatools）就是为了解决这件事：GPL-3.0 开源，用 WinUI 3 + .NET 10 重新做了个绿色便携版，把硬件检测、装机助手、网络诊断、垃圾清理、性能跑分 70 多个工具塞进一个箱子。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;tubatools 是图吧工具箱的 WinUI 3 重构版，GPL-3.0 开源，x64/x86/ARM64 全支持，Windows 10 1809+ 可用&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;70+ 工具分 9 类：处理器 9、显卡 11、显示器 3、内存 7、硬盘 20、烤鸡 2、综合检测 5、外设 7、其他 19，开箱即搜即用&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;v1.6.1 起 Lite 版内置 CPU-Z/GPU-Z/HWiNFO/FurMark 最小内核，首次启动快；完整 Tools.zip 才下全部 70 多个工具&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;跑分支持云同步、最多 6 份历史报告对比，雷达图/柱状图/表格三种视图，验二手主机时很好用&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;冷门但有用的点：防晕 3D 准星、硬件信息页自动检测 CPU/GPU 品牌换品牌壁纸、商店版可先下 Lite 再升级完整内核&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么你装机时总要下-10-个杂毛软件&#34;&gt;为什么你装机时总要下 10 个杂毛软件？&#xA;&lt;/h2&gt;&lt;p&gt;验机、装系统、清垃圾、看配置，每个动作背后都是一个独立软件。CPU 要看 CPU-Z，烤机要 FurMark，硬盘要 CrystalDiskMark，装系统要 Ventoy，清垃圾要 Dism++，跑分要 AIDA64。每个工具单独下，下载页里夹带捆绑的概率随广告位数量上升。你刚装完系统，桌面就多 3 个全家桶。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

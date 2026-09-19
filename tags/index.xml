@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 19 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>HomeLab</title>
+				<link>https://softon.top/tags/homelab/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/homelab/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>IOS</title>
+				<link>https://softon.top/tags/ios/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ios/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>NAS</title>
+				<link>https://softon.top/tags/nas/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/nas/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Wake-on-LAN</title>
+				<link>https://softon.top/tags/wake-on-lan/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/wake-on-lan/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>WakeMeUp</title>
+				<link>https://softon.top/tags/wakemeup/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/wakemeup/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>远程开机</title>
+				<link>https://softon.top/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E6%9C%BA/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E6%9C%BA/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Garage</title>
+				<link>https://softon.top/tags/garage/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/garage/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MinIO</title>
+				<link>https://softon.top/tags/minio/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/minio/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RustFS</title>
+				<link>https://softon.top/tags/rustfs/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/rustfs/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>S3</title>
+				<link>https://softon.top/tags/s3/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/s3/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>SeaweedFS</title>
+				<link>https://softon.top/tags/seaweedfs/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/seaweedfs/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Hosted</title>
+				<link>https://softon.top/tags/self-hosted/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/self-hosted/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>对象存储</title>
+				<link>https://softon.top/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI Agent</title>
+				<link>https://softon.top/tags/ai-agent/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Ai-Coding</title>
+				<link>https://softon.top/tags/ai-coding/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-coding/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Context-Engineering</title>
+				<link>https://softon.top/tags/context-engineering/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/context-engineering/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Openspec</title>
+				<link>https://softon.top/tags/openspec/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/openspec/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Spec-Driven-Development</title>
+				<link>https://softon.top/tags/spec-driven-development/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/spec-driven-development/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>API 费用</title>
+				<link>https://softon.top/tags/api-%E8%B4%B9%E7%94%A8/</link>
+				<pubDate>Wed, 16 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/api-%E8%B4%B9%E7%94%A8/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>LLM 成本</title>
+				<link>https://softon.top/tags/llm-%E6%88%90%E6%9C%AC/</link>
+				<pubDate>Wed, 16 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/llm-%E6%88%90%E6%9C%AC/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>
