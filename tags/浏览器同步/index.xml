@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>浏览器同步 on softon.top</title>
+		<link>https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%AD%A5/</link>
+		<description>Recent content in 浏览器同步 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 12 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%AD%A5/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>换电脑再也不用重装：Konode 把浏览器书签、标签页、扩展全搬进你自己的网盘</title>
+				<link>https://softon.top/software/konode-private-browser-sync-to-your-own-storage/</link>
+				<pubDate>Sat, 12 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/konode-private-browser-sync-to-your-own-storage/</guid>
+				<description>&lt;p&gt;换电脑第一件事：重新登录，把书签、插件、打开的标签页一样一样搬过去。Chrome 自带同步常年掉线，Floccus 只搬书签，xBrowserSync 依赖别人服务器。AI 时代书签本身都不重要了，&lt;strong&gt;已打开的标签页和浏览历史&lt;/strong&gt;才是你的工作现场。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Konode 是开源（MPL-2.0）浏览器扩展，同步书签 / 打开标签页 / 历史 / 扩展 4 类数据，直接写进你&lt;strong&gt;自己的存储&lt;/strong&gt;（WebDAV、Nextcloud、GitHub、Google Drive、pCloud、Koofr、Fastmail），无任何 Konode 账号&lt;/li&gt;&#xA;&lt;li&gt;支持可选端到端加密（AES-256-GCM）：加密开，存储商只能看乱码；加密关，存储商能读明文&lt;/li&gt;&#xA;&lt;li&gt;后端选 GitHub 时每次同步产生一个 commit，可人工 diff / 回滚——书签的&amp;quot;版本管理&amp;quot;&lt;/li&gt;&#xA;&lt;li&gt;不搬密码、不搬 Cookie；密码走 KeePass / Bitwarden，是 Konode 有意的设计取舍&lt;/li&gt;&#xA;&lt;li&gt;4 种冲突策略，推荐&amp;quot;最后一次写入为准&amp;quot;；1.3.0 版 Firefox 有 WebDAV bug，1.3.1 修复但未发布，可源码编译临时用&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么浏览器自带同步不顶用&#34;&gt;为什么浏览器自带同步不顶用？&#xA;&lt;/h2&gt;&lt;p&gt;Chrome 自带同步的逻辑是：所有数据进 Google 服务器，换设备登录 Google 账号拉回来。听着简单，实际三座坑：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;坑&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;实际表现&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;跨浏览器不通用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Edge 用微软账号同步，Chrome 用 Google，两套体系互相不通。同一公司电脑（Edge）与家用电脑（Chrome）之间搬不了&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;同步范围受限&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;打开的标签页只在&amp;quot;来自其他设备&amp;quot;里露个脸，历史同步受口令限制，扩展个性化配置基本不归它管&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;数据去向&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;全部落 Google / Mozilla 服务器。对自托管党、隐私敏感用户，这是直接否决理由&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;Floccus、xBrowserSync 这类第三方工具解决了&amp;quot;跨浏览器&amp;quot;，但只搬书签，而且依赖各自的同步服务器（国外服务器国内常连不上）。&lt;/p&gt;&#xA;&lt;p&gt;Konode 的思路反过来：&lt;strong&gt;没有 Konode 服务器，数据直接写进你指定的存储，自己端对端加密&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

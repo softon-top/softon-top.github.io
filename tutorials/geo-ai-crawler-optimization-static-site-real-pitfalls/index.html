@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="静态站想让 ChatGPT / Perplexity / Google AI Overviews 引用，GEO 改造不止加个 llms.txt。这篇是我 900+ 篇文章 Hugo 站真实改造全记录：CF 托管 robots.txt 覆盖自定义文件、AI 爬虫白名单配置、llms.txt 与 llms-full.txt 生成、6 类 Schema 落地、lastmod 决策。含真实踩坑：CF 托管没关导致改 2 天不生效、git 仓分叉误报定位、TOML 引号炸构建。附 2026 行业实测：AI 爬虫大多不抓 llms.txt，它不是排名因子。">
+<title>让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天">
+<meta property='og:description' content="静态站想让 ChatGPT / Perplexity / Google AI Overviews 引用，GEO 改造不止加个 llms.txt。这篇是我 900+ 篇文章 Hugo 站真实改造全记录：CF 托管 robots.txt 覆盖自定义文件、AI 爬虫白名单配置、llms.txt 与 llms-full.txt 生成、6 类 Schema 落地、lastmod 决策。含真实踩坑：CF 托管没关导致改 2 天不生效、git 仓分叉误报定位、TOML 引号炸构建。附 2026 行业实测：AI 爬虫大多不抓 llms.txt，它不是排名因子。">
+<meta property='og:url' content='https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='GEO' /><meta property='article:tag' content='llms.txt' /><meta property='article:tag' content='AI爬虫' /><meta property='article:tag' content='robots.txt' /><meta property='article:tag' content='Hugo' /><meta property='article:tag' content='Schema' /><meta property='article:tag' content='AI引用' /><meta property='article:published_time' content='2026-09-22T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-22T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天">
+<meta name="twitter:description" content="静态站想让 ChatGPT / Perplexity / Google AI Overviews 引用，GEO 改造不止加个 llms.txt。这篇是我 900+ 篇文章 Hugo 站真实改造全记录：CF 托管 robots.txt 覆盖自定义文件、AI 爬虫白名单配置、llms.txt 与 llms-full.txt 生成、6 类 Schema 落地、lastmod 决策。含真实踩坑：CF 托管没关导致改 2 天不生效、git 仓分叉误报定位、TOML 引号炸构建。附 2026 行业实测：AI 爬虫大多不抓 llms.txt，它不是排名因子。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天\"",
+  "description": "\"静态站想让 ChatGPT / Perplexity / Google AI Overviews 引用，GEO 改造不止加个 llms.txt。这篇是我 900+ 篇文章 Hugo 站真实改造全记录：CF 托管 robots.txt 覆盖自定义文件、AI 爬虫白名单配置、llms.txt 与 llms-full.txt 生成、6 类 Schema 落地、lastmod 决策。含真实踩坑：CF 托管没关导致改 2 天不生效、git 仓分叉误报定位、TOML 引号炸构建。附 2026 行业实测：AI 爬虫大多不抓 llms.txt，它不是排名因子。\"",
+  "url": "\"https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/\"",
+  "datePublished": "2026-09-22T00:00:00Z",
+  "dateModified": "2026-09-22T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/\""
+  },
+  "keywords": "\"GEO, llms.txt, AI爬虫, robots.txt, Hugo, Schema, AI引用\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天\"",
+      "item": "\"https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#geo-和-seo-到底差在哪">GEO 和 SEO 到底差在哪？</a></li>
+    <li><a href="#第一步ai-爬虫白名单cf-托管是个大坑">第一步：AI 爬虫白名单，CF 托管是个大坑</a></li>
+    <li><a href="#第二步llmstxt-和-llms-fulltxt走模板不手写">第二步：llms.txt 和 llms-full.txt，走模板不手写</a></li>
+    <li><a href="#第三步schema-结构化数据6-类一起上">第三步：Schema 结构化数据，6 类一起上</a></li>
+    <li><a href="#内容层为什么-h2-要用问句结论要进表格">内容层：为什么 H2 要用问句、结论要进表格</a></li>
+    <li><a href="#第四步lastmod-要不要开-enablegitinfo">第四步：lastmod 要不要开 enableGitInfo？</a></li>
+    <li><a href="#踩坑复盘定位那天的三个动作">踩坑复盘：定位那天的三个动作</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/">让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-22T00:00:00Z'>
+                    2026-09-22，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#geo-和-seo-到底差在哪">GEO 和 SEO 到底差在哪？</a></li>
+    <li><a href="#第一步ai-爬虫白名单cf-托管是个大坑">第一步：AI 爬虫白名单，CF 托管是个大坑</a></li>
+    <li><a href="#第二步llmstxt-和-llms-fulltxt走模板不手写">第二步：llms.txt 和 llms-full.txt，走模板不手写</a></li>
+    <li><a href="#第三步schema-结构化数据6-类一起上">第三步：Schema 结构化数据，6 类一起上</a></li>
+    <li><a href="#内容层为什么-h2-要用问句结论要进表格">内容层：为什么 H2 要用问句、结论要进表格</a></li>
+    <li><a href="#第四步lastmod-要不要开-enablegitinfo">第四步：lastmod 要不要开 enableGitInfo？</a></li>
+    <li><a href="#踩坑复盘定位那天的三个动作">踩坑复盘：定位那天的三个动作</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>2026 年，用户问&quot;推荐个 XX&quot;，第一反应越来越是问 ChatGPT / Perplexity，不是搜 Google。如果你的站没被 AI 引擎引用，等于在新入口里隐身。</p>
+<p>我这边 Hugo 站 900+ 篇文章，去年做了 GEO 改造，想让 AI 引擎抓得动、愿意引。过程踩了 3 个坑，最要命那个 CF 托管 robots.txt 覆盖的问题，折腾一整天才定位。这篇把全链路复盘，给静态站友一份可复现的清单。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>GEO 不只是&quot;加个 llms.txt&quot;。真正决定 AI 引擎引不引用你的是：AI 爬虫白名单、结构化 Schema、内容可提取度。llms.txt 是辅助。</li>
+<li>Cloudflare 托管 robots.txt 会<strong>覆盖</strong>你 <code>static/robots.txt</code>，不先在 CF 后台关托管，改 2 天都不生效。</li>
+<li>2026 行业实测（500M+ LLM bot 流量样本）：AI 爬虫绝大多数<strong>不抓</strong> <code>/llms.txt</code>，直接爬 HTML。所以别指望它提排名。</li>
+<li>Hugo 静态站生成 <code>llms.txt</code> + <code>llms-full.txt</code> 走模板，不手工维护，一次配好长期受益。</li>
+<li>旧文不改 lastmod（<code>enableGitInfo</code> 不开），改某篇时单独手写 <code>lastmod</code>，比开全局自动改更干净。</li>
+</ul>
+</blockquote>
+<h2 id="geo-和-seo-到底差在哪">GEO 和 SEO 到底差在哪？
+</h2><p>传统 SEO 目标：Google 排名靠前，用户点蓝链进你站。</p>
+<p>GEO（Generative Engine Optimization）目标：让 LLM 在回答用户问题时<strong>引用你、摘你、转述你</strong>。用户不一定进你站，但你的内容进了 AI 答案。</p>
+<p>机制差异很关键：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>传统 SEO</th>
+					<th>GEO</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>抓取方</td>
+					<td>Googlebot 为主</td>
+					<td>GPTBot / ClaudeBot / PerplexityBot / OAI-SearchBot / Google-Extended 等</td>
+			</tr>
+			<tr>
+					<td>索引方式</td>
+					<td>传统倒排索引</td>
+					<td>RAG 检索 + 生成</td>
+			</tr>
+			<tr>
+					<td>内容消费</td>
+					<td>用户读整页</td>
+					<td>LLM 抽段落进上下文</td>
+			</tr>
+			<tr>
+					<td>可见度信号</td>
+					<td>排名位</td>
+					<td>引用率 / 提及率 / 答案采纳</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>RAG 决定了一件事：<strong>LLM 提取信息靠结构化</strong>。散在段落的数字、结论、对比，它抓不到；表格、列表、明确 H2 问句、FAQ 区，它才能抽出来喂生成。这也是我改造时内容层跟着动的核心原因。</p>
+<h2 id="第一步ai-爬虫白名单cf-托管是个大坑">第一步：AI 爬虫白名单，CF 托管是个大坑
+</h2><p>GEO 前提：AI 爬虫能进你站。靠 <code>robots.txt</code> 显式 allow 这些 agent：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: GPTBot</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: OAI-SearchBot</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: ClaudeBot</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: PerplexityBot</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: Google-Extended</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: Applebot-Extended</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: Bytespider</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: Amazonbot</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">User-agent: meta-externalagent</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Allow: /</span>
+</span></span></code></pre></div><p>我踩的第一个坑在这。Hugo 站放 <code>static/robots.txt</code>，构建后推到 GitHub Pages，理论上生效。结果抓了 2 天，线上 <code>https://你的域名/robots.txt</code> 还是 Cloudflare 默认版本，不是我的。</p>
+<p><strong>定位过程</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 抓线上 robots.txt，看返回的是谁</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl -s https://softon.top/robots.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 发现是 CF 托管的默认 robots，不是 static/ 那个</span>
+</span></span></code></pre></div><p>原因：Cloudflare 后台开了托管 robots.txt 功能（CF 侧有&quot;托管 robots.txt&quot;配置项），它会<strong>优先返回 CF 那份，覆盖你站点静态文件</strong>。我在 Hugo 侧怎么改都没用，因为 CF 在 CDN 层先拦截了。</p>
+<p>解法：<strong>先去 Cloudflare 后台把托管 robots.txt 关掉</strong>，然后改 <code>static/robots.txt</code> 才真正生效。</p>
+<p>这一步的教训：CDN 层的配置会盖过源站文件。改静态站 robots 不生效，先查 CDN 有没有托管同类资源（robots、sitemap、404 页都可能被 CDN 劫持）。</p>
+<h2 id="第二步llmstxt-和-llms-fulltxt走模板不手写">第二步：llms.txt 和 llms-full.txt，走模板不手写
+</h2><p>llms.txt 是 Jeremy Howard 2024 提的拟议标准，给 LLM 一份&quot;站点内容目录&quot;。我做成两层：</p>
+<ul>
+<li><code>llms.txt</code>：站点结构索引（分类 + 说明）</li>
+<li><code>llms-full.txt</code>：全站文章列表（标题 + 摘要 + 日期 + 链接），39KB</li>
+</ul>
+<p>这两个<strong>不手工维护</strong>，走 Hugo 模板生成，不然 900 篇文章根本盯不过来。模板读 <code>Site.RegularPages</code>，按分类聚合成 Markdown 列表，构建时一次性吐出到 <code>public/</code>。</p>
+<p>一个反直觉的行业实测要摆出来（免得大家高估它）：</p>
+<blockquote>
+<p>2026 年 5 月，Limy 分析 5.15 亿次 LLM bot 流量事件：<strong>AI 爬虫几乎从不 fetch <code>/llms.txt</code></strong>。GPTBot、ClaudeBot、PerplexityBot、OAI-SearchBot、Google-Extended 绝大多数直接爬 HTML，跳过 llms.txt。</p>
+</blockquote>
+<p>也就是说，llms.txt 目前<strong>不是 GEO 排名因子</strong>。期望&quot;加了 llms.txt 就被 ChatGPT 更多引用&quot;会失望。但它仍是低成本的结构化信号，成本近乎 0，配上不亏。真正提可见度的是下面的 Schema 和内容结构。</p>
+<p><code>llms.txt</code> 必须<strong>直接放根路径返回 200</strong>，不能 301/302 重定向。PerplexityBot 在 <code>/llms.txt</code> 上不跟重定向，重定向 = 文件不存在。CDN 或子域场景用服务端 rewrite，别用客户端可见 redirect。</p>
+<h2 id="第三步schema-结构化数据6-类一起上">第三步：Schema 结构化数据，6 类一起上
+</h2><p>LLM 提取信息靠 Schema.org 标注。我在 <code>layouts/partials/head/custom.html</code> 加 6 类：</p>
+<ul>
+<li><code>Article</code>：正文</li>
+<li><code>BreadcrumbList</code>：面包屑</li>
+<li><code>WebPage</code>：页级</li>
+<li><code>Person</code>：作者（我）</li>
+<li><code>Organization</code>：站点/机构</li>
+<li><code>CollectionPage</code>：列表/分类页</li>
+</ul>
+<p>落地验证：首页 <code>ld+json</code> count = 1（只有 WebPage），抽一篇正文 <code>/software/...</code> ld+json count = 2（Article + BreadcrumbList + Organization + Person + WebPage）。用 curl 数 <code>application/ld+json</code> 出现次数就能快速校验。</p>
+<p>未来文章够多、FAQ 区够密后，再挂 <code>FAQPage</code> schema——那是长期项，不急。</p>
+<h2 id="内容层为什么-h2-要用问句结论要进表格">内容层：为什么 H2 要用问句、结论要进表格
+</h2><p>改造不止配置层，内容格式也得跟着 LLM 的提取方式调。我给新文章定的规则（已写进工作流）：</p>
+<ul>
+<li><strong>TL;DR 必带</strong>：AI 引用 80% 直接抄这段，3-5 条，每条能独立成立</li>
+<li><strong>H2 用问句 / 痛点句</strong>：&ldquo;为什么 X 慢&rdquo;，不写&quot;性能分析&quot;。AI 匹配用户问句靠 H2</li>
+<li><strong>对比 / 数据进表格或列表</strong>：散在段落里的数字 AI 抓不到</li>
+<li><strong>FAQ 区 5-7 个真实问答</strong>：每问 1-3 句答完，为未来 FAQPage schema 留结构</li>
+<li><strong>第一人称立场</strong>：&ldquo;我实测&quot;&ldquo;我踩过&rdquo;，AI 引擎爱引有立场的原创，不爱汇总</li>
+</ul>
+<p>这些不是玄学，是 RAG 检索的实际行为：它抽&quot;结论&quot;时优先读 TL;DR，抽&quot;为什么&quot;时优先读问句 H2，抽&quot;数据对比&quot;时优先读表格。</p>
+<h2 id="第四步lastmod-要不要开-enablegitinfo">第四步：lastmod 要不要开 enableGitInfo？
+</h2><p>一个纠结过很久的决策，给静态站友讲清楚：</p>
+<ul>
+<li>开 <code>enableGitInfo</code> + <code>frontmatter.lastmod</code>：Hugo 按 git commit 自动刷 lastmod</li>
+<li>问题：我 900+ 旧文基本不再改，lastmod 永远 = date，开了反而每次 build 都乱跳日期，生成无意义的&quot;最近修改&quot;信号</li>
+</ul>
+<p>结论：<strong>不开</strong>（方案 R）。旧文不改，lastmod 就是 date，天然对。未来哪天真改了某篇旧文，单独在那篇 TOML 手写 <code>lastmod = &quot;YYYY-MM-DD&quot;</code>，比开全局自动干净。</p>
+<h2 id="踩坑复盘定位那天的三个动作">踩坑复盘：定位那天的三个动作
+</h2><p>把当天最耗时的坑复盘成可复用 SOP：</p>
+<p><strong>坑 1：CF 托管 robots.txt 覆盖静态文件</strong>
+定位三连：① <code>curl</code> 线上 robots.txt 看返回体；② 对比 CF 后台有没有托管 robots；③ 关托管再改源文件。</p>
+<p><strong>坑 2：git 仓分叉误报</strong>
+我 Hugo 源站的 <code>origin</code> remote 以前错指到 Pages 仓，每次部署都报&quot;分叉&rdquo;。处理：<code>git remote remove origin</code>，<code>public/.git</code> 的 remote 保留（Pages 部署链路靠它）。以后部署不再误报。</p>
+<p><strong>坑 3：public/ 旧主题残留 + 900+ 文章未跟踪</strong>
+git 仓定格在建站初期（4 个古老 commit），900+ 文章、Stack 主题、新 config 全未跟踪，public/ 一堆旧主题残留。结论：部署链路根本不靠这个仓的 git，靠的是 <code>public/</code> 里那个仓 force push 到 Pages，所以<strong>不深入整理</strong>，链路完好就行。别在非关键链路上耗时间。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: llms.txt 真的能提升 ChatGPT 引用吗？</strong></p>
+<p>A: 目前不能。2026 实测 AI 爬虫大多不抓它，直接爬 HTML。它是低成本结构化信号，配上无害，但别当排名因子指望。</p>
+<p><strong>Q2: 我不用 Cloudflare，robots.txt 改了就生效吗？</strong></p>
+<p>A: 多数直连 / 其他 CDN 改了就生效。但要确认 CDN 没托管同类文件。最稳的验证：<code>curl 线上/robots.txt</code> 看返回体是不是你的版本。</p>
+<p><strong>Q3: llms.txt 放重定向行不行？</strong></p>
+<p>A: 不行。必须根路径直接 200。PerplexityBot 不跟 /llms.txt 的重定向，重定向等于文件缺失。CDN 子域用服务端 rewrite。</p>
+<p><strong>Q4: Hugo 站怎么自动生成 llms-full.txt？</strong></p>
+<p>A: 写个模板遍历 <code>Site.RegularPages</code>，按分类聚合输出&quot;标题 + 摘要 + 日期 + 链接&quot;到 <code>public/llms-full.txt</code>，构建时吐出。不手工维护。</p>
+<p><strong>Q5: enableGitInfo 开了 lastmod 乱跳怎么办？</strong></p>
+<p>A: 别开。旧文不改的话 lastmod = date 本来就对。真改了某篇，单独在那篇 TOML 手写 <code>lastmod</code>。</p>
+<p><strong>Q6: GEO 改造后多久能看到 AI 引用变化？</strong></p>
+<p>A: 没有确定周期。爬虫抓取 + 生成模型都滞后。别盯短期引用率，把它当长期基础设施，配置一次长期受益，别当排名速效药。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/hugo-github-pages-cloudflare%e5%85%8d%e8%b4%b9%e5%9b%be%e5%ba%8a-%e4%b8%aa%e4%ba%ba%e4%bd%8e%e6%88%90%e6%9c%ac%e5%bb%ba%e7%ab%99%e4%bf%9d%e5%a7%86%e7%ba%a7%e6%95%99%e7%a8%8b/" >Hugo + GitHub Pages + Cloudflare 免费图床：个人低成本建站保姆级教程</a></li>
+<li><a class="link" href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/" >AI Agent 沙箱选型：Docker vs gVisor vs microVM，安全边界怎么画</a></li>
+<li><a class="link" href="/software/minio-cut-open-source-community-docker-image/" >MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/geo/">GEO</a>
+        
+            <a href="/tags/llms.txt/">Llms.txt</a>
+        
+            <a href="/tags/ai%E7%88%AC%E8%99%AB/">AI爬虫</a>
+        
+            <a href="/tags/robots.txt/">Robots.txt</a>
+        
+            <a href="/tags/hugo/">Hugo</a>
+        
+            <a href="/tags/schema/">Schema</a>
+        
+            <a href="/tags/ai%E5%BC%95%E7%94%A8/">AI引用</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/geo-ai-crawler-optimization-static-site-real-pitfalls\/'; 
+        const pageTitle = '让 ChatGPT \/ Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 267 天 14 小时 · 125 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-25 22:27:09 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

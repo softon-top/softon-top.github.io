@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 25 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>ClickHouse</title>
+				<link>https://softon.top/tags/clickhouse/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/clickhouse/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Dbmate</title>
+				<link>https://softon.top/tags/dbmate/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/dbmate/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>DevOps</title>
+				<link>https://softon.top/tags/devops/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/devops/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MySQL</title>
+				<link>https://softon.top/tags/mysql/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/mysql/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>PostgreSQL</title>
+				<link>https://softon.top/tags/postgresql/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/postgresql/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>SQLite</title>
+				<link>https://softon.top/tags/sqlite/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/sqlite/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>数据库迁移</title>
+				<link>https://softon.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Android</title>
+				<link>https://softon.top/tags/android/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/android/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>DroidVNC</title>
+				<link>https://softon.top/tags/droidvnc/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/droidvnc/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>HomeLab</title>
+				<link>https://softon.top/tags/homelab/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/homelab/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>NoVNC</title>
+				<link>https://softon.top/tags/novnc/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/novnc/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>VNC</title>
+				<link>https://softon.top/tags/vnc/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/vnc/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>远程桌面</title>
+				<link>https://softon.top/tags/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI引用</title>
+				<link>https://softon.top/tags/ai%E5%BC%95%E7%94%A8/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai%E5%BC%95%E7%94%A8/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI爬虫</title>
+				<link>https://softon.top/tags/ai%E7%88%AC%E8%99%AB/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai%E7%88%AC%E8%99%AB/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>GEO</title>
+				<link>https://softon.top/tags/geo/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/geo/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Hugo</title>
+				<link>https://softon.top/tags/hugo/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/hugo/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Llms.txt</title>
+				<link>https://softon.top/tags/llms.txt/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/llms.txt/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Robots.txt</title>
+				<link>https://softon.top/tags/robots.txt/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/robots.txt/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Schema</title>
+				<link>https://softon.top/tags/schema/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/schema/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

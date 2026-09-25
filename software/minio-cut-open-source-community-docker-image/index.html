@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="MinIO 2026 年 4 月 GitHub 仓库归档、社区版停止发布预编译二进制与 Docker 镜像，自建 S3 的根基被动了。实测 4 款替代方案：Garage（单机 50MB 内存、CRDT 多节点）、RustFS（MinIO 路径最像的 drop-in 替代）、SeaweedFS（大规模混合存储）、Ceph（企业级但三节点起步），给自建党一份迁移判断表。">
+<title>MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</title>
+
+<link rel='canonical' href='https://softon.top/software/minio-cut-open-source-community-docker-image/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍">
+<meta property='og:description' content="MinIO 2026 年 4 月 GitHub 仓库归档、社区版停止发布预编译二进制与 Docker 镜像，自建 S3 的根基被动了。实测 4 款替代方案：Garage（单机 50MB 内存、CRDT 多节点）、RustFS（MinIO 路径最像的 drop-in 替代）、SeaweedFS（大规模混合存储）、Ceph（企业级但三节点起步），给自建党一份迁移判断表。">
+<meta property='og:url' content='https://softon.top/software/minio-cut-open-source-community-docker-image/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='MinIO' /><meta property='article:tag' content='S3' /><meta property='article:tag' content='对象存储' /><meta property='article:tag' content='Garage' /><meta property='article:tag' content='RustFS' /><meta property='article:tag' content='SeaweedFS' /><meta property='article:tag' content='self-hosted' /><meta property='article:tag' content='HomeLab' /><meta property='article:published_time' content='2026-09-18T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-18T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍">
+<meta name="twitter:description" content="MinIO 2026 年 4 月 GitHub 仓库归档、社区版停止发布预编译二进制与 Docker 镜像，自建 S3 的根基被动了。实测 4 款替代方案：Garage（单机 50MB 内存、CRDT 多节点）、RustFS（MinIO 路径最像的 drop-in 替代）、SeaweedFS（大规模混合存储）、Ceph（企业级但三节点起步），给自建党一份迁移判断表。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍\"",
+  "description": "\"MinIO 2026 年 4 月 GitHub 仓库归档、社区版停止发布预编译二进制与 Docker 镜像，自建 S3 的根基被动了。实测 4 款替代方案：Garage（单机 50MB 内存、CRDT 多节点）、RustFS（MinIO 路径最像的 drop-in 替代）、SeaweedFS（大规模混合存储）、Ceph（企业级但三节点起步），给自建党一份迁移判断表。\"",
+  "url": "\"https://softon.top/software/minio-cut-open-source-community-docker-image/\"",
+  "datePublished": "2026-09-18T00:00:00Z",
+  "dateModified": "2026-09-18T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/minio-cut-open-source-community-docker-image/\""
+  },
+  "keywords": "\"MinIO, S3, 对象存储, Garage, RustFS, SeaweedFS, self-hosted, HomeLab\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍\"",
+      "item": "\"https://softon.top/software/minio-cut-open-source-community-docker-image/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#minio-到底砍了什么为什么是现在">MinIO 到底砍了什么，为什么是现在</a></li>
+    <li><a href="#自建-s3-真正要的是什么">自建 S3 真正要的是什么</a></li>
+    <li><a href="#4-个下家实测账本">4 个下家实测账本</a></li>
+    <li><a href="#我为什么最后选-garage">我为什么最后选 Garage</a></li>
+    <li><a href="#迁移要踩的几个坑">迁移要踩的几个坑</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                Ai-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/minio-cut-open-source-community-docker-image/">MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-18T00:00:00Z'>
+                    2026-09-18，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：8分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/minio-cut-open-source-community-docker-image/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#minio-到底砍了什么为什么是现在">MinIO 到底砍了什么，为什么是现在</a></li>
+    <li><a href="#自建-s3-真正要的是什么">自建 S3 真正要的是什么</a></li>
+    <li><a href="#4-个下家实测账本">4 个下家实测账本</a></li>
+    <li><a href="#我为什么最后选-garage">我为什么最后选 Garage</a></li>
+    <li><a href="#迁移要踩的几个坑">迁移要踩的几个坑</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>上周搭新环境，<code>docker pull minio/minio</code> 的时候卡住，回头一看——<code>minio/minio</code> 仓库 2026 年 4 月 25 日归档了，只读、不收 PR、不再出新镜像。十年前我在 VPS 上跑的第一套自建站图床备份就是 MinIO，当时觉得&quot;自建 S3 这块稳了&quot;。现在这块地基被人抽走了。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>MinIO 社区版已死：2026-04-25 GitHub 仓库归档，源码之外不再有预编译二进制和官方 Docker 镜像，安全补丁断供。</li>
+<li>官方只推自家 AIStor 商业版，自建党实际在选 4 个下家：Garage、RustFS、SeaweedFS、Ceph。</li>
+<li>我最推荐 <strong>Garage</strong>：单 binary、50MB 内存起、单机即打、CRDT 多节点，对&quot;家用 + 小团队&quot;甜度最高。</li>
+<li><strong>RustFS</strong> 最像 MinIO 的 drop-in，但还在 1.0.0-alpha，别进生产。</li>
+<li>旧部署能跑但无上游，任何 CVE/内核升级都得自己扛——这是真正该动手迁移的信号。</li>
+</ul>
+</blockquote>
+<h2 id="minio-到底砍了什么为什么是现在">MinIO 到底砍了什么，为什么是现在
+</h2><p>不是 2026 年 4 月那一刀的事，是一整条线，时间拉出来看就懂了：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>时间</th>
+					<th>发生了什么</th>
+					<th>影响</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>2021</td>
+					<td>开源协议 Apache 2.0 改成 AGPLv3</td>
+					<td>提供服务的一方须开源，商业公司开始绕开</td>
+			</tr>
+			<tr>
+					<td>2025-05</td>
+					<td>社区版删除控制台管理 UI</td>
+					<td>白嫖党少一块，企业版多一块</td>
+			</tr>
+			<tr>
+					<td>2025-10</td>
+					<td>停止向 Docker Hub 发布社区版镜像（<code>RELEASE.2025-10-15T17-29-55Z</code> 版本）</td>
+					<td>当天撞上一个严重 CVE 修复，开发者没法拉新镜像打补丁，社区炸锅</td>
+			</tr>
+			<tr>
+					<td>2025-12</td>
+					<td>联合创始人 Harshavardhana 在 README 宣布&quot;维护模式&quot;</td>
+					<td>官方明牌</td>
+			</tr>
+			<tr>
+					<td>2026-02 → 2026-04</td>
+					<td>仓库先归档、短暂解封、再次归档（4 月 25 日）</td>
+					<td>终局</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>我的判断：这不是 MinIO 一家变坏，是&quot;公司做出好软件 → 免费分发做不起盈利 → 对核心用户开刀&quot;的又一轮。GitHub Discussion 里有句话说得狠：&ldquo;It&rsquo;s not a feature issue, it&rsquo;s a trust one.&rdquo; 信任塌了，技术再强也没人敢下注。</p>
+<h2 id="自建-s3-真正要的是什么">自建 S3 真正要的是什么
+</h2><p>先把需求摆出来，别被&quot;对象存储&quot;四个字糊过去：</p>
+<ul>
+<li><strong>S3 兼容 API</strong>：rclone、Restic、Kopia、Velero、Loki、MinIO 客户端、各种 <code>aws s3</code> 脚本能不能直接指过去，不改一行配置。</li>
+<li><strong>单机能跑</strong>：家用 NAS / HomeLab 场景下，别一上来就要 3 节点集群。</li>
+<li><strong>资源小</strong>：内存、CPU、启动速度，别拖垮家里那台旧机器。</li>
+<li><strong>有上游维护</strong>：CVE 有人修、内核升级后还能跑、Docker/K8s 有人跟。</li>
+<li><strong>免费且开源</strong>：这是整个自建叙事的底线，AIStor 一毛钱都不信。</li>
+</ul>
+<p>MinIO 当年赢就在这五条全占。现在它自己把&quot;免费且开源&quot;这条让掉了，剩下四条，谁最贴就选谁。</p>
+<h2 id="4-个下家实测账本">4 个下家实测账本
+</h2><p>我本地起了一套 250GB NVMe + 12C24G 的容器机，四款全装一遍，同一组脚本（rclone 备份 50GB 混合小文件 + 单次 5GB 大对象上传下载）跑，记录如下：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>许可证</th>
+					<th>资源占用（静默）</th>
+					<th>单机难度</th>
+					<th>多节点</th>
+					<th>S3 兼容度</th>
+					<th>我实测结论</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Garage</strong></td>
+					<td>AGPLv3</td>
+					<td>~50MB 内存 / 单 binary 20MB</td>
+					<td>★ 极简（一条命令）</td>
+					<td>★★ 中等</td>
+					<td>高</td>
+					<td>最推荐，家用甜度最高</td>
+			</tr>
+			<tr>
+					<td><strong>RustFS</strong></td>
+					<td>类 Apache</td>
+					<td>偏低</td>
+					<td>★★ 易</td>
+					<td>弱</td>
+					<td>高（MinIO drop-in）</td>
+					<td>还在 alpha，不进生产</td>
+			</tr>
+			<tr>
+					<td><strong>SeaweedFS</strong></td>
+					<td>Apache 2.0</td>
+					<td>中等</td>
+					<td>★★★ 偏难</td>
+					<td>★★★ 强</td>
+					<td>高</td>
+					<td>大文件 / 视频存储最稳</td>
+			</tr>
+			<tr>
+					<td><strong>Ceph</strong></td>
+					<td>LGPL</td>
+					<td>高</td>
+					<td>★★★★ 重</td>
+					<td>★★★★ 强</td>
+					<td>高</td>
+					<td>企业级，3 节点起步，家用别碰</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>Garage</strong> 实测最爽。一条 <code>docker run</code> 起单机，控制台能直接用；多节点走 CRDT，两台之间对账、没有中心节点——这对&quot;家里一台 + 异地一台&quot;的场景是天选。备份脚本我直接把 MinIO 的 endpoint 改成 Garage 的，rclone 一行没动。</p>
+<p><strong>RustFS</strong> 名字像 MinIO，路径也最像 MinIO（它就是在 MinIO 社区版基础上重写的）。但版本还挂在 <code>1.0.0-alpha.X</code>，README 自己写着&quot;未到生产等级&quot;。适合做开发环境顶替，上生产我直接跳过。</p>
+<p><strong>SeaweedFS</strong> 强项是大对象：4K 视频、数据集，吞吐拉满。但它一套服务（master、volume、fsm）起来偏重，小团队用觉得&quot;功能多到用不上&quot;。</p>
+<p><strong>Ceph</strong> 一句话：企业答案。三节点起步、底层存储规划、运维知识门槛高。HomeLab 用户碰它基本是给自己找罪受。</p>
+<h2 id="我为什么最后选-garage">我为什么最后选 Garage
+</h2><p>不是&quot;谁 S3 兼容度高谁就赢&quot;，是这几条同时满足：</p>
+<ul>
+<li>一条命令起，家用 5 分钟通；</li>
+<li>内存 50MB 级，旧机器扛得住；</li>
+<li>多节点 CRDT，异地容灾不用引中心；</li>
+<li>已有真实合作社、非营利组织跑了多年生产，不是玩具；</li>
+<li>迁移：旧 MinIO 桶 <code>rclone sync</code> 直接搬，API 不兼容的地方极少。</li>
+</ul>
+<p>如果你的场景是&quot;大规模视频 / 数据集存储&quot;，SeaweedFS 更合适；如果&quot;我就要 MinIO 的路径原封不动&quot;，RustFS 先顶一段等它出 1.0；如果是&quot;企业多节点 + 高可用 + 强合规&quot;，Ceph 还是正解。Garage 只是把&quot;90% 家用和中小自建&quot;这条最常见的需求切得最干净。</p>
+<h2 id="迁移要踩的几个坑">迁移要踩的几个坑
+</h2><p>别只换软件，这几个地方容易翻车：</p>
+<ul>
+<li><strong>控制台没了</strong>：MinIO 社区版 2025 年起砍了 UI，Garage 自带一个够用，但别把老习惯带过去。</li>
+<li><strong>密钥系统要重配</strong>：MinIO 用 <code>MINIO_ROOT_USER/PASSWORD</code>，Garage 是 token 对，迁移脚本里这两行别共用。</li>
+<li><strong>生命周期 / 版本化规则</strong>：S3 的 versioning 各家实现深度不一，Restic、Kopia 依赖的增量语义要先用目标端跑一遍再切。</li>
+<li><strong><code>minio-client</code> (mc) 命令</strong>：大部分能用，但 <code>mc admin</code> 子命令在 Garage 上会报错，别写进自动化脚本。</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 我现在的 MinIO 还能用吗，要不要马上迁？</strong></p>
+<p>能用，旧镜像和新部署都还在跑。但&quot;无上游&quot;意味着 CVE 没人修、内核升级后没人保证能跑。我一般给自己 3 个月观察期，期间新桶直接开在新栈上，旧的慢慢 <code>rclone sync</code> 搬完。</p>
+<p><strong>Q2: Garage 单节点可靠吗，挂一台数据就没了？</strong></p>
+<p>单节点是&quot;单点故障&quot;，数据只有一份。家用可以接受；要多节点容灾就上 Garage 的 CRDT 多节点，两台异地对账，掉一台不影响读。别拿单节点跑关键备份。</p>
+<p><strong>Q3: RustFS 什么时候能上生产？</strong></p>
+<p>以目前 <code>1.0.0-alpha</code> 进度看，至少再等 2-3 个版本。现在只当开发替身，别进备份链。</p>
+<p><strong>Q4: 我图床走的是 Cloudflare R2，受影响吗？</strong></p>
+<p>不受。R2 是 S3 兼容，不依赖 MinIO。受冲击的是&quot;自己搭 S3 给 R2 当底&quot;或者&quot;自建对象存储整套&quot;的那批人。</p>
+<p><strong>Q5: SeaweedFS 和 Ceph 能混用吗？</strong></p>
+<p>技术上能，但没必要。一个环境定一种，运维心智负担别叠加。</p>
+<p><strong>Q6: 有没有 MinIO 的社区分叉还在更新？</strong></p>
+<p>有，OpenMaxIO、pgsty/minio 都试图续命，但活跃度都撑不起生产。我实测过的 4 款里，Garage 是唯一有真实生产背书且资源占用的最平衡的。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/hugo-github-pages-cloudflare%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A-%E4%B8%AA%E4%BA%BA%E4%BD%8E%E6%88%90%E6%9C%AC%E5%BB%BA%E7%AB%99%E4%BF%9D%E5%A7%86%E7%BA%A7%E6%95%99%E7%A8%8B/" >Hugo + GitHub Pages + Cloudflare 免费图床：个人低成本建站保姆级教程</a></li>
+<li><a class="link" href="/software/ollama-cost-saving-real-test-2026/" >Ollama 成本实测：本地运行 LLM 每月省 1800 元 API 费用</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/minio/">MinIO</a>
+        
+            <a href="/tags/s3/">S3</a>
+        
+            <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/">对象存储</a>
+        
+            <a href="/tags/garage/">Garage</a>
+        
+            <a href="/tags/rustfs/">RustFS</a>
+        
+            <a href="/tags/seaweedfs/">SeaweedFS</a>
+        
+            <a href="/tags/self-hosted/">Self-Hosted</a>
+        
+            <a href="/tags/homelab/">HomeLab</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/tinyauth-homelab-auth-middleware/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">别再给每个自托管服务单独做登录了：tinyauth 为什么是 HomeLab 的小门卫</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/minio-cut-open-source-community-docker-image\/'; 
+        const pageTitle = 'MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 267 天 14 小时 · 125 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-09-25 22:27:09 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
