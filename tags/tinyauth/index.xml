@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tinyauth on softon.top</title>
+		<link>https://softon.top/tags/tinyauth/</link>
+		<description>Recent content in Tinyauth on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 20 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/tinyauth/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>别再给每个自托管服务单独做登录了：tinyauth 为什么是 HomeLab 的小门卫</title>
+				<link>https://softon.top/software/tinyauth-homelab-auth-middleware/</link>
+				<pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/tinyauth-homelab-auth-middleware/</guid>
+				<description>&lt;p&gt;家里那台 NAS、迷你主机、旧笔记本，最开始只是放个下载器、相册、仪表盘。等你回过神，里面已经长出一片小型互联网：&lt;code&gt;qBittorrent&lt;/code&gt;、&lt;code&gt;Jellyfin&lt;/code&gt;、&lt;code&gt;Uptime Kuma&lt;/code&gt;、&lt;code&gt;FileBrowser&lt;/code&gt;、&lt;code&gt;Grafana&lt;/code&gt;、各种内部后台，还有几个一看就像周末凌晨三点部署出来的半成品服务。&lt;/p&gt;&#xA;&lt;p&gt;问题也跟着来了：&lt;strong&gt;不是每个服务都认真做了登录。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;有的应用自带账号系统，但体验像上个时代的化石；有的默认只适合局域网裸奔；有的登录能用，但不支持 OAuth、不支持二次验证、不支持细粒度访问控制。你要是只在家里用，似乎还能忍。可一旦你想通过反向代理把它们挂到公网，给手机、家人、同事或自己的远程工作流用，事情就变味了。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;自托管最危险的瞬间，往往不是你不会部署，而是你觉得“这个小服务没人会扫到”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;&lt;code&gt;tinyauth&lt;/code&gt; 解决的正是这个夹缝问题：&lt;strong&gt;不改原应用代码，在反向代理前面加一层统一登录。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;它不是那种企业 IAM 巨兽，也不是要你花一下午研究术语的身份平台。它更像 HomeLab 门口的一个小门卫：服务本身继续做自己的事，外面的人想进来，先过它这一关。&lt;/p&gt;&#xA;&lt;h2 id=&#34;不是每个自托管服务都值得重写登录&#34;&gt;不是每个自托管服务都值得重写登录&#xA;&lt;/h2&gt;&lt;p&gt;很多人第一次给 HomeLab 加认证，会本能地想：既然某个服务没有登录，那我是不是应该给它加一个？&lt;/p&gt;&#xA;&lt;p&gt;这条路听上去工程正确，实际很快会变成泥潭。&lt;/p&gt;&#xA;&lt;p&gt;一个看似普通的登录功能，背后不是“用户名 + 密码框”这么简单。你要处理密码哈希、Cookie 安全、会话过期、暴力破解、HTTPS、反向代理头、OAuth 回调、用户注销、权限隔离。每个服务都手搓一遍，最后你得到的不是安全系统，而是一堆风格不同、强度不同、坑位不同的小锁。&lt;/p&gt;&#xA;&lt;p&gt;真正更稳的思路是：&lt;strong&gt;把认证从应用里抽出来，放到入口层。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;反向代理本来就是所有请求进入服务前的十字路口。Traefik、Caddy、Nginx Proxy Manager 这类工具负责根据域名、路径、证书把请求送到对应容器。认证中间件就站在这个路口上：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;用户访问 app.example.com&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;反向代理拦截请求&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;转给认证中间件判断是否登录&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;已登录：放行到真实应用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;未登录：跳转到登录页&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样做的好处很朴素：你不必强迫每个应用都长出完整账号系统。一个没有登录页的小工具，只要挂在代理后面，也能被统一保护。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;tinyauth&lt;/code&gt; 的定位正落在这里。它官方描述自己是一个轻量的认证与授权服务器，可以作为应用的 authentication middleware，也可以作为 standalone authentication server。它支持 OAuth、LDAP、访问控制，并能和 Traefik、Nginx、Caddy 这类常见代理配合。&lt;/p&gt;&#xA;&lt;p&gt;这句话翻译成人话就是：&lt;strong&gt;它不替代你的应用，它替你守门。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;tinyauth-的价值不在能登录在足够轻&#34;&gt;tinyauth 的价值，不在“能登录”，在“足够轻”&#xA;&lt;/h2&gt;&lt;p&gt;认证工具并不少。Authelia、Authentik、Keycloak 都很有名，也都很强。&lt;/p&gt;&#xA;&lt;p&gt;但强，有时候也是问题。&lt;/p&gt;&#xA;&lt;p&gt;Keycloak 是企业级身份平台，功能像一艘航母。Authentik 更现代，界面、流程、策略都完整。Authelia 在反向代理认证场景里也很成熟。它们适合复杂组织、复杂权限、复杂用户生命周期。&lt;/p&gt;&#xA;&lt;p&gt;可如果你的场景只是：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;给 &lt;code&gt;Uptime Kuma&lt;/code&gt; 加登录&lt;/li&gt;&#xA;&lt;li&gt;让家人访问相册前先 OAuth&lt;/li&gt;&#xA;&lt;li&gt;给某个内部管理页面套一层保护&lt;/li&gt;&#xA;&lt;li&gt;在 Nginx Proxy Manager 后面统一守住几个小服务&lt;/li&gt;&#xA;&lt;li&gt;不想为每个应用折腾账号体系&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;那上 Keycloak 就像为了锁自行车，先修了一座边检站。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

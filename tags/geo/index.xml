@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>GEO on softon.top</title>
+		<link>https://softon.top/tags/geo/</link>
+		<description>Recent content in GEO on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 22 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/geo/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>让 ChatGPT / Perplexity 引用你的站：静态站 GEO 改造全记录，CF 托管 robots 坑了我一整天</title>
+				<link>https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/</link>
+				<pubDate>Tue, 22 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/geo-ai-crawler-optimization-static-site-real-pitfalls/</guid>
+				<description>&lt;p&gt;2026 年，用户问&amp;quot;推荐个 XX&amp;quot;，第一反应越来越是问 ChatGPT / Perplexity，不是搜 Google。如果你的站没被 AI 引擎引用，等于在新入口里隐身。&lt;/p&gt;&#xA;&lt;p&gt;我这边 Hugo 站 900+ 篇文章，去年做了 GEO 改造，想让 AI 引擎抓得动、愿意引。过程踩了 3 个坑，最要命那个 CF 托管 robots.txt 覆盖的问题，折腾一整天才定位。这篇把全链路复盘，给静态站友一份可复现的清单。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;GEO 不只是&amp;quot;加个 llms.txt&amp;quot;。真正决定 AI 引擎引不引用你的是：AI 爬虫白名单、结构化 Schema、内容可提取度。llms.txt 是辅助。&lt;/li&gt;&#xA;&lt;li&gt;Cloudflare 托管 robots.txt 会&lt;strong&gt;覆盖&lt;/strong&gt;你 &lt;code&gt;static/robots.txt&lt;/code&gt;，不先在 CF 后台关托管，改 2 天都不生效。&lt;/li&gt;&#xA;&lt;li&gt;2026 行业实测（500M+ LLM bot 流量样本）：AI 爬虫绝大多数&lt;strong&gt;不抓&lt;/strong&gt; &lt;code&gt;/llms.txt&lt;/code&gt;，直接爬 HTML。所以别指望它提排名。&lt;/li&gt;&#xA;&lt;li&gt;Hugo 静态站生成 &lt;code&gt;llms.txt&lt;/code&gt; + &lt;code&gt;llms-full.txt&lt;/code&gt; 走模板，不手工维护，一次配好长期受益。&lt;/li&gt;&#xA;&lt;li&gt;旧文不改 lastmod（&lt;code&gt;enableGitInfo&lt;/code&gt; 不开），改某篇时单独手写 &lt;code&gt;lastmod&lt;/code&gt;，比开全局自动改更干净。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;geo-和-seo-到底差在哪&#34;&gt;GEO 和 SEO 到底差在哪？&#xA;&lt;/h2&gt;&lt;p&gt;传统 SEO 目标：Google 排名靠前，用户点蓝链进你站。&lt;/p&gt;&#xA;&lt;p&gt;GEO（Generative Engine Optimization）目标：让 LLM 在回答用户问题时&lt;strong&gt;引用你、摘你、转述你&lt;/strong&gt;。用户不一定进你站，但你的内容进了 AI 答案。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

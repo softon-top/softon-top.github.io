@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Tailscale 8 月开源的 Tailcat：复用 WireGuard/DERP 数据面、砍掉控制平面，不用账号不用 root，两台机器靠临时 token 直连。拆解 ephemeral key 生命周期、SSH allowlist 玩法，以及托管中继记日志、无 SLA 的坑。">
+<title>Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具</title>
+
+<link rel='canonical' href='https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具">
+<meta property='og:description' content="Tailscale 8 月开源的 Tailcat：复用 WireGuard/DERP 数据面、砍掉控制平面，不用账号不用 root，两台机器靠临时 token 直连。拆解 ephemeral key 生命周期、SSH allowlist 玩法，以及托管中继记日志、无 SLA 的坑。">
+<meta property='og:url' content='https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='tailscale' /><meta property='article:tag' content='tailcat' /><meta property='article:tag' content='wireguard' /><meta property='article:tag' content='derp' /><meta property='article:tag' content='内网穿透' /><meta property='article:tag' content='点对点' /><meta property='article:tag' content='开源工具' /><meta property='article:published_time' content='2026-10-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-03T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具">
+<meta name="twitter:description" content="Tailscale 8 月开源的 Tailcat：复用 WireGuard/DERP 数据面、砍掉控制平面，不用账号不用 root，两台机器靠临时 token 直连。拆解 ephemeral key 生命周期、SSH allowlist 玩法，以及托管中继记日志、无 SLA 的坑。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具\"",
+  "description": "\"Tailscale 8 月开源的 Tailcat：复用 WireGuard/DERP 数据面、砍掉控制平面，不用账号不用 root，两台机器靠临时 token 直连。拆解 ephemeral key 生命周期、SSH allowlist 玩法，以及托管中继记日志、无 SLA 的坑。\"",
+  "url": "\"https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/\"",
+  "datePublished": "2026-10-03T00:00:00Z",
+  "dateModified": "2026-10-03T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/\""
+  },
+  "keywords": "\"tailscale, tailcat, wireguard, derp, 内网穿透, 点对点, 开源工具\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具\"",
+      "item": "\"https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#tailcat-到底是什么把-tailscale-拆成两半只留数据面">Tailcat 到底是什么？——把 Tailscale 拆成两半，只留数据面</a></li>
+    <li><a href="#为什么没有控制平面反而成了卖点">为什么&quot;没有控制平面&quot;反而成了卖点？</a></li>
+    <li><a href="#实战从一条命令到-ssh-直连">实战：从一条命令到 SSH 直连</a></li>
+    <li><a href="#tailcat-vs-tailscale-vs-ngrok-vs-frp一张表说清选型">Tailcat vs Tailscale vs ngrok vs frp：一张表说清选型</a></li>
+    <li><a href="#ephemeral-key-的账本地址是怎么活过来的">ephemeral key 的账本：地址是怎么&quot;活&quot;过来的</a></li>
+    <li><a href="#这些坑上手前必须知道">这些坑，上手前必须知道</a></li>
+    <li><a href="#什么时候该用什么时候别用">什么时候该用，什么时候别用</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/tailscale-tailcat-ephemeral-direct-connection/">Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-03T00:00:00Z'>
+                    2026-10-03，星期六</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#tailcat-到底是什么把-tailscale-拆成两半只留数据面">Tailcat 到底是什么？——把 Tailscale 拆成两半，只留数据面</a></li>
+    <li><a href="#为什么没有控制平面反而成了卖点">为什么&quot;没有控制平面&quot;反而成了卖点？</a></li>
+    <li><a href="#实战从一条命令到-ssh-直连">实战：从一条命令到 SSH 直连</a></li>
+    <li><a href="#tailcat-vs-tailscale-vs-ngrok-vs-frp一张表说清选型">Tailcat vs Tailscale vs ngrok vs frp：一张表说清选型</a></li>
+    <li><a href="#ephemeral-key-的账本地址是怎么活过来的">ephemeral key 的账本：地址是怎么&quot;活&quot;过来的</a></li>
+    <li><a href="#这些坑上手前必须知道">这些坑，上手前必须知道</a></li>
+    <li><a href="#什么时候该用什么时候别用">什么时候该用，什么时候别用</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>临时连两台机器，怎么这么麻烦？</p>
+<p>想从笔记本 SSH 到机房那台机器，注册 Tailscale 账号、配 ACL、装客户端、等审批，一套流程走下来半小时没了。用 ngrok？本地服务直接暴露到公网，心里发毛。用 frp？得先有一台自己的公网服务器，维护成本摆在那。</p>
+<p>2026 年 8 月，Tailscale 在 TailscaleUp 大会上开源了 <strong>Tailcat</strong>——第三条路：<strong>像 netcat 一样，跑在 Tailscale 数据面上，但没有 Tailscale 的控制平面</strong>。没有账号、没有 IP 分配、没有 ACL、不需要 root，两台机器靠一个临时 token 就能建立 WireGuard 加密的点对点隧道。进程一退，连接即死，地址作废，像从没存在过。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Tailcat 是 Tailscale 2026 年 8 月开源的工具：netcat 式管道，跑在 Tailscale 数据面（WireGuard 加密 + DERP NAT 穿透）上，<strong>砍掉了整个控制平面</strong></li>
+<li>没有账号、没有 IP 分配、没有 ACL、不需要 root，纯 userspace，不改路由表和 DNS</li>
+<li>默认 ephemeral key：每次启动生成全新密钥，进程退出即失效，地址没人见过</li>
+<li>支持 stdin/stdout 管道、端口转发、免密 SSH 服务、SOCKS5 代理、exit node 模式</li>
+<li>托管 DERP 中继<strong>记 metadata 日志</strong>、限流、无 SLA、随时可能吊销——要隐私或吞吐就自己跑 derper</li>
+</ul>
+</blockquote>
+<h2 id="tailcat-到底是什么把-tailscale-拆成两半只留数据面">Tailcat 到底是什么？——把 Tailscale 拆成两半，只留数据面
+</h2><p>先建立一个认知框架。Tailscale 其实是两件事的合体：</p>
+<ul>
+<li><strong>控制面</strong>：账号体系、设备身份、ACL 策略、MagicDNS、审计日志。它决定&quot;谁能连谁&quot;。</li>
+<li><strong>数据面</strong>：<code>magicsock</code>、WireGuard 加密、DERP 中继。它负责&quot;连上之后怎么传数据&quot;——点对点 WireGuard 隧道，DERP 做 NAT 穿透的信令通道，穿透失败时兜底中继。</li>
+</ul>
+<p>Tailscale 把这两层都做成了产品。而 Tailcat 做的事情很极端：<strong>只留数据面，把控制面整个扔掉</strong>。</p>
+<p>官方原话是 &ldquo;a remix of Tailscale open source pieces to act like netcat, but over Tailscale&rsquo;s data plane, without Tailscale&rsquo;s control plane&rdquo;。连接所需的元数据（密钥、DERP 区域等）全部<strong>带外交换</strong>（out-of-band）——你把 token 发给对方，对方就能连。没有服务器在中间登记&quot;你是谁&quot;。</p>
+<p>打个比方：Tailscale 像物业登记的小区，每家每户有门牌号、有访客登记制度；Tailcat 像两个人之间的碰头暗号——对上暗号就能说上话，暗号作废就谁也不认识谁。</p>
+<h2 id="为什么没有控制平面反而成了卖点">为什么&quot;没有控制平面&quot;反而成了卖点？
+</h2><p>控制面不是免费的。它意味着注册、登录、SSO 对接、设备审批、策略配置——对&quot;长期组网&quot;来说是治理能力，对&quot;临时连一下&quot;来说就是纯负担。</p>
+<p>Tailcat 官方页面列了一张&quot;没有控制平面所以没有什么&quot;的清单，读起来反而很痛快：</p>
+<ul>
+<li>没有 IP 地址分配</li>
+<li>没有账号（没有登录、密码、SSO）</li>
+<li>没有用户、没有管理员</li>
+<li>没有管理控制、没有治理</li>
+</ul>
+<p>代价与收益是一体两面：<strong>安全边界从&quot;身份体系&quot;收缩到了&quot;token 本身&quot;</strong>。谁拿到地址，谁就能连。所以 Tailcat 把密钥生命周期做成了核心特性——这正是它叫&quot;即用即抛&quot;的原因。</p>
+<h2 id="实战从一条命令到-ssh-直连">实战：从一条命令到 SSH 直连
+</h2><p>上手第一步是理解密钥。Tailcat 的密钥分两种，搞懂它们的区别，这个工具就懂了一半：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 生成一对新密钥（默认 ephemeral：只在内存里，进程退出即失效）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tailcat genkey</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 列出本地已保存的密钥</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tailcat genkey --list</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 删除名为 default 的保存密钥</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tailcat genkey --delete --key</span><span style="color:#f92672">=</span><span style="color:#e6db74">default</span>
+</span></span></code></pre></div><p>几个关键行为：</p>
+<ul>
+<li><strong>ephemeral key 是默认</strong>。每次 <code>serve</code> 都生成一个没人见过的新地址，进程一死，地址随之作废。这就是&quot;临时内网直连&quot;的字面实现。</li>
+<li><strong>saved key 用 <code>genkey</code> 存盘</strong>，地址跨重启保持稳定。但注意：任何曾经收到过这个地址的人，都能重连你未来的服务——除非用 <code>--allow</code> 限定客户端。</li>
+<li><strong><code>default</code> 是魔法 key 名</strong>。一旦它存在，裸跑 <code>tailcat</code> 会静默使用它而不是生成 ephemeral key。想强制临时连接用 <code>--key=new</code>，想用别的保存密钥用 <code>--key=&lt;name&gt;</code>。</li>
+<li><strong>PSK 默认开启</strong>。WireGuard 预共享密钥提供后量子保护，也防止公共 DERP 运营方通过观察公钥推断拓扑。<code>--psk=false</code> 只为兼容 v0.5.0 及更早客户端，会去掉这层保护，别随便关。</li>
+</ul>
+<p>服务端起 SSH 服务时，文档给出的关键 flag 是 <code>--allow</code>（限定允许的客户端）和 <code>--ssh-authorized-keys</code>（指定授权公钥）。客户端侧的流程是：生成客户端身份密钥对，把公钥给服务端，之后客户端模式会自动使用保存的 <code>client-default</code> 密钥——<strong>其他人的握手会被静默忽略</strong>，他们连 SSH 服务存在都发现不了。</p>
+<p>更优雅的是 DNS 发布：把 tailcat 地址写成一条 TXT 记录，</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">my-server.example.com. 300 IN TXT &#34;tailcat</span><span style="color:#f92672">=</span><span style="color:#e6db74">tcXXXXXXXXX&#34;</span>
+</span></span></code></pre></div><p>客户端直接查 DNS 就能拿到地址，连&quot;怎么把 token 传过去&quot;都省了。</p>
+<h2 id="tailcat-vs-tailscale-vs-ngrok-vs-frp一张表说清选型">Tailcat vs Tailscale vs ngrok vs frp：一张表说清选型
+</h2><p>这四个工具经常被混着问，但它们的&quot;连接单元&quot;根本不同：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>本质</th>
+					<th>需要账号/服务器</th>
+					<th>连接生命周期</th>
+					<th>适用场景</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Tailscale</strong></td>
+					<td>mesh VPN（控制面 + 数据面）</td>
+					<td>需要账号</td>
+					<td>持久</td>
+					<td>长期设备组网、团队内网、审计治理</td>
+			</tr>
+			<tr>
+					<td><strong>Tailcat</strong></td>
+					<td>数据面直连管道</td>
+					<td>都不需要</td>
+					<td>临时，进程死即失效</td>
+					<td>临时 SSH、CI job、AI agent 临时接入</td>
+			</tr>
+			<tr>
+					<td><strong>ngrok</strong></td>
+					<td>公网隧道</td>
+					<td>需要账号</td>
+					<td>进程存活期</td>
+					<td>把本地服务暴露到公网</td>
+			</tr>
+			<tr>
+					<td><strong>frp</strong></td>
+					<td>自建反向隧道</td>
+					<td>需要自己的服务器</td>
+					<td>进程存活期</td>
+					<td>自建穿透、长期暴露内网服务</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>一句话版本：<strong>要治理用 Tailscale，要快速连接用 Tailcat，要暴露公网用 ngrok，要自建穿透用 frp。</strong></p>
+<h2 id="ephemeral-key-的账本地址是怎么活过来的">ephemeral key 的账本：地址是怎么&quot;活&quot;过来的
+</h2><p>这是 Tailcat 最值得玩味的设计。把密钥生命周期拆开看：</p>
+<ul>
+<li><strong>ephemeral（默认）</strong>：密钥只存在于内存，地址每次全新，进程退出 = 地址死亡。没有残留、没有历史、没有&quot;上次那个地址还能用&quot;的意外。适合 CI job、沙箱环境、一次性远程开发。</li>
+<li><strong>saved（<code>genkey</code> 存盘）</strong>：地址稳定，跨重启可用。适合&quot;这台机器我隔三差五要连&quot;的场景。但风险随之而来：地址一旦给出去，就永久有效，除非用 <code>--allow</code> 收窄入口。</li>
+<li><strong>PSK（默认开）</strong>：在 WireGuard 之上再加一层预共享密钥，抗后量子，也防 DERP 运营方做流量分析。</li>
+</ul>
+<p>我的建议：<strong>默认就让它临时</strong>。需要稳定地址时再 <code>genkey</code> 存盘，并且立刻配 <code>--allow</code>。别图省事把 saved key 当默认——那等于把&quot;临时内网&quot;用成了&quot;永久后门&quot;。</p>
+<h2 id="这些坑上手前必须知道">这些坑，上手前必须知道
+</h2><p>Tailcat 官方文档把丑话说得很直白，我替你划重点：</p>
+<ol>
+<li><strong>托管中继记 metadata 日志</strong>。官方明说 hosted relay service &ldquo;keeps metadata logs and isn&rsquo;t intended for privacy&rdquo;。数据面有 WireGuard 加密，但连接元数据（谁连了谁、什么时候）对中继运营方可见。</li>
+<li><strong>限流 + 无 SLA + 随时吊销</strong>。公共 DERP 中继是免费限流的，没有可用性承诺，&ldquo;may revoke access at any time, for any reason&rdquo;。</li>
+<li><strong>无 API/CLI 稳定性承诺</strong>。Go API、CLI flag、wire format 都可能变。写进自动化脚本里的命令，明天可能就不认了。</li>
+<li><strong>要隐私或吞吐，自己跑 derper</strong>。Tailscale 支持 Custom DERPs，自建中继才能同时解决日志和性能两个问题。</li>
+</ol>
+<h2 id="什么时候该用什么时候别用">什么时候该用，什么时候别用
+</h2><p><strong>用 Tailcat 的场景</strong>：临时远程开发、应急 SSH、文件传输、CI job 连内网依赖、游戏联机、沙箱环境、以及——官方特别提到——<strong>软件或 AI agent 需要临时访问某台机器而不加入你的网络</strong>。这个场景在 agent 时代只会越来越多。</p>
+<p><strong>别用 Tailcat 的场景</strong>：长期组网、多用户协作、需要审计和权限治理。这些是 Tailscale 的主场，Tailcat 故意不做。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: Tailcat 需要 Tailscale 账号吗？</strong></p>
+<p>A: 不需要。没有控制平面就没有账号体系，连接靠 token 带外交换，连 Tailscale 客户端都不用装。</p>
+<p><strong>Q2: 需要 root 权限吗？</strong></p>
+<p>A: 不需要。纯 userspace 实现，不改路由表、不改 DNS，普通用户就能跑。</p>
+<p><strong>Q3: ephemeral key 和 saved key 到底差在哪？</strong></p>
+<p>A: ephemeral 每次新生成、进程死即失效，零残留；saved 存盘、地址稳定，但任何拿到过地址的人都能重连，必须配 <code>--allow</code> 限制。</p>
+<p><strong>Q4: 托管中继安全吗？</strong></p>
+<p>A: 数据面是 WireGuard 加密的，但中继方记 metadata 日志，官方明说不适合隐私场景。要隐私就自建 derper。</p>
+<p><strong>Q5: Tailcat 能替代 Tailscale 吗？</strong></p>
+<p>A: 不能。它故意砍掉了身份、ACL、设备管理和持久访问。要治理用 Tailscale，要快速连接用 Tailcat。</p>
+<p><strong>Q6: 都能拿它干什么？</strong></p>
+<p>A: stdin/stdout 管道、端口转发、免密 SSH 服务、SOCKS5 代理、exit node 模式、自带 DERP 中继、DNS TXT 发布地址。CLI 和 Go 库两种用法都支持。</p>
+<p><strong>Q7: 稳定性如何，能上生产吗？</strong></p>
+<p>A: 官方明说无 API/CLI 稳定性承诺、wire format 可能变、公共中继无 SLA 且可吊销。关键生产路径请谨慎，或自建中继并锁定版本。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/droidvnc-ng-android-remote-desktop-browser-control/" >DroidVNC-NG：把安卓变成远程桌面与浏览器控制</a></li>
+<li><a class="link" href="/software/wake-me-up-wol-app-remote-power-on-nas/" >Wake Me Up：WOL 应用远程开机 NAS</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/tailscale/">Tailscale</a>
+        
+            <a href="/tags/tailcat/">Tailcat</a>
+        
+            <a href="/tags/wireguard/">Wireguard</a>
+        
+            <a href="/tags/derp/">Derp</a>
+        
+            <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">内网穿透</a>
+        
+            <a href="/tags/%E7%82%B9%E5%AF%B9%E7%82%B9/">点对点</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">开源工具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/tubatools-windows-hardware-diagnostic-toolbox/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 装机别乱下工具了：tubatools 把硬件检测、装系统、清垃圾、跑分装进一个箱子</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/wintoastrelay-windows-toast-notification-relay-phone/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/nightcrawler-mobile-ai-pentest-agent-real-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nightcrawler：手机上跑本地 AI 渗透 Agent，是真家伙还是极客玩具</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/scrapling-adaptive-python-web-scraping-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">网页一改版爬虫就死？Scrapling 想用自适应解析给爬虫续命</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/tinyauth-homelab-auth-middleware/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">别再给每个自托管服务单独做登录了：tinyauth 为什么是 HomeLab 的小门卫</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/tailscale-tailcat-ephemeral-direct-connection\/'; 
+        const pageTitle = 'Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 282 天 11 小时 · 133 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-10 19:27:57 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Spec-Driven-Development on softon.top</title>
+		<link>https://softon.top/tags/spec-driven-development/</link>
+		<description>Recent content in Spec-Driven-Development on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 17 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/spec-driven-development/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI 编程 agent 越写越歪？OpenSpec 把规格说明塞进代码库，让 agent 按图施工</title>
+				<link>https://softon.top/ai/openspec-ai-coding-spec-framework-agent/</link>
+				<pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/openspec-ai-coding-spec-framework-agent/</guid>
+				<description>&lt;p&gt;你让 AI 编程 agent 加个功能，它先改了三个无关文件，顺手重构了半条工具链，还自作主张加了个全局缓存——你说的是「加个暗色模式」，它交付的是「一场你没法 code review 的架构运动」。&lt;/p&gt;&#xA;&lt;p&gt;问题不在模型变笨。问题在&lt;strong&gt;你的需求只活在那条聊天记录里&lt;/strong&gt;：上下文一滚动，早期决策就蒸发了；agent 每次开工都是「断片」状态。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;OpenSpec 是 Fission-AI 的开源 SDD（spec-driven development）框架，GitHub 68.5k star，思路：&lt;strong&gt;agent 读 &lt;code&gt;openspec/changes/&lt;/code&gt; 下的 proposal + delta specs + design + tasks，再动代码&lt;/strong&gt;，规格进 Git 而不是进聊天记录。&lt;/li&gt;&#xA;&lt;li&gt;核心循环就三条：&lt;code&gt;/opsx:explore&lt;/code&gt; 摸代码定方案 → &lt;code&gt;/opsx:propose&lt;/code&gt; 生成规格文档 → &lt;code&gt;/opsx:apply&lt;/code&gt; 照单施工 → &lt;code&gt;/opsx:archive&lt;/code&gt; 归档。轻量、无 phase gate，比 GitHub Spec Kit 轻、比 Kiro 不绑 IDE。&lt;/li&gt;&#xA;&lt;li&gt;对&lt;strong&gt;老项目&lt;/strong&gt;最友好：它记的是 &lt;strong&gt;spec delta（这次改了什么）&lt;/strong&gt;，不强迫你先写全量规格——brownfield 场景比 greenfield 框架（Spec Kit/Superpowers）省一大截前置成本。&lt;/li&gt;&#xA;&lt;li&gt;个人项目就 30 分钟起步（&lt;code&gt;npm i -g&lt;/code&gt; + &lt;code&gt;openspec init&lt;/code&gt;）；团队场景用 beta 版 &lt;strong&gt;Stores&lt;/strong&gt;：规划单独开仓，&lt;code&gt;git push&lt;/code&gt; 共享给全组 agent，跨仓库功能一份计划。&lt;/li&gt;&#xA;&lt;li&gt;别指望它替代需求管理平台：OpenSpec 是&lt;strong&gt;规划层&lt;/strong&gt;，Jama 这类 system of record 还是得留着。ThoughtWorks 2026 年 4 月 Radar 已把它放进 Assess 圈。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么需求只活在聊天里会让-agent-越写越歪&#34;&gt;为什么「需求只活在聊天里」会让 agent 越写越歪？&#xA;&lt;/h2&gt;&lt;p&gt;先说痛点。AI 编程 agent 的能力早就不缺了，缺的是&lt;strong&gt;持久意图（durable intent）&lt;/strong&gt;：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

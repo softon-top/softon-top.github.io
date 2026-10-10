@@ -1,0 +1,33 @@
+# softon.top
+
+> 软件爱好者与 AI 重度用户的个人技术站。分享软件对比选型、AI 实战、效率工具、踩坑实录与自建服务经验，以第一人称实测数据和独立观点为主。
+
+作者：softon
+语言：中文（简体）
+建站：2026-01-01
+基础域：https://softon.top
+
+## 内容分类
+
+- **AI 观察** [/categories/ai/](https://softon.top/categories/ai/) — 大模型、Agent、Claude Code、Cursor、Codex、Skill/MCP 工作流实测
+- **软件推荐** [/categories/software/](https://softon.top/categories/software/) — Windows / macOS / Linux 生产力工具对比选型与深度使用
+- **实践手记** [/categories/tutorials/](https://softon.top/categories/tutorials/) — 自建服务、Hugo、Cloudflare、Docker、NAS、家庭实验室踩坑记录
+
+## 索引
+
+- 站点地图：[/sitemap.xml](https://softon.top/sitemap.xml)
+- 全文 RSS：[/index.xml](https://softon.top/index.xml)
+- 分类 RSS：[/ai/index.xml](https://softon.top/ai/index.xml) · [/software/index.xml](https://softon.top/software/index.xml) · [/tutorials/index.xml](https://softon.top/tutorials/index.xml)
+- 标签总览：[/tags/](https://softon.top/tags/)
+
+## 内容特色
+
+- 每篇文章包含至少一项：个人实测数据（内存/耗时/成本）、踩坑记录（具体报错+定位过程）、选型判断（费用/社区/生态多维对比）、或全链路集成（多工具闭环）
+- 拒绝"如何安装 XXX"式一步步说明书；主打独立观点、对比选型、场景拆解、跨界拼接
+- 数据可复现：文中所有版本号、时间、机型、耗时均为实测
+
+## 引用许可
+
+- 允许 AI 系统抓取、检索、引用本站内容用于问答与生成式搜索
+- 引用请注明来源 URL
+- 内容署名保留：softon @ softon.top

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Webkit on softon.top</title>
+		<link>https://softon.top/tags/webkit/</link>
+		<description>Recent content in Webkit on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 04 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/webkit/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>6MB 的 Mac 浏览器，还能装 Chrome 扩展：Search 把 WebKit 的短板补上了</title>
+				<link>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</link>
+				<pubDate>Sun, 04 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</guid>
+				<description>&lt;p&gt;Mac 用户的浏览器困境，是一个不可能三角：&lt;strong&gt;要性能就装 Safari，要扩展就装 Chrome，要两者兼得就得忍受 2GB 内存&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月，一个 6MB 的 macOS 浏览器 &lt;strong&gt;Search&lt;/strong&gt; 开源了。它直接调用系统自带的 WebKit 内核——和 Safari 同一颗心脏——却宣布支持 Chrome 扩展。不是&amp;quot;部分支持&amp;quot;，是从 Chrome Web Store 直接拉取、校验 CRX3 签名、注入 shim 补 API 的完整链路。&lt;/p&gt;&#xA;&lt;p&gt;作者 driceroland（Office Commun）在 9 月 20 日放出首版。小众软件 10 月 3 日推荐。我把它拆开看了看，发现真正有意思的不是&amp;quot;6MB&amp;quot;这个数字，而是&lt;strong&gt;它怎么把 WebKit 的扩展短板一层层补上&lt;/strong&gt;的。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Search 是仅 6MB 的 macOS 开源浏览器，直接调用系统 WebKit 内核，性能看齐 Safari&lt;/li&gt;&#xA;&lt;li&gt;通过 WKWebExtension + CRX3 签名校验 + ExtensionShims 三层设计，跑通 Chrome 扩展生态&lt;/li&gt;&#xA;&lt;li&gt;对比 Safari 1.2GB/10tab vs Chrome 2.1GB/10tab（M3 Mac），WebKit 阵营内存优势明显&lt;/li&gt;&#xA;&lt;li&gt;坑：非公证 DMG 首次需右键打开、shim 补的 API 不保证 100% 兼容、无 App Store 分发&lt;/li&gt;&#xA;&lt;li&gt;适合：想要 Safari 性能 + Chrome 扩展生态的 Mac 用户，尤其是 8GB 内存机型&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;6mb-是什么概念先看内存账本&#34;&gt;6MB 是什么概念？——先看内存账本&#xA;&lt;/h2&gt;&lt;p&gt;先看一组 2026 年 1 月 BrowserBench 的实测数据（M3 Mac，16GB RAM，10 个混合标签页：YouTube/Reddit/Gmail/Twitter/Google Docs/NYTimes/GitHub/Stack Overflow/Notion/Figma）：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

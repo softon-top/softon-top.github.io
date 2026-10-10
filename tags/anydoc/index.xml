@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AnyDoc on softon.top</title>
+		<link>https://softon.top/tags/anydoc/</link>
+		<description>Recent content in AnyDoc on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 24 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/anydoc/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AnyDoc 实测：14 种文档 4 毫秒转 Markdown，Firecrawl 这套开源方案凭什么把 MarkItDown 和 Pandoc 甩开一个数量级</title>
+				<link>https://softon.top/software/anydoc-firecrawl-open-source-document-to-markdown/</link>
+				<pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/anydoc-firecrawl-open-source-document-to-markdown/</guid>
+				<description>&lt;p&gt;搞 AI Agent 的都懂一个心照不宣的秘密：一旦用户开始上传本地文档，整套流水线的品味立刻塌方。&lt;/p&gt;&#xA;&lt;p&gt;一个二十年前的 &lt;code&gt;.doc&lt;/code&gt; 合同、一份 2009 年导出的 &lt;code&gt;.xls&lt;/code&gt;、一份路演 &lt;code&gt;.pptx&lt;/code&gt;、一本 &lt;code&gt;.epub&lt;/code&gt;，再夹一份扫描版 PDF。想让 LLM 认得，得先把它们统统翻译成 Markdown。可翻译这一步，从来没被谁真正搞定过。&lt;/p&gt;&#xA;&lt;h2 id=&#34;老方案的四种痛法&#34;&gt;老方案的四种痛法&#xA;&lt;/h2&gt;&lt;p&gt;先复盘一下过去这几年大家怎么凑合过日子。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;MarkItDown&lt;/strong&gt;：微软家的，Python 生态里最常见的一把小刀。docx 转得还行，pptx 勉强，xlsx 就开始飘，&lt;code&gt;.doc&lt;/code&gt; 直接不认。速度中等偏慢。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Pandoc&lt;/strong&gt;：万金油，写论文很香。缺点是格式覆盖偏窄——Excel 类完全不支持，PowerPoint 也不管，主要吃 docx / rtf / epub / odt。老技术栈，胜在稳。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Docling&lt;/strong&gt;：IBM 出品，方向对着深度学习跑，能处理复杂版式的 PDF。但依赖重、启动慢、单文档五百毫秒起步，喂到批量流水线里马上变瓶颈。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Unstructured&lt;/strong&gt;：野心大，什么格式都想吃一口，但吃得都不深。质量参差，输出经常带一堆冗余噪声。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;LibreOffice CLI&lt;/strong&gt;：无损，好像什么都支持。真跑起来一份文档要一秒多，纯写死的进程调用，别提做并发。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;mammoth&lt;/strong&gt;：docx 一枝独秀，其他都不管。&lt;/p&gt;&#xA;&lt;p&gt;结果就是每个团队的文档管道，最后都长成同一副样子：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;if pdf:      走 pdfplumber / pypdf → 图片页降级 OCR&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif docx:   走 mammoth 或 python-docx&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif xlsx:   走 openpyxl 硬解&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif pptx:   走 python-pptx 拼接&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif rtf:    ???&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif epub:   走 ebooklib 再自己遍历&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;else:        raise UnsupportedFormat&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;四五个库拼在一起，四五套依赖，四五种失败姿势，输出格式还各说各话——docx 出来的表格是一种样子，xlsx 出来的表格又是另一种。想给 LLM 一个统一的 Markdown 骨架？做梦。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

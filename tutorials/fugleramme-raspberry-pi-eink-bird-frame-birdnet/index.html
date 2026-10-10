@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="fugleramme 是一个开源树莓派项目：接上麦克风和墨水屏，它就能实时听鸟叫、用 BirdNET-Go 本地识别出鸟种，然后把结果画成 19 世纪古典风格的鸟插画挂在墙上。不用云、不用摄像头，纯本地推理。本文拆解它为什么选音频而非视觉、BirdNET 能识别什么、适合什么人搭，以及和传统摄像头识别的差异。">
+<title>别再把 AI 关在屏幕里：树莓派 &#43; 墨水屏，做一个会听鸟叫的智能相框</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="别再把 AI 关在屏幕里：树莓派 + 墨水屏，做一个会听鸟叫的智能相框">
+<meta property='og:description' content="fugleramme 是一个开源树莓派项目：接上麦克风和墨水屏，它就能实时听鸟叫、用 BirdNET-Go 本地识别出鸟种，然后把结果画成 19 世纪古典风格的鸟插画挂在墙上。不用云、不用摄像头，纯本地推理。本文拆解它为什么选音频而非视觉、BirdNET 能识别什么、适合什么人搭，以及和传统摄像头识别的差异。">
+<meta property='og:url' content='https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='树莓派' /><meta property='article:tag' content='墨水屏' /><meta property='article:tag' content='BirdNET' /><meta property='article:tag' content='DIY' /><meta property='article:tag' content='开源硬件' /><meta property='article:tag' content='边缘AI' /><meta property='article:published_time' content='2026-10-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="别再把 AI 关在屏幕里：树莓派 + 墨水屏，做一个会听鸟叫的智能相框">
+<meta name="twitter:description" content="fugleramme 是一个开源树莓派项目：接上麦克风和墨水屏，它就能实时听鸟叫、用 BirdNET-Go 本地识别出鸟种，然后把结果画成 19 世纪古典风格的鸟插画挂在墙上。不用云、不用摄像头，纯本地推理。本文拆解它为什么选音频而非视觉、BirdNET 能识别什么、适合什么人搭，以及和传统摄像头识别的差异。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"别再把 AI 关在屏幕里：树莓派 + 墨水屏，做一个会听鸟叫的智能相框\"",
+  "description": "\"fugleramme 是一个开源树莓派项目：接上麦克风和墨水屏，它就能实时听鸟叫、用 BirdNET-Go 本地识别出鸟种，然后把结果画成 19 世纪古典风格的鸟插画挂在墙上。不用云、不用摄像头，纯本地推理。本文拆解它为什么选音频而非视觉、BirdNET 能识别什么、适合什么人搭，以及和传统摄像头识别的差异。\"",
+  "url": "\"https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/\"",
+  "datePublished": "2026-10-01T00:00:00Z",
+  "dateModified": "2026-10-01T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/\""
+  },
+  "keywords": "\"树莓派, 墨水屏, BirdNET, DIY, 开源硬件, 边缘AI\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"别再把 AI 关在屏幕里：树莓派 + 墨水屏，做一个会听鸟叫的智能相框\"",
+      "item": "\"https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么用听而不是看">为什么用&quot;听&quot;而不是&quot;看&quot;？</a></li>
+    <li><a href="#birdnet-go-是什么为什么选它">BirdNET-Go 是什么？为什么选它</a></li>
+    <li><a href="#古典插画这一手把工具变成了摆件">古典插画这一手，把&quot;工具&quot;变成了&quot;摆件&quot;</a></li>
+    <li><a href="#搭建要什么门槛有多低">搭建要什么？门槛有多低</a></li>
+    <li><a href="#它适合谁--不适合谁">它适合谁 / 不适合谁</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/">别再把 AI 关在屏幕里：树莓派 &#43; 墨水屏，做一个会听鸟叫的智能相框</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-01T00:00:00Z'>
+                    2026-10-01，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：6分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么用听而不是看">为什么用&quot;听&quot;而不是&quot;看&quot;？</a></li>
+    <li><a href="#birdnet-go-是什么为什么选它">BirdNET-Go 是什么？为什么选它</a></li>
+    <li><a href="#古典插画这一手把工具变成了摆件">古典插画这一手，把&quot;工具&quot;变成了&quot;摆件&quot;</a></li>
+    <li><a href="#搭建要什么门槛有多低">搭建要什么？门槛有多低</a></li>
+    <li><a href="#它适合谁--不适合谁">它适合谁 / 不适合谁</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>家里挂了个相框，但它不拍照片——它<strong>听</strong>。</p>
+<p>鸟一叫，墨水屏就&quot;啪&quot;地刷出一张 19 世纪复古风格的鸟插画，标注这是蓝雀、那是画眉。没有摄像头，没有云端，不用装 App。它叫 <strong>fugleramme</strong>（荷兰语&quot;鸟笼&quot;的变体），一个基于树莓派的开源项目，最近上了 Hacker News。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>全本地：树莓派 + 麦克风 + 墨水屏 + BirdNET-Go 推理，不依赖摄像头、不联网、不上传音频。</li>
+<li>选<strong>音频识别</strong>而非视觉：鸟鸣比鸟影好认——树荫里、夜里、雾天，视觉识别直接瞎，音频照样工作。</li>
+<li>渲染成 19 世纪古典鸟插画挂在墙上，比&quot;识别结果 = 文字列表&quot;多一层审美价值。</li>
+<li>硬件门槛低：树莓派 4/5 + 一个 USB 麦克风 + 墨水屏模块，百元级配件。</li>
+<li>适合：喜欢鸟、想要&quot;活的墙饰&quot;的 DIY 党，以及想入门边缘 AI 的人。</li>
+</ul>
+</blockquote>
+<h2 id="为什么用听而不是看">为什么用&quot;听&quot;而不是&quot;看&quot;？
+</h2><p>这是整个项目最有意思的设计决策。</p>
+<p>用摄像头识别鸟类要解决一堆问题：光线（树荫/逆光/夜晚）、遮挡（枝叶挡住鸟）、鸟在画面里占比小、分辨率、目标检测模型……一套下来又重又脆弱。</p>
+<p><strong>音频识别绕过了所有这些。</strong></p>
+<p>鸟一开嗓子，声波就在空气里传播，不管你站多远、不管它躲在叶子后面。麦克风接上就能采。配合 BirdNET-Go 这种<strong>纯音频鸟鸣分类模型</strong>，树莓派本地推理完全跑得动。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>视觉识别（摄像头）</th>
+					<th>音频识别（fugleramme）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>光照依赖</td>
+					<td>强（暗光/逆光难）</td>
+					<td>无（声音不挑光）</td>
+			</tr>
+			<tr>
+					<td>遮挡</td>
+					<td>枝叶挡鸟直接失效</td>
+					<td>不影响（声波绕射）</td>
+			</tr>
+			<tr>
+					<td>夜间</td>
+					<td>基本没戏</td>
+					<td>照样识别</td>
+			</tr>
+			<tr>
+					<td>隐私</td>
+					<td>拍到人/房</td>
+					<td>只采声音，拍不到人</td>
+			</tr>
+			<tr>
+					<td>模型门槛</td>
+					<td>视觉模型重</td>
+					<td>BirdNET-Go 轻，边缘可跑</td>
+			</tr>
+			<tr>
+					<td>额外硬件</td>
+					<td>摄像头</td>
+					<td>USB 麦克风</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>所以 fugleramme 选音频不是&quot;偷懒&quot;，是<strong>这个场景音频天然更鲁棒</strong>。</p>
+<h2 id="birdnet-go-是什么为什么选它">BirdNET-Go 是什么？为什么选它
+</h2><p>BirdNET 是 Cornell Lab（康奈尔大学鸟类学实验室）开源的鸟鸣分类系统，背后是 <strong>BIRDNET 训练出的卷积神经网络</strong>，能基于声音识别出<strong>全球 11000+ 鸟类物种</strong>。</p>
+<p>fugleramme 用的是 <strong>BirdNET-Go</strong> 的 Go 语言实现，两个原因：</p>
+<ul>
+<li>单二进制、无 Python 依赖，树莓派部署干净</li>
+<li>推理快，树莓派 4（4GB）上实时跑完全够</li>
+</ul>
+<p>配合麦克风采集的 5 秒滑窗，识别结果直接推给渲染层。</p>
+<h2 id="古典插画这一手把工具变成了摆件">古典插画这一手，把&quot;工具&quot;变成了&quot;摆件&quot;
+</h2><p>识别结果做成&quot;文字列表 + 鸟名&quot;，那是工具；做成 <strong>19 世纪古典风格的鸟插画</strong>，那是艺术品。</p>
+<p>fugleramme 走的是后者：识别出鸟种后，渲染对应<strong>手雕铜版画风格</strong>的插画（1800s 风格的博物学插图），再显示到墨水屏上。墨水屏断电不刷新、护眼、像挂着的画，配古典插画，整个就是墙上一幅&quot;会动的鸟图鉴&quot;。</p>
+<p>这一层审美价值，是它和&quot;智能鸟屋&quot;这类纯工具型项目最大的差异——<strong>它是个摆件，不是你盯的数据面板</strong>。</p>
+<h2 id="搭建要什么门槛有多低">搭建要什么？门槛有多低
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>部件</th>
+					<th>用途</th>
+					<th>大致成本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>树莓派 4 / 5</td>
+					<td>推理 + 驱动</td>
+					<td>300-800 元</td>
+			</tr>
+			<tr>
+					<td>USB 麦克风</td>
+					<td>采音</td>
+					<td>50-200 元</td>
+			</tr>
+			<tr>
+					<td>墨水屏模块（SPI 驱动）</td>
+					<td>显示插画</td>
+					<td>100-300 元</td>
+			</tr>
+			<tr>
+					<td>3D 打印外壳 / 相框</td>
+					<td>挂墙</td>
+					<td>自制</td>
+			</tr>
+			<tr>
+					<td>SD 卡 / 电源</td>
+					<td>系统</td>
+					<td>杂项</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>软件侧：刷一个精简系统，跑 BirdNET-Go + fugleramme 的渲染服务，开机自启。具体型号、接线、镜像选择，直接看项目 GitHub 的 <code>README</code> 和 <code>hardware/</code> 目录（fugleramme 作者把硬件清单和接线图画得很细）。</p>
+<p><strong>入门者最该做的一步</strong>：先只跑 BirdNET-Go 命令行 + 一个 USB 麦，在终端里看识别结果，确认你的环境鸟鸣够、信噪比够，再上墨水屏渲染。分两步调，比一上来就全链路卡死在&quot;显示没反应&quot;好排得多。</p>
+<h2 id="它适合谁--不适合谁">它适合谁 / 不适合谁
+</h2><p><strong>适合：</strong></p>
+<ul>
+<li>喜欢观鸟、住郊区/院子/有阳台的 DIY 党</li>
+<li>想入门边缘 AI（树莓派 + 本地推理 + 硬件接线），又不想啃大模型</li>
+<li>想要一个&quot;有生活感的科技摆件&quot;，而非效率工具</li>
+<li>在意隐私，不想把家里音频上传云</li>
+</ul>
+<p><strong>不适合：</strong></p>
+<ul>
+<li>想要&quot;实时监控 + 报警&quot;——它不报警，就静静换图</li>
+<li>城市高噪环境（鸟鸣被车流盖住）——信噪比拉胯，识别率掉</li>
+<li>不想动手焊线 / 调硬件的人——这个项目要接 USB 麦、接墨水屏 SPI，纯软件党会劝退</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 为什么不用大模型 / GPT-4o 听声音？</strong></p>
+<p>A: 两个原因：① 边缘设备（树莓派）跑不了大模型，BirdNET-Go 是专为音频分类轻量化的；② 隐私——不想把&quot;家门口鸟鸣&quot;传到 OpenAI。全本地是 fugleramme 的设计底线。</p>
+<p><strong>Q2: 能识别中国本土鸟吗？</strong></p>
+<p>A: 取决于你训练 / 加载的 BirdNET 数据集。默认模型偏欧美常见种，国内鸟种要多跑一些本地样本、或直接换用面向东亚的训练集。这是数据问题，不是模型能力问题。</p>
+<p><strong>Q3: 墨水屏选什么规格？</strong></p>
+<p>A: 作者方案里用的是彩色墨水屏（4 寸级别），能渲染古典插画色彩。黑白墨水屏能跑但插画效果打折。具体型号看项目 <code>hardware/</code> 目录，别照抄别的教程的型号，fugleramme 用的 SPI 驱动是特定的。</p>
+<p><strong>Q4: 夜里没鸟叫会一直显示同一张图吗？</strong></p>
+<p>A: 会。它有静默期的显示策略——没识别到鸟时保持当前画面或回退到默认插画。具体逻辑看项目 <code>config</code>。</p>
+<p><strong>Q5: 能扩展成&quot;识别后推送到手机&quot;吗？</strong></p>
+<p>A: 理论上可以。BirdNET-Go 识别结果可以接 HTTP webhook 推到你自己的小服务。但项目本体定位是&quot;墙上的摆件&quot;，移动端推送不在它的主线里，要扩展得自己写。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/micro-radar-esp32-desktop-flight-radar/" >ESP32 桌面小雷达：MicroRadar 用雷达波做桌面上的飞行物轨迹</a></li>
+<li><a class="link" href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/" >AI Agent 沙箱选型：Docker vs gVisor vs microVM，安全边界怎么画</a></li>
+<li><a class="link" href="/tutorials/pve-install-windows11-ltsc-practical-guide/" >PVE 安装 Windows 11 LTSC 实操指南（新手避坑 + 驱动安装）</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
+        
+            <a href="/tags/%E5%A2%A8%E6%B0%B4%E5%B1%8F/">墨水屏</a>
+        
+            <a href="/tags/birdnet/">BirdNET</a>
+        
+            <a href="/tags/diy/">DIY</a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E7%A1%AC%E4%BB%B6/">开源硬件</a>
+        
+            <a href="/tags/%E8%BE%B9%E7%BC%98ai/">边缘AI</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/micro-radar-esp32-desktop-flight-radar/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">micro-radar：把航班雷达缩到桌面上，ESP32 小屏幕为什么让人上头？</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/fugleramme-raspberry-pi-eink-bird-frame-birdnet\/'; 
+        const pageTitle = '别再把 AI 关在屏幕里：树莓派 \u002b 墨水屏，做一个会听鸟叫的智能相框';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 282 天 11 小时 · 133 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-10 19:27:57 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

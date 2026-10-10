@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI API on softon.top</title>
+		<link>https://softon.top/tags/ai-api/</link>
+		<description>Recent content in AI API on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 09 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai-api/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI API 中转站产业链拆解：4 种隐藏套路与自建替代方案</title>
+				<link>https://softon.top/ai/ai-api-relay-station-risks-and-alternatives/</link>
+				<pubDate>Fri, 09 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-api-relay-station-risks-and-alternatives/</guid>
+				<description>&lt;p&gt;你在用 Cursor 或 Claude Code 写代码时，有没有想过把 &lt;code&gt;base_url&lt;/code&gt; 换成一个中转站地址？&lt;/p&gt;&#xA;&lt;p&gt;国内开发者调用 OpenAI、Anthropic、Google 的 API，面临两个硬门槛：&lt;strong&gt;网络不通&lt;/strong&gt;和&lt;strong&gt;支付受限&lt;/strong&gt;。中转站就是夹在中间的第三方服务——你给它人民币，它帮你转发请求到海外官方 API，再把结果回传给你。&lt;/p&gt;&#xA;&lt;p&gt;听起来很美好。但这个行业的水，比你想象的要深得多。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;中转站产业链分四层：卡商→号池→中转站→用户，每层都在赚差价&lt;/li&gt;&#xA;&lt;li&gt;4 种常见套路：Token 暗税（虚报用量）、模型掉包（偷梁换柱）、缓存套利、数据收割&lt;/li&gt;&#xA;&lt;li&gt;17 家头部中转站中 15 家是个人运营，无企业注册、无 ICP 备案&lt;/li&gt;&#xA;&lt;li&gt;自建替代方案成熟：One API、Sub2API、LiteLLM 均可 Docker 一键部署&lt;/li&gt;&#xA;&lt;li&gt;有条件尽量用官方 API；实在要用中转站，选有企业资质的大平台&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;中转站是怎么运作的&#34;&gt;中转站是怎么运作的？&#xA;&lt;/h2&gt;&lt;p&gt;中转站的供应链可以拆成四层：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;层级&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;角色&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;盈利方式&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;上游&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;卡商/号商&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;批量注册账号、倒卖虚拟信用卡&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;中游&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;号池&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;汇聚账号，批发 token 额度&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;下游&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;中转站&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;整合客户需求向上游压价，赚取差额&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;终端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;你&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;付人民币，换 API 调用额度&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;这个链条的核心问题在于&lt;strong&gt;信息不对称&lt;/strong&gt;。你不知道背后跑的是什么模型，不知道你的对话有没有被存档，不知道站长明天会不会消失。&lt;/p&gt;&#xA;&lt;p&gt;V2EX 上有个帖子说得很直白：&amp;ldquo;开中转站很容易，一个 docker compose 就起了，难的是上游渠道和号池。&amp;ldquo;这意味着技术门槛不高，但渠道门槛极高——而渠道恰恰是黑活的重灾区。&lt;/p&gt;&#xA;&lt;h2 id=&#34;4-种你必须知道的隐藏套路&#34;&gt;4 种你必须知道的隐藏套路&#xA;&lt;/h2&gt;&lt;h3 id=&#34;套路一token-暗税滑块&#34;&gt;套路一：Token 暗税滑块&#xA;&lt;/h3&gt;&lt;p&gt;你在代码里看到 &lt;code&gt;usage.prompt_tokens: 150&lt;/code&gt;，但实际模型只消耗了 100 token。中转站在账单上乘以一个倍率（1.0x 到 3.0x），虚报你的用量。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

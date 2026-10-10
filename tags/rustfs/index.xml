@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>RustFS on softon.top</title>
+		<link>https://softon.top/tags/rustfs/</link>
+		<description>Recent content in RustFS on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 18 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/rustfs/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</title>
+				<link>https://softon.top/software/minio-cut-open-source-community-docker-image/</link>
+				<pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/minio-cut-open-source-community-docker-image/</guid>
+				<description>&lt;p&gt;上周搭新环境，&lt;code&gt;docker pull minio/minio&lt;/code&gt; 的时候卡住，回头一看——&lt;code&gt;minio/minio&lt;/code&gt; 仓库 2026 年 4 月 25 日归档了，只读、不收 PR、不再出新镜像。十年前我在 VPS 上跑的第一套自建站图床备份就是 MinIO，当时觉得&amp;quot;自建 S3 这块稳了&amp;quot;。现在这块地基被人抽走了。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;MinIO 社区版已死：2026-04-25 GitHub 仓库归档，源码之外不再有预编译二进制和官方 Docker 镜像，安全补丁断供。&lt;/li&gt;&#xA;&lt;li&gt;官方只推自家 AIStor 商业版，自建党实际在选 4 个下家：Garage、RustFS、SeaweedFS、Ceph。&lt;/li&gt;&#xA;&lt;li&gt;我最推荐 &lt;strong&gt;Garage&lt;/strong&gt;：单 binary、50MB 内存起、单机即打、CRDT 多节点，对&amp;quot;家用 + 小团队&amp;quot;甜度最高。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;RustFS&lt;/strong&gt; 最像 MinIO 的 drop-in，但还在 1.0.0-alpha，别进生产。&lt;/li&gt;&#xA;&lt;li&gt;旧部署能跑但无上游，任何 CVE/内核升级都得自己扛——这是真正该动手迁移的信号。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;minio-到底砍了什么为什么是现在&#34;&gt;MinIO 到底砍了什么，为什么是现在&#xA;&lt;/h2&gt;&lt;p&gt;不是 2026 年 4 月那一刀的事，是一整条线，时间拉出来看就懂了：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;时间&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;发生了什么&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;影响&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2021&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;开源协议 Apache 2.0 改成 AGPLv3&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;提供服务的一方须开源，商业公司开始绕开&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2025-05&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;社区版删除控制台管理 UI&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;白嫖党少一块，企业版多一块&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2025-10&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;停止向 Docker Hub 发布社区版镜像（&lt;code&gt;RELEASE.2025-10-15T17-29-55Z&lt;/code&gt; 版本）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;当天撞上一个严重 CVE 修复，开发者没法拉新镜像打补丁，社区炸锅&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2025-12&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;联合创始人 Harshavardhana 在 README 宣布&amp;quot;维护模式&amp;quot;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;官方明牌&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;2026-02 → 2026-04&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;仓库先归档、短暂解封、再次归档（4 月 25 日）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;终局&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;我的判断：这不是 MinIO 一家变坏，是&amp;quot;公司做出好软件 → 免费分发做不起盈利 → 对核心用户开刀&amp;quot;的又一轮。GitHub Discussion 里有句话说得狠：&amp;ldquo;It&amp;rsquo;s not a feature issue, it&amp;rsquo;s a trust one.&amp;rdquo; 信任塌了，技术再强也没人敢下注。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

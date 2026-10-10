@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>PPT on softon.top</title>
+		<link>https://softon.top/tags/ppt/</link>
+		<description>Recent content in PPT on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 28 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ppt/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</title>
+				<link>https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/</link>
+				<pubDate>Fri, 28 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/</guid>
+				<description>&lt;h2 id=&#34;一个熟悉的场景ai-帮我做了-ppt但改不动&#34;&gt;一个熟悉的场景：AI 帮我做了 PPT，但改不动&#xA;&lt;/h2&gt;&lt;p&gt;上周汇报，我把 8000 字的调研文档喂给某在线 AI 生 PPT 工具，10 秒钟出了 15 页。视觉花哨，图表齐全，看起来能交差。&lt;/p&gt;&#xA;&lt;p&gt;真到自己修图、换字，噩梦开始了：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;页面是导出成图片的，一段小字都不能改，只能整页删掉重生成&lt;/li&gt;&#xA;&lt;li&gt;图表数据不能编辑，AI 编的数字跟原文对不上，只能自己截图外面画好再贴回去&lt;/li&gt;&#xA;&lt;li&gt;换主题？重新生成一次，之前改过的内容全丢&lt;/li&gt;&#xA;&lt;li&gt;想要 PPTX 版本？升级到年费 999 的会员才能导出，导出的还是一堆图片贴在 PPTX 里，一样改不动&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;那一晚我加班到两点，最后回到 Keynote 手搓。心里骂：&lt;strong&gt;AI 生 PPT 的产物如果不能改，就等于没生&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这周被同事塞了一个 GitHub 上 6.3k 星、评论区还挺乐观的 Skill：&lt;a class=&#34;link&#34; href=&#34;https://github.com/chuspeeism/dashi-ppt-skill&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;chuspeeism/dashi-ppt-skill&lt;/a&gt;。名字叫「大师 PPT」。看介绍很唬人：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;一个真正适合职场人的 PPT Skill。把文档丢给你的 AI Agent，每一页都自带编辑控制台的 PPT Skill——不满意的地方直接在浏览器里改，改完还能一键导出成真实的、可编辑的 PPTX。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;关键词就一个：&lt;strong&gt;改&lt;/strong&gt;。每页自带控制台，能就地改字、换图、调布局、换配色，最后导出的是&lt;strong&gt;真的可编辑 PPTX&lt;/strong&gt;——不是把网页截图塞进去那种。&lt;/p&gt;&#xA;&lt;p&gt;抱着&amp;quot;又是 GitHub 上刷星刷出来的 AI PPT 项目&amp;quot;的心态，我在自己的 Codex 和 Claude Code 上装了一遍，用它生成 3 份真实的 PPT（一份融资复盘、一份行业研究、一份内部培训），跑通了导出。这篇写给同样被 AI 生 PPT 坑过的你。&lt;/p&gt;&#xA;&lt;h2 id=&#34;它跟别的-ai-生-ppt-工具差在哪&#34;&gt;它跟别的 AI 生 PPT 工具差在哪&#xA;&lt;/h2&gt;&lt;p&gt;先直接摆结论。市面上 AI 生 PPT 大致三类：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

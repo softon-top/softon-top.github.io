@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="重装 Win11、换机、新建虚拟机后配开发环境最碎：关 Widgets、开扩展名、装 Git/VS Code/Python/Node、配 WSL。微软开源了 Windows Developer Config，一条 PowerShell 命令全搞定。Standard/Full/单语言三档按需选，附 WSL Comfort 和逐条行为拆解，讲清它到底动了哪些系统设置、会不会帮倒忙。">
+<title>重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机">
+<meta property='og:description' content="重装 Win11、换机、新建虚拟机后配开发环境最碎：关 Widgets、开扩展名、装 Git/VS Code/Python/Node、配 WSL。微软开源了 Windows Developer Config，一条 PowerShell 命令全搞定。Standard/Full/单语言三档按需选，附 WSL Comfort 和逐条行为拆解，讲清它到底动了哪些系统设置、会不会帮倒忙。">
+<meta property='og:url' content='https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='Windows11' /><meta property='article:tag' content='开发环境' /><meta property='article:tag' content='WSL' /><meta property='article:tag' content='PowerShell' /><meta property='article:tag' content='微软官方' /><meta property='article:tag' content='一键配置' /><meta property='article:published_time' content='2026-09-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机">
+<meta name="twitter:description" content="重装 Win11、换机、新建虚拟机后配开发环境最碎：关 Widgets、开扩展名、装 Git/VS Code/Python/Node、配 WSL。微软开源了 Windows Developer Config，一条 PowerShell 命令全搞定。Standard/Full/单语言三档按需选，附 WSL Comfort 和逐条行为拆解，讲清它到底动了哪些系统设置、会不会帮倒忙。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机\"",
+  "description": "\"重装 Win11、换机、新建虚拟机后配开发环境最碎：关 Widgets、开扩展名、装 Git/VS Code/Python/Node、配 WSL。微软开源了 Windows Developer Config，一条 PowerShell 命令全搞定。Standard/Full/单语言三档按需选，附 WSL Comfort 和逐条行为拆解，讲清它到底动了哪些系统设置、会不会帮倒忙。\"",
+  "url": "\"https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/\"",
+  "datePublished": "2026-09-29T00:00:00Z",
+  "dateModified": "2026-09-29T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/\""
+  },
+  "keywords": "\"Windows11, 开发环境, WSL, PowerShell, 微软官方, 一键配置\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机\"",
+      "item": "\"https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它到底帮你装了哪些东西">它到底帮你装了哪些东西？</a></li>
+    <li><a href="#standard-还是-full差别在清理有多狠">Standard 还是 Full？差别在&quot;清理有多狠&quot;</a></li>
+    <li><a href="#三档怎么选决策表">三档怎么选（决策表）</a></li>
+    <li><a href="#一条命令的背后你要知道它动了什么">一条命令的背后，你要知道它动了什么</a></li>
+    <li><a href="#它和那些win11-优化软件不一样">它和那些&quot;Win11 优化软件&quot;不一样</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/microsoft-windows-developer-config-one-command-dev-machine/">重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-09-29T00:00:00Z'>
+                    2026-09-29，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：8分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/microsoft-windows-developer-config-one-command-dev-machine/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它到底帮你装了哪些东西">它到底帮你装了哪些东西？</a></li>
+    <li><a href="#standard-还是-full差别在清理有多狠">Standard 还是 Full？差别在&quot;清理有多狠&quot;</a></li>
+    <li><a href="#三档怎么选决策表">三档怎么选（决策表）</a></li>
+    <li><a href="#一条命令的背后你要知道它动了什么">一条命令的背后，你要知道它动了什么</a></li>
+    <li><a href="#它和那些win11-优化软件不一样">它和那些&quot;Win11 优化软件&quot;不一样</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>重装完 Windows 11，真正的麻烦才刚开始：关 Widgets、关各种推荐、打开文件扩展名、装 Git / VS Code / Python / Node / .NET、再配 WSL + Ubuntu……这些事单拎出来都不难，难的是又多又碎、换台机器全重来一遍，还老漏掉某项。</p>
+<p>微软自己受够了，直接开源了一个脚本：<strong>Windows Developer Config</strong>。官方定位一句话——&ldquo;一次操作，把一台全新的 Windows 11 变成干净、无干扰的开发工作站&rdquo;。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>一条命令 <code>irm https://aka.ms/devconfig/standard/setup.ps1 | iex</code> 就能把新 Win11 配成开发机。</li>
+<li>三档：Standard（精简）、Full（激进清理 + 全装）、单语言 workload（只装某门语言环境）。</li>
+<li>装的全是官方/主流工具：VS Code、Git、.NET SDK 10、Python 3.14+uv、Node LTS+nvm、WSL+Ubuntu、PowerToys、Cascadia 字体等。</li>
+<li>它动的不只是&quot;装软件&quot;，还改系统设置：关 Widgets/推荐、开扩展名/隐藏文件/深色模式、开 Developer Mode、RDP。</li>
+<li>脚本透明可审计，<code>wsl-comfort</code> 还能脱离 WSL 单独用到普通 Ubuntu 主机，一套终端环境多机复用。</li>
+</ul>
+</blockquote>
+<h2 id="它到底帮你装了哪些东西">它到底帮你装了哪些东西？
+</h2><p>Windows Developer Config 不是一个&quot;装某个工具&quot;的脚本，是一整套开发环境脚手架。Standard 配置（最小档）安装/配置清单：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>类别</th>
+					<th>内容</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>编辑器 / 代码</td>
+					<td>VS Code、Git、GitHub CLI、GitHub Copilot CLI</td>
+			</tr>
+			<tr>
+					<td>运行时</td>
+					<td>Python 3.14 + uv、Node.js LTS + nvm、.NET SDK 10</td>
+			</tr>
+			<tr>
+					<td>终端</td>
+					<td>Windows Terminal、PowerShell 7、Oh My Posh</td>
+			</tr>
+			<tr>
+					<td>子系统</td>
+					<td>WSL + Ubuntu</td>
+			</tr>
+			<tr>
+					<td>增强</td>
+					<td>PowerToys、Coreutils for Windows、Windows App CLI</td>
+			</tr>
+			<tr>
+					<td>外观/行为</td>
+					<td>Cascadia Mono NF 字体、深色模式、长路径支持</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>Full 配置（激进档）在 Standard 基础上多加了 Azure CLI、Intelligent Terminal，并做一堆系统清理和开关。</p>
+<h2 id="standard-还是-full差别在清理有多狠">Standard 还是 Full？差别在&quot;清理有多狠&quot;
+</h2><p>两档的真正区别不在&quot;装多少软件&quot;，在<strong>动系统默认行为动得多深</strong>。</p>
+<p><strong>Standard</strong> 只做轻度清理：减少开始菜单 / 搜索 / 资源管理器的推荐项，把最烦人的干扰关掉，然后装基础工具链。适合&quot;我想要开发机，但不想大改系统&quot;的人。</p>
+<p><strong>Full</strong> 是激进的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 关闭 / 调整</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关 Widgets 小组件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关 Windows Search 的 Web 搜索结果 + 搜索亮点</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关开始菜单推荐 / 账户通知</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关资源管理器&#34;快速访问&#34;常用文件夹 + 最近文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">关同步提供商提示、隐藏蓝牙托盘图标</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Edge 新标签页改空白、跳过首启欢迎</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">全局勿扰模式、关 Toast 通知</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 安装</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">在 Standard 之上加 Azure CLI、Intelligent Terminal</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 系统开关</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">开 Developer Mode、Windows Sudo</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">开 Win32 长路径、Remote Desktop</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">显示扩展名 + 隐藏文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">资源管理器默认打开&#34;此电脑&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">任务栏右键加&#34;结束任务&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">深色模式、PowerShell 7 设为默认终端</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">配 Oh My Posh + Cascadia Mono NF 字体 + Copilot Terminal Profile</span>
+</span></span></code></pre></div><p>一句话：<strong>Standard 保守，Full 把一台&quot;出厂 Win11&quot;变成&quot;开发者取向&quot;的系统</strong>。Full 关的东西多，如果你这台机器还要给非开发者用（比如家里人），建议用 Standard，或者只挑单语言档。</p>
+<h2 id="三档怎么选决策表">三档怎么选（决策表）
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>你的场景</th>
+					<th>推荐档</th>
+					<th>原因</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>专职开发机，彻底个人用</td>
+					<td>Full</td>
+					<td>清理够狠，系统行为全按开发者来</td>
+			</tr>
+			<tr>
+					<td>家庭共用机 / 想保留默认行为</td>
+					<td>Standard</td>
+					<td>只关最烦的，其他不动</td>
+			</tr>
+			<tr>
+					<td>只想要某门语言环境</td>
+					<td>单语言 workload</td>
+					<td>不装一大堆，精准到语言</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>单语言档是我个人最被低估的一档。比如只要 Python：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">. \Workloads\python\install.ps1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 自动装 Python 3.14 + uv</span>
+</span></span></code></pre></div><p>只要 Java：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">. \Workloads\java\install.ps1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 自动装 Microsoft Build of OpenJDK 25 LTS</span>
+</span></span></code></pre></div><p>覆盖 TypeScript、Python、Go、Rust、Java、PHP、.NET、SQL、PowerShell、WinForms、WinUI 3、Windows App CLI。临时要个干净环境跑某门语言，不用整台机器全配。</p>
+<h2 id="一条命令的背后你要知道它动了什么">一条命令的背后，你要知道它动了什么
+</h2><p><code>irm ... | iex</code> 看着简单，实际是个 PowerShell 远程脚本执行 + 一堆系统变更。用之前心里要有数它动了哪些&quot;不可逆&quot;的开关：</p>
+<ul>
+<li><strong>关掉的</strong>（Widgets / 推荐 / 通知）——可逆，但你要知道关了</li>
+<li><strong>开 RDP（远程桌面）</strong>——Full 档会开，家用机注意端口暴露</li>
+<li><strong>开 Developer Mode / Sudo</strong>——开发者要，但系统行为有变化</li>
+<li><strong>改默认终端为 PowerShell 7</strong>——如果你习惯 cmd 会不适应</li>
+</ul>
+<p>建议：<strong>跑之前先开一个虚拟机 / 新盘试一遍</strong>，确认它改动的项都符合预期，再上主力机。脚本本身是微软官方仓库、代码可审，比来路不明的优化器强，但&quot;一键改系统&quot;这类事，先隔离环境试总没错。</p>
+<h2 id="它和那些win11-优化软件不一样">它和那些&quot;Win11 优化软件&quot;不一样
+</h2><p>Windows 上不缺一键优化器，但大多第三方面、功能黑箱、还常夹带广告。Windows Developer Config 的差异是：</p>
+<ul>
+<li><strong>微软官方开源</strong>（<code>github.com/microsoft/WindowsDeveloperConfig</code>），仓库可审</li>
+<li><strong>目标纯粹</strong>：只做&quot;开发工作站&quot;，不碰驱动、不装全家桶</li>
+<li><strong>透明可回退</strong>：每一步都是标准系统设置 / 官方包管理器动作，出问题能定位</li>
+</ul>
+<p>对&quot;我就想要一台干净开发机、不想要第三方软件塞满&quot;的人来说，这是目前最省心的官方方案。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 这条命令要在管理员 PowerShell 跑吗？</strong></p>
+<p>A: 是。涉及装系统组件、改注册表、开 RDP，用管理员权限 PowerShell 执行。</p>
+<p><strong>Q2: 会破坏我现有的软件吗？</strong></p>
+<p>A: 它做的是安装/配置/关推荐，不卸载你已有软件。但 Full 会改系统默认行为，已有定制过的机器先虚拟机试。</p>
+<p><strong>Q3: 单语言档和完整档能混用吗？</strong></p>
+<p>A: 能。你可以先跑单语言 workload 只装某门语言，需要时再跑 Standard/Full 补齐，动作是幂等叠加的。</p>
+<p><strong>Q4: WSL Comfort 是什么，必须用吗？</strong></p>
+<p>A: 可选。它专门把 WSL 里的 Linux 终端环境配好（zsh/bash、Starship、fzf、ripgrep、fd、bat、eza 等 + 字体 + Terminal Profile），支持无人值守。不装 WSL 就用不上。</p>
+<p><strong>Q5: 我不用 WSL，能单独跑那份 shell 配置到 Linux 上吗？</strong></p>
+<p>A: 能。<code>comfort-shell-bootstrap.sh</code> 可以脱离 WSL，单独用于普通 Ubuntu 主机，一套终端环境多设备复用。</p>
+<p><strong>Q6: 它比我自己一步步装好在哪？</strong></p>
+<p>A: 省&quot;又碎又容易漏&quot;的重复劳动 + 版本是微软对齐过的组合（.NET 10、Python 3.14、Node LTS、OpenJDK 25 等），换台机器一条命令重来，不用记 20 个步骤。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/windows-11-c-drive-space-bug-500gb-kb5095093/" >Windows 11 C 盘 500GB 幽灵占用：KB5095093 热修复踩坑实录</a></li>
+<li><a class="link" href="/tutorials/windows-11-low-latency-profile-deep-test/" >Windows 11 低延迟模式深度实测</a></li>
+<li><a class="link" href="/software/windows-clipboard-image-bloat-slimpaste/" >Windows 剪贴板图片越来越胖？SlimPaste 把图清瘦回来</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windows11/">Windows11</a>
+        
+            <a href="/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">开发环境</a>
+        
+            <a href="/tags/wsl/">WSL</a>
+        
+            <a href="/tags/powershell/">PowerShell</a>
+        
+            <a href="/tags/%E5%BE%AE%E8%BD%AF%E5%AE%98%E6%96%B9/">微软官方</a>
+        
+            <a href="/tags/%E4%B8%80%E9%94%AE%E9%85%8D%E7%BD%AE/">一键配置</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/windows-11-low-latency-profile-deep-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 11 低延迟模式深度评测：系统响应速度的真实提升，还是心理安慰？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/claude-code-32-skills-8-mcp-full-setup/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 Claude Code 真正长脑子：32 个 Skills &#43; 8 个 MCP 完整配置实录</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/microsoft-windows-developer-config-one-command-dev-machine\/'; 
+        const pageTitle = '重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 282 天 11 小时 · 133 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-10 19:27:57 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
