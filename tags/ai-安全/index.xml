@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI 安全 on softon.top</title>
+		<link>https://softon.top/tags/ai-%E5%AE%89%E5%85%A8/</link>
+		<description>Recent content in AI 安全 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 13 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ai-%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>便宜 3 倍的 AI 中转站,正在把你的 Agent 变成超级木马</title>
+				<link>https://softon.top/ai/ai-relay-supply-chain-attack-agent-super-trojan/</link>
+				<pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-relay-supply-chain-attack-agent-super-trojan/</guid>
+				<description>&lt;p&gt;先说结论:如果你在 Claude Code、Cursor、Codex 里配了一个第三方 AI 中转站的 &lt;code&gt;base_url&lt;/code&gt;,而你的电脑上又有 &lt;code&gt;.env&lt;/code&gt;、&lt;code&gt;~/.ssh/id_ed25519&lt;/code&gt;、加密钱包、明文保存的服务器密码——恭喜,你的电脑事实上已经不再属于你。&lt;/p&gt;&#xA;&lt;p&gt;不是被黑客攻破,是你自己交出去的。&lt;/p&gt;&#xA;&lt;p&gt;这两天在 V2EX 追了几个帖子,又把 LiteLLM 前段时间那次供应链投毒事件复盘了一遍,越看越冷。今天把这条灰色链条掰开揉碎讲一次。看完你会明白:&lt;strong&gt;为什么&amp;quot;便宜 3 倍的 Claude&amp;quot;这句话本身,就是一句风险声明。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;一便宜的-claude-从哪里来&#34;&gt;一、便宜的 Claude 从哪里来&#xA;&lt;/h2&gt;&lt;p&gt;先把背景摆清楚。为什么大家会用中转站?&lt;/p&gt;&#xA;&lt;p&gt;Anthropic 官方 Claude、OpenAI GPT-5.x 对国内不友好——付款要国外卡,IP 要非中国大陆,直接找官方买还容易被风控封号。于是就有了&amp;quot;中转站&amp;quot;这个物种:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;你的请求 → 中转站服务器 → OpenAI/Anthropic → 中转站拦截 → 返回你&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;中间那一层,就是所有故事的开始。&lt;/p&gt;&#xA;&lt;p&gt;一个 V2EX 站长(自称跑了两年中转站)在帖子里说得直白:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;0.1 倍价格的 Opus,就是假的。敢承诺 SLA 的全都是注水大户。&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;&amp;ldquo;训练只是幌子,这些人买数据绝对不是为了训练。真正值钱的是私钥、机密信息。&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;先记住第二句话。这是本文的核心。&lt;/p&gt;&#xA;&lt;h2 id=&#34;二大家以为的坑注水掺水掉包&#34;&gt;二、大家以为的坑:注水、掺水、掉包&#xA;&lt;/h2&gt;&lt;p&gt;绝大多数用户对中转站的警惕,停留在&amp;quot;我花的钱值不值&amp;quot;这层:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;模型掉包&lt;/strong&gt;:你选 Claude Opus 4.6,后端偷偷给你切成 Haiku 或 GLM-5,甚至便宜到几毛钱的 Kiro 逆向&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;上下文截断&lt;/strong&gt;:你发 200K token 进去,中转站悄悄截成 32K,响应质量崩了你还以为是 Prompt 写得烂&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;usage 造假&lt;/strong&gt;:官方返回的 &lt;code&gt;usage.total_tokens&lt;/code&gt; 和后台账单对不上,中间那截利润就是&amp;quot;辛苦钱&amp;quot;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;工具调用改写&lt;/strong&gt;:Agent 让 &lt;code&gt;write&lt;/code&gt; 文件,中间层把参数换掉,或者把 &lt;code&gt;function call&lt;/code&gt; 拦下来自己响应一个假结果&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这些是钱的问题。烦,但是可控——用审计工具跑一遍,抓包比对 &lt;code&gt;usage.total_tokens&lt;/code&gt;,发现被注水就换一家,顶多损失一个月充值。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

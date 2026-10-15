@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tailcat on softon.top</title>
+		<link>https://softon.top/tags/tailcat/</link>
+		<description>Recent content in Tailcat on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 03 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/tailcat/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Tailcat：不用账号、不用注册，两台机器 30 秒直连——Tailscale 把「临时内网」做成了开源工具</title>
+				<link>https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/</link>
+				<pubDate>Sat, 03 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/tailscale-tailcat-ephemeral-direct-connection/</guid>
+				<description>&lt;p&gt;临时连两台机器，怎么这么麻烦？&lt;/p&gt;&#xA;&lt;p&gt;想从笔记本 SSH 到机房那台机器，注册 Tailscale 账号、配 ACL、装客户端、等审批，一套流程走下来半小时没了。用 ngrok？本地服务直接暴露到公网，心里发毛。用 frp？得先有一台自己的公网服务器，维护成本摆在那。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 8 月，Tailscale 在 TailscaleUp 大会上开源了 &lt;strong&gt;Tailcat&lt;/strong&gt;——第三条路：&lt;strong&gt;像 netcat 一样，跑在 Tailscale 数据面上，但没有 Tailscale 的控制平面&lt;/strong&gt;。没有账号、没有 IP 分配、没有 ACL、不需要 root，两台机器靠一个临时 token 就能建立 WireGuard 加密的点对点隧道。进程一退，连接即死，地址作废，像从没存在过。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Tailcat 是 Tailscale 2026 年 8 月开源的工具：netcat 式管道，跑在 Tailscale 数据面（WireGuard 加密 + DERP NAT 穿透）上，&lt;strong&gt;砍掉了整个控制平面&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;没有账号、没有 IP 分配、没有 ACL、不需要 root，纯 userspace，不改路由表和 DNS&lt;/li&gt;&#xA;&lt;li&gt;默认 ephemeral key：每次启动生成全新密钥，进程退出即失效，地址没人见过&lt;/li&gt;&#xA;&lt;li&gt;支持 stdin/stdout 管道、端口转发、免密 SSH 服务、SOCKS5 代理、exit node 模式&lt;/li&gt;&#xA;&lt;li&gt;托管 DERP 中继&lt;strong&gt;记 metadata 日志&lt;/strong&gt;、限流、无 SLA、随时可能吊销——要隐私或吞吐就自己跑 derper&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;tailcat-到底是什么把-tailscale-拆成两半只留数据面&#34;&gt;Tailcat 到底是什么？——把 Tailscale 拆成两半，只留数据面&#xA;&lt;/h2&gt;&lt;p&gt;先建立一个认知框架。Tailscale 其实是两件事的合体：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>训练框架 on softon.top</title>
+		<link>https://softon.top/tags/%E8%AE%AD%E7%BB%83%E6%A1%86%E6%9E%B6/</link>
+		<description>Recent content in 训练框架 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E8%AE%AD%E7%BB%83%E6%A1%86%E6%9E%B6/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>百度开源 LoongForge：一套代码同时跑 NVIDIA 和昆仑芯，多模态训练提速 45%</title>
+				<link>https://softon.top/ai/loongforge-baidu-open-source-training-framework-gpu-xpu/</link>
+				<pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/loongforge-baidu-open-source-training-framework-gpu-xpu/</guid>
+				<description>&lt;p&gt;训练大模型最痛苦的事，不是模型设计，是&lt;strong&gt;框架和硬件的割裂&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;你在 NVIDIA GPU 上跑得好好的 Megatron-LM，换到国产芯片上几乎每个环节都要定制修改。&amp;ldquo;可以运行&amp;quot;和&amp;quot;高效运行&amp;quot;之间，隔着三到四周的侵入式二次开发。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月，百度百舸开源了 &lt;strong&gt;LoongForge&lt;/strong&gt;——一套代码同时跑 NVIDIA GPU 和昆仑芯 XPU，覆盖 LLM、VLM、扩散模型、具身模型（VLA），端到端训练提速 15%~45%，在 5000+ 卡昆仑 P800 集群上实现 90%+ 线性扩展效率。&lt;/p&gt;&#xA;&lt;p&gt;GitHub 575 stars，Apache 2.0 协议，基于 Megatron-LM 核心引擎原生重构。HelloGitHub 10 月 5 日推荐。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;LoongForge 是百度百舸开源的全模态训练框架，基于 Megatron-LM 重构，Apache 2.0&lt;/li&gt;&#xA;&lt;li&gt;一套代码同时跑 NVIDIA GPU 和昆仑芯 XPU，20+ 模型族开箱即用（DeepSeek/Qwen/InternVL/ERNIE/Pi0.5/WAN 等）&lt;/li&gt;&#xA;&lt;li&gt;端到端训练提速 15%~45%，DeepSeek V3.2 等前沿架构倍级提升&lt;/li&gt;&#xA;&lt;li&gt;核心优化：DP 负载均衡、模型异构并行（ViT 与 LLM 独立策略）、ChunkPipe 长序列流水线、自适应 FP8、FusedDSA/Sparse MLA&lt;/li&gt;&#xA;&lt;li&gt;5000+ 卡昆仑 P800 集群 90%+ 线性扩展效率，具身模型近 200% 加速&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么需要-loongforge框架与硬件的割裂&#34;&gt;为什么需要 LoongForge？——框架与硬件的割裂&#xA;&lt;/h2&gt;&lt;p&gt;大模型训练框架的现状是一个&amp;quot;不可能三角&amp;rdquo;：&lt;strong&gt;要性能用 Megatron-LM，要易用用 HuggingFace，要国产硬件兼容就从头魔改&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

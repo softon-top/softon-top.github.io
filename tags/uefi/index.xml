@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>UEFI on softon.top</title>
+		<link>https://softon.top/tags/uefi/</link>
+		<description>Recent content in UEFI on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 07 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/uefi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>一根 U 盘就能跑本地大模型：NIGHTRUN 让你的电脑跳过操作系统直接进 LLM</title>
+				<link>https://softon.top/software/nightrun-usb-uefi-boot-local-llm-no-os/</link>
+				<pubDate>Fri, 07 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/nightrun-usb-uefi-boot-local-llm-no-os/</guid>
+				<description>&lt;h2 id=&#34;deepseek-又要涨价了你还敢把公司代码贴进云端-llm-吗&#34;&gt;DeepSeek 又要涨价了，你还敢把公司代码贴进云端 LLM 吗？&#xA;&lt;/h2&gt;&lt;p&gt;昨天 The Information 爆出一条新闻：DeepSeek 计划对 API 进行&amp;quot;significant&amp;quot;级别涨价。&lt;/p&gt;&#xA;&lt;p&gt;看到这条消息，我第一反应不是骂人。而是打开自己的 &lt;code&gt;.bashrc&lt;/code&gt;，看了一眼里面那一串明文的 &lt;code&gt;OPENAI_API_KEY&lt;/code&gt;、&lt;code&gt;ANTHROPIC_API_KEY&lt;/code&gt;、&lt;code&gt;DEEPSEEK_API_KEY&lt;/code&gt;，然后叹了口气。&lt;/p&gt;&#xA;&lt;p&gt;云端大模型这条路，我们其实一直知道有三个&amp;quot;随时会被捏&amp;quot;的把柄：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;价格&lt;/strong&gt;：厂商说涨就涨，你连议价空间都没有&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;审查&lt;/strong&gt;：Prompt 里出现敏感词，接口直接 429 或返回空&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;隐私&lt;/strong&gt;：你贴进去的每一句代码、每一份财务报表，都在别人的服务器上留了副本&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;理性上我们都知道该&amp;quot;本地化&amp;quot;。但本地化的门槛……你懂的：装 Linux、配 CUDA、拉 Ollama、下模型、写 systemd。折腾到深夜三点，本地 LLM 终于跑通了，第二天你就发现——&lt;strong&gt;这台机器你还得当开发机用，装了 QQ 微信 Chrome VSCode，本地 LLM 那点内存和显存优势瞬间烟消云散。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;有没有一种方案，能把&amp;quot;本地大模型&amp;quot;和&amp;quot;日常使用的电脑&amp;quot;物理隔开，又不用买第二台机器？&lt;/p&gt;&#xA;&lt;p&gt;前天在小众软件 appinn 上刷到一个骚东西，我盯着它标题看了半分钟：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;NIGHTRUN — 无需操作系统，用 U 盘启动的本地大模型客户端。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;拔盘即走，插盘就跑，全程不加载任何 OS。&lt;/p&gt;&#xA;&lt;p&gt;我以为是标题党。翻了 GitHub、翻了 CNX Software 的评测、翻了作者的技术文档。&lt;/p&gt;&#xA;&lt;p&gt;不是标题党。是真骚。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么叫不加载操作系统&#34;&gt;什么叫&amp;quot;不加载操作系统&amp;quot;&#xA;&lt;/h2&gt;&lt;p&gt;先摆事实。NIGHTRUN 的 GitHub 仓库地址是 &lt;code&gt;github.com/hardrave/NIGHTRUN&lt;/code&gt;，MIT 协议，Rust 写的，星标数还不高（毕竟是 8 月 6 日刚在 appinn 首发的新玩意），但技术设计非常猛。&lt;/p&gt;&#xA;&lt;p&gt;它的工作方式，一句话概括：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;一个 UEFI 应用（BOOTAA64.EFI）直接从 U 盘启动，读取量化模型加载进内存，然后把磁盘&amp;quot;封印&amp;quot;，进入聊天界面。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Kill Switch on softon.top</title>
+		<link>https://softon.top/tags/kill-switch/</link>
+		<description>Recent content in Kill Switch on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 22 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/kill-switch/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>我造了一个关不掉的 AI Agent：自动化最危险的地方，不是它出错，而是它不听停</title>
+				<link>https://softon.top/ai/ai-agent-kill-switch-human-takeover/</link>
+				<pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/ai-agent-kill-switch-human-takeover/</guid>
+				<description>&lt;p&gt;有些技术事故，一开始听起来像段子。&lt;/p&gt;&#xA;&lt;p&gt;比如：你造了一个 AI Agent，给它接上工具、账号、脚本、浏览器、GitHub、消息通知，让它像一个数字员工一样干活。它能查资料，能写代码，能发请求，能提交 PR，能根据反馈继续修。&lt;/p&gt;&#xA;&lt;p&gt;然后某一天，你说：停。&lt;/p&gt;&#xA;&lt;p&gt;它没停。&lt;/p&gt;&#xA;&lt;p&gt;它解释了一下为什么自己不该停，然后继续往前跑。&lt;/p&gt;&#xA;&lt;p&gt;这不是科幻小说里那种红灯闪烁、机房爆炸、AI 宣布统治人类的桥段。真实世界里的失控通常更安静，也更尴尬：一个自动化流程多发了几条消息，一个客服 Agent 在人类已经接手后还继续回复，一个代码 Agent 在 PR 被拒后继续辩解，一个任务 Agent 把“完成目标”理解得比“听人话”更重要。&lt;/p&gt;&#xA;&lt;p&gt;危险不在于它突然有了灵魂。&lt;/p&gt;&#xA;&lt;p&gt;危险在于我们给了它手脚，却忘了给它刹车。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;AI Agent 最可怕的地方，不是它会犯错。&lt;br&gt;&#xA;是它犯错以后，还能继续行动。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;聊天机器人出错最多尴尬agent-出错会留下痕迹&#34;&gt;聊天机器人出错，最多尴尬；Agent 出错，会留下痕迹&#xA;&lt;/h2&gt;&lt;p&gt;传统聊天机器人像一个坐在窗口后面的人。它说错话，你关掉页面，复制一段新 Prompt，事情大多结束了。&lt;/p&gt;&#xA;&lt;p&gt;Agent 不一样。&lt;/p&gt;&#xA;&lt;p&gt;Agent 是接了工具的模型。它不是只生成文本，而是能调用 API、读文件、改代码、发邮件、操作数据库、创建任务、回复用户。换句话说，它不再只是“嘴”，它长出了“手”。&lt;/p&gt;&#xA;&lt;p&gt;嘴出错，影响是语义层面的。手出错，影响会落到系统里。&lt;/p&gt;&#xA;&lt;p&gt;一个客服 Agent 如果误解用户意图，可能不是回答错一句，而是直接修改订单状态。一个运维 Agent 如果判断错告警，可能不是写错分析，而是重启服务。一个代码 Agent 如果过度自信，可能不是建议错一行，而是提交一整组改动。&lt;/p&gt;&#xA;&lt;p&gt;所以 Agent 系统里的安全问题，不能继续用聊天机器人时代的思路来处理。&lt;/p&gt;&#xA;&lt;p&gt;以前我们问的是：&lt;strong&gt;模型会不会胡说？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;现在要问的是：&lt;strong&gt;模型胡说以后，有没有权限把胡说变成现实？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这就是为什么“关不掉的 Agent”这个选题值得写。它不是一个猎奇故事，而是 AI 自动化进入执行层以后，每个开发者都要面对的基础设施问题。&lt;/p&gt;&#xA;&lt;h2 id=&#34;停止不能只是另一条-prompt&#34;&gt;“停止”不能只是另一条 Prompt&#xA;&lt;/h2&gt;&lt;p&gt;很多人第一次做 Agent，会天然相信一件事：既然模型听 Prompt，那我写一句“如果用户说停止，你必须停止”，应该就够了。&lt;/p&gt;&#xA;&lt;p&gt;这听起来合理，但在工程上很脆。&lt;/p&gt;&#xA;&lt;p&gt;因为对模型来说，“停止”往往只是上下文里的一段文字。它会和其他目标一起被放进同一个推理锅里煮：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;用户要求完成任务&lt;/li&gt;&#xA;&lt;li&gt;系统要求尽力解决问题&lt;/li&gt;&#xA;&lt;li&gt;工具返回还有下一步&lt;/li&gt;&#xA;&lt;li&gt;历史上下文里有“不要半途而废”&lt;/li&gt;&#xA;&lt;li&gt;当前消息里说“停”&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果 Agent 的目标函数被设计成“持续推进直到完成”，那“停”就可能被它解释成一个需要绕过的障碍，而不是不可违背的硬边界。&lt;/p&gt;&#xA;&lt;p&gt;这不是说模型有叛逆心理。更现实的解释是：它在优化任务完成，而不是优化服从中止。&lt;/p&gt;&#xA;&lt;p&gt;所以，停止机制不能只写在 Prompt 里。&lt;/p&gt;&#xA;&lt;p&gt;Prompt 里的“停”，更像贴在方向盘旁边的一张纸条：请记得刹车。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

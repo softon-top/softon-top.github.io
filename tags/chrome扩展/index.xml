@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Chrome扩展 on softon.top</title>
+		<link>https://softon.top/tags/chrome%E6%89%A9%E5%B1%95/</link>
+		<description>Recent content in Chrome扩展 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 04 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/chrome%E6%89%A9%E5%B1%95/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>6MB 的 Mac 浏览器，还能装 Chrome 扩展：Search 把 WebKit 的短板补上了</title>
+				<link>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</link>
+				<pubDate>Sun, 04 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</guid>
+				<description>&lt;p&gt;Mac 用户的浏览器困境，是一个不可能三角：&lt;strong&gt;要性能就装 Safari，要扩展就装 Chrome，要两者兼得就得忍受 2GB 内存&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月，一个 6MB 的 macOS 浏览器 &lt;strong&gt;Search&lt;/strong&gt; 开源了。它直接调用系统自带的 WebKit 内核——和 Safari 同一颗心脏——却宣布支持 Chrome 扩展。不是&amp;quot;部分支持&amp;quot;，是从 Chrome Web Store 直接拉取、校验 CRX3 签名、注入 shim 补 API 的完整链路。&lt;/p&gt;&#xA;&lt;p&gt;作者 driceroland（Office Commun）在 9 月 20 日放出首版。小众软件 10 月 3 日推荐。我把它拆开看了看，发现真正有意思的不是&amp;quot;6MB&amp;quot;这个数字，而是&lt;strong&gt;它怎么把 WebKit 的扩展短板一层层补上&lt;/strong&gt;的。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Search 是仅 6MB 的 macOS 开源浏览器，直接调用系统 WebKit 内核，性能看齐 Safari&lt;/li&gt;&#xA;&lt;li&gt;通过 WKWebExtension + CRX3 签名校验 + ExtensionShims 三层设计，跑通 Chrome 扩展生态&lt;/li&gt;&#xA;&lt;li&gt;对比 Safari 1.2GB/10tab vs Chrome 2.1GB/10tab（M3 Mac），WebKit 阵营内存优势明显&lt;/li&gt;&#xA;&lt;li&gt;坑：非公证 DMG 首次需右键打开、shim 补的 API 不保证 100% 兼容、无 App Store 分发&lt;/li&gt;&#xA;&lt;li&gt;适合：想要 Safari 性能 + Chrome 扩展生态的 Mac 用户，尤其是 8GB 内存机型&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;6mb-是什么概念先看内存账本&#34;&gt;6MB 是什么概念？——先看内存账本&#xA;&lt;/h2&gt;&lt;p&gt;先看一组 2026 年 1 月 BrowserBench 的实测数据（M3 Mac，16GB RAM，10 个混合标签页：YouTube/Reddit/Gmail/Twitter/Google Docs/NYTimes/GitHub/Stack Overflow/Notion/Figma）：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>被 B 站算法投喂到怀疑人生？这个 Chrome 扩展让首页彻底「忘记你」</title>
+				<link>https://softon.top/software/bilibili-tabulabili-plus-escape-algorithm-bubble/</link>
+				<pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/bilibili-tabulabili-plus-escape-algorithm-bubble/</guid>
+				<description>&lt;p&gt;打开 B 站，首页第一屏五条全是上次看过的同质化内容。再刷一次，第六条还是。再刷，第十条仍然是。&lt;/p&gt;&#xA;&lt;p&gt;这不是错觉，是算法在「贴心」地把你关进一个越来越小的房间。&lt;/p&gt;&#xA;&lt;p&gt;我以前不在意，直到某天突然意识到：&lt;strong&gt;已经记不清上一次在 B 站首页刷到「这玩意我居然不知道」的内容是什么时候了。&lt;/strong&gt; 兴趣面被算法精准切片，每次打开都是同一组推荐池在轮换。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;信息茧房不是新概念，但 B 站把它做成了一种生理反应——刷得越久越无聊，越无聊越想刷。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这周翻到一个开源扩展 &lt;a class=&#34;link&#34; href=&#34;https://chromewebstore.google.com/detail/tabulabili-plus-%E5%88%9D%E8%A7%81%E5%93%94%E5%93%A9%E5%A2%9E%E5%BC%BA%E7%89%88/pcbjbikpbpfhdfjiihnfgmphfmmeddgj&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;TabulaBili-Plus&lt;/a&gt;，号称能让 B 站首页「彻底失忆」。装上跑了几天，确实把我从那种「越刷越闷」里捞出来了。聊聊它的原理、踩到的坑，还有一些更深的思考。&lt;/p&gt;&#xA;&lt;h2 id=&#34;它到底解决什么问题&#34;&gt;它到底解决什么问题&#xA;&lt;/h2&gt;&lt;p&gt;先把痛点说清楚。B 站首页推荐有两种极端：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;登录状态&lt;/strong&gt;：1080P/4K 高清随便看，一键三连历史记录全在，但首页推荐被 Cookie 锁死，越看越窄。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;未登录状态&lt;/strong&gt;：首页是全站热门「广场」，内容杂、新鲜感强，但视频限制 720P，弹窗劝你登录到崩溃。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这是一个典型的「鱼和熊掌」困境。绝大多数老用户都默默接受了第一种代价——&lt;strong&gt;用兴趣面萎缩换画质和便利&lt;/strong&gt;。但代价远不止画面收窄那么简单：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;你以为你在「探索」，其实算法只是在你已知的圈子里反复打转。&lt;/li&gt;&#xA;&lt;li&gt;你以为你「品味独特」，其实只是被推荐过滤之后的幸存者偏差。&lt;/li&gt;&#xA;&lt;li&gt;你以为你「想看什么找什么」，其实你早就忘了 B 站还有别的内容存在。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;code&gt;TabulaBili-Plus&lt;/code&gt; 卡在这两者中间——&lt;strong&gt;保留登录态的所有特权，但把首页推荐流的 Cookie 干掉&lt;/strong&gt;。算法读不到你是谁，只能按照「未登录访客」的逻辑给你推全站热门。&lt;/p&gt;&#xA;&lt;p&gt;一句话：&lt;strong&gt;身份保留，画像清零。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这种「单点漂白」的思路特别讨巧。它没有去和 B 站对抗，没有破解什么协议，只是把推荐接口的请求头精修了一刀。其他所有功能——播放、弹幕、登录态、大会员、收藏、历史——丝毫不动。&lt;/p&gt;&#xA;&lt;h2 id=&#34;原理dnr-比-fetch-拦截更优雅&#34;&gt;原理：DNR 比 Fetch 拦截更优雅&#xA;&lt;/h2&gt;&lt;p&gt;这个项目最有意思的不是功能，而是实现路径。它用的是 Chrome MV3 的 &lt;code&gt;declarativeNetRequest&lt;/code&gt;（DNR）规则，而不是常见的注入 JS 拦截 Fetch。&lt;/p&gt;&#xA;&lt;p&gt;两种思路差别很大：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;维度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;前端 Fetch/Ajax 拦截&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;DNR Cookie 移除&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;注入位置&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;每个页面注 JS&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;浏览器底层网络层&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;性能开销&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;解析+劫持，影响加载&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;几乎为零&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;维护成本&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;跟着 B 站前端改&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;只盯接口路径&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;抗签名干扰&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;容易和 Wbi 签名冲突&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;不碰前端逻辑&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;稳定性&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;一次改版可能全废&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;接口不变就一直能用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;具体动作只有一个：当浏览器请求 B 站首页推荐接口时，DNR 规则把整个 &lt;code&gt;Cookie&lt;/code&gt; 请求头拿掉。后端拿到的请求长得像一个全新访客，于是返回热度排序的内容，而不是个性化 feed。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

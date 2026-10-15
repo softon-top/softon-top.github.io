@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>文件传输 on softon.top</title>
+		<link>https://softon.top/tags/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/</link>
+		<description>Recent content in 文件传输 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 15 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>隔了一年半，LocalSend 1.18.0 终于放大招：命令行版来了</title>
+				<link>https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/</link>
+				<pubDate>Sat, 15 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/localsend-1-18-0-cli-file-transfer-cross-platform/</guid>
+				<description>&lt;p&gt;如果你的电脑桌面上、手机主屏上、公司办公机上都装着同一个青绿色小图标，那基本可以确定，你是那种「文件从来不发微信自己传自己」的选手。LocalSend 就是这批人手里的默认答案：跨 Windows、macOS、Linux、Android、iOS 五端，局域网直传，不走云、不压缩、不改名。&lt;/p&gt;&#xA;&lt;p&gt;但这两年用过来，多少有点尴尬。上一版有分量的更新还停在 2025 年 2 月，一晃过去一年半，日常里够用，也没啥新花样。直到 2026 年 8 月 11 日，1.18.0 突然更新，一次性把好几个「早就该做」的功能全端了出来。&lt;/p&gt;&#xA;&lt;h2 id=&#34;最重要的一件事命令行版本终于来了&#34;&gt;最重要的一件事：命令行版本终于来了&#xA;&lt;/h2&gt;&lt;p&gt;在 LocalSend 的历代版本里，这次的头号亮点毫无悬念——&lt;strong&gt;CLI 支持&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;以前你想在一台没有图形界面的机器上收发文件，只有两个选项：一个是硬装个虚拟桌面把 App 拉起来，一个是老老实实用 &lt;code&gt;scp&lt;/code&gt;。前者笨重，后者……你但凡跨过 Windows 和 macOS 折腾过 SSH key，就知道那是一场需要冥想的仪式。&lt;/p&gt;&#xA;&lt;p&gt;现在 CLI 版是这样跑的：进入交互模式，读取配置文件里的默认设备名、下载目录、监听端口，也可以在命令里覆盖；启动之后可以用热键发现附近设备、发文件、收文件；旁边同一网段的手机、笔记本会看到一台标注为 &lt;code&gt;CLI&lt;/code&gt; 的设备躺在列表里。&lt;/p&gt;&#xA;&lt;p&gt;对我来说最有价值的两个场景：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;NAS&lt;/strong&gt;：想把手机拍的一段 4K 视频丢进 Jellyfin 的媒体目录，以前要么走 SMB 挂载，要么先上传到某个云盘再拉下来，现在直接手机点 LocalSend，选中那台 NAS 的 CLI 实例，几秒完事。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;只有 SSH 的服务器&lt;/strong&gt;：临时把日志文件、配置备份、一份 CSV 拉到手机看一眼——不用再折腾一次 &lt;code&gt;scp&lt;/code&gt; + &lt;code&gt;pbcopy&lt;/code&gt;。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;CLI 打包成独立的 tarball / exe，不需要装 GUI 版本作为前置依赖。这一点很重要，意味着 Docker 镜像、树莓派、iKuai 上的软路由都能轻装上阵。&lt;/p&gt;&#xA;&lt;h2 id=&#34;ipv6-监听企业内网和移动网络的救星&#34;&gt;IPv6 监听：企业内网和移动网络的救星&#xA;&lt;/h2&gt;&lt;p&gt;第二个容易被忽略但同样关键的改动：&lt;strong&gt;1.18.0 开始支持 IPv6 监听&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

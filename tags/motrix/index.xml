@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Motrix on softon.top</title>
+		<link>https://softon.top/tags/motrix/</link>
+		<description>Recent content in Motrix on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 17 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/motrix/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</title>
+				<link>https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/</link>
+				<pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/motrix-2-0-beta-3-year-return-ai-agent-cli/</guid>
+				<description>&lt;p&gt;我第一次装 Motrix 是 2019 年。那时候我刚从 IDM 的授权码轮盘里逃出来,想找一个界面不油腻、不弹广告、又能吃磁力链接和 BT 种子的下载器。Motrix 一装上就是那种&amp;quot;啊,这个就够了&amp;quot;的感觉——干干净净一个仪表盘,一个添加按钮,一个速度曲线,&lt;code&gt;Aria2&lt;/code&gt; 老引擎在底下稳稳跑,任务从来不掉链子。&lt;/p&gt;&#xA;&lt;p&gt;然后它就没了动静。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;上一次 Motrix 发正式版本,是 2023 年&lt;/strong&gt;。此后 GitHub 仓库像被按了暂停键,浏览器扩展慢慢腐烂,底层的 aria2 内核也停在了 2023 的版本号上不动。装机必备变成了装机遗物,大家都以为作者放弃了这个 5.2 万 star 的项目。&lt;/p&gt;&#xA;&lt;p&gt;社区急得直接开始了自救。有位博士研究生用 AI 把 Motrix 和 Aria2 整个啃了一遍,搞出了架构完全不同的 &lt;a class=&#34;link&#34; href=&#34;https://www.appinn.com/motrix-next/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;Motrix Next&lt;/a&gt;,用 Tauri 2 + Vue 3 + Pinia 重写外壳,底层换成了自己重构的 Aria2 Next,顺手补上了 ED2K 支持——一个开源项目沉寂到&amp;quot;用户被逼着自己 fork 一版&amp;quot;的地步,基本可以宣判临床死亡了。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;结果 8 月 16 日,Motrix 作者 agalwood 突然放出了 2.0.0 Turbo beta。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;时隔-3-年不是补丁是推倒重来&#34;&gt;时隔 3 年,不是补丁,是推倒重来&#xA;&lt;/h2&gt;&lt;p&gt;拿到这个消息我第一反应不是&amp;quot;有什么新功能&amp;quot;,是&amp;quot;能更新就是最大的功能&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;但打开 &lt;a class=&#34;link&#34; href=&#34;https://github.com/agalwood/Motrix/releases&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;release notes&lt;/a&gt; 看完,我发现这不是那种憋了很久终于挤出来的小版本。&lt;strong&gt;v2.0.0 Turbo 是把 Motrix 从头到脚重构了一遍。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
