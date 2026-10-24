@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>WakeMeUp on softon.top</title>
+		<link>https://softon.top/tags/wakemeup/</link>
+		<description>Recent content in WakeMeUp on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 19 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/wakemeup/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>人没到家 NAS 先醒着：一个 13MB 的 WOL 唤醒 App，治好了我远程开机的强迫症</title>
+				<link>https://softon.top/software/wake-me-up-wol-app-remote-power-on-nas/</link>
+				<pubDate>Sat, 19 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/wake-me-up-wol-app-remote-power-on-nas/</guid>
+				<description>&lt;p&gt;出门在外要查 NAS 上的备份、拉台常开服务跑个任务、家里留台工作站当下载机——你第一件事永远是同一个动作：确认它开没开机。没开？行吧，先别查了，等回家再说。&lt;/p&gt;&#xA;&lt;p&gt;对自架党来说，这是最尴尬的卡点。机器可以一直通电，但电费是实打实的；彻底关机省电，代价是远程彻底失联。中间那条路叫 &lt;strong&gt;WOL（Wake-on-LAN，局域网唤醒）&lt;/strong&gt;，而今天要说的 Wake Me Up，就是给这条路上装了一个手机按钮。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Wake Me Up 是 iOS/iPad 上的 WOL 唤醒应用，13MB、免费、零内购，全部功能一个按钮搞定。&lt;/li&gt;&#xA;&lt;li&gt;原理就是发 WOL 魔术包（Magic Packet），填 MAC + IP 两个框就能用，无账号、无后端。&lt;/li&gt;&#xA;&lt;li&gt;局域网场景选默认 &lt;strong&gt;LAN Broadcast&lt;/strong&gt; 就够；Unicast 单播只在特定网络拓扑下才需要。&lt;/li&gt;&#xA;&lt;li&gt;唤醒只负责&amp;quot;开机&amp;quot;，之后远程连进系统还得自己搭隧道（Tailscale/ZeroTier 一类），这套组合拳才是完整方案。&lt;/li&gt;&#xA;&lt;li&gt;频繁唤醒到一定程度，&amp;ldquo;干脆不关机&amp;quot;反而是更优解——下面有账本。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么手机一个按钮开机是刚需&#34;&gt;为什么&amp;quot;手机一个按钮开机&amp;quot;是刚需？&#xA;&lt;/h2&gt;&lt;p&gt;WOL 不是新东西，路由器的 WOL 开关、Windows 的任务计划、Linux 的 &lt;code&gt;wakeonlan&lt;/code&gt; 命令行工具都干这活。但它们的共同点是：&lt;strong&gt;你得先有一台开着的设备&lt;/strong&gt;（另一台电脑、路由器后台、SSH 上去）才能触发。&lt;/p&gt;&#xA;&lt;p&gt;出门在外、家里没开机的场景里，唯一&amp;quot;时刻在手&amp;quot;的设备是手机。所以需求就变成了：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;手机上按一个按钮 → 家那台机器开机 → 连进去干活。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Wake Me Up 就是把这条链路的第一步做成了 13MB 的 app：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;设置页只有两个输入框：目标机器的 &lt;strong&gt;MAC 地址&lt;/strong&gt; 和 &lt;strong&gt;IP 地址&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;首页一个按钮（或多台机器多个按钮），按下立即发魔术包&lt;/li&gt;&#xA;&lt;li&gt;支持 &lt;strong&gt;iOS 桌面小组件&lt;/strong&gt;，不用打开 app，桌面点一下也行&lt;/li&gt;&#xA;&lt;li&gt;LAN 广播 / 单播可切换&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;全部功能，免费，无内购，无账号。13MB。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

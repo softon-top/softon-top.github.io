@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 24 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Cli</title>
+				<link>https://softon.top/tags/cli/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cli/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Command Line</title>
+				<link>https://softon.top/tags/command-line/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/command-line/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Moreutils</title>
+				<link>https://softon.top/tags/moreutils/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/moreutils/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Sponge</title>
+				<link>https://softon.top/tags/sponge/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/sponge/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Unix</title>
+				<link>https://softon.top/tags/unix/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/unix/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI-Agent</title>
+				<link>https://softon.top/tags/ai-agent/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Headless Browser</title>
+				<link>https://softon.top/tags/headless-browser/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/headless-browser/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Lightpanda</title>
+				<link>https://softon.top/tags/lightpanda/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/lightpanda/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Puppeteer</title>
+				<link>https://softon.top/tags/puppeteer/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/puppeteer/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Zig</title>
+				<link>https://softon.top/tags/zig/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/zig/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Google</title>
+				<link>https://softon.top/tags/google/</link>
+				<pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/google/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Harness2</title>
+				<link>https://softon.top/tags/harness2/</link>
+				<pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/harness2/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>OpenCode</title>
+				<link>https://softon.top/tags/opencode/</link>
+				<pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/opencode/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Improvement</title>
+				<link>https://softon.top/tags/self-improvement/</link>
+				<pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/self-improvement/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Block</title>
+				<link>https://softon.top/tags/block/</link>
+				<pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/block/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Buzz</title>
+				<link>https://softon.top/tags/buzz/</link>
+				<pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/buzz/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Hosted</title>
+				<link>https://softon.top/tags/self-hosted/</link>
+				<pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/self-hosted/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Slack Alternative</title>
+				<link>https://softon.top/tags/slack-alternative/</link>
+				<pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/slack-alternative/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CPU Inference</title>
+				<link>https://softon.top/tags/cpu-inference/</link>
+				<pubDate>Thu, 15 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cpu-inference/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Local AI</title>
+				<link>https://softon.top/tags/local-ai/</link>
+				<pubDate>Thu, 15 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/local-ai/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

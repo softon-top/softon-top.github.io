@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Moreutils on softon.top</title>
+		<link>https://softon.top/tags/moreutils/</link>
+		<description>Recent content in Moreutils on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 24 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/moreutils/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>moreutils：15 个 Unix 命令行缺了三十年的工具，我为什么全装上了</title>
+				<link>https://softon.top/software/moreutils-unix-tools-sponge-vipe-vidir-parallel/</link>
+				<pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/moreutils-unix-tools-sponge-vipe-vidir-parallel/</guid>
+				<description>&lt;p&gt;你大概写过这样的命令：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sort data.txt | uniq &amp;gt; data.txt&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后发现文件空了。因为 shell 先打开 &lt;code&gt;data.txt&lt;/code&gt; 准备写入，把它清空，然后才轮到 &lt;code&gt;sort&lt;/code&gt; 去读它——读到的是空文件。&lt;/p&gt;&#xA;&lt;p&gt;这是 Unix 管道的经典陷阱。三十年来，大家的解法是加临时文件：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sort data.txt | uniq &amp;gt; tmp &amp;amp;&amp;amp; mv tmp data.txt&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;多丑。moreutils 的 &lt;code&gt;sponge&lt;/code&gt; 一句话解决：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sort data.txt | uniq | sponge data.txt&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;moreutils 是 Joey Hess 收集的 15 个 Unix 工具，补的是三十年来的设计空白&lt;/li&gt;&#xA;&lt;li&gt;核心是 &lt;code&gt;sponge&lt;/code&gt;：吸收所有 stdin 再一次性写入文件，解决&amp;quot;输出重定向到正在读取的文件&amp;quot;&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;vipe&lt;/code&gt; 让你在管道中间插入编辑器，&lt;code&gt;vidir&lt;/code&gt; 用编辑器编辑整个目录&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;parallel&lt;/code&gt; 并行跑任务，&lt;code&gt;ts&lt;/code&gt; 给每行输出加时间戳，&lt;code&gt;chronic&lt;/code&gt; 只在失败时输出&lt;/li&gt;&#xA;&lt;li&gt;实测：&lt;code&gt;parallel&lt;/code&gt; 比 &lt;code&gt;xargs -P&lt;/code&gt; 快但不如 GNU parallel；&lt;code&gt;sponge&lt;/code&gt; 无替代品，必装&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;moreutils-是什么&#34;&gt;moreutils 是什么？&#xA;&lt;/h2&gt;&lt;p&gt;Joey Hess（也是 Debian 开发者）收集的一套命令行工具，官方描述：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
