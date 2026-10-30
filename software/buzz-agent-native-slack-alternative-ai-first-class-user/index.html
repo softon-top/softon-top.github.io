@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Buzz 是 Block（Jack Dorsey）2026 年 7 月发布的开源协作平台，核心理念 agent-native：AI agent 是一等公民而非插件 bot。每个 agent 独立加密身份、频道级权限、完整审计日志。本文拆解架构、与 Slack 对比、Docker Compose 自托管实战。">
+<title>Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了</title>
+
+<link rel='canonical' href='https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了">
+<meta property='og:description' content="Buzz 是 Block（Jack Dorsey）2026 年 7 月发布的开源协作平台，核心理念 agent-native：AI agent 是一等公民而非插件 bot。每个 agent 独立加密身份、频道级权限、完整审计日志。本文拆解架构、与 Slack 对比、Docker Compose 自托管实战。">
+<meta property='og:url' content='https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='Buzz' /><meta property='article:tag' content='Block' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Slack Alternative' /><meta property='article:tag' content='Self-Hosted' /><meta property='article:published_time' content='2026-10-18T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-18T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了">
+<meta name="twitter:description" content="Buzz 是 Block（Jack Dorsey）2026 年 7 月发布的开源协作平台，核心理念 agent-native：AI agent 是一等公民而非插件 bot。每个 agent 独立加密身份、频道级权限、完整审计日志。本文拆解架构、与 Slack 对比、Docker Compose 自托管实战。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了\"",
+  "description": "\"Buzz 是 Block（Jack Dorsey）2026 年 7 月发布的开源协作平台，核心理念 agent-native：AI agent 是一等公民而非插件 bot。每个 agent 独立加密身份、频道级权限、完整审计日志。本文拆解架构、与 Slack 对比、Docker Compose 自托管实战。\"",
+  "url": "\"https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/\"",
+  "datePublished": "2026-10-18T00:00:00Z",
+  "dateModified": "2026-10-18T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/\""
+  },
+  "keywords": "\"Buzz, Block, AI Agent, Slack Alternative, Self-Hosted\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了\"",
+      "item": "\"https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#buzz-到底是什么">Buzz 到底是什么？</a></li>
+    <li><a href="#架构拆解nostr--容器化">架构拆解：Nostr + 容器化</a></li>
+    <li><a href="#与-slackmattermostrocketchat-的选型对比">与 Slack/Mattermost/Rocket.Chat 的选型对比</a></li>
+    <li><a href="#docker-compose-自托管实战">Docker Compose 自托管实战</a>
+      <ul>
+        <li><a href="#环境准备">环境准备</a></li>
+        <li><a href="#初始化用户">初始化用户</a></li>
+        <li><a href="#添加-ai-agent">添加 AI Agent</a></li>
+        <li><a href="#验证运行">验证运行</a></li>
+      </ul>
+    </li>
+    <li><a href="#agent-工作流实例">Agent 工作流实例</a></li>
+    <li><a href="#成本账本">成本账本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/buzz-agent-native-slack-alternative-ai-first-class-user/">Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-18T00:00:00Z'>
+                    2026-10-18，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：8分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#buzz-到底是什么">Buzz 到底是什么？</a></li>
+    <li><a href="#架构拆解nostr--容器化">架构拆解：Nostr + 容器化</a></li>
+    <li><a href="#与-slackmattermostrocketchat-的选型对比">与 Slack/Mattermost/Rocket.Chat 的选型对比</a></li>
+    <li><a href="#docker-compose-自托管实战">Docker Compose 自托管实战</a>
+      <ul>
+        <li><a href="#环境准备">环境准备</a></li>
+        <li><a href="#初始化用户">初始化用户</a></li>
+        <li><a href="#添加-ai-agent">添加 AI Agent</a></li>
+        <li><a href="#验证运行">验证运行</a></li>
+      </ul>
+    </li>
+    <li><a href="#agent-工作流实例">Agent 工作流实例</a></li>
+    <li><a href="#成本账本">成本账本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>AI agent 终于不是一等公民了。</p>
+<p>2026 年 7 月 21 日，Block（Jack Dorsey 的公司，背后是 Square 和 Cash App）发布了 Buzz——一个开源协作平台，口号是&quot;人类和 AI agent 共享工作空间&quot;。不是给 Slack 加个 bot 插件，而是从协议层就把 agent 当一等公民设计。</p>
+<p>Jack Dorsey 在推文里说：</p>
+<blockquote>
+<p>&ldquo;we&rsquo;re launching BUZZ! a new groupchat platform for teams of people and agents of all sizes, built to reduce our dependency on slack and github. model-agnostic, decentralized, self-sovereign, and open source.&rdquo;</p>
+</blockquote>
+<p>一周内 GitHub star 破 13,700。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Buzz 是 Block 发布的开源 agent-native 协作平台，Apache 2.0，Docker Compose 自托管</li>
+<li>核心差异：agent 有独立加密身份和频道级权限，不是共享 bot token 的插件</li>
+<li>架构基于 Nostr 协议，去中心化，支持 Git 仓库连接和自动化工作流</li>
+<li>对比 Slack/Mattermost：Buzz 的 agent 是&quot;团队成员&quot;而非&quot;集成插件&quot;</li>
+<li>自托管门槛低：Postgres + Redis + MinIO，Tauri 桌面端覆盖三大平台</li>
+</ul>
+</blockquote>
+<h2 id="buzz-到底是什么">Buzz 到底是什么？
+</h2><p>Buzz 看起来像 Slack——频道、线程、回复、emoji 反应、DM，该有的都有。但它解决的问题不一样：</p>
+<p><strong>Slack 的问题</strong>：AI agent 通过 bot token 接入，权限是应用级的，不是用户级的。你给 bot 开了 #general 权限，它就能看到 #general 所有消息。agent 没有自己的身份，没有独立的权限边界，没有完整的审计日志。</p>
+<p><strong>Buzz 的方案</strong>：每个 agent 有自己的 Nostr 密钥对，频道级权限控制，每个操作都有加密签名和审计日志。agent 是&quot;团队成员&quot;，不是&quot;集成插件&quot;。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>特性</th>
+					<th>Slack + Bot</th>
+					<th>Mattermost + Plugin</th>
+					<th>Buzz</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent 身份</td>
+					<td>共享 bot token</td>
+					<td>共享 webhook</td>
+					<td>独立加密密钥对</td>
+			</tr>
+			<tr>
+					<td>权限粒度</td>
+					<td>应用级</td>
+					<td>应用级</td>
+					<td>频道级</td>
+			</tr>
+			<tr>
+					<td>审计日志</td>
+					<td>有限</td>
+					<td>有限</td>
+					<td>完整，每次操作加密签名</td>
+			</tr>
+			<tr>
+					<td>自托管</td>
+					<td>❌</td>
+					<td>✅</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>Agent 原生设计</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>Git 集成</td>
+					<td>通过 app</td>
+					<td>通过 plugin</td>
+					<td>原生</td>
+			</tr>
+	</tbody>
+</table></div>
+<h2 id="架构拆解nostr--容器化">架构拆解：Nostr + 容器化
+</h2><p>Buzz 的协议层基于 Nostr——去中心化、加密、无需中心服务器。Block 工程博客说：</p>
+<blockquote>
+<p>&ldquo;Where existing standards stopped, we specified agent authorization, access, memory, control, accounting, Git signatures, device pairing, and related machinery.&rdquo;</p>
+</blockquote>
+<p>技术栈：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>组件</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Nostr 协议</td>
+					<td>去中心化通信层，加密消息中继</td>
+			</tr>
+			<tr>
+					<td>PostgreSQL</td>
+					<td>持久化存储（频道、消息、用户）</td>
+			</tr>
+			<tr>
+					<td>Redis</td>
+					<td>实时消息缓存和 pub/sub</td>
+			</tr>
+			<tr>
+					<td>MinIO/S3</td>
+					<td>文件存储（图片、附件）</td>
+			</tr>
+			<tr>
+					<td>Tauri</td>
+					<td>桌面客户端（macOS/Windows/Linux）</td>
+			</tr>
+			<tr>
+					<td>Docker Compose</td>
+					<td>一键自托管部署</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>设计亮点</strong>：agent 的&quot;记忆&quot;（memory）、&ldquo;控制&rdquo;（control）、&ldquo;计费&rdquo;（accounting）都在协议层定义，不是应用层 hack。这意味着任何兼容 Nostr 的 agent 都能接入 Buzz，不绑定特定框架。</p>
+<h2 id="与-slackmattermostrocketchat-的选型对比">与 Slack/Mattermost/Rocket.Chat 的选型对比
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>Slack</th>
+					<th>Mattermost</th>
+					<th>Rocket.Chat</th>
+					<th>Buzz</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent 原生</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>❌</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>自托管</td>
+					<td>❌</td>
+					<td>✅</td>
+					<td>✅</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>价格</td>
+					<td>$7.25/人/月</td>
+					<td>免费/企业付费</td>
+					<td>免费/企业付费</td>
+					<td>免费（自托管）</td>
+			</tr>
+			<tr>
+					<td>数据控制</td>
+					<td>云锁定</td>
+					<td>自有</td>
+					<td>自有</td>
+					<td>完全自有</td>
+			</tr>
+			<tr>
+					<td>Agent 权限</td>
+					<td>应用级</td>
+					<td>应用级</td>
+					<td>应用级</td>
+					<td>频道级 + 加密签名</td>
+			</tr>
+			<tr>
+					<td>审计能力</td>
+					<td>基础</td>
+					<td>基础</td>
+					<td>基础</td>
+					<td>完整操作链</td>
+			</tr>
+			<tr>
+					<td>生态成熟度</td>
+					<td>最成熟</td>
+					<td>成熟</td>
+					<td>成熟</td>
+					<td>早期</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>Buzz 的差异化</strong>：不是&quot;更好的 Slack&quot;，而是&quot;为 agent 时代设计的聊天平台&quot;。Slack 的 bot 模型是 2013 年的设计，Buzz 把 agent 当一等用户是 2026 年的设计。</p>
+<h2 id="docker-compose-自托管实战">Docker Compose 自托管实战
+</h2><h3 id="环境准备">环境准备
+</h3><p>一台 2C4G VPS，Ubuntu 22.04，Docker + Docker Compose。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 克隆仓库</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">git clone https://github.com/block/buzz.git</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd buzz</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 配置环境变量</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cp .env.example .env</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 编辑 .env，设置域名和密钥</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose up -d</span>
+</span></span></code></pre></div><h3 id="初始化用户">初始化用户
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 每个用户需要自己的 Nostr 密钥对</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 在桌面客户端生成，分享公钥给管理员</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 从服务器添加用户</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose exec app ./buzz-cli add-user --pubkey &lt;用户公钥&gt;</span>
+</span></span></code></pre></div><p><strong>踩坑 1</strong>：Nostr 密钥对是 Buzz 的身份基础。没有密钥对就无法加入。桌面客户端会自动生成，但管理员需要手动添加公钥。</p>
+<h3 id="添加-ai-agent">添加 AI Agent
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Agent 也有自己的密钥对</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose exec app ./buzz-cli add-agent --name &#34;code-reviewer&#34; --pubkey &lt;agent公钥&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 给 agent 分配频道权限</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose exec app ./buzz-cli grant-access --agent &#34;code-reviewer&#34; --channel &#34;#dev&#34;</span>
+</span></span></code></pre></div><p><strong>踩坑 2</strong>：agent 的权限是频道级的。你给 agent 开了 #dev 权限，它只能看到 #dev 的消息。这与 Slack bot 的&quot;全有或全无&quot;完全不同。</p>
+<h3 id="验证运行">验证运行
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 检查服务状态</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose ps</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看日志</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker compose logs -f app</span>
+</span></span></code></pre></div><h2 id="agent-工作流实例">Agent 工作流实例
+</h2><p>一个典型的 Buzz agent 工作流：</p>
+<ol>
+<li><strong>Code Review Agent</strong> 加入 <code>#dev</code> 频道</li>
+<li>开发者推送代码到连接的 Git 仓库</li>
+<li>Agent 自动拉取 diff，生成 review 评论</li>
+<li>评论以 agent 身份发到 <code>#dev</code> 频道，带有加密签名</li>
+<li>人类开发者回复，agent 继续跟进</li>
+</ol>
+<p>整个流程中，agent 的每次操作都有完整审计日志——谁、什么时候、做了什么、签名是什么。</p>
+<h2 id="成本账本">成本账本
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>10 人团队月成本</th>
+					<th>Agent 月成本</th>
+					<th>总计</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Slack Pro</td>
+					<td>$72.5</td>
+					<td>另付 API</td>
+					<td>$72.5+</td>
+			</tr>
+			<tr>
+					<td>Mattermost 自托管</td>
+					<td>$0（服务器 $10-20）</td>
+					<td>本地 agent $0</td>
+					<td>$10-20</td>
+			</tr>
+			<tr>
+					<td>Buzz 自托管</td>
+					<td>$0（服务器 $10-20）</td>
+					<td>本地 agent $0</td>
+					<td>$10-20</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>注：Buzz 本身免费，成本仅为服务器。Agent 如果用本地 LLM（如 Ollama），边际成本为零。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: Buzz 和 Nostr 社交有什么区别？</strong></p>
+<p>A: Nostr 是去中心化社交协议（类似 Twitter），Buzz 用 Nostr 做底层通信但加了企业功能：频道权限、agent 身份、Git 集成、审计日志。Buzz 是团队协作工具，不是社交网络。</p>
+<p><strong>Q2: 能对接哪些 AI agent 框架？</strong></p>
+<p>A: 协议层兼容 Nostr 的 agent 都能接入。不绑定特定框架——你可以用 OpenClaw、Claude Code、或自己写的 agent。</p>
+<p><strong>Q3: 数据安全吗？</strong></p>
+<p>A: 消息通过 Nostr 加密中继传输，自托管模式下数据存在你自己的 Postgres。Agent 操作有加密签名和完整审计链。</p>
+<p><strong>Q4: 和 Slack 比有什么劣势？</strong></p>
+<p>A: 生态早期——没有 Slack 那么丰富的 app 目录、集成和社区插件。但 agent 原生设计是 Slack 没有的。</p>
+<p><strong>Q5: 能迁移现有 Slack 数据吗？</strong></p>
+<p>A: Buzz 目前没有官方 Slack 导入工具。新建团队建议直接迁移，存量团队可并行运行过渡。</p>
+<p><strong>Q6: 移动端体验如何？</strong></p>
+<p>A: 目前主要是 Tauri 桌面端（macOS/Windows/Linux）。Web 客户端可用，但移动端原生应用还在路线图上。</p>
+<p><strong>Q7: Block 会持续维护吗？</strong></p>
+<p>A: Block 工程博客明确开源承诺，Apache 2.0 许可证。即使 Block 停止维护，社区可以 fork 继续。去中心化协议也降低了单点依赖风险。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/memorysync-ai-agent-memory-api-vs-self-hosted/" >MemorySync：AI Agent 记忆 API 架构拆解</a></li>
+<li><a class="link" href="/ai/talorys-cloudflare-free-tier-personal-ai-agent/" >Talorys：Cloudflare 免费层自托管 AI Agent</a></li>
+<li><a class="link" href="/tutorials/moondream-local-deployment-raspberry-pi-cpu-vision-model/" >Moondream：本地部署视觉语言模型实战</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/buzz/">Buzz</a>
+        
+            <a href="/tags/block/">Block</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/slack-alternative/">Slack Alternative</a>
+        
+            <a href="/tags/self-hosted/">Self-Hosted</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/memorysync-ai-agent-memory-api-vs-self-hosted/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MemorySync：一个 API 让 AI Agent 拥有记忆，但代价是什么？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/talorys-cloudflare-free-tier-personal-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Talorys：在 Cloudflare 免费层跑个人 AI agent，一条命令部署</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/anydoc-firecrawl-open-source-document-to-markdown/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AnyDoc 实测：14 种文档 4 毫秒转 Markdown，Firecrawl 这套开源方案凭什么把 MarkItDown 和 Pandoc 甩开一个数量级</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/motrix-2-0-beta-3-year-return-ai-agent-cli/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">装机必备失踪 3 年,Motrix 2.0.0 beta 归来:这次它想让 AI Agent 帮你按下下载键</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/buzz-agent-native-slack-alternative-ai-first-class-user\/'; 
+        const pageTitle = 'Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 302 天 14 小时 · 145 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-30 22:00:42 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

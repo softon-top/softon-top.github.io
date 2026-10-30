@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Local LLM on softon.top</title>
+		<link>https://softon.top/tags/local-llm/</link>
+		<description>Recent content in Local LLM on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 26 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/local-llm/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少</title>
+				<link>https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/</link>
+				<pubDate>Mon, 26 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/</guid>
+				<description>&lt;p&gt;2026 年 10 月，一个叫 &lt;strong&gt;GPU Unlock&lt;/strong&gt; 的开源项目突然火了。&lt;/p&gt;&#xA;&lt;p&gt;起因是社区发现——NVIDIA 从 Ampere 架构开始，把消费级显卡的 FP16/BF16 指令发射速率锁到了专业卡的一半。同名的 GA102 核心，GeForce 3090 卖几千块，A6000 卖几万块，差别就在一道寄存器。&lt;/p&gt;&#xA;&lt;p&gt;解锁后的实测数据相当夸张：RTX 3090 Ti 的 BF16 算力从 87.5 涨到 157.4 TFLOPS（+80%），ComfyUI 跑扩散模型出图提升 58%。这不是超频，不是改驱动，而是解除一道存在了八年的硬件限制。&lt;/p&gt;&#xA;&lt;p&gt;我按着社区实测报告，把整件事拆了一遍——&lt;strong&gt;锁了什么、怎么绕、快多少、风险在哪、到底值不值得折腾&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;NVIDIA 从 Ampere 架构开始，把消费级显卡的 FP16/BF16 指令发射速率锁到专业卡的一半&lt;/li&gt;&#xA;&lt;li&gt;GPU Unlock 用 Linux 内核模块在驱动加载前改硬件寄存器，解除这道限制&lt;/li&gt;&#xA;&lt;li&gt;实测：3090 Ti BF16 87.5→157 TFLOPS、ComfyUI 出图 +58%、vLLM 推理 +33%&lt;/li&gt;&#xA;&lt;li&gt;但 LLM 逐 token 生成几乎没变（瓶颈在显存带宽），llama.cpp 量化模型完全无感&lt;/li&gt;&#xA;&lt;li&gt;风险真实存在：可能顶到 power cap，体质差的卡有烧卡风险&lt;/li&gt;&#xA;&lt;li&gt;换卡还是解锁？我算了一笔账&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;英伟达到底锁了什么&#34;&gt;英伟达到底锁了什么？&#xA;&lt;/h2&gt;&lt;p&gt;先厘清一个常见误解：&lt;strong&gt;这不是显存不够，也不是 CUDA 核心被屏蔽&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;GA102、GA104 这些 Ampere 核心，物理上和专业卡（A6000、A100）是&lt;strong&gt;同一颗芯片&lt;/strong&gt;。差别在于——NVIDIA 在硬件里放了一个&lt;strong&gt;速度选择寄存器&lt;/strong&gt;（speed select register），控制 Tensor Core 的&lt;strong&gt;指令发射速率&lt;/strong&gt;（instruction issue rate）。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

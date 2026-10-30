@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>PhpClaw on softon.top</title>
+		<link>https://softon.top/tags/phpclaw/</link>
+		<description>Recent content in PhpClaw on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 30 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/phpclaw/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看</title>
+				<link>https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/</guid>
+				<description>&lt;p&gt;PHP 程序员想给项目加个 AI Agent，通常的路径是这样的：装一个 LLM SDK，拿到一个 HTTP 客户端，然后自己写 tool-calling 循环。&lt;/p&gt;&#xA;&lt;p&gt;循环写完了，问题才开始——工具结果要不要过滤？提示词注入怎么防？记忆存哪？流式输出和工具调用能不能同时跑？&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月底，Hacker News 上出现一个项目，自称把这些全做完了：&lt;strong&gt;phpClaw&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;我读了它的 README、Packagist 元数据和 HN 上的讨论。结论是——&lt;strong&gt;它解决的不是&amp;quot;PHP 能不能调 LLM&amp;quot;，而是&amp;quot;PHP 项目里那个 Agent 循环，谁来维护&amp;quot;&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这篇把它的机制拆开，重点讲三个东西：工具怎么注册、安全守卫怎么工作、以及它和通用 LLM SDK 的真实边界。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;phpClaw 是 MIT 开源的 PHP Agent 运行时，核心零框架依赖，PHP 8.1+ 即可&lt;/li&gt;&#xA;&lt;li&gt;一个 &lt;code&gt;composer require&lt;/code&gt; + 一行 builder + 一次 &lt;code&gt;send()&lt;/code&gt;，就是完整 Agent&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;8 个默认安全守卫&lt;/strong&gt;才是重点：prompt injection / PII / 代码注入 / Unicode / homoglyph / 角色切换 / 破坏性 SQL / 消息长度&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;ShellTool&lt;/code&gt; 白名单硬编码不可覆盖，&lt;code&gt;HttpTool&lt;/code&gt; 校验解析后的 IP（堵 DNS rebinding）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;明确不做 RAG&lt;/strong&gt;：没有 embeddings、没有向量库&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;php-项目里的-agent-循环为什么会变成祖传代码&#34;&gt;PHP 项目里的 Agent 循环，为什么会变成祖传代码？&#xA;&lt;/h2&gt;&lt;p&gt;先看不用任何框架要写什么。一个最小的 tool-calling agent，PHP 里大致长这样：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

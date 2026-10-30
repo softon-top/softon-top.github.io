@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 30 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI-Agent</title>
+				<link>https://softon.top/tags/ai-agent/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Laravel</title>
+				<link>https://softon.top/tags/laravel/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/laravel/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MCP</title>
+				<link>https://softon.top/tags/mcp/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/mcp/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>PHP</title>
+				<link>https://softon.top/tags/php/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/php/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>PhpClaw</title>
+				<link>https://softon.top/tags/phpclaw/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/phpclaw/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Prompt Injection</title>
+				<link>https://softon.top/tags/prompt-injection/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/prompt-injection/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Symfony</title>
+				<link>https://softon.top/tags/symfony/</link>
+				<pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/symfony/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Agent Framework</title>
+				<link>https://softon.top/tags/agent-framework/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/agent-framework/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Declarative</title>
+				<link>https://softon.top/tags/declarative/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/declarative/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Docker-Agent</title>
+				<link>https://softon.top/tags/docker-agent/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/docker-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>LangGraph</title>
+				<link>https://softon.top/tags/langgraph/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/langgraph/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>YAML</title>
+				<link>https://softon.top/tags/yaml/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/yaml/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Homelab</title>
+				<link>https://softon.top/tags/homelab/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/homelab/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>SSH</title>
+				<link>https://softon.top/tags/ssh/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ssh/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Tailscale</title>
+				<link>https://softon.top/tags/tailscale/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/tailscale/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Tailworm</title>
+				<link>https://softon.top/tags/tailworm/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/tailworm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vulnerability</title>
+				<link>https://softon.top/tags/vulnerability/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/vulnerability/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Zero Trust</title>
+				<link>https://softon.top/tags/zero-trust/</link>
+				<pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/zero-trust/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Ampere</title>
+				<link>https://softon.top/tags/ampere/</link>
+				<pubDate>Mon, 26 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ampere/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>ComfyUI</title>
+				<link>https://softon.top/tags/comfyui/</link>
+				<pubDate>Mon, 26 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/comfyui/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

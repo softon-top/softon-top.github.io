@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="phpClaw 是 MIT 开源的 PHP AI Agent 运行时：记忆、MCP server、8 个默认安全守卫，支持 Laravel/Symfony/WordPress 等 8 个框架。拆解工具调用、ShellTool 白名单、HttpTool 防 DNS rebinding，与通用 LLM SDK 的区别。">
+<title>phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看">
+<meta property='og:description' content="phpClaw 是 MIT 开源的 PHP AI Agent 运行时：记忆、MCP server、8 个默认安全守卫，支持 Laravel/Symfony/WordPress 等 8 个框架。拆解工具调用、ShellTool 白名单、HttpTool 防 DNS rebinding，与通用 LLM SDK 的区别。">
+<meta property='og:url' content='https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='PHP' /><meta property='article:tag' content='phpClaw' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Laravel' /><meta property='article:tag' content='Symfony' /><meta property='article:tag' content='MCP' /><meta property='article:tag' content='Prompt Injection' /><meta property='article:published_time' content='2026-10-30T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-30T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看">
+<meta name="twitter:description" content="phpClaw 是 MIT 开源的 PHP AI Agent 运行时：记忆、MCP server、8 个默认安全守卫，支持 Laravel/Symfony/WordPress 等 8 个框架。拆解工具调用、ShellTool 白名单、HttpTool 防 DNS rebinding，与通用 LLM SDK 的区别。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看\"",
+  "description": "\"phpClaw 是 MIT 开源的 PHP AI Agent 运行时：记忆、MCP server、8 个默认安全守卫，支持 Laravel/Symfony/WordPress 等 8 个框架。拆解工具调用、ShellTool 白名单、HttpTool 防 DNS rebinding，与通用 LLM SDK 的区别。\"",
+  "url": "\"https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/\"",
+  "datePublished": "2026-10-30T00:00:00Z",
+  "dateModified": "2026-10-30T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/\""
+  },
+  "keywords": "\"PHP, phpClaw, AI Agent, Laravel, Symfony, MCP, Prompt Injection\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看\"",
+      "item": "\"https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#php-项目里的-agent-循环为什么会变成祖传代码">PHP 项目里的 Agent 循环，为什么会变成祖传代码？</a></li>
+    <li><a href="#1-分钟跑起来安装buildersend">1 分钟跑起来：安装、builder、send</a>
+      <ul>
+        <li><a href="#核心依赖有多轻">核心依赖有多轻</a></li>
+      </ul>
+    </li>
+    <li><a href="#工具怎么注册五个内置工具--白名单">工具怎么注册：五个内置工具 + 白名单</a>
+      <ul>
+        <li><a href="#shelltool-的白名单是硬编码的">ShellTool 的白名单是硬编码的</a></li>
+        <li><a href="#httptool-防的是-dns-rebinding">HttpTool 防的是 DNS rebinding</a></li>
+        <li><a href="#文件工具是沙箱隔离的">文件工具是沙箱隔离的</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-个默认安全守卫这才是重点">8 个默认安全守卫：这才是重点</a>
+      <ul>
+        <li><a href="#44-个-hook">44 个 hook</a></li>
+        <li><a href="#五个静态注册表">五个静态注册表</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-个框架适配器cms-为什么走-zip">8 个框架适配器：CMS 为什么走 ZIP</a>
+      <ul>
+        <li><a href="#mcp-server把-php-工具暴露给-claude-desktop">MCP server：把 PHP 工具暴露给 Claude Desktop</a></li>
+      </ul>
+    </li>
+    <li><a href="#它明确不是什么">它明确不是什么</a></li>
+    <li><a href="#和通用-llm-sdk-的真实边界">和通用 LLM SDK 的真实边界</a>
+      <ul>
+        <li><a href="#pipeline-和-graph">Pipeline 和 Graph</a></li>
+      </ul>
+    </li>
+    <li><a href="#我的判断值得看的是守卫不是-agent">我的判断：值得看的是守卫，不是 Agent</a>
+      <ul>
+        <li><a href="#适合的场景">适合的场景</a></li>
+        <li><a href="#不适合的场景">不适合的场景</a></li>
+        <li><a href="#一个现实顾虑">一个现实顾虑</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/">phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-30T00:00:00Z'>
+                    2026-10-30，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：20分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#php-项目里的-agent-循环为什么会变成祖传代码">PHP 项目里的 Agent 循环，为什么会变成祖传代码？</a></li>
+    <li><a href="#1-分钟跑起来安装buildersend">1 分钟跑起来：安装、builder、send</a>
+      <ul>
+        <li><a href="#核心依赖有多轻">核心依赖有多轻</a></li>
+      </ul>
+    </li>
+    <li><a href="#工具怎么注册五个内置工具--白名单">工具怎么注册：五个内置工具 + 白名单</a>
+      <ul>
+        <li><a href="#shelltool-的白名单是硬编码的">ShellTool 的白名单是硬编码的</a></li>
+        <li><a href="#httptool-防的是-dns-rebinding">HttpTool 防的是 DNS rebinding</a></li>
+        <li><a href="#文件工具是沙箱隔离的">文件工具是沙箱隔离的</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-个默认安全守卫这才是重点">8 个默认安全守卫：这才是重点</a>
+      <ul>
+        <li><a href="#44-个-hook">44 个 hook</a></li>
+        <li><a href="#五个静态注册表">五个静态注册表</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-个框架适配器cms-为什么走-zip">8 个框架适配器：CMS 为什么走 ZIP</a>
+      <ul>
+        <li><a href="#mcp-server把-php-工具暴露给-claude-desktop">MCP server：把 PHP 工具暴露给 Claude Desktop</a></li>
+      </ul>
+    </li>
+    <li><a href="#它明确不是什么">它明确不是什么</a></li>
+    <li><a href="#和通用-llm-sdk-的真实边界">和通用 LLM SDK 的真实边界</a>
+      <ul>
+        <li><a href="#pipeline-和-graph">Pipeline 和 Graph</a></li>
+      </ul>
+    </li>
+    <li><a href="#我的判断值得看的是守卫不是-agent">我的判断：值得看的是守卫，不是 Agent</a>
+      <ul>
+        <li><a href="#适合的场景">适合的场景</a></li>
+        <li><a href="#不适合的场景">不适合的场景</a></li>
+        <li><a href="#一个现实顾虑">一个现实顾虑</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>PHP 程序员想给项目加个 AI Agent，通常的路径是这样的：装一个 LLM SDK，拿到一个 HTTP 客户端，然后自己写 tool-calling 循环。</p>
+<p>循环写完了，问题才开始——工具结果要不要过滤？提示词注入怎么防？记忆存哪？流式输出和工具调用能不能同时跑？</p>
+<p>2026 年 10 月底，Hacker News 上出现一个项目，自称把这些全做完了：<strong>phpClaw</strong>。</p>
+<p>我读了它的 README、Packagist 元数据和 HN 上的讨论。结论是——<strong>它解决的不是&quot;PHP 能不能调 LLM&quot;，而是&quot;PHP 项目里那个 Agent 循环，谁来维护&quot;</strong>。</p>
+<p>这篇把它的机制拆开，重点讲三个东西：工具怎么注册、安全守卫怎么工作、以及它和通用 LLM SDK 的真实边界。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>phpClaw 是 MIT 开源的 PHP Agent 运行时，核心零框架依赖，PHP 8.1+ 即可</li>
+<li>一个 <code>composer require</code> + 一行 builder + 一次 <code>send()</code>，就是完整 Agent</li>
+<li><strong>8 个默认安全守卫</strong>才是重点：prompt injection / PII / 代码注入 / Unicode / homoglyph / 角色切换 / 破坏性 SQL / 消息长度</li>
+<li><code>ShellTool</code> 白名单硬编码不可覆盖，<code>HttpTool</code> 校验解析后的 IP（堵 DNS rebinding）</li>
+<li><strong>明确不做 RAG</strong>：没有 embeddings、没有向量库</li>
+</ul>
+</blockquote>
+<h2 id="php-项目里的-agent-循环为什么会变成祖传代码">PHP 项目里的 Agent 循环，为什么会变成祖传代码？
+</h2><p>先看不用任何框架要写什么。一个最小的 tool-calling agent，PHP 里大致长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 手写 tool-calling 循环的骨架（示意）
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">runAgent</span>(<span style="color:#66d9ef">array</span> $messages, <span style="color:#66d9ef">array</span> $tools, <span style="color:#a6e22e">callable</span> $dispatch)<span style="color:#f92672">:</span> <span style="color:#a6e22e">string</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ($i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; $i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; $i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        $resp <span style="color:#f92672">=</span> $http<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;https://api.anthropic.com/v1/messages&#39;</span>, [
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;messages&#39;</span> <span style="color:#f92672">=&gt;</span> $messages,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;tools&#39;</span>    <span style="color:#f92672">=&gt;</span> $tools,
+</span></span><span style="display:flex;"><span>        ])<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">json</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#66d9ef">empty</span>($resp[<span style="color:#e6db74">&#39;content&#39;</span>])) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">foreach</span> ($resp[<span style="color:#e6db74">&#39;content&#39;</span>] <span style="color:#66d9ef">as</span> $block) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> ($block[<span style="color:#e6db74">&#39;type&#39;</span>] <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;tool_use&#39;</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// ← 这里：工具结果要不要过滤？
+</span></span></span><span style="display:flex;"><span>                    $result <span style="color:#f92672">=</span> $dispatch($block[<span style="color:#e6db74">&#39;name&#39;</span>], $block[<span style="color:#e6db74">&#39;input&#39;</span>]);
+</span></span><span style="display:flex;"><span>                    $messages[] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;role&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;user&#39;</span>, <span style="color:#e6db74">&#39;content&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">json_encode</span>($result)];
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> $resp[<span style="color:#e6db74">&#39;content&#39;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;text&#39;</span>]; <span style="color:#75715e">// ← 循环出口
+</span></span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RuntimeException</span>(<span style="color:#e6db74">&#39;iteration cap&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这段代码的问题不在写，在<strong>维护</strong>。</p>
+<ul>
+<li>改一个系统提示词 → 动这个文件</li>
+<li>加一个工具 → 动这个文件</li>
+<li>换模型 → 动这个文件</li>
+<li>加一层防注入 → 还是动这个文件</li>
+</ul>
+<p>Agent 一复杂，这个文件就没人敢碰了。phpClaw 在 README 里把这句话说得很直白：</p>
+<blockquote>
+<p>Every &ldquo;AI in PHP&rdquo; tutorial ends the same way: an HTTP client bolted onto a provider API, a hand-rolled tool-call loop, and a prayer that the prompt holds up in production.</p>
+</blockquote>
+<p>翻译过来就是：<strong>所有&quot;PHP 接入 AI&quot;的教程，结局都一样——HTTP 客户端焊在 provider API 上，手写一个工具循环，然后祈祷提示词在生产环境能撑住。</strong></p>
+<p>phpClaw 的定位是把&quot;runtime&quot;这一层抽出来：循环、守卫、记忆、框架接线，全部装好。你只写业务工具。</p>
+<h2 id="1-分钟跑起来安装buildersend">1 分钟跑起来：安装、builder、send
+</h2><p>按官方 README，最小可用路径是三步：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>composer require phpclaw/phpclaw
+</span></span><span style="display:flex;"><span>export ANTHROPIC_API_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sk-ant-...&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">require</span> <span style="color:#e6db74">&#39;vendor/autoload.php&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$agent <span style="color:#f92672">=</span> <span style="color:#a6e22e">PhpClaw\Claw</span><span style="color:#f92672">::</span><span style="color:#a6e22e">builder</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">build</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> $agent<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;What can you help me with?&#39;</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">text</span>;
+</span></span></code></pre></div><p><strong>一个环境变量，一个 builder，一次 <code>send()</code></strong>。</p>
+<p>builder 的 provider 探测顺序，README 写得很明确——按这个顺序找环境变量，用第一个找到的：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>顺序</th>
+					<th>环境变量</th>
+					<th>Provider</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td><code>ANTHROPIC_API_KEY</code></td>
+					<td>Anthropic</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td><code>OPENAI_API_KEY</code></td>
+					<td>OpenAI</td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td><code>GROQ_API_KEY</code></td>
+					<td>Groq</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td><code>GEMINI_API_KEY</code></td>
+					<td>Gemini</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td><code>MISTRAL_API_KEY</code></td>
+					<td>Mistral</td>
+			</tr>
+			<tr>
+					<td>6</td>
+					<td><code>DEEPSEEK_API_KEY</code></td>
+					<td>DeepSeek</td>
+			</tr>
+			<tr>
+					<td>7</td>
+					<td><code>OLLAMA_HOST</code></td>
+					<td>Ollama</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>想换 provider 不改代码，用 <code>-&gt;provider()</code> + <code>-&gt;model()</code>。想加 fallback，<code>-&gt;withFallback('ollama', 'qwen2.5:7b')</code>——主 provider 挂了自动切。</p>
+<p>还有个细节：README 里写明<strong>自定义 OpenAI 兼容端点是 opt-in</strong>，要设 <code>PHPCLAW_PROVIDER=custom</code>。也就是说默认不假设你在用什么野鸡网关。</p>
+<h3 id="核心依赖有多轻">核心依赖有多轻
+</h3><p>按 Packagist 的元数据，<code>phpclaw/phpclaw</code> 最新版 v0.1.5 的 require 只有三项：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{<span style="color:#f92672">&#34;php&#34;</span>: <span style="color:#e6db74">&#34;^8.1&#34;</span>, <span style="color:#f92672">&#34;ext-curl&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>, <span style="color:#f92672">&#34;ext-json&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>, <span style="color:#f92672">&#34;ext-mbstring&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>}
+</span></span></code></pre></div><p>三个扩展，没了。README 里那张对比表的最后一行写的是：</p>
+<blockquote>
+<p>Zero framework deps in core: <code>ext-curl</code>, <code>ext-json</code>, <code>ext-mbstring</code>, done.</p>
+</blockquote>
+<p>这个&quot;done&quot;不是客套。它意味着你可以在一个<strong>没有任何框架的裸 PHP 项目</strong>里跑 Agent——不需要 Laravel，不需要 Symfony，不需要 DI 容器。这对那种有 2005 年历史、composer.json 都不存在的 PHP 项目，是唯一现实的接入路径。</p>
+<h2 id="工具怎么注册五个内置工具--白名单">工具怎么注册：五个内置工具 + 白名单
+</h2><p>phpClaw 内置的工具集，README 点名的是这几个：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> <span style="color:#a6e22e">PhpClaw\Tools\ShellTool</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> <span style="color:#a6e22e">PhpClaw\Tools\HttpTool</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> <span style="color:#a6e22e">PhpClaw\Tools\FileReadTool</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> <span style="color:#a6e22e">PhpClaw\Tools\DatabaseQueryTool</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> <span style="color:#a6e22e">PhpClaw\Tools\CodeSearchTool</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$agent <span style="color:#f92672">=</span> <span style="color:#a6e22e">Claw</span><span style="color:#f92672">::</span><span style="color:#a6e22e">builder</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">tools</span>([
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ShellTool</span>(<span style="color:#a6e22e">allowlist</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;ls&#39;</span>, <span style="color:#e6db74">&#39;df&#39;</span>, <span style="color:#e6db74">&#39;tail&#39;</span>]),
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HttpTool</span>(),
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FileReadTool</span>(),
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">DatabaseQueryTool</span>($pdo),
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">CodeSearchTool</span>(),
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">build</span>();
+</span></span></code></pre></div><p>配这几个工具，Agent 就能干这些活（README 原文给的示例问句）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>能干什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>ShellTool</code></td>
+					<td>&ldquo;Check disk usage and tail the last 20 lines of the error log&rdquo;</td>
+			</tr>
+			<tr>
+					<td><code>HttpTool</code></td>
+					<td>&ldquo;Is api.example.com responding right now?&rdquo;</td>
+			</tr>
+			<tr>
+					<td><code>DatabaseQueryTool</code></td>
+					<td>&ldquo;Run a read-only SELECT to count today&rsquo;s orders&rdquo;</td>
+			</tr>
+			<tr>
+					<td><code>CodeSearchTool</code></td>
+					<td>&ldquo;Find every place UserService is used in this codebase&rdquo;</td>
+			</tr>
+			<tr>
+					<td><code>FileReadTool</code></td>
+					<td>读工作区内的文件</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>关键机制</strong>：Agent 自己决定调哪个工具、按什么顺序调，跑一个 ReAct 循环（reason → act → observe → repeat），直到有答案或者撞上迭代上限。README 写明 <code>max_iterations</code> <strong>默认 20</strong>。</p>
+<p>这个循环对 shell、数据库、HTTP、代码库是同一套逻辑——工具是注册进去的，循环不关心工具内部怎么实现。</p>
+<h3 id="shelltool-的白名单是硬编码的">ShellTool 的白名单是硬编码的
+</h3><p>这是我最关注的部分，因为它是 Agent 安全的第一道闸。README 的 Security 段写得很具体：</p>
+<blockquote>
+<p><code>ShellTool</code> runs only commands on its allowlist (default <code>ls</code>, <code>pwd</code>, <code>df</code>, <code>wc</code>, <code>date</code>, <code>uptime</code>, <code>hostname</code>, <code>whoami</code>), matched exactly and case-sensitively; a fixed, non-overridable blocklist of dangerous commands is checked first regardless of what&rsquo;s allowlisted.</p>
+</blockquote>
+<p>拆开三个要点：</p>
+<ol>
+<li><strong>默认白名单只有 8 个命令</strong>：<code>ls</code> <code>pwd</code> <code>df</code> <code>wc</code> <code>date</code> <code>uptime</code> <code>hostname</code> <code>whoami</code></li>
+<li><strong>精确匹配 + 大小写敏感</strong>——不是前缀匹配，<code>ls</code> 不会放行 <code>lsalias</code></li>
+<li><strong>blocklist 先检查，且不可覆盖</strong>——就算你把 <code>rm</code> 加进白名单，也先被 blocklist 拦掉</li>
+</ol>
+<p>第 3 点是设计上的硬约束。大多数&quot;可配置白名单&quot;的框架，管理员误配就能把危险命令放进来。phpClaw 把 blocklist 放在白名单判断<strong>之前</strong>，且做成不可覆盖——这是防御性设计，不是灵活性取舍。</p>
+<h3 id="httptool-防的是-dns-rebinding">HttpTool 防的是 DNS rebinding
+</h3><p>README 原文：</p>
+<blockquote>
+<p><code>HttpTool</code> blocks requests by hostname prefix, then re-validates every resolved IP address, catching CGNAT and DNS-rebinding attempts that hostname checks alone would miss.</p>
+</blockquote>
+<p><strong>先按 hostname 前缀拦，再校验解析后的每一个 IP</strong>。</p>
+<p>为什么要这一步？因为 hostname 检查有个经典漏洞：第一次解析返回合法 IP（通过检查），第二次解析返回内网 IP（DNS rebinding）。只校验 hostname 的框架会被这招绕过。phpClaw 的做法是解析后逐个校验 IP，堵住 CGNAT 和 rebinding。</p>
+<p>这个细节在 README 里只有一句话，但它是判断一个 Agent 框架&quot;有没有真正想过安全&quot;的试金石。</p>
+<h3 id="文件工具是沙箱隔离的">文件工具是沙箱隔离的
+</h3><p><code>FileReadTool</code> / <code>FileWriteTool</code> 按 README：</p>
+<blockquote>
+<p>sandboxed to a configured workspace root and refuse credentials, keys and security directories (<code>.git</code>, <code>.ssh</code>, <code>wp-admin</code>, &hellip;) unconditionally, and <code>vendor/</code> and <code>node_modules/</code> by default.</p>
+</blockquote>
+<p><strong>无条件拒绝</strong> <code>.git</code>、<code>.ssh</code>、<code>wp-admin</code>，默认拒绝 <code>vendor/</code> 和 <code>node_modules/</code>。</p>
+<p>注意&quot;unconditionally&quot;和&quot;by default&quot;的区别——敏感目录是硬拒，依赖目录是默认拒但可配。这个分层是合理的：<code>.ssh</code> 里的东西永远不该给 LLM 看，但 <code>vendor/</code> 在某些代码搜索场景下是有用的。</p>
+<h2 id="8-个默认安全守卫这才是重点">8 个默认安全守卫：这才是重点
+</h2><p>phpClaw README 里最该被圈起来的数字是 <strong>8</strong>。</p>
+<blockquote>
+<p>8 security guards on by default (prompt injection, PII, code injection, Unicode, homoglyph, role-switch, destructive SQL, message length), plus rate limiting available as an opt-in guard.</p>
+</blockquote>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>守卫</th>
+					<th>防什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>prompt injection</td>
+					<td>用户输入里藏指令</td>
+			</tr>
+			<tr>
+					<td>PII</td>
+					<td>个人身份信息外泄</td>
+			</tr>
+			<tr>
+					<td>code injection</td>
+					<td>代码块注入</td>
+			</tr>
+			<tr>
+					<td>Unicode</td>
+					<td>异常 Unicode 字符（零宽、控制符）</td>
+			</tr>
+			<tr>
+					<td>homoglyph</td>
+					<td>同形异义字攻击（用西里尔字母冒充拉丁字母）</td>
+			</tr>
+			<tr>
+					<td>role-switch</td>
+					<td>试图切换模型角色</td>
+			</tr>
+			<tr>
+					<td>destructive SQL</td>
+					<td>破坏性 SQL（DROP / TRUNCATE 等）</td>
+			</tr>
+			<tr>
+					<td>message length</td>
+					<td>消息长度超限</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>默认全开</strong>，不用你一个个打开。rate limiting 是唯一 opt-in 的。</p>
+<p>还有一个容易忽略的设计：</p>
+<blockquote>
+<p>Tool results are sanitised unconditionally by <code>ToolOutputGuard</code>, which sits outside the guard registry.</p>
+</blockquote>
+<p><strong><code>ToolOutputGuard</code> 在守卫注册表之外，无条件执行</strong>。</p>
+<p>这句话的含义很重要：其他 8 个守卫是注册式的（可以注册自定义的），但工具输出净化是<strong>独立于注册表、强制生效</strong>的。也就是说你无法通过&quot;不注册某个 guard&quot;来绕过它。</p>
+<p>LLM 输出净化同样默认开启，可以用 <code>-&gt;sanitiseOutput(false)</code> 关掉——但工具输出净化没有这个开关。</p>
+<h3 id="44-个-hook">44 个 hook
+</h3><p>README 的架构图里写着：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Message
+</span></span><span style="display:flex;"><span>  → Guards       (blocks injection/PII before the LLM sees it)
+</span></span><span style="display:flex;"><span>  → Hooks         (lifecycle events fire, 44 across the loop)
+</span></span><span style="display:flex;"><span>  → Agent          (ReAct loop: provider + tools + memory + skills)
+</span></span><span style="display:flex;"><span>  → AgentResponse  (text, tokens, tool calls, timing)
+</span></span></code></pre></div><p><strong>44 个生命周期 hook 贯穿整个循环</strong>。这个数字说明它的扩展点不是&quot;加个工具&quot;这么简单，而是可以在循环的几乎每一步插逻辑。</p>
+<h3 id="五个静态注册表">五个静态注册表
+</h3><p>README 写明扩展机制：</p>
+<blockquote>
+<p>Five static registries (<code>GuardRegistry</code>, <code>HookRegistry</code>, <code>MemoryRegistry</code>, <code>ProviderRegistry</code>, <code>SkillRegistry</code>) plus the per-agent <code>ToolRegistry</code> instance. Drop a class in <code>packages/core/src/&lt;Subsystem&gt;/</code> with the matching attribute (<code>#[Tool]</code>, <code>#[Provider]</code>, <code>#[Memory]</code>, <code>#[Skill]</code>, <code>#[Hook]</code>, <code>#[Guard]</code>), run <code>composer dump-autoload</code>, it&rsquo;s live.</p>
+</blockquote>
+<p><strong>PHP 8 attribute 驱动</strong>——写个类，打上 <code>#[Tool]</code> 或 <code>#[Guard]</code>，<code>composer dump-autoload</code>，就生效了。这是 PHP 8.1+ 的原生 attribute 语法，不需要写配置文件。</p>
+<h2 id="8-个框架适配器cms-为什么走-zip">8 个框架适配器：CMS 为什么走 ZIP
+</h2><p>phpClaw 支持 8 个平台，但安装方式分两类：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>平台</th>
+					<th>包</th>
+					<th>安装方式</th>
+					<th>版本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Laravel</td>
+					<td><code>phpclaw/phpclaw-laravel</code></td>
+					<td>Composer</td>
+					<td>10, 11, 12, 13</td>
+			</tr>
+			<tr>
+					<td>Symfony</td>
+					<td><code>phpclaw/phpclaw-symfony</code></td>
+					<td>Composer</td>
+					<td>6.4, 7.x, 8.x</td>
+			</tr>
+			<tr>
+					<td>Drupal</td>
+					<td><code>phpclaw/phpclaw-drupal</code></td>
+					<td>Composer</td>
+					<td>10, 11</td>
+			</tr>
+			<tr>
+					<td>Magento</td>
+					<td><code>phpclaw/phpclaw-magento</code></td>
+					<td>Composer</td>
+					<td>2.4.x</td>
+			</tr>
+			<tr>
+					<td>WordPress + WooCommerce</td>
+					<td>—</td>
+					<td><strong>ZIP 上传</strong></td>
+					<td>6.2+</td>
+			</tr>
+			<tr>
+					<td>Joomla</td>
+					<td>—</td>
+					<td><strong>ZIP 上传</strong></td>
+					<td>4, 5, 6</td>
+			</tr>
+			<tr>
+					<td>OpenCart</td>
+					<td>—</td>
+					<td><strong>ZIP 上传</strong></td>
+					<td>3.x, 4.x</td>
+			</tr>
+			<tr>
+					<td>PrestaShop</td>
+					<td>—</td>
+					<td><strong>ZIP 上传</strong></td>
+					<td>8.x, 9.x</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>README 解释了为什么这么分：</p>
+<blockquote>
+<p>CMS adapters ship as ZIP downloads from Releases, not Composer, because that&rsquo;s how their host platforms install extensions.</p>
+</blockquote>
+<p><strong>CMS 平台就是这么装插件的</strong>——WordPress 后台点上传，Joomla 后台点安装。让它们走 Composer 等于让用户去改生产站的构建流程。</p>
+<p>每个适配器接进宿主的惯用机制：Laravel 用 Eloquent，Symfony 用 Doctrine，WordPress 用 WP-CLI，Drupal 用 Drush。底层是同一套 <strong>3 表记忆 schema</strong>。</p>
+<p>命令行也统一了：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>php artisan phpclaw <span style="color:#e6db74">&#34;deploy staging and notify #ops&#34;</span>          <span style="color:#75715e"># Laravel</span>
+</span></span><span style="display:flex;"><span>bin/console phpclaw <span style="color:#e6db74">&#34;check all database connections&#34;</span>          <span style="color:#75715e"># Symfony</span>
+</span></span><span style="display:flex;"><span>drush phpclaw:run <span style="color:#e6db74">&#34;list recently-active users&#34;</span>                <span style="color:#75715e"># Drupal</span>
+</span></span><span style="display:flex;"><span>bin/magento phpclaw:run <span style="color:#e6db74">&#34;check order-queue status&#34;</span>             <span style="color:#75715e"># Magento</span>
+</span></span><span style="display:flex;"><span>wp phpclaw send <span style="color:#e6db74">&#34;summarise today&#39;s posts&#34;</span>                     <span style="color:#75715e"># WordPress</span>
+</span></span></code></pre></div><h3 id="mcp-server把-php-工具暴露给-claude-desktop">MCP server：把 PHP 工具暴露给 Claude Desktop
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>composer require phpclaw/phpclaw-mcp
+</span></span></code></pre></div><p>README 原文：</p>
+<blockquote>
+<p><code>phpclaw/phpclaw-mcp</code> exposes your existing <code>ToolRegistry</code> over the Model Context Protocol, so Claude Desktop, Claude Code, Cursor, or any MCP-compatible client can call your tools directly, with the default guards scanning every tool call&rsquo;s arguments.</p>
+</blockquote>
+<p><strong>关键点</strong>：默认守卫会扫描<strong>每一次工具调用的参数</strong>。</p>
+<p>这里有个诚实的边界说明——README 主动指出：</p>
+<blockquote>
+<p>the prompt-only code-injection, PII and length guards apply to chat messages, not tool arguments</p>
+</blockquote>
+<p>也就是说，code-injection / PII / 长度这三个守卫是<strong>只针对聊天消息</strong>的，不覆盖工具参数。工具参数走的是另一套检查。这个区分写得透明，比&quot;全面防护&quot;这种话实在。</p>
+<h2 id="它明确不是什么">它明确不是什么
+</h2><p>phpClaw README 里有一句自我限定，我觉得比功能列表更有信息量：</p>
+<blockquote>
+<p><strong>Not trying to be everything.</strong> phpClaw isn&rsquo;t a RAG framework: there are no embeddings or vector stores. It&rsquo;s built to give an LLM tools, memory and security controls against your real application, and to chain those agents into pipelines and graphs when one call isn&rsquo;t enough.</p>
+</blockquote>
+<p><strong>不做 RAG</strong>。没有 embeddings，没有向量库。</p>
+<p>为什么这条重要？因为&quot;Agent&quot;这个词现在被用烂了，很多框架把 RAG、Agent、workflow 混在一起卖。phpClaw 明确划开：<strong>我管工具、记忆、安全，RAG 你自己搭</strong>。</p>
+<p>需要 RAG 的场景（比如&quot;从 10 万篇文档里找答案&quot;），phpClaw 不是答案。需要&quot;让 LLM 操作你的数据库、跑你的命令、调你的 API&quot;，它才是。</p>
+<h2 id="和通用-llm-sdk-的真实边界">和通用 LLM SDK 的真实边界
+</h2><p>README 里那张对比表是官方立场，我按它拆：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>phpClaw</th>
+					<th>通用 LLM SDK</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>tool-calling 循环</td>
+					<td>ReAct，内置</td>
+					<td><strong>你自己写</strong></td>
+			</tr>
+			<tr>
+					<td>框架原生适配器</td>
+					<td>8 个，按框架惯用法</td>
+					<td>无</td>
+			</tr>
+			<tr>
+					<td>prompt injection 防御</td>
+					<td>8 默认守卫 + 可选限流</td>
+					<td>无</td>
+			</tr>
+			<tr>
+					<td>记忆抽象</td>
+					<td>可换驱动</td>
+					<td>无</td>
+			</tr>
+			<tr>
+					<td>流式 + 工具调用同时</td>
+					<td>hybrid 模式</td>
+					<td>看 SDK</td>
+			</tr>
+			<tr>
+					<td>内置 MCP server</td>
+					<td>暴露任意 app 给 Claude Desktop</td>
+					<td>无</td>
+			</tr>
+			<tr>
+					<td>chains / 多 agent 图</td>
+					<td><code>Pipeline</code> + <code>Graph</code></td>
+					<td><strong>你自己搭</strong></td>
+			</tr>
+			<tr>
+					<td>核心框架依赖</td>
+					<td><code>ext-curl</code> / <code>ext-json</code> / <code>ext-mbstring</code></td>
+					<td>看 SDK</td>
+			</tr>
+			<tr>
+					<td>核心协议</td>
+					<td>MIT，无功能锁定</td>
+					<td>看 SDK</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>通用 LLM SDK 给你什么</strong>：一个 HTTP 客户端。它能调 API，返回文本。</p>
+<p><strong>phpClaw 给你什么</strong>：客户端外面那一圈——循环、守卫、记忆、框架接线。</p>
+<p>所以这不是&quot;二选一&quot;。你完全可以在已有 SDK 的项目里，只把循环和守卫换成 phpClaw 的 core（它零框架依赖，理论上能塞进任何 PHP 项目）。</p>
+<h3 id="pipeline-和-graph">Pipeline 和 Graph
+</h3><p>README 提到两个进阶能力：</p>
+<ul>
+<li><strong><code>Pipeline</code></strong>：链式步骤（prompt 模板、agent、结构化输出、你自己的 callable），带 <strong>retry 和 fallback</strong></li>
+<li><strong><code>Graph</code></strong>：节点可以循环、分支、<strong>暂停等人工</strong>、<strong>在另一个进程里恢复</strong>、fan-out 给 cron / 队列 / CLI 的 worker</li>
+</ul>
+<p>&ldquo;暂停等人工、另一个进程恢复&quot;这条值得注意——它解决的是 Agent 长任务里最烦的问题：跑到一半要人确认，但进程不能一直挂着。phpClaw 把这个做成框架能力，不是让你自己写状态机。</p>
+<h2 id="我的判断值得看的是守卫不是-agent">我的判断：值得看的是守卫，不是 Agent
+</h2><p>读完材料，我的结论是——<strong>phpClaw 的价值排序里，8 个守卫排在 ReAct 循环前面</strong>。</p>
+<p>理由：</p>
+<ol>
+<li><strong>ReAct 循环已经不稀缺</strong>。网上教程一大把，Copilot 都能给你写。</li>
+<li><strong>守卫是真门槛</strong>。prompt injection、homoglyph、DNS rebinding——这三个词能同时出现在一个 PHP 项目的 README 里，说明作者真的想过&quot;Agent 接进生产系统会发生什么&rdquo;。</li>
+<li><strong><code>ToolOutputGuard</code> 独立于注册表</strong>，这个设计决策比&quot;支持 8 个 provider&quot;重要得多。</li>
+</ol>
+<h3 id="适合的场景">适合的场景
+</h3><ul>
+<li><strong>老 PHP 项目</strong>（WordPress 站、Laravel 后台、自研 CMS）想加 Agent 能力</li>
+<li><strong>PHP 团队</strong>不想引入 Python 服务，Agent 和主业务同栈</li>
+<li><strong>需要 MCP</strong>：想把 PHP 工具暴露给 Claude Desktop / Claude Code</li>
+<li><strong>需要安全基线</strong>：默认 8 守卫 + 不可覆盖的 blocklist</li>
+</ul>
+<h3 id="不适合的场景">不适合的场景
+</h3><ul>
+<li><strong>需要 RAG</strong>：没有 embeddings 和向量库，得自己搭</li>
+<li><strong>PHP 版本 &lt; 8.1</strong>：不支持</li>
+<li><strong>复杂分支编排</strong>：<code>Graph</code> 有循环和分支，但如果你的流程需要精细到&quot;第 7 步失败时回退到第 3 步并重试两次&quot;，还是得看 <code>Graph</code> 能不能表达</li>
+<li><strong>想要 100% 控制循环</strong>：它的循环是框架管的，改不了内部行为</li>
+</ul>
+<h3 id="一个现实顾虑">一个现实顾虑
+</h3><p>HN 讨论里有一条评论值得摆出来（HN item 50293361，12 points）：</p>
+<blockquote>
+<p>I will say I&rsquo;m a bit sceptical to the general quality and probably sloppiness of this based on the 300k loc initial commit which sets off some warning signs for me.</p>
+</blockquote>
+<p><strong>&ldquo;30 万行代码的首次提交&quot;让人警觉。</strong></p>
+<p>这条评论点出了一个真问题：一个 2026 年 9 月 23 日才创建的仓库，首次提交就是 30 万行——这个体量不像手写，更像生成或搬运。仓库目前 24 stars，Packagist 最新 v0.1.5。</p>
+<p>我的看法：<strong>这种项目值得看设计，不值得直接上生产</strong>。先读它的守卫实现和 blocklist，学到东西；真要在生产用，先做一轮代码审计。README 里也写了漏洞报告走 SECURITY.md、不要开公开 issue——说明作者至少知道这个流程。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: phpClaw 收费吗？</strong></p>
+<p>A: 核心 MIT 协议，README 写明&quot;nothing gated&rdquo;（无功能锁定）。Packagist 上 <code>phpclaw/phpclaw</code> 可直接 <code>composer require</code>。有个可选的 cloud transport（托管的、持续更新的 prompt-scan 守卫），那是增值服务，核心不依赖它。</p>
+<p><strong>Q2: 我的项目是 WordPress，能用吗？</strong></p>
+<p>A: 能。WordPress 适配器走 ZIP 上传（后台安装），不需要 Composer。支持 WordPress 6.2+ 和 WooCommerce。命令是 <code>wp phpclaw send &quot;summarise today's posts&quot;</code>。</p>
+<p><strong>Q3: 支持哪些 PHP 版本？</strong></p>
+<p>A: 8.1 / 8.2 / 8.3 / 8.4。README 写明&quot;Tested across every supported version&quot;。低于 8.1 不支持。</p>
+<p><strong>Q4: 能换模型吗？</strong></p>
+<p>A: 能。<code>-&gt;provider()</code> + <code>-&gt;model()</code> 切换，其他代码不用改。7 个 provider 按环境变量自动探测，顺序是 Anthropic → OpenAI → Groq → Gemini → Mistral → DeepSeek → Ollama。自定义 OpenAI 兼容端点要设 <code>PHPCLAW_PROVIDER=custom</code>。</p>
+<p><strong>Q5: ShellTool 会不会被误配成危险命令？</strong></p>
+<p>A: 不能。默认白名单只有 8 个只读命令，精确匹配 + 大小写敏感。危险命令 blocklist 在白名单判断之前检查，且<strong>不可覆盖</strong>——就算你把 <code>rm</code> 加进白名单也会被拦。</p>
+<p><strong>Q6: 我想做 RAG，phpClaw 够用吗？</strong></p>
+<p>A: 不够。README 明确写&quot;it isn&rsquo;t a RAG framework: there are no embeddings or vector stores&quot;。它管工具、记忆、安全；向量检索和 embeddings 要你自己搭。</p>
+<p><strong>Q7: 它和 LangChain PHP 之类的库是什么关系？</strong></p>
+<p>A: 竞争关系，但定位不同。phpClaw 强调&quot;零框架依赖的 core + 8 个适配器&quot;，走的是 runtime 路线（循环、守卫、记忆装好）。选它的主要理由不是功能多，是<strong>PHP 原生 + 安全基线 + 不锁定框架</strong>。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/ai-agent-runtime-vs-framework/" >Agent 运行时 vs 框架：我为什么两头都要</a></li>
+<li><a class="link" href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/" >DeepSeek Harness vs OpenClaw：插件式 Agent 框架对比</a></li>
+<li><a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >Claude Code 32 Skills + 8 MCP 全套配置</a></li>
+<li><a class="link" href="/ai/ai-agent-jail-what-it-is/" >AI Agent Jail：Agent 进入真实系统后，什么会崩</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/php/">PHP</a>
+        
+            <a href="/tags/phpclaw/">PhpClaw</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/laravel/">Laravel</a>
+        
+            <a href="/tags/symfony/">Symfony</a>
+        
+            <a href="/tags/mcp/">MCP</a>
+        
+            <a href="/tags/prompt-injection/">Prompt Injection</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/tolaria-git-markdown-ai-memory/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tolaria 把 AI 记忆拉回 Markdown：为什么 Git 仓库可能比向量数据库更适合第二大脑</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/gitlost-github-ai-agent-private-repo-leak/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">GitLost 把 GitHub AI Agent 骗到泄露私有仓库：Agent 时代最危险的不是幻觉，是权限</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/scrapling-self-healing-crawler-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Scrapling：AI Agent 时代，爬虫为什么需要“自愈能力”？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lightpanda-zig-headless-browser-ai-agent-crawler/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Lightpanda：用 Zig 从零写的无头浏览器，AI Agent 的新爬虫引擎</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/phpclaw-php-ai-agent-runtime-laravel-symfony-wordpress-mcp-guards\/'; 
+        const pageTitle = 'phpClaw 拆解：PHP 项目挂一个 AI Agent 要几步，以及为什么 8 个安全守卫比 Agent 本身更值得看';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 302 天 14 小时 · 145 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-30 22:00:42 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

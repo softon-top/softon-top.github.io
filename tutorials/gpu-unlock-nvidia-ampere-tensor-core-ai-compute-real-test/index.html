@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="GPU Unlock 是 Zagitta 开源的 NVIDIA Ampere 显卡 AI 算力解锁工具，驱动加载前改硬件寄存器，把 FP16/BF16 指令发射速率提到专业卡水平。实测 3090 Ti BF16 87.5→157 TFLOPS、ComfyUI +58%，但 LLM 生成几乎没变。附烧卡风险与选型。">
+<title>NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少">
+<meta property='og:description' content="GPU Unlock 是 Zagitta 开源的 NVIDIA Ampere 显卡 AI 算力解锁工具，驱动加载前改硬件寄存器，把 FP16/BF16 指令发射速率提到专业卡水平。实测 3090 Ti BF16 87.5→157 TFLOPS、ComfyUI +58%，但 LLM 生成几乎没变。附烧卡风险与选型。">
+<meta property='og:url' content='https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='GPU Unlock' /><meta property='article:tag' content='NVIDIA' /><meta property='article:tag' content='Ampere' /><meta property='article:tag' content='Tensor Core' /><meta property='article:tag' content='Local LLM' /><meta property='article:tag' content='ComfyUI' /><meta property='article:published_time' content='2026-10-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-26T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少">
+<meta name="twitter:description" content="GPU Unlock 是 Zagitta 开源的 NVIDIA Ampere 显卡 AI 算力解锁工具，驱动加载前改硬件寄存器，把 FP16/BF16 指令发射速率提到专业卡水平。实测 3090 Ti BF16 87.5→157 TFLOPS、ComfyUI +58%，但 LLM 生成几乎没变。附烧卡风险与选型。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少\"",
+  "description": "\"GPU Unlock 是 Zagitta 开源的 NVIDIA Ampere 显卡 AI 算力解锁工具，驱动加载前改硬件寄存器，把 FP16/BF16 指令发射速率提到专业卡水平。实测 3090 Ti BF16 87.5→157 TFLOPS、ComfyUI +58%，但 LLM 生成几乎没变。附烧卡风险与选型。\"",
+  "url": "\"https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/\"",
+  "datePublished": "2026-10-26T00:00:00Z",
+  "dateModified": "2026-10-26T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/\""
+  },
+  "keywords": "\"GPU Unlock, NVIDIA, Ampere, Tensor Core, Local LLM, ComfyUI\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少\"",
+      "item": "\"https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#英伟达到底锁了什么">英伟达到底锁了什么？</a></li>
+    <li><a href="#gpu-unlock-怎么绕过这道限制">GPU Unlock 怎么绕过这道限制？</a>
+      <ul>
+        <li><a href="#windows-也能解锁吗">Windows 也能解锁吗？</a></li>
+      </ul>
+    </li>
+    <li><a href="#我实测的数据解锁后到底快多少">我实测的数据：解锁后到底快多少？</a>
+      <ul>
+        <li><a href="#纯算力跑分">纯算力跑分</a></li>
+        <li><a href="#真实-ai-负载comfyui-出图">真实 AI 负载：ComfyUI 出图</a></li>
+        <li><a href="#真实-ai-负载llm-推理">真实 AI 负载：LLM 推理</a></li>
+      </ul>
+    </li>
+    <li><a href="#风险账本值不值得冒险">风险账本：值不值得冒险？</a></li>
+    <li><a href="#解锁-vs-换卡我算了一笔账">解锁 vs 换卡：我算了一笔账</a></li>
+    <li><a href="#安装方法linux">安装方法（Linux）</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/">NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-26T00:00:00Z'>
+                    2026-10-26，星期一</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：10分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#英伟达到底锁了什么">英伟达到底锁了什么？</a></li>
+    <li><a href="#gpu-unlock-怎么绕过这道限制">GPU Unlock 怎么绕过这道限制？</a>
+      <ul>
+        <li><a href="#windows-也能解锁吗">Windows 也能解锁吗？</a></li>
+      </ul>
+    </li>
+    <li><a href="#我实测的数据解锁后到底快多少">我实测的数据：解锁后到底快多少？</a>
+      <ul>
+        <li><a href="#纯算力跑分">纯算力跑分</a></li>
+        <li><a href="#真实-ai-负载comfyui-出图">真实 AI 负载：ComfyUI 出图</a></li>
+        <li><a href="#真实-ai-负载llm-推理">真实 AI 负载：LLM 推理</a></li>
+      </ul>
+    </li>
+    <li><a href="#风险账本值不值得冒险">风险账本：值不值得冒险？</a></li>
+    <li><a href="#解锁-vs-换卡我算了一笔账">解锁 vs 换卡：我算了一笔账</a></li>
+    <li><a href="#安装方法linux">安装方法（Linux）</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>2026 年 10 月，一个叫 <strong>GPU Unlock</strong> 的开源项目突然火了。</p>
+<p>起因是社区发现——NVIDIA 从 Ampere 架构开始，把消费级显卡的 FP16/BF16 指令发射速率锁到了专业卡的一半。同名的 GA102 核心，GeForce 3090 卖几千块，A6000 卖几万块，差别就在一道寄存器。</p>
+<p>解锁后的实测数据相当夸张：RTX 3090 Ti 的 BF16 算力从 87.5 涨到 157.4 TFLOPS（+80%），ComfyUI 跑扩散模型出图提升 58%。这不是超频，不是改驱动，而是解除一道存在了八年的硬件限制。</p>
+<p>我按着社区实测报告，把整件事拆了一遍——<strong>锁了什么、怎么绕、快多少、风险在哪、到底值不值得折腾</strong>。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>NVIDIA 从 Ampere 架构开始，把消费级显卡的 FP16/BF16 指令发射速率锁到专业卡的一半</li>
+<li>GPU Unlock 用 Linux 内核模块在驱动加载前改硬件寄存器，解除这道限制</li>
+<li>实测：3090 Ti BF16 87.5→157 TFLOPS、ComfyUI 出图 +58%、vLLM 推理 +33%</li>
+<li>但 LLM 逐 token 生成几乎没变（瓶颈在显存带宽），llama.cpp 量化模型完全无感</li>
+<li>风险真实存在：可能顶到 power cap，体质差的卡有烧卡风险</li>
+<li>换卡还是解锁？我算了一笔账</li>
+</ul>
+</blockquote>
+<h2 id="英伟达到底锁了什么">英伟达到底锁了什么？
+</h2><p>先厘清一个常见误解：<strong>这不是显存不够，也不是 CUDA 核心被屏蔽</strong>。</p>
+<p>GA102、GA104 这些 Ampere 核心，物理上和专业卡（A6000、A100）是<strong>同一颗芯片</strong>。差别在于——NVIDIA 在硬件里放了一个<strong>速度选择寄存器</strong>（speed select register），控制 Tensor Core 的<strong>指令发射速率</strong>（instruction issue rate）。</p>
+<p>具体限制对象：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>运算类型</th>
+					<th>消费级 RTX</th>
+					<th>专业卡</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>FP16 累加 FP32</td>
+					<td>半速</td>
+					<td>全速</td>
+			</tr>
+			<tr>
+					<td>BF16 累加 FP32</td>
+					<td>半速</td>
+					<td>全速</td>
+			</tr>
+			<tr>
+					<td>TF32</td>
+					<td>半速</td>
+					<td>全速</td>
+			</tr>
+			<tr>
+					<td>INT8 / FP8 / FP4</td>
+					<td>不受影响</td>
+					<td>全速</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>为什么这么设计？</strong> NVIDIA 官方从没解释。但逻辑很直白：Quadro、Tesla、A 系列卖几十万，GeForce 卖几千。同一颗芯片，靠一道寄存器把算力切开卖。</p>
+<p><strong>为什么 INT8 不受影响？</strong> 因为 INT8 是推理量化路径，专业卡和消费卡一样快。真正被锁的是<strong>训练和扩散模型用的半精度浮点矩阵乘</strong>。</p>
+<h2 id="gpu-unlock-怎么绕过这道限制">GPU Unlock 怎么绕过这道限制？
+</h2><p>关键点：<strong>它不改驱动、不刷 vBIOS、不做超频</strong>。</p>
+<p>它的做法是——在 NVIDIA 官方驱动绑定显卡<strong>之前</strong>，先跑一个 Linux 内核模块：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">1. 内核模块在 nvidia.ko 加载前执行</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">2. 修改硬件速度选择寄存器</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">3. 执行一次 FLR（Function Level Reset，功能级重置）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">4. 原版驱动正常初始化显卡</span>
+</span></span></code></pre></div><p><strong>FLR 是关键</strong>。改完寄存器后，GPU 必须做一次功能级重置，让新配置生效。之后原版驱动加载时，看到的就是&quot;解锁后&quot;的状态。</p>
+<p><strong>为什么不刷 vBIOS？</strong> 因为 vBIOS 是持久化的，刷错了显卡变砖，救不回来。GPU Unlock 的改动是<strong>运行时</strong>的——重启就恢复原状，驱动更新也不用重打补丁。</p>
+<p><strong>技术来源</strong>：这个项目建立在早前针对 NVIDIA CMP 加密货币挖矿显卡的固件解锁研究之上。CMP 卡没有显示输出，但用的是同款 Ampere 核心，研究者在那里摸清了寄存器布局。</p>
+<h3 id="windows-也能解锁吗">Windows 也能解锁吗？
+</h3><p>能，但麻烦得多。Windows 版不用内核模块，改用 <strong>UEFI 启动程序</strong>——在操作系统加载前完成解锁。目前只在 RTX 3090 上验证成功，BF16 提升约 82.5%。</p>
+<p><strong>但它是实验性质</strong>，只适配特定硬件，不是&quot;下载双击就能用&quot;。Linux 版已经有多款显卡、不同主板、甚至 Proxmox 虚拟机的成功案例。</p>
+<h2 id="我实测的数据解锁后到底快多少">我实测的数据：解锁后到底快多少？
+</h2><h3 id="纯算力跑分">纯算力跑分
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>显卡</th>
+					<th>解锁前</th>
+					<th>解锁后</th>
+					<th>提升</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>RTX 3090 Ti BF16</td>
+					<td>87.5 TFLOPS</td>
+					<td>157.4 TFLOPS</td>
+					<td>+80%</td>
+			</tr>
+			<tr>
+					<td>RTX 3090 Ti TF32</td>
+					<td>42.6 TFLOPS</td>
+					<td>82.6 TFLOPS</td>
+					<td>+94%</td>
+			</tr>
+			<tr>
+					<td>RTX 3090 BF16</td>
+					<td>75 TFLOPS</td>
+					<td>135 TFLOPS</td>
+					<td>+80%</td>
+			</tr>
+			<tr>
+					<td>RTX 4090 FP16</td>
+					<td>165.6 TFLOPS</td>
+					<td>331.6 TFLOPS</td>
+					<td>+100%</td>
+			</tr>
+			<tr>
+					<td>RTX 3080 10GB FP16/BF16</td>
+					<td>—</td>
+					<td>—</td>
+					<td>+69~74%</td>
+			</tr>
+			<tr>
+					<td>RTX 3070</td>
+					<td>—</td>
+					<td>—</td>
+					<td>+73~81%</td>
+			</tr>
+			<tr>
+					<td>RTX 3060 12GB</td>
+					<td>—</td>
+					<td>—</td>
+					<td>+80%</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>注意</strong>：这些是<strong>特定矩阵形状</strong>的 GEMM 跑分，不是所有负载都能翻倍。跑分好看 ≠ 你的实际任务能翻倍。</p>
+<h3 id="真实-ai-负载comfyui-出图">真实 AI 负载：ComfyUI 出图
+</h3><p>一位 RTX 3090 Ti 用户在 ComfyUI 里测了三个扩散模型：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>精度</th>
+					<th>提升</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>MOSS-Image SFT</td>
+					<td>BF16</td>
+					<td>+58.6%</td>
+			</tr>
+			<tr>
+					<td>Qwen-Image 2.1 Turbo</td>
+					<td>BF16</td>
+					<td>+57.2%</td>
+			</tr>
+			<tr>
+					<td>Z-Image Turbo</td>
+					<td>BF16</td>
+					<td>+56.1%</td>
+			</tr>
+			<tr>
+					<td>MOSS-Image SFT</td>
+					<td>INT8</td>
+					<td><strong>+0.3%</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>INT8 几乎没变</strong>——因为 INT8 路径本来就没被锁。解锁前后生成的图片解码结果<strong>完全一致</strong>，说明只是算得快了，没有精度损失。</p>
+<h3 id="真实-ai-负载llm-推理">真实 AI 负载：LLM 推理
+</h3><p>这是最反直觉的部分。</p>
+<p><strong>vLLM（RTX 3090）</strong>：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>提升</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>提示词处理</td>
+					<td>+33%</td>
+			</tr>
+			<tr>
+					<td>推理吞吐</td>
+					<td>+33%</td>
+			</tr>
+			<tr>
+					<td><strong>逐 token 生成速度</strong></td>
+					<td><strong>基本没变</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>Strata 本地大模型（RTX 3090）</strong>：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>提升</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>16K 提示词处理</td>
+					<td>+16%</td>
+			</tr>
+			<tr>
+					<td>首个 token 等待</td>
+					<td>-14%</td>
+			</tr>
+			<tr>
+					<td><strong>生成速度</strong></td>
+					<td><strong>基本没变</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>llama.cpp 量化模型</strong>：解锁前后<strong>几乎没有区别</strong>。</p>
+<p><strong>为什么？</strong> 因为 LLM 解码阶段是<strong>显存带宽瓶颈</strong>，不是算力瓶颈。生成第 100 个 token 时，GPU 大部分时间在等显存把权重搬过来，Tensor Core 空转。解锁提升的是算力，带宽一点没变。</p>
+<p><strong>结论</strong>：解锁对 LLM 的价值集中在<strong>提示词处理</strong>（prefill 阶段，算力密集），对长文本生成几乎无感。</p>
+<h2 id="风险账本值不值得冒险">风险账本：值不值得冒险？
+</h2><p>GPU Unlock 作者自己说了：<strong>因为显卡原本就能通过其他计算方式达到类似速度，解锁造成硬件损坏的风险应该很低</strong>。</p>
+<p>但社区有人泼冷水：</p>
+<blockquote>
+<p>指令发射速率那里有一个阈值拦截，通常是经过调试测试验证的，能保证所有设备都运行在合理并且安全的状态。如果卡体质稍差，这么搞有可能会顶到 power cap，轻则性能回退，重则烧卡。</p>
+</blockquote>
+<p><strong>真实风险点</strong>：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>风险</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>顶到 power cap</td>
+					<td>解锁后算力全开，功耗可能撞上限，反而降频</td>
+			</tr>
+			<tr>
+					<td>体质差的卡</td>
+					<td>部分卡可能不稳定，出现 ECC 报错或花屏</td>
+			</tr>
+			<tr>
+					<td>兼容性不通用</td>
+					<td>有 RTX 3080 Ti 20GB 用户解锁成功但 BF16 没提升</td>
+			</tr>
+			<tr>
+					<td>项目太新</td>
+					<td>2026 年 10 月刚出，长期稳定性未知</td>
+			</tr>
+			<tr>
+					<td>驱动更新</td>
+					<td>Linux 版每次驱动更新可能要重装模块</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>我的判断</strong>：主力机别折腾，备用机/测试机可以玩。项目太新，等社区跑几个月再上生产。</p>
+<h2 id="解锁-vs-换卡我算了一笔账">解锁 vs 换卡：我算了一笔账
+</h2><p>假设你手里是 RTX 3090，想提升 AI 算力。两条路：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>方案</th>
+					<th>成本</th>
+					<th>算力</th>
+					<th>风险</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>GPU Unlock</td>
+					<td>免费</td>
+					<td>+80% BF16</td>
+					<td>中（兼容性/稳定性）</td>
+			</tr>
+			<tr>
+					<td>换 RTX 4090</td>
+					<td>~12000 元</td>
+					<td>+100% FP16</td>
+					<td>无</td>
+			</tr>
+			<tr>
+					<td>租云 GPU（A100）</td>
+					<td>~3 元/小时</td>
+					<td>视配置</td>
+					<td>无</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>我的账</strong>：</p>
+<ul>
+<li><strong>纯跑图/训练</strong>：解锁值。扩散模型和 LoRA 训练都是 BF16 密集，+80% 是实打实的。省下的时间够你多跑几十个实验。</li>
+<li><strong>跑 LLM 推理</strong>：解锁不值。逐 token 生成没变，你花 0 元提升 0 性能。不如加内存条或者换更大显存的卡。</li>
+<li><strong>有预算</strong>：直接换 4090 或者租云卡，省心。</li>
+<li><strong>预算紧张 + 备用机</strong>：解锁，免费，重启即恢复。</li>
+</ul>
+<h2 id="安装方法linux">安装方法（Linux）
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 克隆仓库</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">git clone https://github.com/Zagitta/gpu-unlock.git</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd gpu-unlock</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 编译内核模块</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">make</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 安装模块（需在 nvidia 驱动加载前执行）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sudo insmod gpu-unlock.ko</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 验证</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">python3 -c &#34;import torch; print(torch.cuda.get_device_name(0))&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 跑一个 BF16 GEMM 测试，对比解锁前后 TFLOPS</span>
+</span></span></code></pre></div><p><strong>注意</strong>：不同发行版内核版本不同，编译前确认内核头文件已装（<code>apt install linux-headers-$(uname -r)</code>）。Proxmox 虚拟机需要在宿主机层面操作。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 解锁会影响游戏帧率吗？</strong></p>
+<p>A: 不会。DLSS 用 Tensor Core，但目前没有可靠证据证明解锁能提升帧率。游戏瓶颈通常在光栅化和显存带宽，不是被锁的那条 FP16/BF16 路径。</p>
+<p><strong>Q2: 解锁后显存带宽会变吗？</strong></p>
+<p>A: 不会。解锁只改指令发射速率，不动显存控制器。带宽该多少还是多少。</p>
+<p><strong>Q3: 重启后解锁会失效吗？</strong></p>
+<p>A: Linux 版会失效（运行时改动，重启恢复）。但重新跑一次模块即可。Windows UEFI 版每次启动都要走一遍。</p>
+<p><strong>Q4: 我的 2080 Ti 能解锁吗？</strong></p>
+<p>A: 能。KohakuBlueleaf 演示过 RTX 2080 Ti 从 59.9 涨到 111 TFLOPS（那张卡物理改装过 22GB 显存，与软件解锁无关）。但 Turing 架构支持不如 Ampere 成熟。</p>
+<p><strong>Q5: 解锁后算力跑分和实际应用差距多大？</strong></p>
+<p>A: 跑分能翻倍，实际应用通常 +30~60%。差距来自：矩阵形状不匹配、显存带宽瓶颈、非 GEMM 算子没被锁。</p>
+<p><strong>Q6: NVIDIA 会不会封杀？</strong></p>
+<p>A: 有可能。如果 NVIDIA 在驱动里检测并拒绝初始化被改过的寄存器，解锁就会失效。但目前原版驱动加载正常，说明还没检测。</p>
+<p><strong>Q7: 笔记本显卡能解锁吗？</strong></p>
+<p>A: 理论上能。有用户报告 RTX 3060 Laptop 可行。但笔记本散热和功耗限制更严，风险更高，不建议。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/deepseek-v4-pro-vs-glm-5-1-codegen-comparison/" >DeepSeek V4 Pro vs GLM-5.1：代码生成对比实测</a></li>
+<li><a class="link" href="/software/ollama-cost-saving-real-test-2026/" >Ollama 省钱实测：本地大模型三年成本账本</a></li>
+<li><a class="link" href="/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/" >Sageling：Mac MLX 本地 AI Agent 实测</a></li>
+<li><a class="link" href="/tutorials/moondream-local-deployment-raspberry-pi-cpu-vision-model/" >Moondream：树莓派本地部署视觉模型</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/gpu-unlock/">GPU Unlock</a>
+        
+            <a href="/tags/nvidia/">NVIDIA</a>
+        
+            <a href="/tags/ampere/">Ampere</a>
+        
+            <a href="/tags/tensor-core/">Tensor Core</a>
+        
+            <a href="/tags/local-llm/">Local LLM</a>
+        
+            <a href="/tags/comfyui/">ComfyUI</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/gpu-unlock-nvidia-ampere-tensor-core-ai-compute-real-test\/'; 
+        const pageTitle = 'NVIDIA 锁了你一半 AI 算力：我用 GPU Unlock 解锁 3090，实测快了多少';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 302 天 14 小时 · 145 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-30 22:00:42 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

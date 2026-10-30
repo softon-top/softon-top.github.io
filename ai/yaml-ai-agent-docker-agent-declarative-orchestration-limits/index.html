@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Docker 推出 docker-agent：一个 YAML 文件定义整个 AI Agent，不用写 Python。本文拆开它的 30 个内置工具集、flavor 变体、eval 断言机制，以及微软 Agent Framework 1.0 的 YAML 声明式配置，讲清声明式编排适合什么、不适合什么，附选型判断。">
+<title>用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界</title>
+
+<link rel='canonical' href='https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界">
+<meta property='og:description' content="Docker 推出 docker-agent：一个 YAML 文件定义整个 AI Agent，不用写 Python。本文拆开它的 30 个内置工具集、flavor 变体、eval 断言机制，以及微软 Agent Framework 1.0 的 YAML 声明式配置，讲清声明式编排适合什么、不适合什么，附选型判断。">
+<meta property='og:url' content='https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='YAML' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='docker-agent' /><meta property='article:tag' content='LangGraph' /><meta property='article:tag' content='Agent Framework' /><meta property='article:tag' content='Declarative' /><meta property='article:published_time' content='2026-10-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界">
+<meta name="twitter:description" content="Docker 推出 docker-agent：一个 YAML 文件定义整个 AI Agent，不用写 Python。本文拆开它的 30 个内置工具集、flavor 变体、eval 断言机制，以及微软 Agent Framework 1.0 的 YAML 声明式配置，讲清声明式编排适合什么、不适合什么，附选型判断。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界\"",
+  "description": "\"Docker 推出 docker-agent：一个 YAML 文件定义整个 AI Agent，不用写 Python。本文拆开它的 30 个内置工具集、flavor 变体、eval 断言机制，以及微软 Agent Framework 1.0 的 YAML 声明式配置，讲清声明式编排适合什么、不适合什么，附选型判断。\"",
+  "url": "\"https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/\"",
+  "datePublished": "2026-10-29T00:00:00Z",
+  "dateModified": "2026-10-29T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/\""
+  },
+  "keywords": "\"YAML, AI Agent, docker-agent, LangGraph, Agent Framework, Declarative\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界\"",
+      "item": "\"https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#agent-代码为什么会膨胀">Agent 代码为什么会膨胀？</a></li>
+    <li><a href="#docker-agent把-agent-压进一个-yaml">docker-agent：把 Agent 压进一个 YAML</a>
+      <ul>
+        <li><a href="#30-个内置工具集">30 个内置工具集</a></li>
+        <li><a href="#flavor一个文件的多个变体">flavor：一个文件的多个变体</a></li>
+        <li><a href="#eval把-agent-当软件测试">eval：把 Agent 当软件测试</a></li>
+        <li><a href="#share像分享镜像一样分享-agent">share：像分享镜像一样分享 Agent</a></li>
+      </ul>
+    </li>
+    <li><a href="#微软也在这条路上agent-framework-10">微软也在这条路上：Agent Framework 1.0</a></li>
+    <li><a href="#声明式-vs-命令式边界在哪">声明式 vs 命令式：边界在哪？</a></li>
+    <li><a href="#我的判断按任务形态选不是按潮流选">我的判断：按任务形态选，不是按潮流选</a>
+      <ul>
+        <li><a href="#适合-yaml-的场景">适合 YAML 的场景</a></li>
+        <li><a href="#必须写代码的场景">必须写代码的场景</a></li>
+        <li><a href="#一个折中方案">一个折中方案</a></li>
+      </ul>
+    </li>
+    <li><a href="#成本账本">成本账本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI-Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+            <a href="/tags/ai/">
+                AI
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/">用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-10-29T00:00:00Z'>
+                    2026-10-29，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：15分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#agent-代码为什么会膨胀">Agent 代码为什么会膨胀？</a></li>
+    <li><a href="#docker-agent把-agent-压进一个-yaml">docker-agent：把 Agent 压进一个 YAML</a>
+      <ul>
+        <li><a href="#30-个内置工具集">30 个内置工具集</a></li>
+        <li><a href="#flavor一个文件的多个变体">flavor：一个文件的多个变体</a></li>
+        <li><a href="#eval把-agent-当软件测试">eval：把 Agent 当软件测试</a></li>
+        <li><a href="#share像分享镜像一样分享-agent">share：像分享镜像一样分享 Agent</a></li>
+      </ul>
+    </li>
+    <li><a href="#微软也在这条路上agent-framework-10">微软也在这条路上：Agent Framework 1.0</a></li>
+    <li><a href="#声明式-vs-命令式边界在哪">声明式 vs 命令式：边界在哪？</a></li>
+    <li><a href="#我的判断按任务形态选不是按潮流选">我的判断：按任务形态选，不是按潮流选</a>
+      <ul>
+        <li><a href="#适合-yaml-的场景">适合 YAML 的场景</a></li>
+        <li><a href="#必须写代码的场景">必须写代码的场景</a></li>
+        <li><a href="#一个折中方案">一个折中方案</a></li>
+      </ul>
+    </li>
+    <li><a href="#成本账本">成本账本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>2026 年 10 月底，Hacker News 上出现一篇《Writing AI agents in YAML instead of Python》，指向 codecut.ai 的一篇教程。</p>
+<p>内容说的是 Docker 的新工具 <strong>docker-agent</strong>：不写 Python，一个 YAML 文件定义整个 Agent，一条命令跑起来。</p>
+<p>我读完文档和教程，第一反应是——<strong>这跟 2023 年&quot;低代码 Agent&quot;那波口号有什么区别？</strong> 但仔细拆下去，发现它确实解决了一个真问题：Agent 代码膨胀后，改一处要读三处。</p>
+<p>但它的边界也很清楚。这篇把机制拆开，讲清楚<strong>什么时候该用 YAML，什么时候必须写代码</strong>。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>docker-agent 是 Docker 官方开源工具，一个 YAML 定义 Agent 的模型、指令、工具、拓扑</li>
+<li>它解决的是&quot;Agent 代码膨胀&quot;问题：配置与代码分离，一处改动不用翻三个文件</li>
+<li>微软 Agent Framework 1.0 也在走同一条路：YAML 声明式 Agent + 编排拓扑</li>
+<li><strong>边界</strong>：自定义分支、重试、逐步控制——YAML 表达不了，必须回 LangGraph</li>
+<li>实测数据：gpt-5-mini 通过 18/18 断言，gpt-5-nano 只过 13/18，成本却只要一半</li>
+</ul>
+</blockquote>
+<h2 id="agent-代码为什么会膨胀">Agent 代码为什么会膨胀？
+</h2><p>先看传统写法要干什么。Google DeepMind 的 Philipp Schmid 在 2026 年 9 月那场《Agents Without Code》演讲里，把流程列得很直白：</p>
+<blockquote>
+<p>写一个 Agent，主要就是写一个 Python 循环。你需要定义一个 JSON schema，定义 Python 函数，看 LLM 的输出，检查它是函数调用还是文本回复，然后跟类型匹配，再调用工具，出错了还要回头重来。</p>
+</blockquote>
+<p>这段话的关键在最后那句&quot;出错了还要回头重来&quot;。真实 Agent 的代码长这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 一个最小 tool-calling agent 的骨架（示意）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run_agent</span>(messages, tools):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        resp <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>chat<span style="color:#f92672">.</span>completions<span style="color:#f92672">.</span>create(
+</span></span><span style="display:flex;"><span>            model<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gpt-4&#34;</span>, messages<span style="color:#f92672">=</span>messages, tools<span style="color:#f92672">=</span>tools
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        msg <span style="color:#f92672">=</span> resp<span style="color:#f92672">.</span>choices[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>message
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> msg<span style="color:#f92672">.</span>tool_calls:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> call <span style="color:#f92672">in</span> msg<span style="color:#f92672">.</span>tool_calls:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> dispatch(call<span style="color:#f92672">.</span>name, call<span style="color:#f92672">.</span>arguments)  <span style="color:#75715e"># ← 错误处理在这</span>
+</span></span><span style="display:flex;"><span>                messages<span style="color:#f92672">.</span>append(tool_result(result))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> msg<span style="color:#f92672">.</span>content  <span style="color:#75715e"># ← 循环出口在这</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 重试、超时、token 上限、状态持久化……全要自己写</span>
+</span></span></code></pre></div><p>问题在于：<strong>模型、工具、指令、循环逻辑、错误处理全糊在一个文件里</strong>。</p>
+<p>改一个提示词要动代码，加工具要动代码，换模型要动代码。Agent 一复杂，就成了没人敢碰的祖传代码。</p>
+<h2 id="docker-agent把-agent-压进一个-yaml">docker-agent：把 Agent 压进一个 YAML
+</h2><p>docker-agent 的做法是——<strong>配置归配置，逻辑归运行时</strong>。</p>
+<p>一个 <code>embeddings.yaml</code> 定义全部：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">agents</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">root</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">model</span>: <span style="color:#ae81ff">openai/gpt-5-mini</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">description</span>: <span style="color:#ae81ff">Answers questions about Polars from the user guide</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">instruction</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      You answer questions about the Polars DataFrame library.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      Always search the knowledge base before answering.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      Answer only from what the search returns.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">toolsets</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">rag</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ref</span>: <span style="color:#ae81ff">polars_docs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">rag</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">polars_docs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tool</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">description</span>: <span style="color:#ae81ff">The Polars user guide</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">docs</span>: [<span style="color:#ae81ff">./docs/polars]</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">strategies</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">chunked-embeddings</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">embedding_model</span>: <span style="color:#ae81ff">openai/text-embedding-3-small</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">vector_dimensions</span>: <span style="color:#ae81ff">1536</span>
+</span></span></code></pre></div><p>跑起来就一条命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">docker agent run --exec embeddings.yaml &#34;How do I read a Parquet file without loading it all into memory?&#34;</span>
+</span></span></code></pre></div><p><strong>关键点</strong>：循环、错误处理、工具调用、类型匹配——这些运行时全管了。你只描述&quot;要什么&quot;，不写&quot;怎么做&quot;。</p>
+<h3 id="30-个内置工具集">30 个内置工具集
+</h3><p>docker-agent 内置 30 个 toolset，教程里点名的有：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>工具集</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>rag</code></td>
+					<td>检索增强，向量存本地 SQLite，自动索引、文件变更自动重索引</td>
+			</tr>
+			<tr>
+					<td><code>shell</code></td>
+					<td>跑 shell 命令</td>
+			</tr>
+			<tr>
+					<td><code>duckdb</code></td>
+					<td>查 DuckDB</td>
+			</tr>
+			<tr>
+					<td><code>filesystem</code></td>
+					<td>读写文件</td>
+			</tr>
+			<tr>
+					<td><code>fetch</code></td>
+					<td>抓网页</td>
+			</tr>
+			<tr>
+					<td><code>mcp</code></td>
+					<td>接 MCP 工具</td>
+			</tr>
+			<tr>
+					<td><code>memory</code></td>
+					<td>跨会话记忆</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><code>rag</code> 那个细节值得说：传统 RAG 要自己搭向量数据库、自己写索引脚本。docker-agent 把向量存本地 SQLite，<strong>首次启动自动索引，文件变了自动重索引</strong>。这一步省掉的是整个基础设施。</p>
+<h3 id="flavor一个文件的多个变体">flavor：一个文件的多个变体
+</h3><p>YAML 最容易遇到的问题是&quot;想试个变体就得复制一份&quot;。docker-agent 的 <code>flavors</code> 段解决这个：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># embeddings.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">agents</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">root</span>: <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">rag</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">polars_docs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">strategies</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">chunked-embeddings</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">flavors</span>:            <span style="color:#75715e"># 文件末尾新增</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hybrid</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rag</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">polars_docs</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">strategies+</span>:   <span style="color:#75715e"># + 号表示&#34;在原有基础上追加&#34;</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">bm25</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">results</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">fusion</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">strategy</span>: <span style="color:#ae81ff">rrf</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k</span>: <span style="color:#ae81ff">60</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">deduplicate</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">limit</span>: <span style="color:#ae81ff">5</span>
+</span></span></code></pre></div><p><code>strategies+</code> 那个 <code>+</code> 号是<strong>合并语义</strong>——保留原来的 embedding 搜索，追加 bm25 关键词搜索，再用 RRF（Reciprocal Rank Fusion）融合结果。</p>
+<p>教程里有个真实对比：问 <code>SQLContext</code>（一个类名），纯 embedding 搜索找不到（返回&quot;没找到匹配文档&quot;），加 hybrid flavor 后关键词搜索命中，正确回答。</p>
+<h3 id="eval把-agent-当软件测试">eval：把 Agent 当软件测试
+</h3><p>这是我印象最深的部分。<code>evals/</code> 目录下放 JSON 测试用例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;Large Parquet file question&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;messages&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {<span style="color:#f92672">&#34;message&#34;</span>: {<span style="color:#f92672">&#34;role&#34;</span>: <span style="color:#e6db74">&#34;user&#34;</span>, <span style="color:#f92672">&#34;content&#34;</span>: <span style="color:#e6db74">&#34;How do I read a Parquet file without loading it all into memory?&#34;</span>}}
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;evals&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;assertions&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {<span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;uses scan_parquet&#34;</span>, <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;contains&#34;</span>, <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;scan_parquet&#34;</span>},
+</span></span><span style="display:flex;"><span>      {<span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;mentions streaming&#34;</span>, <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;contains&#34;</span>, <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;streaming&#34;</span>},
+</span></span><span style="display:flex;"><span>      {<span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;searched the docs&#34;</span>, <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;tool_called&#34;</span>, <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;polars_docs&#34;</span>}
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>三种断言：<code>contains</code>（答案含某词）、<code>tool_called</code>（确实调了某工具）、还有别的类型。跑测试：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">docker agent eval embeddings.yaml ./evals</span>
+</span></span></code></pre></div><p><strong>实测输出</strong>（教程数据）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>gpt-5-mini</th>
+					<th>gpt-5-nano（cheap flavor）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>断言通过（各跑 3 次）</td>
+					<td>18/18</td>
+					<td>13/18</td>
+			</tr>
+			<tr>
+					<td>Parquet 用例</td>
+					<td>3/3 runs</td>
+					<td>0/3 runs</td>
+			</tr>
+			<tr>
+					<td>asof join 用例</td>
+					<td>3/3 runs</td>
+					<td>2/3 runs</td>
+			</tr>
+			<tr>
+					<td>总成本</td>
+					<td>$0.015</td>
+					<td><strong>$0.007</strong></td>
+			</tr>
+	</tbody>
+</table></div>
+<p>便宜模型省一半成本，但断言从 18 掉到 13，<strong>Parquet 用例三次全挂</strong>。这种对比靠肉眼看输出是看不出来的——你必须有断言。</p>
+<p>而且每个 eval 跑在独立容器里，一个测试不会留下文件影响另一个。</p>
+<h3 id="share像分享镜像一样分享-agent">share：像分享镜像一样分享 Agent
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">docker agent share push embeddings.yaml docker.io/&lt;username&gt;/polars-docs:v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 同事</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">docker agent run docker.io/&lt;username&gt;/polars-docs:v1</span>
+</span></span></code></pre></div><p>不用装 Python 环境、不用跑 setup 脚本。注意：<strong>只共享 YAML 文件</strong>，它指向的 docs 目录、prompt 文件必须在你运行 Agent 的目录里存在。</p>
+<h2 id="微软也在这条路上agent-framework-10">微软也在这条路上：Agent Framework 1.0
+</h2><p>docker-agent 不是孤例。微软在 2026 年 4 月 3 日 GA 了 <strong>Agent Framework 1.0</strong>（Python + .NET 同步，MIT 协议），把 Semantic Kernel 和 AutoGen 合并。</p>
+<p>它的核心特性之一，官方原话：</p>
+<blockquote>
+<p><strong>Declarative Agents and Workflows (YAML)</strong> – Define agents&rsquo; instructions, tools, memory configuration, and orchestration topology in version-controlled YAML files, then load and run them with a single API call.</p>
+</blockquote>
+<p>翻译：<strong>在版本控制的 YAML 里定义 Agent 的指令、工具、记忆配置、编排拓扑，然后一次 API 调用加载运行。</strong></p>
+<p>注意&quot;orchestration topology&quot;（编排拓扑）这个词——微软把多 Agent 的拓扑结构也放进 YAML 了，不只是单个 Agent 的配置。</p>
+<p>同时它还提供<strong>迁移助手</strong>：分析你现有的 Semantic Kernel / AutoGen 代码，生成逐步迁移计划。这是给已经在写代码的团队准备的退路。</p>
+<h2 id="声明式-vs-命令式边界在哪">声明式 vs 命令式：边界在哪？
+</h2><p>现在可以回答最初的问题了。两种范式的真正区别：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>声明式（YAML）</th>
+					<th>命令式（Python/代码）</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>表达什么</td>
+					<td><strong>要什么</strong>（目标、工具、拓扑）</td>
+					<td><strong>怎么做</strong>（每一步逻辑）</td>
+			</tr>
+			<tr>
+					<td>控制粒度</td>
+					<td>粗（框架决定循环）</td>
+					<td>细（你写每一行）</td>
+			</tr>
+			<tr>
+					<td>自定义分支</td>
+					<td>难（YAML 没有 if/else 语义）</td>
+					<td>容易</td>
+			</tr>
+			<tr>
+					<td>重试/回退</td>
+					<td>依赖框架内置策略</td>
+					<td>完全自定义</td>
+			</tr>
+			<tr>
+					<td>状态持久化</td>
+					<td>框架管</td>
+					<td>自己设计</td>
+			</tr>
+			<tr>
+					<td>改配置</td>
+					<td>改 YAML，不碰代码</td>
+					<td>改代码</td>
+			</tr>
+			<tr>
+					<td>可测试性</td>
+					<td>靠 eval 断言</td>
+					<td>靠单元测试 + eval</td>
+			</tr>
+			<tr>
+					<td>上手门槛</td>
+					<td>低</td>
+					<td>高</td>
+			</tr>
+			<tr>
+					<td>适合</td>
+					<td>固定流程、工具组合、RAG 问答</td>
+					<td>复杂分支、长程任务、精细控制</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>教程作者自己的结论</strong>，我觉得很诚实：</p>
+<blockquote>
+<p>docker-agent is not the right fit for everything. If you need to control each step the agent takes, with custom branches or retries, a code-first framework like LangGraph is a better fit.</p>
+</blockquote>
+<p>&ldquo;不适合所有场景。如果你需要控制 Agent 的每一步、自定义分支或重试，LangGraph 这种代码优先的框架更合适。&rdquo;</p>
+<p><strong>LangGraph 的对照</strong>：它把编排暴露成<strong>有向图</strong>——节点是 Python 函数，边定义控制流，状态显式声明，框架管持久化和状态转移。前期工作量更大，但对需要分支、重试、人类审批关卡的流程，能力强得多。它还支持 time-travel debugging（从任意 checkpoint 重放）。</p>
+<h2 id="我的判断按任务形态选不是按潮流选">我的判断：按任务形态选，不是按潮流选
+</h2><p>拆完之后，我的结论是<strong>没有银弹，只有匹配</strong>。</p>
+<h3 id="适合-yaml-的场景">适合 YAML 的场景
+</h3><ul>
+<li><strong>RAG 问答</strong>：文档检索 + 回答，流程固定，工具就是 rag + fetch</li>
+<li><strong>内容流水线</strong>：采集 → 清洗 → 生成，线性流程</li>
+<li><strong>配置驱动的多 Agent</strong>：同一套工具，不同模型/指令组合（flavor 就是干这个的）</li>
+<li><strong>非 Python 用户维护</strong>：运营、产品要改指令，不用碰代码</li>
+<li><strong>需要 eval 回归</strong>：改完跑断言，比看输出靠谱</li>
+</ul>
+<h3 id="必须写代码的场景">必须写代码的场景
+</h3><ul>
+<li><strong>复杂分支</strong>：根据中间结果走不同路径</li>
+<li><strong>长程任务</strong>：几十步、需要 checkpoint 和恢复</li>
+<li><strong>精细重试</strong>：特定错误重试、退避策略、降级</li>
+<li><strong>人类审批关卡</strong>：某步必须人工确认才继续</li>
+<li><strong>需要 time-travel 调试</strong>：从任意历史状态重放</li>
+</ul>
+<h3 id="一个折中方案">一个折中方案
+</h3><p>微软那条路其实给了提示：<strong>YAML 定义拓扑 + 代码实现节点</strong>。</p>
+<ul>
+<li>用 YAML 声明&quot;有几个 Agent、各自什么模型、什么工具、怎么连&quot;</li>
+<li>用 Python 写每个节点内部的具体逻辑</li>
+<li>框架管编排、持久化、迁移</li>
+</ul>
+<p>这样既拿到 YAML 的可读性和版本控制，又不丢代码的灵活性。docker-agent 的 <code>mcp</code> 工具集和微软的&quot;单 API 调用加载 YAML&quot;，本质上都在往这个方向走。</p>
+<h2 id="成本账本">成本账本
+</h2><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>docker-agent</th>
+					<th>手写 Python Agent</th>
+					<th>LangGraph</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>初始代码量</td>
+					<td>一个 YAML（~30 行）</td>
+					<td>一个 .py（~200 行起）</td>
+					<td>一个图定义（~100 行）</td>
+			</tr>
+			<tr>
+					<td>依赖</td>
+					<td>Docker Desktop 4.63+</td>
+					<td>Python + 各 SDK</td>
+					<td>Python/TS + LangGraph</td>
+			</tr>
+			<tr>
+					<td>RAG 基础设施</td>
+					<td>内置（SQLite 向量）</td>
+					<td>自己搭（向量库 + 索引）</td>
+					<td>自己搭</td>
+			</tr>
+			<tr>
+					<td>eval 框架</td>
+					<td>内置断言</td>
+					<td>自己写</td>
+					<td>自己写（或用 LangSmith）</td>
+			</tr>
+			<tr>
+					<td>迁移成本</td>
+					<td>低（改 YAML）</td>
+					<td>高（改代码）</td>
+					<td>中</td>
+			</tr>
+			<tr>
+					<td>学习曲线</td>
+					<td>平缓</td>
+					<td>陡</td>
+					<td>中陡</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>按教程数据算</strong>：一个 eval 用例成本 $0.002 量级。如果你的 Agent 每天跑 1000 次，月成本在几十美元量级——<strong>这个量级下，代码可维护性比那点性能差异重要得多</strong>。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: docker-agent 是免费的吗？</strong></p>
+<p>A: 开源工具，MIT 协议。装在 Docker Desktop 4.63+ 里（<code>docker agent</code> 命令自带），或 <code>brew install docker-agent</code>。跑 Agent 要调 LLM API，那部分按 token 付费。</p>
+<p><strong>Q2: YAML 写 Agent 会不会丢掉灵活性？</strong></p>
+<p>A: 会，但只在&quot;需要逐步控制&quot;的场景。如果你要自定义分支、重试、人类审批关卡，YAML 表达不了。教程作者自己也说这种情况该用 LangGraph。</p>
+<p><strong>Q3: docker-agent 和 LangGraph 能一起用吗？</strong></p>
+<p>A: 可以。docker-agent 有 <code>mcp</code> 工具集，能接外部工具；LangGraph 能调 MCP。实践中常见做法是：固定流程用 YAML 声明，复杂节点用 Python 写，通过 MCP 拼起来。</p>
+<p><strong>Q4: 为什么微软也要做 YAML 声明式？</strong></p>
+<p>A: 因为代码膨胀是真痛点。Agent 一复杂，模型/工具/指令/循环糊在一个文件里，改一处要读三处。YAML 把配置抽出来，版本控制能看到每次改了什么。微软的迁移助手也说明：他们知道很多团队已经在写代码了，给的是退路不是推倒重来。</p>
+<p><strong>Q5: eval 断言能替代人工检查吗？</strong></p>
+<p>A: 不能完全替代。断言能抓住&quot;答案是否含关键词&quot;&ldquo;是否调了工具&quot;这类回归，但语义正确性、语气、格式还是要人看。它的价值是<strong>防止你改配置时悄悄改坏</strong>——教程里 gpt-5-nano 通过率从 18 掉到 13，靠肉眼根本发现不了。</p>
+<p><strong>Q6: 我应该从哪开始？</strong></p>
+<p>A: 如果你现在没有 Agent，先用 docker-agent 或微软 Agent Framework 的 YAML 跑一个 RAG 问答，感受&quot;配置即 Agent&rdquo;。等遇到 YAML 表达不了的需求，再上 LangGraph。反过来先学 LangGraph 再降维，学习成本高得多。</p>
+<p><strong>Q7: AGENTS.md 和这个是一回事吗？</strong></p>
+<p>A: 不是。AGENTS.md 是给<strong>编码 Agent</strong>（Claude Code、Cursor）读的项目规则文件，告诉它们代码库约定。docker-agent 的 YAML 是给<strong>你自己搭的 Agent</strong> 定义行为。前者是&quot;给助手立的规矩&quot;，后者是&quot;给助手写的程序&quot;。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/ai-agent-runtime-vs-framework/" >Agent 运行时 vs 框架：我为什么两头都要</a></li>
+<li><a class="link" href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/" >DeepSeek Harness vs OpenClaw：插件式 Agent 框架对比</a></li>
+<li><a class="link" href="/software/claude-code-32-skills-8-mcp-full-setup/" >Claude Code 32 Skills + 8 MCP 全套配置</a></li>
+<li><a class="link" href="/tutorials/claude-code-skills-mcp-workflow-deconstruction/" >Claude Code 多 Skill / MCP 工作流拆解</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/yaml/">YAML</a>
+        
+            <a href="/tags/ai-agent/">AI-Agent</a>
+        
+            <a href="/tags/docker-agent/">Docker-Agent</a>
+        
+            <a href="/tags/langgraph/">LangGraph</a>
+        
+            <a href="/tags/agent-framework/">Agent Framework</a>
+        
+            <a href="/tags/declarative/">Declarative</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/deepseek-harness-vs-openclaw-plugin-agent-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DeepSeek 甩出开源 Agent 框架 Harness，和我用了半年的 OpenClaw 有什么不一样？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/ai-agent-runtime-vs-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AI Agent 不能只靠框架：为什么运行时才是落地关键</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/lightpanda-zig-headless-browser-ai-agent-crawler/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Lightpanda：用 Zig 从零写的无头浏览器，AI Agent 的新爬虫引擎</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/google-harness2-recursive-agent-self-improvement-framework/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Google Harness² 开源：不改模型权重，Agent 也能自我进化</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/buzz-agent-native-slack-alternative-ai-first-class-user/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/yaml-ai-agent-docker-agent-declarative-orchestration-limits\/'; 
+        const pageTitle = '用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 302 天 14 小时 · 145 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-10-30 22:00:42 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
