@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Puppeteer on softon.top</title>
+		<link>https://softon.top/tags/puppeteer/</link>
+		<description>Recent content in Puppeteer on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 23 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/puppeteer/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Lightpanda：用 Zig 从零写的无头浏览器，AI Agent 的新爬虫引擎</title>
+				<link>https://softon.top/software/lightpanda-zig-headless-browser-ai-agent-crawler/</link>
+				<pubDate>Fri, 23 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/lightpanda-zig-headless-browser-ai-agent-crawler/</guid>
+				<description>&lt;p&gt;Chrome 能爬网页，但规模化之后就是一场基础设施灾难。&lt;/p&gt;&#xA;&lt;p&gt;2026 年，Lightpanda 用一个激进思路解决这个问题：&lt;strong&gt;不从 Chromium fork，从零用 Zig 写一个只给机器用的浏览器&lt;/strong&gt;。GitHub 36.1K star，AGPL-3.0，官方宣称内存比 Chrome 少 9 倍、速度快 11 倍。&lt;/p&gt;&#xA;&lt;p&gt;不是给人类看网页的浏览器，是给 AI agent 和爬虫用的浏览器。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Lightpanda 是用 Zig 从零写的开源无头浏览器，非 Chromium fork，GitHub 36.1K star&lt;/li&gt;&#xA;&lt;li&gt;官方数据：内存占用比 Chrome headless 少 9 倍，执行速度快 11 倍&lt;/li&gt;&#xA;&lt;li&gt;支持 CDP 端点，现有 Puppeteer/Playwright 脚本改一行就能切换引擎&lt;/li&gt;&#xA;&lt;li&gt;新增原生 MCP server + agent 模式，一次 LLM 调用驱动浏览器，输出 PandaScript 可免 LLM 重放&lt;/li&gt;&#xA;&lt;li&gt;与 Vercel agent-browser 集成，agent 用几百 token 操作页面而非解析原始 HTML&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么不用-chrome&#34;&gt;为什么不用 Chrome？&#xA;&lt;/h2&gt;&lt;p&gt;Chrome headless 本质是&amp;quot;关掉显示器的完整桌面浏览器&amp;quot;。渲染引擎、标签页管理、扩展、UI 代码全都在，你为用不到的功能付内存和 CPU 的代价。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

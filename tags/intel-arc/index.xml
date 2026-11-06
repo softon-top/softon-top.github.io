@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Intel Arc on softon.top</title>
+		<link>https://softon.top/tags/intel-arc/</link>
+		<description>Recent content in Intel Arc on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 01 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/intel-arc/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>本地 Agent 的瓶颈从来不是生成速度：Strata 0.2.9 把 Prefill 提了 88%，这才是关键数字</title>
+				<link>https://softon.top/software/strata-0-2-9-prefill-88-percent-local-agent-bottleneck/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/strata-0-2-9-prefill-88-percent-local-agent-bottleneck/</guid>
+				<description>&lt;p&gt;2026 年 10 月 31 日，Strata 发布 0.2.9。&lt;/p&gt;&#xA;&lt;p&gt;小众软件的标题写的是「本地大模型 Prefill 最高提速 88%」。&lt;/p&gt;&#xA;&lt;p&gt;大部分人看到这个数字，反应大概是「哦，快了」。&lt;/p&gt;&#xA;&lt;p&gt;但我盯着另一组数字看了很久——&lt;strong&gt;同一个版本里，解码速度只从 57.4 tok/s 涨到 58.9 tok/s，约 3%&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;一个涨 88%，一个涨 3%。这个不对称，才是这篇更新真正的信息量。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Strata 0.2.9 的 Prefill 提速来自矩阵核心内核，不是模型变聪明了&lt;/li&gt;&#xA;&lt;li&gt;32K 提示词从 778 → 1460 tok/s（+88%），换算成等待时间：41 秒 → 22 秒&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;解码只涨 3%&lt;/strong&gt;——因为本地 Agent 的瓶颈本来就不在生成&lt;/li&gt;&#xA;&lt;li&gt;1-bit DeepSeek 下载要 241GB，61 项任务过 53 项，低于 2.25-bit 的 56 项&lt;/li&gt;&#xA;&lt;li&gt;项目 2026-09-24 建仓，一个月 37k stars，MIT，C++&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么-prefill-比生成速度重要&#34;&gt;为什么 Prefill 比生成速度重要？&#xA;&lt;/h2&gt;&lt;p&gt;先拆这两个词。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Prefill（预填充）&lt;/strong&gt;：把整段输入喂给模型、它读完、开始吐第一个字之前的那个阶段。这段是&lt;strong&gt;并行&lt;/strong&gt;算的——所有输入 token 一次性过一遍网络。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Decode（解码）&lt;/strong&gt;：一个字一个字往外蹦。这段是&lt;strong&gt;串行&lt;/strong&gt;的——每吐一个 token 都要跑一遍完整前向。&lt;/p&gt;&#xA;&lt;p&gt;传统认知里，聊天场景下 Decode 更重要：你盯着屏幕等字出来，字出得慢就难受。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

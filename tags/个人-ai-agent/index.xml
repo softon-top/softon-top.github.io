@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>个人 AI Agent on softon.top</title>
+		<link>https://softon.top/tags/%E4%B8%AA%E4%BA%BA-ai-agent/</link>
+		<description>Recent content in 个人 AI Agent on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 09 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E4%B8%AA%E4%BA%BA-ai-agent/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Meta Muse 入局个人 AI Agent:与 Copilot、Gemini、Apple Intelligence 差异化在哪</title>
+				<link>https://softon.top/ai/meta-muse-vs-copilot-gemini-apple-intelligence-personal-agent/</link>
+				<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/meta-muse-vs-copilot-gemini-apple-intelligence-personal-agent/</guid>
+				<description>&lt;p&gt;昨晚 Meta 发布 Muse——号称&amp;quot;世界首个面向所有人的个人 AI Agent&amp;quot;。18+、美国先上、可通过独立 app 或 WhatsApp 用。&lt;/p&gt;&#xA;&lt;p&gt;刷 Hacker News 首页四条同时挂 Muse,评论区分成两派:一派觉得又是大厂 PR 秀,一派觉得这次是真的把 agent 塞进 messaging 入口了。&lt;/p&gt;&#xA;&lt;p&gt;我盯着这四家的公开资料翻了两个小时,得出一个反直觉的结论:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;四家路线&lt;strong&gt;完全不同&lt;/strong&gt;:Meta 押独立 VM+messaging 入口,Microsoft 押企业级编排(Copilot Studio),Apple 押系统级 App Intents 让 Siri 变 agent,Google 已悄悄放弃独立 agent 产品(Mariner 5月4日 discontinued)&lt;/li&gt;&#xA;&lt;li&gt;Muse 最大差异化不是模型,是&lt;strong&gt;Muse Secure VM&lt;/strong&gt;——每个用户单独一个虚拟机隔离数据,年底还要上 Confidential VM(端到端加密,连 Meta 都读不到)&lt;/li&gt;&#xA;&lt;li&gt;Copilot 已经跑通企业场景,面向普通消费者体验落后 Muse 一档;Meta 反过来消费者体验强,企业能力弱&lt;/li&gt;&#xA;&lt;li&gt;Apple 战术最保守也最长期:不做独立 agent 产品,把 agent 能力灌进操作系统本身,让每个 app 都变成 agent 的手脚&lt;/li&gt;&#xA;&lt;li&gt;Google 战术已崩:Mariner 项目组被拆散,browser agent 竞赛认输,capabilities 塞进 Gemini Agent 兜底&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;四家凑齐了但打法完全不一样&#34;&gt;四家凑齐了,但打法完全不一样&#xA;&lt;/h2&gt;&lt;p&gt;大厂在 personal AI agent 上有四种截然不同的战术,每种都是根据自家生态位算出来的最优解。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

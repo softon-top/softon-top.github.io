@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>边缘AI on softon.top</title>
+		<link>https://softon.top/tags/%E8%BE%B9%E7%BC%98ai/</link>
+		<description>Recent content in 边缘AI on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 01 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E8%BE%B9%E7%BC%98ai/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>别再把 AI 关在屏幕里：树莓派 &#43; 墨水屏，做一个会听鸟叫的智能相框</title>
+				<link>https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/</link>
+				<pubDate>Thu, 01 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/</guid>
+				<description>&lt;p&gt;家里挂了个相框，但它不拍照片——它&lt;strong&gt;听&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;鸟一叫，墨水屏就&amp;quot;啪&amp;quot;地刷出一张 19 世纪复古风格的鸟插画，标注这是蓝雀、那是画眉。没有摄像头，没有云端，不用装 App。它叫 &lt;strong&gt;fugleramme&lt;/strong&gt;（荷兰语&amp;quot;鸟笼&amp;quot;的变体），一个基于树莓派的开源项目，最近上了 Hacker News。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;全本地：树莓派 + 麦克风 + 墨水屏 + BirdNET-Go 推理，不依赖摄像头、不联网、不上传音频。&lt;/li&gt;&#xA;&lt;li&gt;选&lt;strong&gt;音频识别&lt;/strong&gt;而非视觉：鸟鸣比鸟影好认——树荫里、夜里、雾天，视觉识别直接瞎，音频照样工作。&lt;/li&gt;&#xA;&lt;li&gt;渲染成 19 世纪古典鸟插画挂在墙上，比&amp;quot;识别结果 = 文字列表&amp;quot;多一层审美价值。&lt;/li&gt;&#xA;&lt;li&gt;硬件门槛低：树莓派 4/5 + 一个 USB 麦克风 + 墨水屏模块，百元级配件。&lt;/li&gt;&#xA;&lt;li&gt;适合：喜欢鸟、想要&amp;quot;活的墙饰&amp;quot;的 DIY 党，以及想入门边缘 AI 的人。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么用听而不是看&#34;&gt;为什么用&amp;quot;听&amp;quot;而不是&amp;quot;看&amp;quot;？&#xA;&lt;/h2&gt;&lt;p&gt;这是整个项目最有意思的设计决策。&lt;/p&gt;&#xA;&lt;p&gt;用摄像头识别鸟类要解决一堆问题：光线（树荫/逆光/夜晚）、遮挡（枝叶挡住鸟）、鸟在画面里占比小、分辨率、目标检测模型……一套下来又重又脆弱。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;音频识别绕过了所有这些。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;鸟一开嗓子，声波就在空气里传播，不管你站多远、不管它躲在叶子后面。麦克风接上就能采。配合 BirdNET-Go 这种&lt;strong&gt;纯音频鸟鸣分类模型&lt;/strong&gt;，树莓派本地推理完全跑得动。&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;维度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;视觉识别（摄像头）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;音频识别（fugleramme）&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;光照依赖&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;强（暗光/逆光难）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;无（声音不挑光）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;遮挡&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;枝叶挡鸟直接失效&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;不影响（声波绕射）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;夜间&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;基本没戏&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;照样识别&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;隐私&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;拍到人/房&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;只采声音，拍不到人&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;模型门槛&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;视觉模型重&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;BirdNET-Go 轻，边缘可跑&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;额外硬件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;摄像头&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;USB 麦克风&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;所以 fugleramme 选音频不是&amp;quot;偷懒&amp;quot;，是&lt;strong&gt;这个场景音频天然更鲁棒&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;birdnet-go-是什么为什么选它&#34;&gt;BirdNET-Go 是什么？为什么选它&#xA;&lt;/h2&gt;&lt;p&gt;BirdNET 是 Cornell Lab（康奈尔大学鸟类学实验室）开源的鸟鸣分类系统，背后是 &lt;strong&gt;BIRDNET 训练出的卷积神经网络&lt;/strong&gt;，能基于声音识别出&lt;strong&gt;全球 11000+ 鸟类物种&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

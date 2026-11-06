@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Durable Objects on softon.top</title>
+		<link>https://softon.top/tags/durable-objects/</link>
+		<description>Recent content in Durable Objects on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 12 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/durable-objects/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Talorys：在 Cloudflare 免费层跑个人 AI agent，一条命令部署</title>
+				<link>https://softon.top/ai/talorys-cloudflare-free-tier-personal-ai-agent/</link>
+				<pubDate>Mon, 12 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/talorys-cloudflare-free-tier-personal-ai-agent/</guid>
+				<description>&lt;p&gt;你有没有想过，把一个 AI agent 完全跑在自己的 Cloudflare 账户里，不花一分钱？&lt;/p&gt;&#xA;&lt;p&gt;Talorys 就是这样一个项目。MIT 许可，一条命令 &lt;code&gt;npx create-talorys@latest&lt;/code&gt; 部署，支持聊天、记忆、任务、笔记、项目和定时提醒，无遥测、无分析、无广告。所有数据存在你自己的 Cloudflare 账户里，开发者看不到你的任何对话。&lt;/p&gt;&#xA;&lt;p&gt;它在 Hacker News 上拿到了 209 分，发布两天就冲上了 Show HN。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Talorys 是单用户个人 AI agent，完全运行在 Cloudflare Workers + Durable Objects 上&lt;/li&gt;&#xA;&lt;li&gt;一条命令部署，无需服务器、数据库或第三方账户&lt;/li&gt;&#xA;&lt;li&gt;数据存储在单个 SQLite 支持的 Durable Object 中，开发者无法访问&lt;/li&gt;&#xA;&lt;li&gt;无遥测、无分析、无广告，隐私模型优于大多数商业 AI 助手&lt;/li&gt;&#xA;&lt;li&gt;专为 Workers Free 计划构建，但有每日请求限制，重度用户需付费&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;talorys-是什么&#34;&gt;Talorys 是什么？&#xA;&lt;/h2&gt;&lt;p&gt;Talorys 是一个免费、开源的个人 AI 助手，完全运行在你自己的 Cloudflare 账户内。它的核心理念是：&lt;strong&gt;你的 AI agent，你的云&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;功能覆盖：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;流式聊天&lt;/strong&gt;：与 AI 实时对话&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;记忆&lt;/strong&gt;：记住你的个人事实，可查看和编辑&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;任务管理&lt;/strong&gt;：创建、跟踪、完成任务&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;笔记和项目&lt;/strong&gt;：组织你的想法和工作&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;定时提醒&lt;/strong&gt;：一次性或周期性提醒，每日任务摘要&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;单用户设计：安装时设置一个所有者密码，没有注册流程。&lt;/p&gt;&#xA;&lt;h2 id=&#34;架构拆解cloudflare-上能跑什么&#34;&gt;架构拆解：Cloudflare 上能跑什么？&#xA;&lt;/h2&gt;&lt;p&gt;Talorys 的架构完全基于 Cloudflare 开发者平台：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

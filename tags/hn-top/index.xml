@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Hn-Top on softon.top</title>
+		<link>https://softon.top/tags/hn-top/</link>
+		<description>Recent content in Hn-Top on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 06 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/hn-top/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>OKF Agent Memory 火上 HN 榜首：Agent 的记忆凭什么该住进 Git，而不是向量库？</title>
+				<link>https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/</link>
+				<pubDate>Sun, 06 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/okf-agent-memory-git-native-vs-mem0-letta/</guid>
+				<description>&lt;p&gt;昨晚 HN 榜首是一个叫 OKF Agent Memory 的项目，主张一句话：&lt;strong&gt;Agent 的长期记忆应该住在 Git 里，不该住在别家公司的向量库里&lt;/strong&gt;。我打开它文档的第一反应，是有点熟——因为我用 OpenClaw 每天在做的事，就是把记忆写进 &lt;code&gt;memory/YYYY-MM-DD.md&lt;/code&gt; 和 &lt;code&gt;MEMORY.md&lt;/code&gt;。这套 Git-native 思路根本不是新东西，只是 OKF 第一次把它工程化、给了个专门的搜索引擎。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;OKF Agent Memory：Go 写的 CLI，用 In-Memory BM25 索引 Markdown 文件，搜索延迟 &amp;lt;300µs，冷启动 &amp;lt;4ms，零外部依赖，Apache-2.0&lt;/li&gt;&#xA;&lt;li&gt;对手 mem0 / Letta / Zep 走&amp;quot;向量库 + Postgres/Neo4j&amp;quot;路线，检索延迟 150-800ms，还要 API 费用&lt;/li&gt;&#xA;&lt;li&gt;OKF 的核心不是&amp;quot;更快&amp;quot;，而是&lt;strong&gt;把 Agent 的记忆变成 Git 里的可 diff、可 blame、可 rollback 的一等公民&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;OpenClaw 的 &lt;code&gt;memory/YYYY-MM-DD.md&lt;/code&gt; + &lt;code&gt;MEMORY.md&lt;/code&gt; 早就是这个思路，只是没上索引；OKF 补了这一块&lt;/li&gt;&#xA;&lt;li&gt;谁该上：写代码的 Agent、企业合规场景、不想被 SaaS 绑架的团队。谁别上：需要多用户人格记忆、跨会话情感对话的产品&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么-agent-记忆的黑箱化让越来越多人受不了&#34;&gt;为什么 Agent 记忆的黑箱化让越来越多人受不了？&#xA;&lt;/h2&gt;&lt;p&gt;主流&amp;quot;Agent 记忆&amp;quot;方案长这样：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

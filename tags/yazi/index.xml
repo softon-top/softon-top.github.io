@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Yazi on softon.top</title>
+		<link>https://softon.top/tags/yazi/</link>
+		<description>Recent content in Yazi on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 25 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/yazi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>22k Star 的 superfile：Go 写的 TUI 文件管理器，能不能挤掉 Yazi 和 Ranger</title>
+				<link>https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/</link>
+				<pubDate>Tue, 25 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/superfile-tui-file-manager-vs-yazi-ranger/</guid>
+				<description>&lt;p&gt;我曾经很长一段时间不理解「终端文件管理器」这个物种。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;ls&lt;/code&gt;、&lt;code&gt;cd&lt;/code&gt;、&lt;code&gt;mv&lt;/code&gt;、&lt;code&gt;cp&lt;/code&gt; 我一年打上万次，肌肉记忆快到不需要思考。装个 TUI 上去，看似多了个花哨界面，实际上要多学一套快捷键，还多一层进程。这不叫效率工具，这叫多此一举。&lt;/p&gt;&#xA;&lt;p&gt;直到那天我在服务器上要在四个目录之间倒腾一批日志：&lt;code&gt;/var/log/nginx/&lt;/code&gt;、&lt;code&gt;/opt/app/logs/&lt;/code&gt;、&lt;code&gt;~/analysis/&lt;/code&gt;、&lt;code&gt;~/report/&lt;/code&gt;。终端开了四个 tab，一顿 &lt;code&gt;cd&lt;/code&gt; + &lt;code&gt;ls&lt;/code&gt; 之后我发现自己已经忘了刚才那个 nginx 目录是哪个 tab 了。&lt;/p&gt;&#xA;&lt;p&gt;那一刻我才明白：&lt;strong&gt;GUI 文件管理器解决的问题不是「操作文件」，是「同时看到多个文件夹的状态」。&lt;/strong&gt; 双开、三开、四开面板，眼睛能一眼扫过去，脑子不用维护一个「我当前在哪个目录」的栈。&lt;/p&gt;&#xA;&lt;p&gt;这个问题在 SSH 场景下没有 GUI 兜底。于是我开始翻 TUI 文件管理器。装了三个：&lt;strong&gt;superfile&lt;/strong&gt;、&lt;strong&gt;Yazi&lt;/strong&gt;、&lt;strong&gt;Ranger&lt;/strong&gt;。今天这篇专门聊 superfile —— 一颗 GitHub 22813 star、v1.6.0、Go 写的新贵。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;项目地址：&lt;code&gt;github.com/yorukot/superfile&lt;/code&gt;&#xA;官网：&lt;code&gt;superfile.dev&lt;/code&gt;&#xA;Star 数：22813（截至 2026-08-25）&#xA;最新版本：v1.6.0（2026-06-07 发布）&#xA;License：MIT&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;superfile-到底是个什么东西&#34;&gt;superfile 到底是个什么东西&#xA;&lt;/h2&gt;&lt;p&gt;先说人话版本：&lt;strong&gt;一个能让你在终端里像用 macOS Finder / Windows 文件资源管理器一样操作文件的工具&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;技术版本：Go 1.21+ 写的 TUI 文件管理器，UI 层用的是 charmbracelet 家的 &lt;code&gt;Bubble Tea&lt;/code&gt; 框架 —— 这个框架在 Go 圈是 TUI 事实标准，出了 &lt;code&gt;gum&lt;/code&gt;、&lt;code&gt;glow&lt;/code&gt;、&lt;code&gt;crush&lt;/code&gt; 一堆漂亮东西，&lt;code&gt;superfile&lt;/code&gt; 是同一家族的血脉。&lt;/p&gt;&#xA;&lt;p&gt;跑起来长这样：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;$ spf&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一条命令进去，你会看到左边是文件树，中间是当前目录的文件列表，右边是预览面板 —— 光标停在图片文件上，右侧直接把图缩略图渲染在终端里；停在 Markdown 上，直接语法高亮预览；停在代码文件上，也是彩色高亮。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

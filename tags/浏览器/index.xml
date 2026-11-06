@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>浏览器 on softon.top</title>
+		<link>https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/</link>
+		<description>Recent content in 浏览器 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 04 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>6MB 的 Mac 浏览器，还能装 Chrome 扩展：Search 把 WebKit 的短板补上了</title>
+				<link>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</link>
+				<pubDate>Sun, 04 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/search-6mb-mac-browser-webkit-chrome-extensions/</guid>
+				<description>&lt;p&gt;Mac 用户的浏览器困境，是一个不可能三角：&lt;strong&gt;要性能就装 Safari，要扩展就装 Chrome，要两者兼得就得忍受 2GB 内存&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月，一个 6MB 的 macOS 浏览器 &lt;strong&gt;Search&lt;/strong&gt; 开源了。它直接调用系统自带的 WebKit 内核——和 Safari 同一颗心脏——却宣布支持 Chrome 扩展。不是&amp;quot;部分支持&amp;quot;，是从 Chrome Web Store 直接拉取、校验 CRX3 签名、注入 shim 补 API 的完整链路。&lt;/p&gt;&#xA;&lt;p&gt;作者 driceroland（Office Commun）在 9 月 20 日放出首版。小众软件 10 月 3 日推荐。我把它拆开看了看，发现真正有意思的不是&amp;quot;6MB&amp;quot;这个数字，而是&lt;strong&gt;它怎么把 WebKit 的扩展短板一层层补上&lt;/strong&gt;的。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Search 是仅 6MB 的 macOS 开源浏览器，直接调用系统 WebKit 内核，性能看齐 Safari&lt;/li&gt;&#xA;&lt;li&gt;通过 WKWebExtension + CRX3 签名校验 + ExtensionShims 三层设计，跑通 Chrome 扩展生态&lt;/li&gt;&#xA;&lt;li&gt;对比 Safari 1.2GB/10tab vs Chrome 2.1GB/10tab（M3 Mac），WebKit 阵营内存优势明显&lt;/li&gt;&#xA;&lt;li&gt;坑：非公证 DMG 首次需右键打开、shim 补的 API 不保证 100% 兼容、无 App Store 分发&lt;/li&gt;&#xA;&lt;li&gt;适合：想要 Safari 性能 + Chrome 扩展生态的 Mac 用户，尤其是 8GB 内存机型&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;6mb-是什么概念先看内存账本&#34;&gt;6MB 是什么概念？——先看内存账本&#xA;&lt;/h2&gt;&lt;p&gt;先看一组 2026 年 1 月 BrowserBench 的实测数据（M3 Mac，16GB RAM，10 个混合标签页：YouTube/Reddit/Gmail/Twitter/Google Docs/NYTimes/GitHub/Stack Overflow/Notion/Figma）：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>8 个 Chrome 插件让你效率翻倍（2026 实测）</title>
+				<link>https://softon.top/software/2026-top-8-chrome-extensions-productivity/</link>
+				<pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/2026-top-8-chrome-extensions-productivity/</guid>
+				<description>&lt;p&gt;我浏览器之前装了 50 多个插件，打开 Chrome 要 8 秒。后来做了一次彻底清理，只留了 8 个。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;清理后 Chrome 启动不到 2 秒&lt;/strong&gt;，而且功能上不但没缩水，反而更顺手了 —— 因为不再有多个插件抢快捷键、互相打架的情况。&lt;/p&gt;&#xA;&lt;p&gt;这篇不是&amp;quot;2026 年最好用的插件清单&amp;quot;，那是百科词条该干的事。这篇是一个真实用户的&lt;strong&gt;删选记录&lt;/strong&gt;：我装了哪些、为什么留下这 8 个、以及为什么删掉那些&amp;quot;别人都说好但我用不上&amp;quot;的。&lt;/p&gt;&#xA;&lt;h2 id=&#34;筛选标准三个月验证周期&#34;&gt;筛选标准：三个月验证周期&#xA;&lt;/h2&gt;&lt;p&gt;每个能留在浏览器的插件，都经过了至少三个月的**&amp;ldquo;试用期&amp;rdquo;**。期间我关注三件事：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;不可替代性&lt;/strong&gt;：有没有别的插件能替代它？原生功能能不能做到？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;性能影响&lt;/strong&gt;：加了多少启动时间、后台内存占多少、页面加载有没有变慢&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;更新活跃度&lt;/strong&gt;：超过一年没更新的直接淘汰，除非功能已经稳定且完美&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;按这个标准跑一轮下来，50 多个插件只剩 8 个。&lt;/p&gt;&#xA;&lt;h2 id=&#34;效率核心组4-个&#34;&gt;效率核心组（4 个）&#xA;&lt;/h2&gt;&lt;h3 id=&#34;1-tabby把标签页管理收进一个窗口&#34;&gt;1. Tabby：把标签页管理收进一个窗口&#xA;&lt;/h3&gt;&lt;p&gt;装过 OneTab、Workona、Toby 的应该都懂我在说什么。标签管理类插件有一个通病：&lt;strong&gt;功能越全就越重&lt;/strong&gt;，最终变成另一个浏览器。&lt;/p&gt;&#xA;&lt;p&gt;Tabby 是我试了一圈后留下的。它的核心思路很朴素：&lt;strong&gt;把散落的标签页聚合成&lt;/strong&gt;一个视图，用关键词就能搜到。不开几百个标签的人可能觉得无所谓，但如果你经常查资料开 30+ 标签页，这就是刚需。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;实测表现：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;占内存约 45MB（非活跃时）&lt;/li&gt;&#xA;&lt;li&gt;启动对 Chrome 无影响（延时加载）&lt;/li&gt;&#xA;&lt;li&gt;搜索比 Chrome 原生的历史记录快很多&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;替代方案对比：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;OneTab：功能类似但更新停在了 2024 年&lt;/li&gt;&#xA;&lt;li&gt;Workona：太重了，本身就像个浏览器&lt;/li&gt;&#xA;&lt;li&gt;原生 Chrome：没有聚合搜索功能&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;2-vimium键盘走天下&#34;&gt;2. Vimium：键盘走天下&#xA;&lt;/h3&gt;&lt;p&gt;这个插件可能本身效率提升不大，但&lt;strong&gt;爽感加成极高&lt;/strong&gt;。装上后你就可以用 &lt;code&gt;j/k&lt;/code&gt; 上下翻页、&lt;code&gt;f&lt;/code&gt; 打开链接、&lt;code&gt;H/L&lt;/code&gt; 后退/前进，基本告别鼠标。&lt;/p&gt;&#xA;&lt;p&gt;真正开始依赖 Vimium 是什么时候？某天我在一台没装它的电脑上查资料，手指下意识按 &lt;code&gt;j&lt;/code&gt; 想翻页 —— 发现没反应。那一刻意识到：&lt;strong&gt;它已经变成了肌肉记忆的一部分&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

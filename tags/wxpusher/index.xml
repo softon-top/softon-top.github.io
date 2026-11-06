@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>WxPusher on softon.top</title>
+		<link>https://softon.top/tags/wxpusher/</link>
+		<description>Recent content in WxPusher on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 08 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/wxpusher/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</title>
+				<link>https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/</link>
+				<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/wintoastrelay-windows-toast-notification-relay-phone/</guid>
+				<description>&lt;p&gt;Codex 一开就是四十分钟。我一边等它跑，一边刷手机；等到觉得该好了，切回电脑一看——它十分钟前就跑完了，静静地在那儿等我 review。&lt;/p&gt;&#xA;&lt;p&gt;这种&amp;quot;等得心焦、走开又错过&amp;quot;的循环，AI Coder 圈子里已经变成日经吐槽。之前解法五花八门：Tampermonkey 脚本挂网页轮询、跑完打开钉钉机器人、拉个 systray 图标闪红——都属于&amp;quot;补丁思路&amp;quot;，绕开了 Windows 本身&lt;strong&gt;已经在推系统通知&lt;/strong&gt;这件事。&lt;/p&gt;&#xA;&lt;p&gt;小众软件 09-06 挖到的开源项目 &lt;strong&gt;WinToastRelay&lt;/strong&gt;，直接把这层壳撕了：Windows 那个右下角冒出来的 toast，原封不动转发到你手机。开发者 @RavelloH，MIT 协议，微软商店和 GitHub 双渠道。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;WinToastRelay 用 Windows 原生 &lt;code&gt;UserNotificationListener&lt;/code&gt; 监听所有 toast，事件驱动，不轮询、不装钩子驱动，任务栏托盘常驻内存约 14 MB&lt;/li&gt;&#xA;&lt;li&gt;接收端支持 Bark（iOS 首选）、WxPusher（Android 首选）、以及任意 Webhook；密钥存 Credential Manager，不落 JSON&lt;/li&gt;&#xA;&lt;li&gt;Codex / Claude Code / GitHub Desktop / Docker Desktop 只要能弹 Windows 通知，都能被中继&lt;/li&gt;&#xA;&lt;li&gt;内置应用白名单：可以只放行 Codex，屏蔽掉 Teams 每三分钟提醒你开会&lt;/li&gt;&#xA;&lt;li&gt;Bark 那端配自建服务器，从触发到 iPhone 弹推送我实测 1.2 - 1.8 秒，全链路 HTTPS&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么-ai-coder-特别需要通知转发&#34;&gt;为什么 AI Coder 特别需要&amp;quot;通知转发&amp;quot;？&#xA;&lt;/h2&gt;&lt;p&gt;传统 IDE 时代，编译顶多 30 秒，你根本没时间走开。AI Coding 完全不同：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

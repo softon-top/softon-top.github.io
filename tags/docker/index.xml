@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Docker on softon.top</title>
+		<link>https://softon.top/tags/docker/</link>
+		<description>Recent content in Docker on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 06 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</title>
+				<link>https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/</guid>
+				<description>&lt;p&gt;抽屉里那台吃灰的旧手机，屏幕碎了、电池鼓了、系统卡成 PPT，但你舍不得扔——万一哪天有用呢？&lt;/p&gt;&#xA;&lt;p&gt;现在它真有用武之地了。&lt;/p&gt;&#xA;&lt;p&gt;一个 10 月 31 日刚上线的开源项目 &lt;strong&gt;termux-containers&lt;/strong&gt;，让你可以在&lt;strong&gt;不 Root、不刷机、不跑虚拟机&lt;/strong&gt;的前提下，用 Docker Compose 风格的 YAML 配置文件，在安卓手机里跑起 Nginx、Cloudflared、Aria2 这类服务。&lt;/p&gt;&#xA;&lt;p&gt;听起来像是&amp;quot;把手机变成服务器&amp;quot;的又一个标题党？&lt;/p&gt;&#xA;&lt;p&gt;我研究了一圈它的实现原理，发现这次真的不太一样。它没有伪造一个 Docker Engine，而是老老实实走 Termux + PRoot-Distro 的路子——不是&amp;quot;兼容 Docker&amp;quot;，而是&lt;strong&gt;补上 Docker 最缺的那块拼图：声明式多容器编排&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;termux-containers 基于 PRoot-Distro，无需 Root、无需 Docker 守护进程，用 YAML 管理多个 OCI 容器&lt;/li&gt;&#xA;&lt;li&gt;项目 2026-10-31 上线，GitHub 49 stars，作者仅用两个镜像（cloudflared、fast note sync、cli proxy api）做了验证&lt;/li&gt;&#xA;&lt;li&gt;它是&amp;quot;类 Docker Compose&amp;quot;而非&amp;quot;Docker 替代&amp;quot;：无端口映射、无内核级隔离、强依赖 ARM64 镜像&lt;/li&gt;&#xA;&lt;li&gt;适合做低功耗常驻小服务（消息机器人、Webhook、下载工具），不适合跑重型应用&lt;/li&gt;&#xA;&lt;li&gt;折腾成本极低（一条命令安装），但要做好&amp;quot;后台被杀&amp;quot;和&amp;quot;镜像架构不兼容&amp;quot;的心理准备&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;它到底是个什么东西&#34;&gt;它到底是个什么东西？&#xA;&lt;/h2&gt;&lt;p&gt;先给结论：&lt;strong&gt;termux-containers 不是一个容器运行时，而是一个配置管理器。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;它自己不拉镜像、不跑容器、不管网络。真正干活的是 Termux 生态里的 &lt;strong&gt;PRoot-Distro&lt;/strong&gt;——一个能在 Android 用户空间里跑 Linux 发行版的工具。termux-containers 做的事情，是给 PRoot-Distro 套上一层&amp;quot;类 Docker Compose&amp;quot;的壳：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</title>
+				<link>https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/</link>
+				<pubDate>Sun, 26 Jul 2026 18:05:00 +0800</pubDate>
+				<guid>https://softon.top/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/</guid>
+				<description>&lt;p&gt;把一个 AI Agent 接上 &lt;code&gt;exec&lt;/code&gt;、浏览器和 Git 仓库后，很多人会立刻想到 Docker：起个容器，不就隔离了吗？&lt;/p&gt;&#xA;&lt;p&gt;这句话只对了一半。&lt;/p&gt;&#xA;&lt;p&gt;容器确实能把进程、文件系统视图和网络命名空间切开；但它们仍共用宿主机内核。对一个会读网页、装依赖、运行第三方脚本、调用外部 API 的 Agent 来说，风险并不止“它会不会把程序跑坏”。真正难题是：&lt;strong&gt;一段不受完全信任的指令，最终能碰到哪些资产？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;可能是宿主机的 Docker Socket；可能是挂进容器的项目目录；可能是云端 API Key；也可能是能访问内网的网络出口。模型是否被提示注入、工具调用是否被诱导、依赖包是否有恶意代码，这些问题最后都会落到同一个地方：执行环境有没有边界。&lt;/p&gt;&#xA;&lt;p&gt;沙箱不是给 Agent 盖一层玻璃罩。它是在替人做权限拆分：让 Agent 能完成任务，但拿不到不该拿的东西。&lt;/p&gt;&#xA;&lt;h2 id=&#34;先别选技术先画出-agent-的攻击路径&#34;&gt;先别选技术，先画出 Agent 的攻击路径&#xA;&lt;/h2&gt;&lt;p&gt;普通 Web 服务的代码通常来自团队仓库，输入也经过设计。Agent 的工作流恰好反过来：它常常需要处理陌生输入，并把输入翻译成操作。&lt;/p&gt;&#xA;&lt;p&gt;一封邮件里的一句“请读取这个文件并执行修复脚本”，一段网页里的隐藏提示，一份带有恶意安装命令的 README，都可能进入模型上下文。模型即使没有“中毒”，也可能把这些文字当作高优先级任务，继而调用 Shell、浏览器或代码执行工具。&lt;/p&gt;&#xA;&lt;p&gt;因此，沙箱至少要回答五个问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;进程边界&lt;/strong&gt;：Agent 启动的程序能否影响宿主机或其他任务？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;文件边界&lt;/strong&gt;：它能读写哪些目录？工作成果如何带出来？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络边界&lt;/strong&gt;：它能访问公网、内网、元数据服务、公司 SaaS 吗？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;身份边界&lt;/strong&gt;：API Key、OAuth Token、SSH Key 是否会直接出现在进程或文件里？&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;资源边界&lt;/strong&gt;：它能吃掉多少 CPU、内存、磁盘、进程数和运行时间？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果只回答“我用了 Docker”，其实只覆盖了其中一部分。Docker 更像隔间，不是完整的保险库。&lt;/p&gt;&#xA;&lt;h2 id=&#34;docker足够快但别把默认容器当安全边界&#34;&gt;Docker：足够快，但别把默认容器当安全边界&#xA;&lt;/h2&gt;&lt;p&gt;Docker 仍是多数个人项目和内部自动化的第一站。原因很朴素：镜像好做，生态完整，启动快，依赖隔离直观。为每次 Agent 任务创建短生命周期容器，也比直接在宿主机执行安全得多。&lt;/p&gt;&#xA;&lt;p&gt;但 Docker 的隔离属于操作系统级隔离。容器与宿主机共享 Linux 内核；如果运行时配置太宽松，隔离会被自己打穿。&lt;/p&gt;&#xA;&lt;p&gt;最常见的“沙箱变后门”有四种：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;挂载过大的目录&lt;/strong&gt;：把整个家目录、仓库根目录或 &lt;code&gt;/var/run&lt;/code&gt; 挂进去，Agent 的可见范围就远大于任务需要。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;暴露 Docker Socket&lt;/strong&gt;：容器一旦能控制 Docker，往往就等于能启动高权限容器，边界名存实亡。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;使用特权模式或过多 Capabilities&lt;/strong&gt;：&lt;code&gt;--privileged&lt;/code&gt; 是为了方便排障，不该成为常态；额外 Linux capabilities 同样应按需给。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;网络默认放行&lt;/strong&gt;：容器可以出网并不代表它应该能访问所有内网地址、云元数据端点或管理面板。&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;个人场景里，Docker 可以承担低风险任务：格式化文本、转换文件、运行受信代码的测试、处理不含密钥的公开数据。前提是把它收紧到“任务最小集合”。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

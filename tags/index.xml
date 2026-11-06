@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 06 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Android</title>
+				<link>https://softon.top/tags/android/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/android/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Containers</title>
+				<link>https://softon.top/tags/containers/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/containers/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Docker</title>
+				<link>https://softon.top/tags/docker/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/docker/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Homelab</title>
+				<link>https://softon.top/tags/homelab/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/homelab/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Proot</title>
+				<link>https://softon.top/tags/proot/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/proot/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Hosted</title>
+				<link>https://softon.top/tags/self-hosted/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/self-hosted/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Termux</title>
+				<link>https://softon.top/tags/termux/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/termux/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Finalshell</title>
+				<link>https://softon.top/tags/finalshell/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/finalshell/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Mobaxterm</title>
+				<link>https://softon.top/tags/mobaxterm/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/mobaxterm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Securecrt</title>
+				<link>https://softon.top/tags/securecrt/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/securecrt/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Ssh</title>
+				<link>https://softon.top/tags/ssh/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ssh/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Tabby</title>
+				<link>https://softon.top/tags/tabby/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/tabby/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Terminal</title>
+				<link>https://softon.top/tags/terminal/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/terminal/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Windterm</title>
+				<link>https://softon.top/tags/windterm/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/windterm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Xshell</title>
+				<link>https://softon.top/tags/xshell/</link>
+				<pubDate>Wed, 04 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/xshell/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AMD Strix Halo</title>
+				<link>https://softon.top/tags/amd-strix-halo/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/amd-strix-halo/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>DeepSeek</title>
+				<link>https://softon.top/tags/deepseek/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/deepseek/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Inference</title>
+				<link>https://softon.top/tags/inference/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/inference/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Intel Arc</title>
+				<link>https://softon.top/tags/intel-arc/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/intel-arc/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Local LLM</title>
+				<link>https://softon.top/tags/local-llm/</link>
+				<pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/local-llm/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>
