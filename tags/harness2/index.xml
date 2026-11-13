@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Harness2 on softon.top</title>
+		<link>https://softon.top/tags/harness2/</link>
+		<description>Recent content in Harness2 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 20 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/harness2/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Google Harness² 开源：不改模型权重，Agent 也能自我进化</title>
+				<link>https://softon.top/ai/google-harness2-recursive-agent-self-improvement-framework/</link>
+				<pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/google-harness2-recursive-agent-self-improvement-framework/</guid>
+				<description>&lt;p&gt;你的 Agent 不够强？也许不是模型的错，是 harness 的错。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月 18 日，Google Research 开源了 Harness²——一个递归 Agent Harnessing 框架。核心理念一句话：&lt;strong&gt;不改模型权重，只改模型周围的一切&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;Prompt、工具、记忆、guardrails、skills、scripts、plugins——这些包裹在模型外面的&amp;quot;harness&amp;quot;才是 Agent 性能的关键。Harness² 让 Agent 自己优化自己的 harness，递归改进，越用越好。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Harness² 是 Google 开源的递归 Agent Harnessing 框架，Apache 2.0，不改模型权重&lt;/li&gt;&#xA;&lt;li&gt;8 个可编辑组件：system prompt、guardrails、memory、tool guidance、subagents、skills、scripts、plugins&lt;/li&gt;&#xA;&lt;li&gt;双层递归：Task-level 改进当前任务，Harnessing-level 把经验沉淀到未来&lt;/li&gt;&#xA;&lt;li&gt;WorkBuddy-Bench 提升 11.5 分（GLM-5 under OpenCode: 64.2→75.7）&lt;/li&gt;&#xA;&lt;li&gt;弱模型 + 好 harness 击败强模型 + 差 harness——harness 比模型更重要&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;harness-是什么&#34;&gt;Harness 是什么？&#xA;&lt;/h2&gt;&lt;p&gt;Harness² 的论文定义：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;A harness is the system around a model that enables it to act as an agent: prompts, tools, memory, skills, orchestration, and more.&amp;rdquo;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

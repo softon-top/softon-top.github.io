@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Security on softon.top</title>
+		<link>https://softon.top/tags/security/</link>
+		<description>Recent content in Security on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 08 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/security/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AGENTS.md 投毒：网页无声丢一个文本文件进下载夹，你的 AI 编程助手就替黑客干活了</title>
+				<link>https://softon.top/ai/agents-md-poisoning-downloads-folder-ai-agent-attack/</link>
+				<pubDate>Sun, 08 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/agents-md-poisoning-downloads-folder-ai-agent-attack/</guid>
+				<description>&lt;p&gt;你只是打开了一个网页，什么都没点，切走的一瞬间，一个叫 &lt;code&gt;AGENTS.md&lt;/code&gt; 的纯文本文件已经躺进了 &lt;code&gt;~/Downloads&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;看起来人畜无害——一个 Markdown 而已。但如果你习惯在下载夹里直接启动 Claude Code 或 Codex，让 AI 帮你理一理刚下的文件，那接下来发生的事就不太好看了：AI 会自动读这个文件，把它当成&amp;quot;最高圣旨&amp;quot;，照着黑客写好的指令一步步执行——改全局配置、关沙箱、装恶意 npm 包、把本地 API Token 打包寄出去。&lt;/p&gt;&#xA;&lt;p&gt;不用你执行任何脚本，甚至不用你点任何&amp;quot;确定&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;这不是理论推演。安全机构 Forever Security 在一位真实客户的机器上截获了这种攻击，把攻击者的原始 &lt;code&gt;AGENTS.md&lt;/code&gt; 原封不动放进隔离虚拟机里跑，&lt;strong&gt;Codex 超过 90% 的尝试都完整执行了攻击&lt;/strong&gt;；针对 Claude Code 的另一套 payload，成功率也在 &lt;strong&gt;50% 左右&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;更扎心的是：这个问题&lt;strong&gt;没法靠打补丁解决&lt;/strong&gt;。因为 Agent 读当前目录的 &lt;code&gt;AGENTS.md&lt;/code&gt; 并执行里面的环境准备建议，本来就是产品功能设计——就像浏览器渲染钓鱼网站不是 Chrome 的 Bug 一样。攻击面活在&amp;quot;文件内容&amp;quot;和&amp;quot;文件落点&amp;quot;的接缝里，不在 Agent 本身。&lt;/p&gt;&#xA;&lt;p&gt;所以防御只能靠你自己。这篇文章把攻击链拆开，讲清每一环为什么拦不住，最后给一份 3 分钟自检清单。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;攻击入口不是漏洞，是 &lt;code&gt;~/Downloads&lt;/code&gt; 这个&amp;quot;网页能静默写入、你却信任&amp;quot;的文件夹&lt;/li&gt;&#xA;&lt;li&gt;Codex 实测被真实 payload 攻破率 &amp;gt;90%；Claude Code 被诱导改 &lt;code&gt;ANTHROPIC_BASE_URL&lt;/code&gt; 成功率约 50%&lt;/li&gt;&#xA;&lt;li&gt;恶意指令把 &lt;code&gt;~/.codex/config.toml&lt;/code&gt; 全局配置写坏，污染不留在下载夹，而是&lt;strong&gt;每次启动都复活&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;审批门和沙箱会被 payload 自己写的 &lt;code&gt;--dangerously-bypass-approvals-and-sandbox&lt;/code&gt; 关掉——模型亲手关的&lt;/li&gt;&#xA;&lt;li&gt;五条防御：别在 Downloads 启动 Agent、先读陌生指令文件、查全局配置、锁权限边界、发现即轮换 Token&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么一个文本文件能变成可执行代码&#34;&gt;为什么一个文本文件能变成可执行代码？&#xA;&lt;/h2&gt;&lt;p&gt;要理解这次攻击，得先看两个&amp;quot;各自都无害、凑一起就出事&amp;quot;的事实。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

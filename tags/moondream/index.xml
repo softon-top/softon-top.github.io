@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Moondream on softon.top</title>
+		<link>https://softon.top/tags/moondream/</link>
+		<description>Recent content in Moondream on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 15 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/moondream/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Moondream 本地部署实战：1GB 视觉模型跑在树莓派上是什么体验？</title>
+				<link>https://softon.top/tutorials/moondream-local-deployment-raspberry-pi-cpu-vision-model/</link>
+				<pubDate>Thu, 15 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/moondream-local-deployment-raspberry-pi-cpu-vision-model/</guid>
+				<description>&lt;p&gt;树莓派能跑视觉语言模型？&lt;/p&gt;&#xA;&lt;p&gt;2026 年之前，这问题像在问自行车能不能上高速。Moondream 0.5B 改变了答案——1GB 模型权重，CPU 推理，官方说能在树莓派 5 上跑。我试了，确实能跑，但体验比&amp;quot;能跑&amp;quot;三个字复杂得多。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Moondream 0.5B 确实能在树莓派 5 上 CPU 推理，单次查询 8-15 秒，比云端慢但完全可用&lt;/li&gt;&#xA;&lt;li&gt;x86 桌面 CPU 上 0.5B 约 2-3 秒/次，2B 约 8-12 秒，接近实时交互体验&lt;/li&gt;&#xA;&lt;li&gt;准确率方面，0.5B 在简单 caption 和检测任务上接近 GPT-4V，复杂推理和多物体计数差距明显&lt;/li&gt;&#xA;&lt;li&gt;成本优势：本地推理零 API 费用，按 1000 次/天算，月省 $50-150&lt;/li&gt;&#xA;&lt;li&gt;踩坑重点：Python 3.12 兼容性、内存限制、模型量化选项&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么-moondream-值得折腾&#34;&gt;为什么 Moondream 值得折腾？&#xA;&lt;/h2&gt;&lt;p&gt;2026 年视觉语言模型赛道拥挤：GPT-4V、Gemini、Qwen-VL、GLM-4.6V……全在云端。Moondream 选了另一条路：&lt;strong&gt;小到能塞进边缘设备&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;模型&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;参数&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;模型大小&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;硬件要求&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;特点&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Moondream 0.5B&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;5 亿&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~1 GB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;CPU / 树莓派&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;世界最小 VLM&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Moondream 2B&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;20 亿&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~4 GB&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;CPU / 低功耗 GPU&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;通用视觉理解&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Moondream 3.1&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GPU 最优&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;最新 benchmark 冠军&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GPT-4V&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;未公开&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;云端 API&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;最强综合能力&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Gemini 2.5 Flash&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;未公开&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;—&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;云端 API&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;低延迟云端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;GitHub 6M+ 下载，MATLAB R2026a 内置 &lt;code&gt;moondream&lt;/code&gt; 对象，Cloudflare 边缘推理合作——社区生态已经起来了。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>YAML on softon.top</title>
+		<link>https://softon.top/tags/yaml/</link>
+		<description>Recent content in YAML on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 29 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/yaml/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>用 YAML 写 AI Agent 不是银弹：我拆开 docker-agent，看清声明式编排的边界</title>
+				<link>https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/</link>
+				<pubDate>Thu, 29 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/</guid>
+				<description>&lt;p&gt;2026 年 10 月底，Hacker News 上出现一篇《Writing AI agents in YAML instead of Python》，指向 codecut.ai 的一篇教程。&lt;/p&gt;&#xA;&lt;p&gt;内容说的是 Docker 的新工具 &lt;strong&gt;docker-agent&lt;/strong&gt;：不写 Python，一个 YAML 文件定义整个 Agent，一条命令跑起来。&lt;/p&gt;&#xA;&lt;p&gt;我读完文档和教程，第一反应是——&lt;strong&gt;这跟 2023 年&amp;quot;低代码 Agent&amp;quot;那波口号有什么区别？&lt;/strong&gt; 但仔细拆下去，发现它确实解决了一个真问题：Agent 代码膨胀后，改一处要读三处。&lt;/p&gt;&#xA;&lt;p&gt;但它的边界也很清楚。这篇把机制拆开，讲清楚&lt;strong&gt;什么时候该用 YAML，什么时候必须写代码&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;docker-agent 是 Docker 官方开源工具，一个 YAML 定义 Agent 的模型、指令、工具、拓扑&lt;/li&gt;&#xA;&lt;li&gt;它解决的是&amp;quot;Agent 代码膨胀&amp;quot;问题：配置与代码分离，一处改动不用翻三个文件&lt;/li&gt;&#xA;&lt;li&gt;微软 Agent Framework 1.0 也在走同一条路：YAML 声明式 Agent + 编排拓扑&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;边界&lt;/strong&gt;：自定义分支、重试、逐步控制——YAML 表达不了，必须回 LangGraph&lt;/li&gt;&#xA;&lt;li&gt;实测数据：gpt-5-mini 通过 18/18 断言，gpt-5-nano 只过 13/18，成本却只要一半&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;agent-代码为什么会膨胀&#34;&gt;Agent 代码为什么会膨胀？&#xA;&lt;/h2&gt;&lt;p&gt;先看传统写法要干什么。Google DeepMind 的 Philipp Schmid 在 2026 年 9 月那场《Agents Without Code》演讲里，把流程列得很直白：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

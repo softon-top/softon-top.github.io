@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>VNC on softon.top</title>
+		<link>https://softon.top/tags/vnc/</link>
+		<description>Recent content in VNC on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 23 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/vnc/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>老手机别吃灰：droidVNC-NG 装上去，浏览器一开就是一台远程桌面</title>
+				<link>https://softon.top/software/droidvnc-ng-android-remote-desktop-browser-control/</link>
+				<pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/droidvnc-ng-android-remote-desktop-browser-control/</guid>
+				<description>&lt;p&gt;家里翻出 3 台没插 SIM 卡、电池还能撑两小时的旧安卓。不扔，但塞抽屉里吃灰。&lt;/p&gt;&#xA;&lt;p&gt;最直接的复活方式不是装摄像头、不是装音乐盒，是把它变成一台&lt;strong&gt;桌面级的远程安卓机&lt;/strong&gt;：插电源、连 Wi-Fi、装 droidVNC-NG，电脑上浏览器一开，屏幕、键盘、鼠标、剪贴板、文件传输，全套远程桌面能力。不需要装 VNC 客户端——它内置 noVNC，浏览器就是客户端。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;droidVNC-NG 是开源 Android VNC 服务器，基于 Android 7+ 新 API，&lt;strong&gt;免 Root&lt;/strong&gt;（旧 droid-VNC-server 要 Root，这是 NG 的核心卖点）。&lt;/li&gt;&#xA;&lt;li&gt;内置 noVNC Web 客户端：浏览器直接控，不用下 VNC 客户端；传统 VNC 客户端（TightVNC 等）也能连。&lt;/li&gt;&#xA;&lt;li&gt;局域网场景够用：密码、剪贴板共享、文件传输、开机自启、多客户端各自独立鼠标指针、Zeroconf 自动发现。&lt;/li&gt;&#xA;&lt;li&gt;跨网段 / 回家连：有&lt;strong&gt;反连模式&lt;/strong&gt;（Reverse VNC，设备主动连出去）和 &lt;strong&gt;UltraVNC Mode-2 repeater&lt;/strong&gt; 中介，不用在自己家路由器上开 5900 端口。&lt;/li&gt;&#xA;&lt;li&gt;和 TeamViewer/向日葵的差异：开源、自托管、无账号、不花订阅费；代价是没有云端穿透，跨网要自己搭中继或反连。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;它和-teamviewer向日葵到底差在哪&#34;&gt;它和 TeamViewer/向日葵到底差在哪？&#xA;&lt;/h2&gt;&lt;p&gt;先把定位说清，不然读者以为是要&amp;quot;替代向日葵&amp;quot;：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;维度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;droidVNC-NG&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;TeamViewer / 向日葵 / RustDesk&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;协议&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;经典 VNC（TCP）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;各自私有协议 + 部分支持 VNC&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;客户端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;浏览器（noVNC 内置）+ 任意 VNC 客户端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;专用 app / 网页&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;账号体系&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;无&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;有（登录、云端绑定）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;跨网穿透&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;反连 + repeater，需自管&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;云端中继，开箱即用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;费用&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免费开源（F-Droid / Play）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;个人免费 + 商用订阅&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;隐私&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;数据走你自己网络&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;走厂商云端&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Root&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;否（Android 7+ API）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;视功能而定&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;一句话：&lt;strong&gt;droidVNC-NG 解决的是&amp;quot;局域网内 / 已搭好穿透&amp;quot;场景下的安卓远程控制&lt;/strong&gt;，不是&amp;quot;出差在外一键连云端&amp;quot;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Lightweight on softon.top</title>
+		<link>https://softon.top/tags/lightweight/</link>
+		<description>Recent content in Lightweight on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 12 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/lightweight/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数</title>
+				<link>https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/</guid>
+				<description>&lt;p&gt;十美元，512MB 内存，4GB 存储，四核 ARM Cortex-A53。&lt;/p&gt;&#xA;&lt;p&gt;这是开发者 Laurens Bosscher 在 &lt;a class=&#34;link&#34; href=&#34;https://www.appinn.com/11-lightweight-self-hosted-apps-512mb-ram/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;小众软件&lt;/a&gt; 分享的 OpenStick 小主机配置。他买来一台原本刷不了机的高通 4G 上网卡，刷上 Debian，用 Podman 跑起了广告过滤、AI 助手、RSS 阅读、服务器监控一整套服务，并且列了 11 个工具的&amp;quot;参考内存占用&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;这类清单我见过太多，绝大多数的问题是：&lt;strong&gt;数字是抄的，不是跑出来的&lt;/strong&gt;。你照着装完，发现 512MB 根本不够——因为清单算的是单个工具的&amp;quot;最低内存&amp;quot;，没算你同时开几个。&lt;/p&gt;&#xA;&lt;p&gt;所以我把这份清单逐项拉回官方仓库和 README 核对了一遍，把纸面参数和真实可用范围分开，再给你一个 512MB 的装法。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;11 个工具里，&lt;strong&gt;Beszel / Dozzle / Gatus / Diun 是真正的 10-20MB 量级&lt;/strong&gt;，可以无脑装&lt;/li&gt;&#xA;&lt;li&gt;清单把 &lt;strong&gt;AdGuard Home 和它的 fork &amp;ldquo;AdGuard Home Next-Gen&amp;rdquo; 当成两个工具算&lt;/strong&gt;，实际是同一件事，预算要按一个 40MB 算&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;512MB 内存下真正的天花板不是工具数量，是 Docker 本身&lt;/strong&gt;——容器运行时 + 每个容器的开销，先扣掉 100MB 才轮到工具&lt;/li&gt;&#xA;&lt;li&gt;广告过滤选 &lt;strong&gt;AdGuard Home（38k stars，成熟）&lt;/strong&gt;，别选 22 stars 的 Next-Gen，除非你要验证它&lt;/li&gt;&#xA;&lt;li&gt;想复制这套方案，先想清楚你的设备是&amp;quot;常开&amp;quot;还是&amp;quot;按需唤醒&amp;quot;——内存账本对前者成立，对后者不成立&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;先说清楚这台设备到底是什么&#34;&gt;先说清楚：这台设备到底是什么&#xA;&lt;/h2&gt;&lt;p&gt;OpenStick 不是新硬件，是一类&lt;strong&gt;基于高通 MSM8916 芯片的 4G USB 上网卡&lt;/strong&gt;。原本插电脑上只能当调制解调器用，&lt;a class=&#34;link&#34; href=&#34;https://github.com/OpenStick/OpenStick&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;OpenStick 项目&lt;/a&gt;（1.2k stars）把它逆向移植到了主线 Linux，刷 Debian、postmarketOS 都能跑。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

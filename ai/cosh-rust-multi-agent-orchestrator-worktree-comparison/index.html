@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Cosh 用 Rust 写，把 Claude Code、Codex、Goose 等外部 Agent 编排进同一个 TUI 分屏并行，每个 Agent 独立会话、模型、git worktree。基于官方 README、CHANGELOG 与 HN 讨论，拆解其编排机制、worktree 隔离、ACP 接入与同类工具区别。">
+<title>Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端</title>
+
+<link rel='canonical' href='https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端">
+<meta property='og:description' content="Cosh 用 Rust 写，把 Claude Code、Codex、Goose 等外部 Agent 编排进同一个 TUI 分屏并行，每个 Agent 独立会话、模型、git worktree。基于官方 README、CHANGELOG 与 HN 讨论，拆解其编排机制、worktree 隔离、ACP 接入与同类工具区别。">
+<meta property='og:url' content='https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Ai' /><meta property='article:tag' content='Cosh' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='Multi-Agent' /><meta property='article:tag' content='Agent Orchestration' /><meta property='article:tag' content='Rust' /><meta property='article:tag' content='TUI' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='Goose' /><meta property='article:published_time' content='2026-11-13T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-13T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端">
+<meta name="twitter:description" content="Cosh 用 Rust 写，把 Claude Code、Codex、Goose 等外部 Agent 编排进同一个 TUI 分屏并行，每个 Agent 独立会话、模型、git worktree。基于官方 README、CHANGELOG 与 HN 讨论，拆解其编排机制、worktree 隔离、ACP 接入与同类工具区别。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端\"",
+  "description": "\"Cosh 用 Rust 写，把 Claude Code、Codex、Goose 等外部 Agent 编排进同一个 TUI 分屏并行，每个 Agent 独立会话、模型、git worktree。基于官方 README、CHANGELOG 与 HN 讨论，拆解其编排机制、worktree 隔离、ACP 接入与同类工具区别。\"",
+  "url": "\"https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/\"",
+  "datePublished": "2026-11-13T00:00:00Z",
+  "dateModified": "2026-11-13T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/\""
+  },
+  "keywords": "\"Cosh, AI Agent, Multi-Agent, Agent Orchestration, Rust, TUI, Claude Code, Codex, Goose\"",
+  "articleSection": "\"ai\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"ai\"",
+      "item": "https:\/\/softon.top/ai/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端\"",
+      "item": "\"https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它到底想解决什么一个终端里的agent-团队">它到底想解决什么：一个终端里的“Agent 团队”</a></li>
+    <li><a href="#agents-分屏窗格不是另一个聊天框是另一个-agent-的工位"><code>/agents</code> 分屏：窗格不是“另一个聊天框”，是“另一个 Agent 的工位”</a></li>
+    <li><a href="#worktree-隔离为什么这是多-agent-并行的真正门槛">Worktree 隔离：为什么这是多 Agent 并行的真正门槛</a></li>
+    <li><a href="#接入外部-agent-靠什么acp-协议与注册表">接入外部 Agent 靠什么：ACP 协议与注册表</a></li>
+    <li><a href="#和-claude-squadagent-orchestrator-有什么本质区别">和 Claude Squad、Agent Orchestrator 有什么本质区别</a></li>
+    <li><a href="#运行时层被-readme-低估的真正价值">运行时层：被 README 低估的真正价值</a></li>
+    <li><a href="#模块化五个-crate各自能独立用">模块化：五个 crate，各自能独立用</a></li>
+    <li><a href="#hn-上大家其实在质疑什么">HN 上大家其实在质疑什么</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/ai/" style="background-color: hsl(185, 60%, 84%); color: hsl(185, 60%, 15%);">
+                AI观察
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/">Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-13T00:00:00Z'>
+                    2026-11-13，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：15分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它到底想解决什么一个终端里的agent-团队">它到底想解决什么：一个终端里的“Agent 团队”</a></li>
+    <li><a href="#agents-分屏窗格不是另一个聊天框是另一个-agent-的工位"><code>/agents</code> 分屏：窗格不是“另一个聊天框”，是“另一个 Agent 的工位”</a></li>
+    <li><a href="#worktree-隔离为什么这是多-agent-并行的真正门槛">Worktree 隔离：为什么这是多 Agent 并行的真正门槛</a></li>
+    <li><a href="#接入外部-agent-靠什么acp-协议与注册表">接入外部 Agent 靠什么：ACP 协议与注册表</a></li>
+    <li><a href="#和-claude-squadagent-orchestrator-有什么本质区别">和 Claude Squad、Agent Orchestrator 有什么本质区别</a></li>
+    <li><a href="#运行时层被-readme-低估的真正价值">运行时层：被 README 低估的真正价值</a></li>
+    <li><a href="#模块化五个-crate各自能独立用">模块化：五个 crate，各自能独立用</a></li>
+    <li><a href="#hn-上大家其实在质疑什么">HN 上大家其实在质疑什么</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>终端里同时开三个 Agent，各自跑在独立分支上，主 Agent 只负责派活和收报告——这个画面在 2024 年还像科幻，2026 年 11 月已经有一个开源项目把它做成了单 binary。</p>
+<p>它叫 <strong>Cosh</strong>（仓库 <code>DiegoZaluski/co-sh</code>），Rust 写的通用编码 Agent，主打的不是“替代 Claude Code”，而是“把一堆现成 Agent 塞进同一个 TUI 里一起跑”。项目 2026-06-01 建仓，10 月 1 日发 v0.1.0，11 月 10 日已到 v0.2.2，迭代速度几乎是几天一个版本。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Cosh 的自我定位是<strong>编排层</strong>（orchestration layer），不替换 Claude Code / Codex / Goose，而是让它们并排跑在同一个终端里。</li>
+<li>核心机制：<code>/agents</code> 分屏 + 每个 Agent 独立会话/模型/可选 git worktree + 主 Agent 通过 <code>agents_call</code> / <code>agents_compact</code> 派活。</li>
+<li>接入外部 Agent 靠 <strong>ACP（Agent Client Protocol）</strong>，注册表内置 Gemini、Claude、Codex、Cline、Devin、Goose、OpenCode、Kilo，也允许用户自定义。</li>
+<li>和 Claude Squad、Agent Orchestrator 的差别：Cosh 更偏“个人开发者的终端工作台”，Squad 偏单 Agent 并行会话，Orchestrator 偏团队协作流。</li>
+<li>它真正的工程价值不在 UI，而在<strong>运行时</strong>：worktree 隔离、会话持久化、上下文压缩、自然停机门禁、bash 进程树看门狗。</li>
+<li>目前 macOS 官方标注“尚未测试”，Linux/Windows 已测；Stars 数（13）还很低，属于早期项目。</li>
+</ul>
+</blockquote>
+<h2 id="它到底想解决什么一个终端里的agent-团队">它到底想解决什么：一个终端里的“Agent 团队”
+</h2><p>先别急着看功能表。Cosh 的 README 第一句话就划清了界限：</p>
+<blockquote>
+<p>co-sh isn&rsquo;t meant to replace established coding agents — it&rsquo;s designed to work alongside them as an orchestration layer.</p>
+</blockquote>
+<p>这句话很关键。它没有说“我比 Claude Code 更强”，而是说“我不跟你抢方向盘，我帮你把多个司机安排进同一辆车的不同座位”。</p>
+<p>具体到交互层，它的主卖点是 <code>/agents</code> 模式：你按 <code>/agents</code> 打开一个多选面板，勾选想跑的外部 Agent（Gemini、Claude、Codex、Cline……），聊天区就被切成多个窗格。每个窗格是一个独立 Agent，保留自己的会话、模型，还可以挂自己的 git worktree。你输入一句 prompt，它会同时扇出给所有选中的 Agent；主 Agent 负责派任务、收报告、协调上下文。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 启动（官方安装脚本）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">curl -fsSL https://raw.githubusercontent.com/DiegoZaluski/co-sh/main/download.sh | bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Windows PowerShell</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">irm https://raw.githubusercontent.com/DiegoZaluski/co-sh/main/download.ps1 | iex</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 安装后</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cosh</span>
+</span></span></code></pre></div><p>可选环境变量有三个：<code>COSH_BIN_DIR</code>（安装目录）、<code>COSH_VERSION</code>（锁版本）、<code>COSH_VARIANT</code>（默认 <code>slim</code>，或 <code>slim-embed</code> 带本地 RAG，走 fastembed）。</p>
+<p>这不是“多开几个终端窗口”的升级版吗？是，但差别在<strong>共享工作区 + 统一调度</strong>。每个窗格能看到兄弟 Agent 的存在（官方叫 peer preamble），主 Agent 能替你给某个窗格单独派活，也能把某个窗格的上下文提前压缩。你不用在五个 tmux pane 之间来回切、复制粘贴、手动同步进度。</p>
+<h2 id="agents-分屏窗格不是另一个聊天框是另一个-agent-的工位"><code>/agents</code> 分屏：窗格不是“另一个聊天框”，是“另一个 Agent 的工位”
+</h2><p>把 <code>/agents</code> 想成“给每个 Agent 分配一个工位”，比想成“多标签聊天”更准确。官方 CHANGELOG 对 v0.2.0 的描述非常细，我挑几条关键的翻译成人话：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>能力</th>
+					<th>具体行为</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>分屏与扇出</td>
+					<td>一个共享 prompt 同时发给所有选中 Agent；每个窗格有独立滚动、复制、消息操作</td>
+			</tr>
+			<tr>
+					<td>会话持久化</td>
+					<td>每个窗格第一次结束后绑定自己的可恢复 ACP 会话；重启后从 <code>session/load</code> 回放恢复（含模型、推理模式）</td>
+			</tr>
+			<tr>
+					<td>模型独立</td>
+					<td>每个窗格可以单独选模型，<code>/models</code> 只提交给当前聚焦窗格，且跨窗格会话记住上次选择</td>
+			</tr>
+			<tr>
+					<td>Worktree 隔离</td>
+					<td>任何窗格（以及主 Agent 自己）都可以跑在自己的 git worktree 里；拒绝两个 Agent 挤在同一个 checkout</td>
+			</tr>
+			<tr>
+					<td>协调方式</td>
+					<td>主 Agent 用 <code>agents_call</code>（阻塞等报告，或后台挂起）和 <code>agents_compact</code>（提前压缩某窗格上下文）</td>
+			</tr>
+			<tr>
+					<td>窗格间纪律</td>
+					<td>协调工具被从子 Agent 的循环里剥掉——子 Agent 只报告，不互相协调</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>最后一条最像“管理者设计”：子 Agent 没有 <code>agents_call</code> 这类工具，它们不能自己再去派活。所有跨 Agent 协调必须经过主 Agent。这避免了“三个 Agent 互相甩锅、无限递归派活”的常见多 Agent 灾难。</p>
+<h2 id="worktree-隔离为什么这是多-agent-并行的真正门槛">Worktree 隔离：为什么这是多 Agent 并行的真正门槛
+</h2><p>多 Agent 并行写代码，最大的坑不是“它们不会写”，而是“它们互相踩”。同一个 checkout 里，A 刚改了 <code>src/main.rs</code>，B 的 diff 基于旧版本，merge 时就是一场小型车祸。</p>
+<p>Cosh 的做法是 <strong>opt-in worktree isolation</strong>：每个窗格可以绑定一个 git worktree，主 Agent 也能单独跑在隔离 worktree 里，退出时回到共享 checkout。官方明确写了几个约束：</p>
+<ul>
+<li>拒绝两个 Agent 跑在同一个 checkout（防止互相覆盖）；</li>
+<li>能识别并接管已有 worktree，也能按显式路径解析；</li>
+<li>路径带空格会正确加引号；</li>
+<li>主 Agent 的隔离带“返回共享 checkout”的退出路径。</li>
+</ul>
+<p>这一点，比“分屏”本身更值钱。<strong>分屏只是 UI，worktree 才是并发正确性的地基。</strong> 没有隔离的多 Agent 并行，本质上是把“单线程改代码”变成“多线程改代码但不加锁”——你只是更快地制造冲突。</p>
+<h2 id="接入外部-agent-靠什么acp-协议与注册表">接入外部 Agent 靠什么：ACP 协议与注册表
+</h2><p>Cosh 能驱动 Claude Code、Codex、Goose，靠的是 <strong>ACP（Agent Client Protocol）</strong>。CHANGELOG 里把它叫“external ACP agents”，并提到一个合成条目“cosh manager”。注册表内置的 harness 包括：</p>
+<ul>
+<li>GitHub Copilot CLI</li>
+<li>Gemini</li>
+<li>Claude</li>
+<li>Codex</li>
+<li>Cline</li>
+<li>Devin</li>
+<li>Goose</li>
+<li>OpenCode</li>
+<li>Kilo</li>
+</ul>
+<p>此外，用户可以在 <code>setup.json</code> 里注册自定义 ACP Agent（单词名 + 启动命令）和自定义 LLM Provider（endpoint + API family，目前 OpenAI-compatible）。注册是 all-or-nothing 校验，坏条目不会拖垮内置 harness。</p>
+<p>这里有个工程细节值得注意：v0.2.1 修了一个很典型的兼容性问题——某些 harness（如 goose）广告了 <code>loadSession</code> 但没有 <code>sessionCapabilities.resume</code>，会在每次窗格轮次前把保留的对话当普通 <code>session/update</code> 事件重放，污染时间线。Cosh 的处理是：在会话打开窗口内丢弃重放内容，但保留 UI 框架，让 rehydrate 路径用未过滤的处理器。</p>
+<p><strong>这就是“编排层”的真实成本</strong>：你对接的每个 Agent 都有自己的会话语义、重启行为、能力广告，协议层面的“看起来兼容”和“实际能恢复”之间，隔着大量这种边角修复。</p>
+<h2 id="和-claude-squadagent-orchestrator-有什么本质区别">和 Claude Squad、Agent Orchestrator 有什么本质区别
+</h2><p>这三个东西经常被放在一起讨论，但定位其实差很远：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>Cosh</th>
+					<th>Claude Squad</th>
+					<th>Agent Orchestrator</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>核心隐喻</td>
+					<td>终端里的 Agent 团队工作台</td>
+					<td>单个 Agent 的并行会话管理器</td>
+					<td>团队级并行 PR 流水线</td>
+			</tr>
+			<tr>
+					<td>并行对象</td>
+					<td>异构外部 Agent（Claude/Codex/Goose…）</td>
+					<td>同构 Agent（Claude Code 多实例）</td>
+					<td>同构 Agent + GitHub Issues</td>
+			</tr>
+			<tr>
+					<td>隔离方式</td>
+					<td>分屏 + git worktree</td>
+					<td>会话/分支级</td>
+					<td>git worktree + 独立分支</td>
+			</tr>
+			<tr>
+					<td>协调者</td>
+					<td>主 Agent（人可介入）</td>
+					<td>人/脚本</td>
+					<td>编排器（自动 CI/审查/合并）</td>
+			</tr>
+			<tr>
+					<td>成熟度</td>
+					<td>v0.2.2，早期</td>
+					<td>已有较大用户群</td>
+					<td>Composio 出品，偏企业</td>
+			</tr>
+			<tr>
+					<td>适合场景</td>
+					<td>个人开发者想同时试多个 Agent</td>
+					<td>一个人并行处理多个独立任务</td>
+					<td>团队把 Issue 批量喂给 Agent</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>Cosh 的差异化在“异构”。Claude Squad 假设你只用 Claude Code，追求的是同一工具多开；Cosh 假设你已经在用 Claude Code、Codex、Goose，但不想维护多套上下文、多套配置、多个终端。它把“选哪个 Agent”从决策问题变成<strong>运行时问题</strong>——你可以让 Claude 写重构、让 Codex 跑测试、让 Goose 做验证，然后在一个终端里看结果。</p>
+<p>但代价也明显：<strong>它依赖你已经有这些 Agent 的账号、配置和 CLI</strong>。Cosh 不替你解决“我没装 Goose”或“我的 Codex 配额用完了”这类问题。</p>
+<h2 id="运行时层被-readme-低估的真正价值">运行时层：被 README 低估的真正价值
+</h2><p>README 主要讲 UI 和 crates，但 CHANGELOG 里最有信息量的部分是<strong>运行时修复</strong>。我挑几个能反映“Agent 生产化”真实痛点的地方：</p>
+<p><strong>1. 自然停机门禁（harness-natural-stop-gate）</strong></p>
+<p>Agent 循环有时会“静默半途停机”。官方文档列了三种形态：</p>
+<ul>
+<li>只输出 reasoning 流，<code>finish_reason = &quot;stop&quot;</code> 但 answer token 为 0；</li>
+<li>完全空响应；</li>
+<li>工具调用之间插入的叙述文本（“Now I&rsquo;ll run the tests.”）后直接停止。</li>
+</ul>
+<p>根因是：停机门禁把任何白名单 <code>finish_reason</code>（<code>stop | end_turn | tool_calls</code>）都当成任务完成。但 <code>finish_reason</code> 描述的是<strong>响应</strong>，不是<strong>任务</strong>。修复后，停机门禁会结合 TODO 是否还有未完成项、是否已有报告义务等信号判断，而不是只看模型这一轮“说完了”。</p>
+<p><strong>2. bash 进程树看门狗</strong></p>
+<p><code>bash_run</code> 有一个 liveness watchdog，采样整个进程树（bash 会派生子进程，所以看树而不是只看 shell）的三个进度信号：新输出、累计 CPU 时间增长、I/O 计数增长。三者都没有持续 120 秒，判定挂死并杀掉。任何单个信号都会重置计数器，所以构建、下载这类长任务不会被误杀。</p>
+<p>同时，Unix 下所有 kill 路径改为向整个进程组发 <code>SIGKILL</code>——旧行为只杀 shell，会漏掉“泄漏的 <code>yes &gt;/dev/null</code> 把一个核转到永远”。这类修复，才是 Agent 从“能跑”到“能上线”的分水岭。</p>
+<p><strong>3. 上下文压缩与会话持久化</strong></p>
+<p><code>harness/context</code> 模块是 Cosh 的会话唯一权威：所有事件（用户请求、assistant 响应、工具调用、工具结果）进入一条按显示顺序排列的 timeline，<code>build_messages</code> 按需提供发给 provider 的消息列表。三种压缩策略：one-shot LLM compaction、分层 MapReduce、legacy split-and-concatenate。</p>
+<p><code>context-compaction</code> 文档里有一句我很认同的设计原则：</p>
+<blockquote>
+<p>The session JSONL is the only authoritative session history. A checkpoint is an appended derived summary, not a replacement transcript.</p>
+</blockquote>
+<p>翻译：<strong>会话 JSONL 是唯一权威历史；checkpoint 是追加的派生摘要，不是替换 transcript。</strong> 这避免了“压缩丢信息、回滚没法做”的常见问题。</p>
+<h2 id="模块化五个-crate各自能独立用">模块化：五个 crate，各自能独立用
+</h2><p>Cosh 不是单体应用，五个 crate 都可以当库用：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>Crate</th>
+					<th>作用</th>
+					<th>能否独立用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>cosh-sdk</code></td>
+					<td>LLM 连接器（28 provider）、工具调用抽取、hashline 补丁引擎、文件回滚、LSP 客户端、AST 智能</td>
+					<td>是，无 app 依赖</td>
+			</tr>
+			<tr>
+					<td><code>cosh-tools</code></td>
+					<td>所有暴露给 Agent 的工具（fs/bash/find/lsp/computer/web/skills/subagent/plan/question/recall）</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td><code>cosh-tui</code></td>
+					<td>Ratatui 组件层（markdown/diff 渲染、布局、Solid 风格响应层）</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td><code>cosh-recall</code></td>
+					<td>可选 RAG 层（fastembed 本地向量 + LanceDB）</td>
+					<td>是（<code>embed</code> feature）</td>
+			</tr>
+			<tr>
+					<td><code>cosh-onnx</code></td>
+					<td>ONNX 决策引擎（<code>DecisionModel</code> trait + Laya 实现）</td>
+					<td>是（<code>onnx</code> feature）</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><code>cosh-sdk</code> 的 README 里有一个细节：Rust 2024 edition（≥ 1.85）；tree-sitter 语法依赖（约 50 个 crate）是主要编译成本；如果只需要 connector 或补丁引擎，编译会更快。这对想二次开发的人很实用。</p>
+<p><code>cosh-tools</code> 里有个设计我特别喜欢：<strong>读文件返回 <code>file_hash</code>，写文件必须校验</strong>；编辑锚定在 hashline 标签上，每个 target 独立报错；每次写都记录版本用于会话回滚。所有路径在项目 root 设置前一律拒绝，另有写/只读 allow/blocklist 和 Unix 下内核级沙箱（<code>openat</code> + <code>O_NOFOLLOW</code>）。</p>
+<h2 id="hn-上大家其实在质疑什么">HN 上大家其实在质疑什么
+</h2><p>Show HN 帖子下只有 4 条评论，但每一条都戳在编排层项目的命门上：</p>
+<blockquote>
+<p>Can someone sell me on orchestration using any tool besides the native support something like claude provides to spin up a few agents whenever it deems that necessary?</p>
+</blockquote>
+<p>翻译：Claude 自己就能按需拉起子 Agent，我为什么还要一个外部编排器？</p>
+<blockquote>
+<p>Similarly could use some screenshots before I pull down and consider it. Also no WHY I would use this over established players like those mentioned in the post.</p>
+</blockquote>
+<p>翻译：先给我截图，还有，凭什么不用 Claude Code / Codex 自己？</p>
+<p>作者 Zaluski 的回应是：会补 README 里和其他 TUI 编排器的关键差异说明。</p>
+<p><strong>这个质疑是对的</strong>：编排层的价值，必须建立在“原生多 Agent 支持不够用”的具体场景上。Cosh 目前给出的答案是：异构 Agent 混用、统一终端、worktree 隔离、可复用 crates。但 v0.2.2 的 Stars 只有 13，说明市场还没投票。</p>
+<p>我的判断是：<strong>它更适合已经同时使用多个 Agent 的重度用户，而不是只用一个 Agent 的普通人。</strong> 如果你只用 Claude Code，Cosh 的编排层对你就是“多一层抽象”；如果你同时用 Claude、Codex、Goose 做对比实验，Cosh 的分屏 + worktree 能省掉大量终端切换和手动同步。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: Cosh 和 Claude Code 是什么关系？</strong></p>
+<p>A: 不是替代关系。Cosh 是编排层，Claude Code 是它通过 ACP 接入的外部 Agent 之一。你可以把 Claude Code、Codex、Goose 同时放进 Cosh 的 <code>/agents</code> 分屏。</p>
+<p><strong>Q2: 它支持 macOS 吗？</strong></p>
+<p>A: 官方 README 明确写“macOS hasn&rsquo;t been tested yet”，只标注 Linux 和 Windows 已测试。macOS 用户要谨慎，遇到问题官方让你开 issue。</p>
+<p><strong>Q3: 每个 Agent 真的互不干扰吗？</strong></p>
+<p>A: 会话和模型是隔离的；worktree 是 opt-in 的隔离机制。官方会拒绝两个 Agent 挤在同一个 checkout。但如果你不开 worktree，它们仍在同一个工作目录里——并发正确性需要你自己负责。</p>
+<p><strong>Q4: 它解决“上下文爆炸”问题吗？</strong></p>
+<p>A: 有专门设计。<code>harness/context</code> 模块是会话唯一权威，支持三种压缩策略；<code>agents_compact</code> 工具可以让主 Agent 提前压缩某个窗格，不用等 harness 自己到 80% 触发。</p>
+<p><strong>Q5: 和 OpenClaw 的多 Agent 架构有什么区别？</strong></p>
+<p>A: 两者都做编排，但抽象层不同。OpenClaw 更偏“Agent 运行时 + 插件/技能体系”，Cosh 更偏“终端 TUI 里的异构 Agent 工作台 + worktree 并发”。OpenClaw 的强项是长期运行、插件生态、渠道接入；Cosh 的强项是把多个现成 CLI Agent 塞进一个终端协同。</p>
+<p><strong>Q6: 现在能用于生产吗？</strong></p>
+<p>A: v0.2.2，迭代很快，但 Stars 13、macOS 未测试、协议兼容层还在修边角。建议先当“实验工具”，别把核心工作流押在它身上。</p>
+<p><strong>Q7: 它的 SDK 能单独用吗？</strong></p>
+<p>A: 能。<code>cosh-sdk</code> 是纯库，无 app 依赖，包含 28 个 provider 的 LLM 连接器、工具调用抽取、hashline 补丁引擎、文件回滚、LSP 客户端和 AST 智能。Rust ≥ 1.85。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/ai-agent-runtime-vs-framework/" >AI Agent 不能只靠框架：为什么运行时才是落地关键</a></li>
+<li><a class="link" href="/tutorials/openclaw-multi-agent-architecture-moshou-moke/" >OpenClaw 多 Agent 架构：墨守与墨客的协作方式</a></li>
+<li><a class="link" href="/ai/yaml-ai-agent-docker-agent-declarative-orchestration-limits/" >YAML 编排 AI Agent 的边界：声明式工作流到底能走多远</a></li>
+<li><a class="link" href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/" >Agent 沙箱选型：Docker、gVisor、microVM 的真实差距</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cosh/">Cosh</a>
+        
+            <a href="/tags/ai-agent/">AI Agent</a>
+        
+            <a href="/tags/multi-agent/">Multi-Agent</a>
+        
+            <a href="/tags/agent-orchestration/">Agent Orchestration</a>
+        
+            <a href="/tags/rust/">Rust</a>
+        
+            <a href="/tags/tui/">TUI</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/goose/">Goose</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/wintoastrelay-windows-toast-notification-relay-phone/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/anydoc-firecrawl-open-source-document-to-markdown/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AnyDoc 实测：14 种文档 4 毫秒转 Markdown，Firecrawl 这套开源方案凭什么把 MarkItDown 和 Pandoc 甩开一个数量级</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/cursor-to-codex-two-weeks-real-feeling/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/hi-ai-agent-real-cost-latency/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/ai\/cosh-rust-multi-agent-orchestrator-worktree-comparison\/'; 
+        const pageTitle = 'Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 316 天 13 小时 · 152 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-13 21:56:36 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

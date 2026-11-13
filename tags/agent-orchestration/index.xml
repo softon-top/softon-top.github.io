@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Agent Orchestration on softon.top</title>
+		<link>https://softon.top/tags/agent-orchestration/</link>
+		<description>Recent content in Agent Orchestration on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 13 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/agent-orchestration/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端</title>
+				<link>https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/</guid>
+				<description>&lt;p&gt;终端里同时开三个 Agent，各自跑在独立分支上，主 Agent 只负责派活和收报告——这个画面在 2024 年还像科幻，2026 年 11 月已经有一个开源项目把它做成了单 binary。&lt;/p&gt;&#xA;&lt;p&gt;它叫 &lt;strong&gt;Cosh&lt;/strong&gt;（仓库 &lt;code&gt;DiegoZaluski/co-sh&lt;/code&gt;），Rust 写的通用编码 Agent，主打的不是“替代 Claude Code”，而是“把一堆现成 Agent 塞进同一个 TUI 里一起跑”。项目 2026-06-01 建仓，10 月 1 日发 v0.1.0，11 月 10 日已到 v0.2.2，迭代速度几乎是几天一个版本。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Cosh 的自我定位是&lt;strong&gt;编排层&lt;/strong&gt;（orchestration layer），不替换 Claude Code / Codex / Goose，而是让它们并排跑在同一个终端里。&lt;/li&gt;&#xA;&lt;li&gt;核心机制：&lt;code&gt;/agents&lt;/code&gt; 分屏 + 每个 Agent 独立会话/模型/可选 git worktree + 主 Agent 通过 &lt;code&gt;agents_call&lt;/code&gt; / &lt;code&gt;agents_compact&lt;/code&gt; 派活。&lt;/li&gt;&#xA;&lt;li&gt;接入外部 Agent 靠 &lt;strong&gt;ACP（Agent Client Protocol）&lt;/strong&gt;，注册表内置 Gemini、Claude、Codex、Cline、Devin、Goose、OpenCode、Kilo，也允许用户自定义。&lt;/li&gt;&#xA;&lt;li&gt;和 Claude Squad、Agent Orchestrator 的差别：Cosh 更偏“个人开发者的终端工作台”，Squad 偏单 Agent 并行会话，Orchestrator 偏团队协作流。&lt;/li&gt;&#xA;&lt;li&gt;它真正的工程价值不在 UI，而在&lt;strong&gt;运行时&lt;/strong&gt;：worktree 隔离、会话持久化、上下文压缩、自然停机门禁、bash 进程树看门狗。&lt;/li&gt;&#xA;&lt;li&gt;目前 macOS 官方标注“尚未测试”，Linux/Windows 已测；Stars 数（13）还很低，属于早期项目。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;它到底想解决什么一个终端里的agent-团队&#34;&gt;它到底想解决什么：一个终端里的“Agent 团队”&#xA;&lt;/h2&gt;&lt;p&gt;先别急着看功能表。Cosh 的 README 第一句话就划清了界限：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

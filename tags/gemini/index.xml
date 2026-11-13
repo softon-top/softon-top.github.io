@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Gemini on softon.top</title>
+		<link>https://softon.top/tags/gemini/</link>
+		<description>Recent content in Gemini on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 09 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/gemini/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Meta Muse 入局个人 AI Agent:与 Copilot、Gemini、Apple Intelligence 差异化在哪</title>
+				<link>https://softon.top/ai/meta-muse-vs-copilot-gemini-apple-intelligence-personal-agent/</link>
+				<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/meta-muse-vs-copilot-gemini-apple-intelligence-personal-agent/</guid>
+				<description>&lt;p&gt;昨晚 Meta 发布 Muse——号称&amp;quot;世界首个面向所有人的个人 AI Agent&amp;quot;。18+、美国先上、可通过独立 app 或 WhatsApp 用。&lt;/p&gt;&#xA;&lt;p&gt;刷 Hacker News 首页四条同时挂 Muse,评论区分成两派:一派觉得又是大厂 PR 秀,一派觉得这次是真的把 agent 塞进 messaging 入口了。&lt;/p&gt;&#xA;&lt;p&gt;我盯着这四家的公开资料翻了两个小时,得出一个反直觉的结论:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;四家路线&lt;strong&gt;完全不同&lt;/strong&gt;:Meta 押独立 VM+messaging 入口,Microsoft 押企业级编排(Copilot Studio),Apple 押系统级 App Intents 让 Siri 变 agent,Google 已悄悄放弃独立 agent 产品(Mariner 5月4日 discontinued)&lt;/li&gt;&#xA;&lt;li&gt;Muse 最大差异化不是模型,是&lt;strong&gt;Muse Secure VM&lt;/strong&gt;——每个用户单独一个虚拟机隔离数据,年底还要上 Confidential VM(端到端加密,连 Meta 都读不到)&lt;/li&gt;&#xA;&lt;li&gt;Copilot 已经跑通企业场景,面向普通消费者体验落后 Muse 一档;Meta 反过来消费者体验强,企业能力弱&lt;/li&gt;&#xA;&lt;li&gt;Apple 战术最保守也最长期:不做独立 agent 产品,把 agent 能力灌进操作系统本身,让每个 app 都变成 agent 的手脚&lt;/li&gt;&#xA;&lt;li&gt;Google 战术已崩:Mariner 项目组被拆散,browser agent 竞赛认输,capabilities 塞进 Gemini Agent 兜底&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;四家凑齐了但打法完全不一样&#34;&gt;四家凑齐了,但打法完全不一样&#xA;&lt;/h2&gt;&lt;p&gt;大厂在 personal AI agent 上有四种截然不同的战术,每种都是根据自家生态位算出来的最优解。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>AI 看懂一段视频，三条完全不同的路：claude-video 为什么绕开原生多模态</title>
+				<link>https://softon.top/ai/claude-video-ai-see-video-three-paths/</link>
+				<pubDate>Tue, 04 Aug 2026 16:20:00 +0800</pubDate>
+				<guid>https://softon.top/ai/claude-video-ai-see-video-three-paths/</guid>
+				<description>&lt;h2 id=&#34;claude-code-用户装-claude-video其实是被逼的&#34;&gt;Claude Code 用户装 claude-video，其实是被逼的&#xA;&lt;/h2&gt;&lt;p&gt;先说一个 Claude Code 老用户经常遇到的场景。&lt;/p&gt;&#xA;&lt;p&gt;你录了一段 5 分钟的屏幕录像，想让 Claude 帮你定位一个 UI 卡顿到底发生在第几秒、点了什么按钮之后。你把 &lt;code&gt;.mp4&lt;/code&gt; 塞进去，Claude 一脸茫然：我只能读文件的字节流。&lt;/p&gt;&#xA;&lt;p&gt;Claude 官方的 &lt;code&gt;claude.ai&lt;/code&gt; 网页版能上传图片，但视频这条路，长期以来是 &lt;strong&gt;Claude 生态的一个巨大盲区&lt;/strong&gt;。而同期 Gemini 2.5 / 3 已经把视频作为一等公民，1 FPS 拆帧、原生看画面、听声音，一次调用搞定。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;claude-video&lt;/code&gt; 就是被这个盲区催生出来的补丁工具，也是 HelloGitHub 8 月 4 日的今日推荐。作者是 bradautomates，用 Claude Skill 的标准形态发布：一个 SKILL.md + 一条 yt-dlp + FFmpeg + Whisper 的组合拳，绕开 Claude 不能原生吃视频这件事。&lt;/p&gt;&#xA;&lt;p&gt;但真正有意思的是，绕的方法不止一种。今天要拆的，就是 AI 处理视频的 &lt;strong&gt;三条完全不同的路径&lt;/strong&gt;——它们的架构、成本、精度差得离谱，选错了，钱包和结果都要挨打。&lt;/p&gt;&#xA;&lt;h2 id=&#34;三条路径的底层世界观&#34;&gt;三条路径的底层世界观&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;原生多模态派&lt;/strong&gt;：Gemini、Qwen-VL、GPT-4o。视频进来，模型自己拆帧、听音、融合，一次推理输出结论。押注的是 &lt;strong&gt;感官融合&lt;/strong&gt;——模型自己看，才是真理。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;分层观察派&lt;/strong&gt;：&lt;code&gt;claude-video&lt;/code&gt;、&lt;code&gt;watch-video-skill&lt;/code&gt;、以及一堆 Claude Code 里的 Skill。视频先被 yt-dlp 拉下来，FFmpeg 拆关键帧和字幕，字幕缺了就 Whisper 转录，最后把结构化文本 + 关键帧图片塞给 Claude。押注的是 &lt;strong&gt;分层观察&lt;/strong&gt;——模型不用全看，看关键的。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;动作捕捉派&lt;/strong&gt;：Anthropic 自家的 &lt;code&gt;Record a Skill&lt;/code&gt;，视频里那个&amp;quot;人&amp;quot;在做什么才是重点。录屏 + 讲解，模型学的是操作流，不是像素。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;同一个视频，三条路径回答的问题都不一样。搞清楚这个，才知道自己该走哪条。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

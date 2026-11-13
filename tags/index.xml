@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on softon.top</title>
+		<link>https://softon.top/tags/</link>
+		<description>Recent content in Tags on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 13 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Agent Orchestration</title>
+				<link>https://softon.top/tags/agent-orchestration/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/agent-orchestration/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI Agent</title>
+				<link>https://softon.top/tags/ai-agent/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/ai-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Claude-Code</title>
+				<link>https://softon.top/tags/claude-code/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/claude-code/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Codex</title>
+				<link>https://softon.top/tags/codex/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/codex/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Cosh</title>
+				<link>https://softon.top/tags/cosh/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cosh/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Goose</title>
+				<link>https://softon.top/tags/goose/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/goose/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Multi-Agent</title>
+				<link>https://softon.top/tags/multi-agent/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/multi-agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Rust</title>
+				<link>https://softon.top/tags/rust/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/rust/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>TUI</title>
+				<link>https://softon.top/tags/tui/</link>
+				<pubDate>Fri, 13 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/tui/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Docker</title>
+				<link>https://softon.top/tags/docker/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/docker/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Homelab</title>
+				<link>https://softon.top/tags/homelab/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/homelab/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Lightweight</title>
+				<link>https://softon.top/tags/lightweight/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/lightweight/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Monitoring</title>
+				<link>https://softon.top/tags/monitoring/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/monitoring/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Nas</title>
+				<link>https://softon.top/tags/nas/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/nas/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Rss</title>
+				<link>https://softon.top/tags/rss/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/rss/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Hosted</title>
+				<link>https://softon.top/tags/self-hosted/</link>
+				<pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/self-hosted/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Cpp</title>
+				<link>https://softon.top/tags/cpp/</link>
+				<pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/cpp/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Editor</title>
+				<link>https://softon.top/tags/editor/</link>
+				<pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/editor/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Markdown</title>
+				<link>https://softon.top/tags/markdown/</link>
+				<pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/markdown/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Opensource</title>
+				<link>https://softon.top/tags/opensource/</link>
+				<pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tags/opensource/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

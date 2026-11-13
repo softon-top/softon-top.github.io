@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="termux-containers 让你在免 Root 的安卓手机里用 Docker Compose 语法跑 OCI 容器，把闲置旧手机变成低功耗小服务器。本文拆解原理（PRoot-Distro 而非 Docker Engine）、上手流程、与真 Docker 的差异，以及我的实算账本：能干啥、不能干啥、值不值得折腾。">
+<title>闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</title>
+
+<link rel='canonical' href='https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器">
+<meta property='og:description' content="termux-containers 让你在免 Root 的安卓手机里用 Docker Compose 语法跑 OCI 容器，把闲置旧手机变成低功耗小服务器。本文拆解原理（PRoot-Distro 而非 Docker Engine）、上手流程、与真 Docker 的差异，以及我的实算账本：能干啥、不能干啥、值不值得折腾。">
+<meta property='og:url' content='https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='termux' /><meta property='article:tag' content='docker' /><meta property='article:tag' content='android' /><meta property='article:tag' content='proot' /><meta property='article:tag' content='homelab' /><meta property='article:tag' content='self-hosted' /><meta property='article:tag' content='containers' /><meta property='article:published_time' content='2026-11-06T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-06T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器">
+<meta name="twitter:description" content="termux-containers 让你在免 Root 的安卓手机里用 Docker Compose 语法跑 OCI 容器，把闲置旧手机变成低功耗小服务器。本文拆解原理（PRoot-Distro 而非 Docker Engine）、上手流程、与真 Docker 的差异，以及我的实算账本：能干啥、不能干啥、值不值得折腾。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器\"",
+  "description": "\"termux-containers 让你在免 Root 的安卓手机里用 Docker Compose 语法跑 OCI 容器，把闲置旧手机变成低功耗小服务器。本文拆解原理（PRoot-Distro 而非 Docker Engine）、上手流程、与真 Docker 的差异，以及我的实算账本：能干啥、不能干啥、值不值得折腾。\"",
+  "url": "\"https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/\"",
+  "datePublished": "2026-11-06T00:00:00Z",
+  "dateModified": "2026-11-06T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/\""
+  },
+  "keywords": "\"termux, docker, android, proot, homelab, self-hosted, containers\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器\"",
+      "item": "\"https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它到底是个什么东西">它到底是个什么东西？</a></li>
+    <li><a href="#上手全流程从装到跑起来">上手全流程：从装到跑起来</a>
+      <ul>
+        <li><a href="#第一步装-termux">第一步：装 Termux</a></li>
+        <li><a href="#第二步克隆项目并安装">第二步：克隆项目并安装</a></li>
+        <li><a href="#第三步写配置">第三步：写配置</a></li>
+        <li><a href="#第四步启动">第四步：启动</a></li>
+        <li><a href="#常用命令">常用命令</a></li>
+      </ul>
+    </li>
+    <li><a href="#它和真-docker-差在哪">它和真 Docker 差在哪？</a>
+      <ul>
+        <li><a href="#差异一没有内核级隔离">差异一：没有内核级隔离</a></li>
+        <li><a href="#差异二没有端口映射">差异二：没有端口映射</a></li>
+        <li><a href="#差异三镜像架构强绑定-arm64">差异三：镜像架构强绑定 ARM64</a></li>
+        <li><a href="#差异四后台运行受-android-摆布">差异四：后台运行受 Android 摆布</a></li>
+      </ul>
+    </li>
+    <li><a href="#我实算的账本值不值得折腾">我实算的账本：值不值得折腾？</a>
+      <ul>
+        <li><a href="#成本侧">成本侧</a></li>
+        <li><a href="#收益侧">收益侧</a></li>
+        <li><a href="#风险侧">风险侧</a></li>
+        <li><a href="#结论">结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#能跑什么不能跑什么">能跑什么、不能跑什么</a>
+      <ul>
+        <li><a href="#适合的场景">适合的场景</a></li>
+        <li><a href="#不适合的场景">不适合的场景</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/termux-containers-old-android-phone-run-docker-without-root/">闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-06T00:00:00Z'>
+                    2026-11-06，星期五</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：13分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它到底是个什么东西">它到底是个什么东西？</a></li>
+    <li><a href="#上手全流程从装到跑起来">上手全流程：从装到跑起来</a>
+      <ul>
+        <li><a href="#第一步装-termux">第一步：装 Termux</a></li>
+        <li><a href="#第二步克隆项目并安装">第二步：克隆项目并安装</a></li>
+        <li><a href="#第三步写配置">第三步：写配置</a></li>
+        <li><a href="#第四步启动">第四步：启动</a></li>
+        <li><a href="#常用命令">常用命令</a></li>
+      </ul>
+    </li>
+    <li><a href="#它和真-docker-差在哪">它和真 Docker 差在哪？</a>
+      <ul>
+        <li><a href="#差异一没有内核级隔离">差异一：没有内核级隔离</a></li>
+        <li><a href="#差异二没有端口映射">差异二：没有端口映射</a></li>
+        <li><a href="#差异三镜像架构强绑定-arm64">差异三：镜像架构强绑定 ARM64</a></li>
+        <li><a href="#差异四后台运行受-android-摆布">差异四：后台运行受 Android 摆布</a></li>
+      </ul>
+    </li>
+    <li><a href="#我实算的账本值不值得折腾">我实算的账本：值不值得折腾？</a>
+      <ul>
+        <li><a href="#成本侧">成本侧</a></li>
+        <li><a href="#收益侧">收益侧</a></li>
+        <li><a href="#风险侧">风险侧</a></li>
+        <li><a href="#结论">结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#能跑什么不能跑什么">能跑什么、不能跑什么</a>
+      <ul>
+        <li><a href="#适合的场景">适合的场景</a></li>
+        <li><a href="#不适合的场景">不适合的场景</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>抽屉里那台吃灰的旧手机，屏幕碎了、电池鼓了、系统卡成 PPT，但你舍不得扔——万一哪天有用呢？</p>
+<p>现在它真有用武之地了。</p>
+<p>一个 10 月 31 日刚上线的开源项目 <strong>termux-containers</strong>，让你可以在<strong>不 Root、不刷机、不跑虚拟机</strong>的前提下，用 Docker Compose 风格的 YAML 配置文件，在安卓手机里跑起 Nginx、Cloudflared、Aria2 这类服务。</p>
+<p>听起来像是&quot;把手机变成服务器&quot;的又一个标题党？</p>
+<p>我研究了一圈它的实现原理，发现这次真的不太一样。它没有伪造一个 Docker Engine，而是老老实实走 Termux + PRoot-Distro 的路子——不是&quot;兼容 Docker&quot;，而是<strong>补上 Docker 最缺的那块拼图：声明式多容器编排</strong>。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>termux-containers 基于 PRoot-Distro，无需 Root、无需 Docker 守护进程，用 YAML 管理多个 OCI 容器</li>
+<li>项目 2026-10-31 上线，GitHub 49 stars，作者仅用两个镜像（cloudflared、fast note sync、cli proxy api）做了验证</li>
+<li>它是&quot;类 Docker Compose&quot;而非&quot;Docker 替代&quot;：无端口映射、无内核级隔离、强依赖 ARM64 镜像</li>
+<li>适合做低功耗常驻小服务（消息机器人、Webhook、下载工具），不适合跑重型应用</li>
+<li>折腾成本极低（一条命令安装），但要做好&quot;后台被杀&quot;和&quot;镜像架构不兼容&quot;的心理准备</li>
+</ul>
+</blockquote>
+<h2 id="它到底是个什么东西">它到底是个什么东西？
+</h2><p>先给结论：<strong>termux-containers 不是一个容器运行时，而是一个配置管理器。</strong></p>
+<p>它自己不拉镜像、不跑容器、不管网络。真正干活的是 Termux 生态里的 <strong>PRoot-Distro</strong>——一个能在 Android 用户空间里跑 Linux 发行版的工具。termux-containers 做的事情，是给 PRoot-Distro 套上一层&quot;类 Docker Compose&quot;的壳：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">web</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginxinc/nginx-unprivileged:stable-alpine</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">directory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">source</span>: <span style="color:#ae81ff">./data/web</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">target</span>: <span style="color:#ae81ff">/usr/share/nginx/html</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">PORT</span>: <span style="color:#e6db74">&#34;8080&#34;</span>
+</span></span></code></pre></div><p>写一个 YAML，跑一句 <code>termux-containers apply</code>，它就帮你把镜像拉下来、容器建起来、服务跑起来。改完配置再 <code>apply</code> 一次，它会 diff 出变化并重建对应容器。</p>
+<p>整个技术栈是四层套娃：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>层</th>
+					<th>组件</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td>Android</td>
+					<td>提供 Linux 内核（但应用跑在用户空间）</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>Termux</td>
+					<td>终端模拟器 + 包管理器 + Linux 用户空间</td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>PRoot-Distro</td>
+					<td>用 PRoot 模拟 root，跑 OCI 镜像</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td>OCI 镜像</td>
+					<td>真正干活的应用（Nginx / cloudflared 等）</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>关键点在第 3 层：<strong>PRoot 不是 Docker</strong>。它不靠内核的 namespace/cgroup 做隔离，而是用 <code>ptrace</code> 在用户空间里&quot;伪造&quot;出一个 root 环境。所以它能跑，但隔离性、性能、兼容性都跟真 Docker 有差距。</p>
+<h2 id="上手全流程从装到跑起来">上手全流程：从装到跑起来
+</h2><h3 id="第一步装-termux">第一步：装 Termux
+</h3><p>去 F-Droid 或 GitHub Releases 装 Termux（Play 商店那个版本已经很久没更新了）。装完打开，先把包管理源换成国内镜像（可选，但强烈建议）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">termux-change-repo</span>
+</span></span></code></pre></div><p>然后装基础依赖：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">pkg update &amp;&amp; pkg install git</span>
+</span></span></code></pre></div><h3 id="第二步克隆项目并安装">第二步：克隆项目并安装
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">git clone https://github.com/BHznJNs/termux-containers ~/termux-containers</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cd ~/termux-containers</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bash install.sh</span>
+</span></span></code></pre></div><p>安装脚本会干这几件事：</p>
+<ol>
+<li>装 Python 3.10+（termux-containers 是 Python 写的）</li>
+<li>装 PRoot-Distro 及其依赖</li>
+<li>创建 <code>termux-containers</code> 命令入口</li>
+<li>写一个默认的空 <code>containers.yaml</code></li>
+<li>配置 Bash Session 自启动（这样每次打开 Termux 都会自动恢复服务）</li>
+</ol>
+<p>装完执行 <code>termux-containers --help</code> 确认命令可用。</p>
+<h3 id="第三步写配置">第三步：写配置
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">nano ~/termux-containers/containers.yaml</span>
+</span></span></code></pre></div><p>官方示例是 Nginx。我建议第一次跑用 <code>nginxinc/nginx-unprivileged:stable-alpine</code> 这个镜像——它是专门为非 root 环境构建的，体积小（约 40MB）， ARM64 支持完善，不会一上来就踩权限坑。</p>
+<h3 id="第四步启动">第四步：启动
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">termux-containers apply</span>
+</span></span></code></pre></div><p>它会读 YAML、拉镜像、建容器、启动服务。完成后：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">termux-containers status</span>
+</span></span></code></pre></div><p>看到服务状态是 running 就说明成了。手机浏览器打开 <code>http://127.0.0.1:8080</code>，看到你写的 HTML 页面，那种感觉——一台拿在手里的手机，托管着一个网页——确实挺妙的。</p>
+<h3 id="常用命令">常用命令
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>命令</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>termux-containers apply [服务名]</code></td>
+					<td>应用配置：装镜像、启动、重启、停止被禁用的服务</td>
+			</tr>
+			<tr>
+					<td><code>termux-containers start [服务名]</code></td>
+					<td>启动已安装且启用的服务（不重新拉镜像）</td>
+			</tr>
+			<tr>
+					<td><code>termux-containers stop [服务名]</code></td>
+					<td>停止服务，保留容器文件系统和挂载数据</td>
+			</tr>
+			<tr>
+					<td><code>termux-containers status [服务名]</code></td>
+					<td>查看实际安装和运行状态</td>
+			</tr>
+			<tr>
+					<td><code>termux-containers -f &lt;路径&gt; apply</code></td>
+					<td>用指定配置文件，不局限于默认位置</td>
+			</tr>
+			<tr>
+					<td><code>bash uninstall.sh --yes</code></td>
+					<td>卸载工具和自启动入口，保留容器与数据</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>省略服务名表示处理全部配置服务。</p>
+<h2 id="它和真-docker-差在哪">它和真 Docker 差在哪？
+</h2><p>这是本文最该讲清楚的部分。<strong>别指望它跑 Docker Hub 上所有镜像。</strong></p>
+<h3 id="差异一没有内核级隔离">差异一：没有内核级隔离
+</h3><p>Docker 靠 Linux 内核的 namespace 和 cgroup 做资源隔离。PRoot 是用户空间程序，用 <code>ptrace</code> 拦截系统调用、伪造 root 权限。这意味着：</p>
+<ul>
+<li><strong>没有真正的进程隔离</strong>：容器里的进程和 Termux 共享同一个 PID namespace（虽然 PRoot 会做一层映射）</li>
+<li><strong>没有资源限制</strong>：没有 <code>--memory</code>、<code>--cpus</code> 这类限制，一个失控容器能把手机搞卡</li>
+<li><strong>没有安全边界</strong>：容器不是沙箱，跑可信镜像</li>
+</ul>
+<h3 id="差异二没有端口映射">差异二：没有端口映射
+</h3><p>Docker 的 <code>-p 8080:80</code> 是内核级 NAT。PRoot 没这个能力，所以：</p>
+<ul>
+<li>容器监听的端口<strong>就是</strong> Termux 监听的端口</li>
+<li>手机本地访问 <code>127.0.0.1:8080</code> 没问题</li>
+<li>局域网/公网访问需要额外手段（Cloudflare Tunnel 是最优解）</li>
+</ul>
+<h3 id="差异三镜像架构强绑定-arm64">差异三：镜像架构强绑定 ARM64
+</h3><p>Android 手机几乎都是 ARM64。Docker Hub 上很多镜像只提供 <code>amd64</code>，没 <code>arm64</code>。虽然 PRoot-Distro 号称能&quot;拉取后构建镜像&quot;，但兼容性不保证。</p>
+<p>作者自己在 V2EX 原帖里说测过三个镜像：<code>cloudflared</code>、<code>fast note sync</code>、<code>cli proxy api</code>，都能跑。但这是个 49 stars 的新项目，<strong>别拿它跑生产服务</strong>。</p>
+<h3 id="差异四后台运行受-android-摆布">差异四：后台运行受 Android 摆布
+</h3><p>Android 的 Doze 模式、后台限制、电池优化，全都会杀进程。作者提过&quot;手机休眠或系统清理后台时，服务可能中断&quot;。解决办法：</p>
+<ol>
+<li>手机设置里把 Termux 加入&quot;电池优化白名单&quot;</li>
+<li>保持 Termux 在前台（开个常驻通知）</li>
+<li>或者接受&quot;偶尔断&quot;——反正它就是个玩具</li>
+</ol>
+<h2 id="我实算的账本值不值得折腾">我实算的账本：值不值得折腾？
+</h2><h3 id="成本侧">成本侧
+</h3><div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>数值</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>硬件成本</td>
+					<td>0（闲置手机本来就在抽屉里）</td>
+			</tr>
+			<tr>
+					<td>电费</td>
+					<td>手机待机 + 常亮屏幕约 2-5W，按 0.6 元/度算，一天 0.03-0.07 元</td>
+			</tr>
+			<tr>
+					<td>时间成本</td>
+					<td>首次安装 15 分钟（换源 + 拉镜像），后续配置改一次 2 分钟</td>
+			</tr>
+			<tr>
+					<td>镜像体积</td>
+					<td>Nginx 约 40MB，cloudflared 约 80MB</td>
+			</tr>
+			<tr>
+					<td>存储占用</td>
+					<td>每个容器约 50-200MB，看镜像大小</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>对比一下：一台 N100 小主机 24 小时开着，一年电费约 100-150 元。手机方案的电费可以忽略不计。</p>
+<h3 id="收益侧">收益侧
+</h3><ul>
+<li><strong>零硬件投入</strong>：旧手机本来就是沉没成本</li>
+<li><strong>便携</strong>：随身带一台&quot;服务器&quot;，这个场景 N100 做不到</li>
+<li><strong>低功耗</strong>：2-5W vs 6-15W（N100 待机），差距不大但手机赢在&quot;不用买&quot;</li>
+<li><strong>学习价值</strong>：YAML 编排 + PRoot 原理 + OCI 镜像结构，都是可迁移知识</li>
+</ul>
+<h3 id="风险侧">风险侧
+</h3><ul>
+<li><strong>稳定性</strong>：后台被杀、系统更新后 Termux 失效、镜像拉取失败，都属于&quot;预期内会出问题&quot;</li>
+<li><strong>安全</strong>：PRoot 无隔离，跑陌生镜像前请三思</li>
+<li><strong>维护</strong>：项目太新，作者更新频率未知，可能半年后就停更</li>
+</ul>
+<h3 id="结论">结论
+</h3><p><strong>如果你手边正好有闲置安卓手机，且想找个周末小项目折腾，值得玩。</strong></p>
+<p><strong>如果你是为了&quot;稳定跑一个家庭服务&quot;，别折腾——买台 N100 或者用云 VPS，省心十倍。</strong></p>
+<h2 id="能跑什么不能跑什么">能跑什么、不能跑什么
+</h2><h3 id="适合的场景">适合的场景
+</h3><ul>
+<li>家庭消息转发机器人（Node.js / Python 常驻进程）</li>
+<li>轻量 Webhook 接收服务</li>
+<li>Aria2 / yt-dlp 下载工具</li>
+<li>Cloudflare Tunnel 客户端（官方示例就是它）</li>
+<li>简单的 Web 服务器（Nginx / Caddy）</li>
+<li>临时测试环境（跑个 Redis 练手）</li>
+</ul>
+<h3 id="不适合的场景">不适合的场景
+</h3><ul>
+<li>数据库（MySQL / PostgreSQL）：PRoot 下 IO 性能差，且无资源限制</li>
+<li>重型应用（Discourse / Nexus）：镜像大、依赖复杂、内存吃紧</li>
+<li>多用户服务：无隔离，安全边界太薄</li>
+<li>7×24 生产服务：Android 后台策略不允许</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 需要 Root 吗？需要解锁 Bootloader 吗？</strong></p>
+<p>A: 都不需要。PRoot 的核心价值就是在用户空间模拟 root，不碰底层权限。</p>
+<p><strong>Q2: 和 Termux 里跑 Qemu 虚拟机装 Docker 比，哪个快？</strong></p>
+<p>A: termux-containers 快得多。Qemu 是硬件虚拟化，在 ARM 上跑 x86 镜像要走模拟，性能损失巨大。PRoot 是系统调用拦截，开销小一个数量级。作者做这个项目的初衷就是嫌弃 Qemu 太慢。</p>
+<p><strong>Q3: 能跑 amd64 镜像吗？</strong></p>
+<p>A: 理论上 PRoot-Distro 支持拉取后构建，但兼容性不保证。最稳妥的做法是找官方提供 <code>linux/arm64</code> 的镜像。Nginx、cloudflared、Alpine 系都有 ARM64 版本。</p>
+<p><strong>Q4: 手机锁屏后服务会断吗？</strong></p>
+<p>A: 会。Android 的 Doze 模式会冻结后台进程。把 Termux 加入电池优化白名单、允许后台活动、保持屏幕常亮（或至少不锁屏），能缓解但不能根除。</p>
+<p><strong>Q5: 多个容器之间能通信吗？</strong></p>
+<p>A: 能。它们都跑在同一个 PRoot 环境里，共享网络栈。容器 A 监听 8080，容器 B 可以用 <code>127.0.0.1:8080</code> 访问。但没有 Docker 那种自定义 bridge 网络。</p>
+<p><strong>Q6: 配置文件里的 <code>PORT</code> 是端口映射吗？</strong></p>
+<p>A: 不是。README 里明确写了：&quot;<code>PORT</code> 是应用环境变量，不是端口映射。&quot; 它只是传给容器的环境变量，应用自己决定监听哪个端口。</p>
+<p><strong>Q7: 改了镜像 tag 会丢数据吗？</strong></p>
+<p>A: 会。README 警告：&ldquo;修改镜像引用后执行 <code>apply</code> 会重建对应容器，丢失容器内未挂载的数据。&rdquo; 重要数据务必通过 <code>volumes</code> 挂载出来。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/droidvnc-ng-android-remote-desktop-browser-control/" >droidVNC-NG：安卓远程桌面浏览器控制</a> —— 同样是旧手机再利用，但方向是&quot;把手机当被控端&quot;</li>
+<li><a class="link" href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/" >AI Agent 沙箱选型：Docker vs gVisor vs microVM</a> —— 容器隔离性对比，理解 PRoot 和 Docker 差异的背景读物</li>
+<li><a class="link" href="/software/minio-cut-open-source-community-docker-image/" >MinIO 砍掉开源社区版 Docker 镜像</a> —— 镜像生态变动如何影响自托管用户</li>
+<li><a class="link" href="/software/installerx-revived-android-apk-installer-mt-manager-comparison/" >InstallerX 复活：安卓 APK 安装器与 MT 管理器对比</a> —— 安卓工具链的另一条思路</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/termux/">Termux</a>
+        
+            <a href="/tags/docker/">Docker</a>
+        
+            <a href="/tags/android/">Android</a>
+        
+            <a href="/tags/proot/">Proot</a>
+        
+            <a href="/tags/homelab/">Homelab</a>
+        
+            <a href="/tags/self-hosted/">Self-Hosted</a>
+        
+            <a href="/tags/containers/">Containers</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/minio-cut-open-source-community-docker-image/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/termux-containers-old-android-phone-run-docker-without-root\/'; 
+        const pageTitle = '闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 316 天 13 小时 · 152 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-13 21:56:36 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

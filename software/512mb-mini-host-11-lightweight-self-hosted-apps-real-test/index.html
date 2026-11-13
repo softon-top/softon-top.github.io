@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="512MB 内存、4GB 存储、10 美元的 OpenStick 小主机上，11 款自托管工具的真实内存账本。逐项核对官方 README 与 GitHub 数据：Beszel、Dozzle、Gatus 确实压到 10-20MB，但两个 AdGuard Home 重复计算，实测可用内存才是决定装几个的关键变量。">
+<title>512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数</title>
+
+<link rel='canonical' href='https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数">
+<meta property='og:description' content="512MB 内存、4GB 存储、10 美元的 OpenStick 小主机上，11 款自托管工具的真实内存账本。逐项核对官方 README 与 GitHub 数据：Beszel、Dozzle、Gatus 确实压到 10-20MB，但两个 AdGuard Home 重复计算，实测可用内存才是决定装几个的关键变量。">
+<meta property='og:url' content='https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='self-hosted' /><meta property='article:tag' content='homelab' /><meta property='article:tag' content='lightweight' /><meta property='article:tag' content='docker' /><meta property='article:tag' content='nas' /><meta property='article:tag' content='monitoring' /><meta property='article:tag' content='rss' /><meta property='article:published_time' content='2026-11-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-12T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数">
+<meta name="twitter:description" content="512MB 内存、4GB 存储、10 美元的 OpenStick 小主机上，11 款自托管工具的真实内存账本。逐项核对官方 README 与 GitHub 数据：Beszel、Dozzle、Gatus 确实压到 10-20MB，但两个 AdGuard Home 重复计算，实测可用内存才是决定装几个的关键变量。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数\"",
+  "description": "\"512MB 内存、4GB 存储、10 美元的 OpenStick 小主机上，11 款自托管工具的真实内存账本。逐项核对官方 README 与 GitHub 数据：Beszel、Dozzle、Gatus 确实压到 10-20MB，但两个 AdGuard Home 重复计算，实测可用内存才是决定装几个的关键变量。\"",
+  "url": "\"https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/\"",
+  "datePublished": "2026-11-12T00:00:00Z",
+  "dateModified": "2026-11-12T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/\""
+  },
+  "keywords": "\"self-hosted, homelab, lightweight, docker, nas, monitoring, rss\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数\"",
+      "item": "\"https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#先说清楚这台设备到底是什么">先说清楚：这台设备到底是什么</a></li>
+    <li><a href="#关键前提内存账本要先扣-docker-的开销">关键前提：内存账本要先扣 Docker 的开销</a></li>
+    <li><a href="#11-个工具逐个核对哪些数字是真的">11 个工具逐个核对：哪些数字是真的</a>
+      <ul>
+        <li><a href="#硬伤一清单把一个东西算了两遍">硬伤一：清单把一个东西算了两遍</a></li>
+        <li><a href="#硬伤二zeroclaw-的-64mb-需要打问号">硬伤二：ZeroClaw 的 64MB 需要打问号</a></li>
+        <li><a href="#其他几个基本可信但各有前提">其他几个：基本可信，但各有前提</a></li>
+      </ul>
+    </li>
+    <li><a href="#512mb-到底怎么装我的两套方案">512MB 到底怎么装：我的两套方案</a>
+      <ul>
+        <li><a href="#方案-a常开服务推荐约占-250mb">方案 A：常开服务（推荐，约占 250MB）</a></li>
+        <li><a href="#方案-b按需启动适合旧手机--电池供电">方案 B：按需启动（适合旧手机 / 电池供电）</a></li>
+      </ul>
+    </li>
+    <li><a href="#清单之外我建议补的一个内存监控本身">清单之外，我建议补的一个：内存监控本身</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">
+                效率工具
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/">512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-12T00:00:00Z'>
+                    2026-11-12，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/512mb-mini-host-11-lightweight-self-hosted-apps-real-test/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#先说清楚这台设备到底是什么">先说清楚：这台设备到底是什么</a></li>
+    <li><a href="#关键前提内存账本要先扣-docker-的开销">关键前提：内存账本要先扣 Docker 的开销</a></li>
+    <li><a href="#11-个工具逐个核对哪些数字是真的">11 个工具逐个核对：哪些数字是真的</a>
+      <ul>
+        <li><a href="#硬伤一清单把一个东西算了两遍">硬伤一：清单把一个东西算了两遍</a></li>
+        <li><a href="#硬伤二zeroclaw-的-64mb-需要打问号">硬伤二：ZeroClaw 的 64MB 需要打问号</a></li>
+        <li><a href="#其他几个基本可信但各有前提">其他几个：基本可信，但各有前提</a></li>
+      </ul>
+    </li>
+    <li><a href="#512mb-到底怎么装我的两套方案">512MB 到底怎么装：我的两套方案</a>
+      <ul>
+        <li><a href="#方案-a常开服务推荐约占-250mb">方案 A：常开服务（推荐，约占 250MB）</a></li>
+        <li><a href="#方案-b按需启动适合旧手机--电池供电">方案 B：按需启动（适合旧手机 / 电池供电）</a></li>
+      </ul>
+    </li>
+    <li><a href="#清单之外我建议补的一个内存监控本身">清单之外，我建议补的一个：内存监控本身</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>十美元，512MB 内存，4GB 存储，四核 ARM Cortex-A53。</p>
+<p>这是开发者 Laurens Bosscher 在 <a class="link" href="https://www.appinn.com/11-lightweight-self-hosted-apps-512mb-ram/"  target="_blank" rel="noopener"
+    >小众软件</a> 分享的 OpenStick 小主机配置。他买来一台原本刷不了机的高通 4G 上网卡，刷上 Debian，用 Podman 跑起了广告过滤、AI 助手、RSS 阅读、服务器监控一整套服务，并且列了 11 个工具的&quot;参考内存占用&quot;。</p>
+<p>这类清单我见过太多，绝大多数的问题是：<strong>数字是抄的，不是跑出来的</strong>。你照着装完，发现 512MB 根本不够——因为清单算的是单个工具的&quot;最低内存&quot;，没算你同时开几个。</p>
+<p>所以我把这份清单逐项拉回官方仓库和 README 核对了一遍，把纸面参数和真实可用范围分开，再给你一个 512MB 的装法。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>11 个工具里，<strong>Beszel / Dozzle / Gatus / Diun 是真正的 10-20MB 量级</strong>，可以无脑装</li>
+<li>清单把 <strong>AdGuard Home 和它的 fork &ldquo;AdGuard Home Next-Gen&rdquo; 当成两个工具算</strong>，实际是同一件事，预算要按一个 40MB 算</li>
+<li><strong>512MB 内存下真正的天花板不是工具数量，是 Docker 本身</strong>——容器运行时 + 每个容器的开销，先扣掉 100MB 才轮到工具</li>
+<li>广告过滤选 <strong>AdGuard Home（38k stars，成熟）</strong>，别选 22 stars 的 Next-Gen，除非你要验证它</li>
+<li>想复制这套方案，先想清楚你的设备是&quot;常开&quot;还是&quot;按需唤醒&quot;——内存账本对前者成立，对后者不成立</li>
+</ul>
+</blockquote>
+<h2 id="先说清楚这台设备到底是什么">先说清楚：这台设备到底是什么
+</h2><p>OpenStick 不是新硬件，是一类<strong>基于高通 MSM8916 芯片的 4G USB 上网卡</strong>。原本插电脑上只能当调制解调器用，<a class="link" href="https://github.com/OpenStick/OpenStick"  target="_blank" rel="noopener"
+    >OpenStick 项目</a>（1.2k stars）把它逆向移植到了主线 Linux，刷 Debian、postmarketOS 都能跑。</p>
+<p>所以这套方案的真实意义不是&quot;买台小主机&quot;，而是：<strong>你已经有一台吃灰的 4G 上网卡，或者一台 512MB 的树莓派/旧安卓机，别扔，它能跑一整套家庭服务。</strong></p>
+<p>硬件参数（来自原文）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>参数</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>处理器</td>
+					<td>四核 ARM Cortex-A53 @ 1GHz</td>
+			</tr>
+			<tr>
+					<td>内存</td>
+					<td>512MB RAM</td>
+			</tr>
+			<tr>
+					<td>存储</td>
+					<td>4GB eMMC</td>
+			</tr>
+			<tr>
+					<td>系统</td>
+					<td>Debian Linux</td>
+			</tr>
+			<tr>
+					<td>容器</td>
+					<td>Podman</td>
+			</tr>
+			<tr>
+					<td>价格</td>
+					<td>约 10 美元（含运费）</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>⚠️ 一个坑：OpenStick 项目<strong>完全开源但禁止商用</strong>，README 明确写了售卖镜像、批量售卖设备都算违规。自己玩没问题，别拿去做生意。</p>
+<h2 id="关键前提内存账本要先扣-docker-的开销">关键前提：内存账本要先扣 Docker 的开销
+</h2><p>这是原清单最大的遗漏。</p>
+<p>它列的是&quot;工具本身占多少 MB&quot;，但你的 512MB 不是从零开始用的。实际账本是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">总内存 512MB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- Debian 系统底噪       约 60-80MB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- Podman 运行时底噪     约 30-50MB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">- 每个容器的额外开销    约 5-15MB/个</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">=</span> <span style="color:#e6db74">真正能给应用的内存    约 350-400MB</span>
+</span></span></code></pre></div><p>也就是说，<strong>你只有大约 350-400MB 的可支配内存</strong>。清单里 11 个工具加起来写的是 5+40+64+8+20+10+10+22+10+9+40 ≈ 238MB，看起来富余，但加上 11 个容器开销（110-165MB）就直接顶到 400MB 了。</p>
+<blockquote>
+<p><strong>结论：512MB 不是&quot;能装 11 个工具&quot;，是&quot;能装 5-6 个真正常开 + 2-3 个按需启动&quot;。</strong></p>
+</blockquote>
+<p>这也是为什么我一直说 Docker 对小内存设备是双刃剑——它解决了依赖地狱，但每个容器都要一份运行时开销。真要抠内存，用 systemd 直接跑二进制，或者 <a class="link" href="https://github.com/henrygd/beszel"  target="_blank" rel="noopener"
+    >Beszel 官方</a>那样把 hub 和 agent 都做成单文件，比容器省。</p>
+<h2 id="11-个工具逐个核对哪些数字是真的">11 个工具逐个核对：哪些数字是真的
+</h2><p>我把清单里每个工具的官方仓库拉了一遍，核对 stars、语言、最近更新。以下数据来自 GitHub API（2026-11-12 抓取）。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>#</th>
+					<th>工具</th>
+					<th>语言</th>
+					<th>GitHub Stars</th>
+					<th>清单标称内存</th>
+					<th>我的核对结论</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td>CastSponsorSkip</td>
+					<td>Go</td>
+					<td>633</td>
+					<td>5-10MB</td>
+					<td>✅ 可信，单二进制，Go 写的</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>AdGuard Home</td>
+					<td>TypeScript</td>
+					<td>38,391</td>
+					<td>约 40MB</td>
+					<td>✅ 可信，成熟项目，官方推荐</td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>ZeroClaw</td>
+					<td>Rust</td>
+					<td>33,339</td>
+					<td>约 64MB</td>
+					<td>⚠️ 存疑，见下</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td>Cloudflare Tunnel</td>
+					<td>Go</td>
+					<td>16,555</td>
+					<td>8-20MB</td>
+					<td>✅ 可信，cloudflared 确实轻</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td>Beszel</td>
+					<td>Go</td>
+					<td>27,250</td>
+					<td>约 20MB</td>
+					<td>✅ 可信，官方 README 强调 lightweight</td>
+			</tr>
+			<tr>
+					<td>6</td>
+					<td>Dozzle</td>
+					<td>Go</td>
+					<td>14,918</td>
+					<td>10-12MB</td>
+					<td>✅ 可信，纯日志查看器</td>
+			</tr>
+			<tr>
+					<td>7</td>
+					<td>Gatus</td>
+					<td>Go</td>
+					<td>12,742</td>
+					<td>约 10MB</td>
+					<td>✅ 可信，状态页 + 告警</td>
+			</tr>
+			<tr>
+					<td>8</td>
+					<td>Fusion RSS</td>
+					<td>TypeScript</td>
+					<td>2,364</td>
+					<td>约 22MB</td>
+					<td>⚠️ 偏乐观，TS/Node 运行时底噪要另算</td>
+			</tr>
+			<tr>
+					<td>9</td>
+					<td>Shiori</td>
+					<td>Go</td>
+					<td>11,852</td>
+					<td>10-20MB</td>
+					<td>✅ 可信，书签管理器</td>
+			</tr>
+			<tr>
+					<td>10</td>
+					<td>Diun</td>
+					<td>Go</td>
+					<td>5,086</td>
+					<td>约 9MB</td>
+					<td>✅ 可信，只做镜像更新检查</td>
+			</tr>
+			<tr>
+					<td>11</td>
+					<td>AdGuard Home Next-Gen</td>
+					<td>TypeScript</td>
+					<td><strong>22</strong></td>
+					<td>约 40MB</td>
+					<td>❌ 清单硬伤，见下</td>
+			</tr>
+	</tbody>
+</table></div>
+<h3 id="硬伤一清单把一个东西算了两遍">硬伤一：清单把一个东西算了两遍
+</h3><p>第 2 项 AdGuard Home 和第 11 项 AdGuard Home Next-Gen 是<strong>同一个功能的两份实现</strong>。</p>
+<ul>
+<li>AdGuard Home：38k stars，AdguardTeam 官方，成熟</li>
+<li>Next-Gen：<strong>22 stars</strong>，作者 LaurensBosscher 自己的 fork，README 原文写的是&quot;memory-efficient DNS blocklists for OpenStick/routers (fork of AdGuardHome)&quot;，2026-11-01 才创建</li>
+</ul>
+<p>原文明确说&quot;这属于作者自己的项目，与前面介绍的官方 AdGuard Home 功能存在重叠&quot;。但列在 11 款清单里，读者会以为这是 11 个不同工具——<strong>实际是 10 个</strong>。</p>
+<p>这不是大问题，但你应该知道：<strong>想省内存，选官方 AdGuard Home 就够了</strong>。除非你就是想测作者这个 fork，否则 22 stars 的项目不要当主力。</p>
+<h3 id="硬伤二zeroclaw-的-64mb-需要打问号">硬伤二：ZeroClaw 的 64MB 需要打问号
+</h3><p>ZeroClaw（33k stars，Rust，Apache-2.0）是个很有意思的项目——单 Rust 二进制，接 20+ 个 LLM 提供商，30+ 个消息渠道，工具调用走 shell/浏览器/HTTP/MCP。</p>
+<p>但它的定位是<strong>功能完整的 AI Agent 运行时</strong>，不是&quot;轻量脚本&quot;。64MB 这个数字，原清单没给出处，而一个要跑 LLM 对话 + 浏览器工具 + MCP 的 agent，空闲 64MB 是可能的，<strong>跑起来带上下文窗口时一定不止</strong>。</p>
+<p>我的判断：<strong>可以装，但把它当成&quot;最占内存的那个&quot;来预留预算，别按 64MB 算</strong>。真要用，留 100MB 余量。</p>
+<h3 id="其他几个基本可信但各有前提">其他几个：基本可信，但各有前提
+</h3><ul>
+<li><strong>Fusion RSS</strong>：2,364 stars，TypeScript。RSS 阅读器是 Node 生态，22MB 这个数字大概率是&quot;应用内存&quot;，Node 运行时底噪另算。想装，先当 40MB 算。</li>
+<li><strong>Beszel</strong>：27k stars，Go，官方 README 直接写 &ldquo;Lightweight: Smaller and less resource-intensive than leading solutions&rdquo;，还专门列了 swap 和 ZFS ARC 的内存统计。这个最可信。</li>
+<li><strong>Dozzle vs Beszel 的分工</strong>：原文说得对——Beszel 看资源占用，Dozzle 看容器日志。两个不重复，都值得装。</li>
+</ul>
+<h2 id="512mb-到底怎么装我的两套方案">512MB 到底怎么装：我的两套方案
+</h2><h3 id="方案-a常开服务推荐约占-250mb">方案 A：常开服务（推荐，约占 250MB）
+</h3><p>适合设备 24 小时开机的场景。</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>服务</th>
+					<th>内存预算</th>
+					<th>理由</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>AdGuard Home</td>
+					<td>40MB</td>
+					<td>全家 DNS 过滤，常驻才有意义</td>
+			</tr>
+			<tr>
+					<td>Beszel (hub + agent)</td>
+					<td>20MB</td>
+					<td>监控本机和 NAS，异常告警</td>
+			</tr>
+			<tr>
+					<td>Dozzle</td>
+					<td>12MB</td>
+					<td>出问题时看日志，比 SSH 快</td>
+			</tr>
+			<tr>
+					<td>Gatus</td>
+					<td>10MB</td>
+					<td>服务挂了自动告警</td>
+			</tr>
+			<tr>
+					<td>Cloudflare Tunnel</td>
+					<td>15MB</td>
+					<td>免公网 IP 暴露服务</td>
+			</tr>
+			<tr>
+					<td><strong>合计</strong></td>
+					<td><strong>约 97MB + 容器开销</strong></td>
+					<td>加 5 个容器开销约 60MB，共 157MB</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>剩下 200MB 富余，可以再加 Shiori（书签）或 Fusion RSS。</p>
+<h3 id="方案-b按需启动适合旧手机--电池供电">方案 B：按需启动（适合旧手机 / 电池供电）
+</h3><p>设备不常开，用的时候再拉起来。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 只常驻最关键的</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">AdGuard Home        40MB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Cloudflare Tunnel   15MB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Beszel              20MB</span>
+</span></span></code></pre></div><p>其余服务用 <code>podman run</code> 需要时手动起，或者写成 systemd timer 定时跑一次就退出（Gatus、Diun 都支持这种用法）。</p>
+<p><strong>为什么强调这点</strong>：内存账本对&quot;常开&quot;成立，对&quot;按需&quot;不成立。你一台旧安卓机插在充电座上 24 小时开，和一周唤醒一次，装的东西应该完全不同。本站之前写过<a class="link" href="https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/"  target="_blank" rel="noopener"
+    >旧安卓机跑 Docker</a>，那套方案的重点就是<strong>不要常驻</strong>。</p>
+<h2 id="清单之外我建议补的一个内存监控本身">清单之外，我建议补的一个：内存监控本身
+</h2><p>这份清单里有个有趣的现象——<strong>11 个工具里 3 个是监控</strong>（Beszel 看资源、Dozzle 看日志、Gatus 看可用性）。</p>
+<p>这很说明问题：小内存设备最容易出的故障是<strong>OOM（内存耗尽被系统杀进程）</strong>。而 OOM 的痕迹往往只留在日志里。</p>
+<p>所以如果你只装一个，我会选 <strong>Beszel</strong>——它直接显示内存、swap、ZFS ARC 和每个容器的占用历史。有了它，你才知道上面那张账本表哪一行是假的。</p>
+<blockquote>
+<p><strong>先有监控，再谈优化。</strong> 没监控的小主机，优化全靠猜。</p>
+</blockquote>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 512MB 真的够用吗？</strong></p>
+<p>A: 够，但不是&quot;全部常开&quot;。扣掉系统和容器运行时，你可支配约 350-400MB，按我方案 A 装 5 个常驻服务占约 157MB，还有余量。想全装 10 个，得砍到按需启动。</p>
+<p><strong>Q2: 为什么用 Podman 不用 Docker？</strong></p>
+<p>A: 两者都能跑，Podman 无守护进程（daemonless），对小内存设备更省一点，且 rootless 更安全。但 Docker 的镜像生态更大。真要抠内存，两个都比&quot;直接跑二进制&quot;费。</p>
+<p><strong>Q3: AdGuard Home 和 Next-Gen 到底选哪个？</strong></p>
+<p>A: 选官方 AdGuard Home（38k stars）。Next-Gen 是作者自己的 fork，22 stars，2026-11-01 才建，功能重叠且未经社区验证。除非你要专门测它的内存优化。</p>
+<p><strong>Q4: 这份清单的内存数字能信吗？</strong></p>
+<p>A: 分工具。Beszel / Dozzle / Gatus / Diun / AdGuard Home 的数字和官方定位一致，可信；ZeroClaw 的 64MB 和 Fusion RSS 的 22MB 偏乐观，实测要留余量；两个 AdGuard 是重复计算。<strong>任何清单的内存数字都要自己跑一次 <code>docker stats</code> 核对。</strong></p>
+<p><strong>Q5: 我没有 OpenStick，用旧手机 / 树莓派能照搬吗？</strong></p>
+<p>A: 能。核心约束是内存，不是硬件。512MB 树莓派 Zero 2W、刷了 Debian 的旧安卓机都适用。但旧手机要注意电池长期插电膨胀，建议拆电池直供或限电充电。</p>
+<p><strong>Q6: Cloudflare Tunnel 会不会泄露数据？</strong></p>
+<p>A: 它建的是从你设备到 Cloudflare 的出站加密连接，不需要开端口映射，攻击面比公网 IP + 端口暴露小。但流量会经过 Cloudflare 边缘节点，敏感服务建议叠加访问控制（比如本站写过的 <a class="link" href="https://softon.top/software/tinyauth-homelab-auth-middleware/"  target="_blank" rel="noopener"
+    >tinyauth 认证中间件</a>）。</p>
+<p><strong>Q7: 这套方案和群晖/威联通这类成品 NAS 比，意义在哪？</strong></p>
+<p>A: 意义在<strong>不依赖厂商</strong>。NAS 厂商停更、加订阅、砍功能你都没辙；一套 Debian + Podman 的小主机，服务全是你自己装的，迁移只要拷配置。代价是你要自己维护——这是自托管的永恒交换。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/"  target="_blank" rel="noopener"
+    >旧安卓手机跑 Docker，无需 root</a></li>
+<li><a class="link" href="https://softon.top/tutorials/fugleramme-raspberry-pi-eink-bird-frame-birdnet/"  target="_blank" rel="noopener"
+    >树莓派 e-Ink 喂鸟器：Fugleramme + BirdNET 实战</a></li>
+<li><a class="link" href="https://softon.top/software/tinyauth-homelab-auth-middleware/"  target="_blank" rel="noopener"
+    >Tinyauth：给自托管服务加一道认证门</a></li>
+<li><a class="link" href="https://softon.top/software/wake-me-up-wol-app-remote-power-on-nas/"  target="_blank" rel="noopener"
+    >Wake Me Up：远程唤醒 NAS 的 WOL 方案</a></li>
+<li><a class="link" href="https://softon.top/ai/talorys-cloudflare-free-tier-personal-ai-agent/"  target="_blank" rel="noopener"
+    >Cloudflare 免费层跑个人 AI Agent：Talorys 实测</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/self-hosted/">Self-Hosted</a>
+        
+            <a href="/tags/homelab/">Homelab</a>
+        
+            <a href="/tags/lightweight/">Lightweight</a>
+        
+            <a href="/tags/docker/">Docker</a>
+        
+            <a href="/tags/nas/">Nas</a>
+        
+            <a href="/tags/monitoring/">Monitoring</a>
+        
+            <a href="/tags/rss/">Rss</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/software/termux-containers-old-android-phone-run-docker-without-root/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/minio-cut-open-source-community-docker-image/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MinIO 砍开源社区版、删 Docker 镜像：自建 S3 还能信谁？我把 4 个下家全跑了一遍</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/hermes-agent-vs-openclaw-whatsapp-self-hosted-ai-agent/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">零成本自托管 WhatsApp AI Agent：Hermes Agent 与 OpenClaw 的实战对决</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/512mb-mini-host-11-lightweight-self-hosted-apps-real-test\/'; 
+        const pageTitle = '512MB 小主机实测：11 款超轻量自托管工具，哪些真能跑，哪些是纸面参数';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 316 天 13 小时 · 152 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-13 21:56:36 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

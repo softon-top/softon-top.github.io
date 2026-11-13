@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Dbmate on softon.top</title>
+		<link>https://softon.top/tags/dbmate/</link>
+		<description>Recent content in Dbmate on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 25 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/dbmate/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>不想被 ORM 绑死迁移？dbmate 一个二进制管完 Postgres / MySQL / SQLite / ClickHouse</title>
+				<link>https://softon.top/software/dbmate-lightweight-sql-database-migration-tool/</link>
+				<pubDate>Fri, 25 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/dbmate-lightweight-sql-database-migration-tool/</guid>
+				<description>&lt;p&gt;团队里 3 个服务一个用 Go、一个用 Node、一个用 Python，数据库都是 Postgres。每个服务各自带一套框架内置的迁移（Rails / DRF / Sequelize / GORM），同一个 schema 变更要改 3 套不同语法的迁移文件，&lt;code&gt;migrate&lt;/code&gt; 命令还各不一样。多人开发 + 生产部署时，&amp;ldquo;谁先跑了哪个迁移&amp;rdquo; 就成了一笔糊涂账。&lt;/p&gt;&#xA;&lt;p&gt;dbmate 是给这种场景准备的解法：&lt;strong&gt;一个独立二进制、纯 SQL 迁移文件、不绑任何语言或框架&lt;/strong&gt;，Postgres / MySQL / SQLite / ClickHouse 共用同一套迁移，跑起来谁先谁后它自己记账。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;dbmate 是 Go 写的数据库迁移工具，单二进制、零运行时依赖，不绑编程语言和框架。&lt;/li&gt;&#xA;&lt;li&gt;迁移文件就是&lt;strong&gt;纯 SQL&lt;/strong&gt;，按时间戳命名（如 &lt;code&gt;20260925120000_create_users.up.sql&lt;/code&gt;），Git 友好、天然可排序。&lt;/li&gt;&#xA;&lt;li&gt;支持 PostgreSQL、MySQL、MariaDB、SQLite、ClickHouse，乃至 BigQuery、Spanner。&lt;/li&gt;&#xA;&lt;li&gt;自带 &lt;code&gt;schema_migrations&lt;/code&gt; 表记账 + &lt;code&gt;schema.sql&lt;/code&gt; 全量 dump，多环境对账清晰。&lt;/li&gt;&#xA;&lt;li&gt;适合&amp;quot;多语言服务共享一个库&amp;quot;或&amp;quot;不想被某框架绑死迁移&amp;quot;的场景；单一框架统一管着的团队未必需要。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;它和框架内置迁移差在哪&#34;&gt;它和框架内置迁移差在哪？&#xA;&lt;/h2&gt;&lt;p&gt;先把定位说清。Rails / GORM / Django 的迁移是&lt;strong&gt;跟着框架走的&lt;/strong&gt;：你写 Go 就 GORM 的 AutoMigrate / Migrator，写 Python 就 Django 的 migration 文件。优点是生态顺，缺点是&lt;strong&gt;语言绑定&lt;/strong&gt;——换个语言栈迁移方式全变。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

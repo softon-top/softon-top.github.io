@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Window Hopper on softon.top</title>
+		<link>https://softon.top/tags/window-hopper/</link>
+		<description>Recent content in Window Hopper on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/window-hopper/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Windows 抄 macOS 抄了 5 年，PowerToys 0.101 这次终于抄到了精髓</title>
+				<link>https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/</link>
+				<pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/powertoys-0101-window-hopper-macos-alt-tab-same-app/</guid>
+				<description>&lt;p&gt;先说一个每天都在发生的场景。&lt;/p&gt;&#xA;&lt;p&gt;你在 Chrome 里同时开着三个窗口：一个是文档，一个是 GitHub，一个是查资料的十几个标签页。你想从&amp;quot;文档&amp;quot;切到&amp;quot;GitHub&amp;quot;那个窗口，按下 &lt;code&gt;Alt + Tab&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;结果呢？桌面上所有开着的东西全冒出来了——两个 VS Code、一个微信、一个 QQ、一个网易云、一个 Excel、一个 Steam。你要在这一大堆缩略图里眯着眼找那个 GitHub 图标。找到了，松手，切过去。&lt;/p&gt;&#xA;&lt;p&gt;三秒。看起来不长。&lt;/p&gt;&#xA;&lt;p&gt;但是这个动作你一天做几十次。每次切浏览器窗口都要看一眼整个桌面，每次切资源管理器都要在十几个窗口里&amp;quot;扫雷&amp;quot;。这种低效是隐性的，你不会觉得难受，你只会觉得&amp;quot;好像有点累&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;Alt + Tab&lt;/code&gt; 的设计从 Windows 3.0 就是这样。三十多年了。它按应用不分组、按窗口不分应用，一视同仁全平铺。&lt;/p&gt;&#xA;&lt;p&gt;macOS 早就有解法：&lt;code&gt;Cmd + Tab&lt;/code&gt; 切应用，&lt;code&gt;Cmd + &lt;/code&gt;（反引号）切当前应用的多个窗口。两个键管两件事，泾渭分明。用过 Mac 的人回到 Windows，第一件事就是问&amp;quot;这个功能哪去了&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;答案是：没有。第三方工具补丁式实现过，但一直没有官方方案。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;直到 2026 年 8 月 25 日，微软发布 PowerToys 0.101。&lt;/p&gt;&#xA;&lt;h2 id=&#34;window-hopperwindows-版的-cmd&#34;&gt;Window Hopper：Windows 版的 Cmd+`&#xA;&lt;/h2&gt;&lt;p&gt;PowerToys 0.101 里最重要的新增就是 &lt;strong&gt;Window Hopper&lt;/strong&gt;——这个名字翻译过来叫&amp;quot;窗口跳跃&amp;quot;，本质就是给 Windows 补上了那个 macOS 已经用了几十年的功能。&lt;/p&gt;&#xA;&lt;p&gt;它的工作方式一句话说完：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;code&gt;Alt + &lt;/code&gt;（反引号，键盘 Tab 上面那个键）在当前应用的多个窗口之间循环切换。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;关键就在&amp;quot;当前应用&amp;quot;这四个字。&lt;/p&gt;&#xA;&lt;p&gt;举个例子：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;你在 Chrome 的某个窗口里，按 &lt;code&gt;Alt + &lt;/code&gt;`，只有其他 Chrome 窗口出来，微信 QQ VS Code 全部不打扰你&lt;/li&gt;&#xA;&lt;li&gt;你在 File Explorer 里，按 &lt;code&gt;Alt + &lt;/code&gt;`，只有其他文件夹窗口出来，浏览器视野被隔离&lt;/li&gt;&#xA;&lt;li&gt;你在 Windows Terminal 里同时开了四个 tab 的多窗口，按 &lt;code&gt;Alt + &lt;/code&gt;`，就在这四个终端之间转&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;它不是替代 &lt;code&gt;Alt + Tab&lt;/code&gt;。它是给 &lt;code&gt;Alt + Tab&lt;/code&gt; 打了个补丁。&lt;/strong&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

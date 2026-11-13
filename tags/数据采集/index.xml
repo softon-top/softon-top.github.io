@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>数据采集 on softon.top</title>
+		<link>https://softon.top/tags/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</link>
+		<description>Recent content in 数据采集 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 23 Jul 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>网页一改版爬虫就死？Scrapling 想用自适应解析给爬虫续命</title>
+				<link>https://softon.top/software/scrapling-adaptive-python-web-scraping-framework/</link>
+				<pubDate>Thu, 23 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/scrapling-adaptive-python-web-scraping-framework/</guid>
+				<description>&lt;p&gt;半夜两点，监控突然开始报警。&lt;/p&gt;&#xA;&lt;p&gt;不是服务器挂了，不是数据库炸了，也不是 API 被人刷爆。只是目标网站前端同学改了一个 class 名：昨天还叫 &lt;code&gt;.product-card&lt;/code&gt;，今天变成了 &lt;code&gt;.item-tile&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;于是你的爬虫安静地跑了一整晚，日志一片绿色，结果表里全是空。&lt;/p&gt;&#xA;&lt;p&gt;这就是网页爬虫最让人血压升高的地方：&lt;strong&gt;它看起来像自动化，实际经常像照顾玻璃心的小动物&lt;/strong&gt;。页面 DOM 多套一层，按钮从 &lt;code&gt;button&lt;/code&gt; 换成 &lt;code&gt;div&lt;/code&gt;，价格字段旁边加个促销标签，选择器就开始装死。&lt;/p&gt;&#xA;&lt;p&gt;传统做法也熟：打开浏览器开发者工具，重新复制 CSS Selector，修脚本，跑测试，部署。过几周，网站又改版，再来一遍。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;很多爬虫项目真正的成本，不在“第一次写出来”，而在“每次页面打喷嚏，你都要陪它去医院”。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;今天这个工具，Scrapling，打的就是这个痛点。&lt;/p&gt;&#xA;&lt;p&gt;它不是又一个“更好用的 BeautifulSoup”。它更像一个给爬虫装上的减震器：选择器断了以后，不是立刻躺平，而是尝试根据之前保存的元素特征，把目标从新页面里重新找回来。&lt;/p&gt;&#xA;&lt;h2 id=&#34;scrapling-到底是什么&#34;&gt;Scrapling 到底是什么&#xA;&lt;/h2&gt;&lt;p&gt;Scrapling 是一个开源 Python Web Scraping 框架，项目定位很直接：从一次简单请求，到完整规模的爬取任务，都放进同一套工具里。&lt;/p&gt;&#xA;&lt;p&gt;它公开信息里最核心的几个点：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;开源协议：BSD-3-Clause&lt;/li&gt;&#xA;&lt;li&gt;运行要求：Python 3.10+&lt;/li&gt;&#xA;&lt;li&gt;核心能力：自适应元素追踪、CSS / XPath / 文本 / 正则等选择方式&lt;/li&gt;&#xA;&lt;li&gt;Fetcher：支持普通 HTTP、动态页面、隐身/反检测相关抓取方式&lt;/li&gt;&#xA;&lt;li&gt;Spider：提供类似 Scrapy 的爬虫框架能力&lt;/li&gt;&#xA;&lt;li&gt;MCP Server：可给 Claude、Cursor 等 AI 工具做辅助网页抽取&lt;/li&gt;&#xA;&lt;li&gt;安装方式：基础解析器可 &lt;code&gt;pip install scrapling&lt;/code&gt;，Fetcher / Spider / MCP 等能力需要额外依赖&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;官网和 README 的一句话很能概括它的野心：Scrapling 是一个 adaptive Web Scraping framework。&lt;/p&gt;&#xA;&lt;p&gt;关键词不是 Web Scraping，而是 &lt;strong&gt;adaptive&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
