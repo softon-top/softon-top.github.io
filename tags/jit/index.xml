@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>JIT on softon.top</title>
+		<link>https://softon.top/tags/jit/</link>
+		<description>Recent content in JIT on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 15 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/jit/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核</title>
+				<link>https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/</link>
+				<pubDate>Sun, 15 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/</guid>
+				<description>&lt;p&gt;上周技术圈被一张图刷屏：一台折叠屏 iPhone，展开就是完整的 Windows 11 桌面，Edge 在跑，Antigravity 在跑，扬声器出声，麦克风能收。不是远程桌面，不是云电脑串流，是&lt;strong&gt;本地&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;更让人想点进去的是作者那句话——谷歌 AI Studio 负责人 Ammaar Reshi 说，他用 Gemini 4 Carbon 加上多 Agent 协作，&lt;strong&gt;大约两小时&lt;/strong&gt;就做出来了。&lt;/p&gt;&#xA;&lt;p&gt;两小时。这三个字是诱饵，也是这篇文章要拆的坑。因为把官方 README 读完，你会发现真正的工程量根本不在那两小时里，而在于它&lt;strong&gt;必须同时满足 Windows NT 内核、ARMv8 架构、PCIe/USB/声卡硬件、iOS TXM 内存模型&lt;/strong&gt;这四套互相打架的约束。少任何一条，Windows 就停在开机 Logo。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;WindowsiOS 跑的是&lt;strong&gt;未修改的零售版 Windows 11 24H2 ARM64（Build 26100）&lt;/strong&gt;，在免越狱的 iPhone Duo（&lt;code&gt;iPhone19,4&lt;/code&gt;，A20 Pro，iOS 27 TXM）上，&lt;strong&gt;不依赖 Hypervisor.framework&lt;/strong&gt;。&lt;/li&gt;&#xA;&lt;li&gt;免越狱的前提下，硬件 EL2 虚拟化在 iOS 16.4+ 已被苹果封死；UTM SE 这类解释器模拟器又慢 5–10 倍，带不动 Chromium/Electron 多进程栈。所以只剩一条路：&lt;strong&gt;ARM64→ARM64 动态二进制翻译 + 4KB 软件 MMU&lt;/strong&gt;。&lt;/li&gt;&#xA;&lt;li&gt;最硬的三处：Windows 把 ASID 放在 &lt;code&gt;TTBR1_EL1&lt;/code&gt;（&lt;code&gt;TCR_EL1.A1=1&lt;/code&gt;）且每次上下文切换会瞬态经过 &lt;code&gt;ASID 0&lt;/code&gt;；Prism 的 &lt;code&gt;LDAPUR/STLUR&lt;/code&gt; 非对齐访问在苹果 EL0 会直接 &lt;code&gt;SIGBUS&lt;/code&gt;；&lt;code&gt;virtio-win&lt;/code&gt; &lt;strong&gt;没有&lt;/strong&gt; Windows 声卡驱动，得从零写一个 Intel ICH6 HDA 控制器。&lt;/li&gt;&#xA;&lt;li&gt;结果是 idle 内存 &lt;strong&gt;1.46 GB / 4.5 GB&lt;/strong&gt;（约 31.7%），4 个 A20 Pro 性能核 &lt;strong&gt;89% WFI 空闲&lt;/strong&gt;，Edge 能渲染 HTTPS 页面，Google/passkey OAuth 能走通。&lt;/li&gt;&#xA;&lt;li&gt;门槛：Apple Silicon Mac + Xcode + &lt;code&gt;xcodegen&lt;/code&gt;/&lt;code&gt;meson&lt;/code&gt;/&lt;code&gt;ninja&lt;/code&gt;/&lt;code&gt;llvm&lt;/code&gt; + 官方 Win11 ARM64 ESD + EDK2 &lt;code&gt;QEMU_EFI.fd&lt;/code&gt; + WHQL &lt;code&gt;NetKVM&lt;/code&gt; 驱动。&lt;strong&gt;实验性项目，别指望日常可用。&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么这事此前没人做成&#34;&gt;为什么这事此前没人做成？&#xA;&lt;/h2&gt;&lt;p&gt;先把「不可能」这三个字拆开。不是没人试过，是三条路都被堵了。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

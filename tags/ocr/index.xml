@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>OCR on softon.top</title>
+		<link>https://softon.top/tags/ocr/</link>
+		<description>Recent content in OCR on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 06 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/ocr/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Snow Shot：社区驱动的开源截图工具，没有会员没有 Pro，插件系统让核心保持 6MB</title>
+				<link>https://softon.top/software/snow-shot-community-driven-open-source-screenshot-tool/</link>
+				<pubDate>Tue, 06 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/snow-shot-community-driven-open-source-screenshot-tool/</guid>
+				<description>&lt;p&gt;截图工具是红海中的红海。ShareX 功能最全，PixPin 跨平台体验好，CleanShot X 是 macOS 付费标杆，Snipaste 靠贴图起家。每一款都有明确的商业逻辑或公司背书。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 10 月，小众软件推荐了一款不太一样的截图工具：&lt;strong&gt;Snow Shot&lt;/strong&gt;。它不是公司出品，不是个人开发者单打独斗，而是&lt;strong&gt;社区共同开发&lt;/strong&gt;——&amp;ldquo;我们相信最好的软件一定是忠于用户社区的&amp;rdquo;。&lt;/p&gt;&#xA;&lt;p&gt;没有高级版，没有 Pro 功能，没有会员。前端应用和后端服务全部开源，GitHub 上找得到每一行代码。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Snow Shot 是社区驱动的开源截图工具，v1.1.4，2026-09-27 更新&lt;/li&gt;&#xA;&lt;li&gt;功能：智能框选、全屏截图、滚动截图、固定到屏幕、OCR、AI 翻译、图片转 HTML/Markdown&lt;/li&gt;&#xA;&lt;li&gt;插件系统保持核心简洁，扩展功能通过插件加载&lt;/li&gt;&#xA;&lt;li&gt;前后端全开源，API 服务也能自己部署&lt;/li&gt;&#xA;&lt;li&gt;全部免费，无会员/Pro/高级版&lt;/li&gt;&#xA;&lt;li&gt;坑：仅 Windows、社区驱动开发节奏不稳定、AI 翻译依赖后端 API&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;snow-shot-是什么社区驱动的截图工具&#34;&gt;Snow Shot 是什么？——社区驱动的截图工具&#xA;&lt;/h2&gt;&lt;p&gt;Snow Shot 的官方介绍只有一句话：&amp;ldquo;Snow Shot 是 Snow Shot 社区共同开发的一款开源截图工具&amp;rdquo;。&lt;/p&gt;&#xA;&lt;p&gt;这个定位在截图工具里几乎独一份。ShareX 是 lin_link 个人维护，PixPin 是公司运营，CleanShot X 是付费商业软件，Snipaste 是个人开发者。Snow Shot 把&amp;quot;社区&amp;quot;写进了产品名字里。&lt;/p&gt;&#xA;&lt;p&gt;GitHub 仓库 &lt;code&gt;mg-chao/snow-apps&lt;/code&gt; 包含 Snow Shot 和 Snow Image Viewer 两个应用。2026 年 9 月 6 日首次提交，9 月 27 日发布 v1.1.4。小众软件 10 月 6 日推荐。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

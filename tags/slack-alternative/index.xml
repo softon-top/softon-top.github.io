@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Slack Alternative on softon.top</title>
+		<link>https://softon.top/tags/slack-alternative/</link>
+		<description>Recent content in Slack Alternative on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 18 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/slack-alternative/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Buzz：Jack Dorsey 的 Agent-Native Slack 替代，AI Agent 终于不是一等公民了</title>
+				<link>https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/</link>
+				<pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/buzz-agent-native-slack-alternative-ai-first-class-user/</guid>
+				<description>&lt;p&gt;AI agent 终于不是一等公民了。&lt;/p&gt;&#xA;&lt;p&gt;2026 年 7 月 21 日，Block（Jack Dorsey 的公司，背后是 Square 和 Cash App）发布了 Buzz——一个开源协作平台，口号是&amp;quot;人类和 AI agent 共享工作空间&amp;quot;。不是给 Slack 加个 bot 插件，而是从协议层就把 agent 当一等公民设计。&lt;/p&gt;&#xA;&lt;p&gt;Jack Dorsey 在推文里说：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;we&amp;rsquo;re launching BUZZ! a new groupchat platform for teams of people and agents of all sizes, built to reduce our dependency on slack and github. model-agnostic, decentralized, self-sovereign, and open source.&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;一周内 GitHub star 破 13,700。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Buzz 是 Block 发布的开源 agent-native 协作平台，Apache 2.0，Docker Compose 自托管&lt;/li&gt;&#xA;&lt;li&gt;核心差异：agent 有独立加密身份和频道级权限，不是共享 bot token 的插件&lt;/li&gt;&#xA;&lt;li&gt;架构基于 Nostr 协议，去中心化，支持 Git 仓库连接和自动化工作流&lt;/li&gt;&#xA;&lt;li&gt;对比 Slack/Mattermost：Buzz 的 agent 是&amp;quot;团队成员&amp;quot;而非&amp;quot;集成插件&amp;quot;&lt;/li&gt;&#xA;&lt;li&gt;自托管门槛低：Postgres + Redis + MinIO，Tauri 桌面端覆盖三大平台&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;buzz-到底是什么&#34;&gt;Buzz 到底是什么？&#xA;&lt;/h2&gt;&lt;p&gt;Buzz 看起来像 Slack——频道、线程、回复、emoji 反应、DM，该有的都有。但它解决的问题不一样：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Firecrawl on softon.top</title>
+		<link>https://softon.top/tags/firecrawl/</link>
+		<description>Recent content in Firecrawl on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 24 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/firecrawl/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AnyDoc 实测：14 种文档 4 毫秒转 Markdown，Firecrawl 这套开源方案凭什么把 MarkItDown 和 Pandoc 甩开一个数量级</title>
+				<link>https://softon.top/software/anydoc-firecrawl-open-source-document-to-markdown/</link>
+				<pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/anydoc-firecrawl-open-source-document-to-markdown/</guid>
+				<description>&lt;p&gt;搞 AI Agent 的都懂一个心照不宣的秘密：一旦用户开始上传本地文档，整套流水线的品味立刻塌方。&lt;/p&gt;&#xA;&lt;p&gt;一个二十年前的 &lt;code&gt;.doc&lt;/code&gt; 合同、一份 2009 年导出的 &lt;code&gt;.xls&lt;/code&gt;、一份路演 &lt;code&gt;.pptx&lt;/code&gt;、一本 &lt;code&gt;.epub&lt;/code&gt;，再夹一份扫描版 PDF。想让 LLM 认得，得先把它们统统翻译成 Markdown。可翻译这一步，从来没被谁真正搞定过。&lt;/p&gt;&#xA;&lt;h2 id=&#34;老方案的四种痛法&#34;&gt;老方案的四种痛法&#xA;&lt;/h2&gt;&lt;p&gt;先复盘一下过去这几年大家怎么凑合过日子。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;MarkItDown&lt;/strong&gt;：微软家的，Python 生态里最常见的一把小刀。docx 转得还行，pptx 勉强，xlsx 就开始飘，&lt;code&gt;.doc&lt;/code&gt; 直接不认。速度中等偏慢。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Pandoc&lt;/strong&gt;：万金油，写论文很香。缺点是格式覆盖偏窄——Excel 类完全不支持，PowerPoint 也不管，主要吃 docx / rtf / epub / odt。老技术栈，胜在稳。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Docling&lt;/strong&gt;：IBM 出品，方向对着深度学习跑，能处理复杂版式的 PDF。但依赖重、启动慢、单文档五百毫秒起步，喂到批量流水线里马上变瓶颈。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Unstructured&lt;/strong&gt;：野心大，什么格式都想吃一口，但吃得都不深。质量参差，输出经常带一堆冗余噪声。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;LibreOffice CLI&lt;/strong&gt;：无损，好像什么都支持。真跑起来一份文档要一秒多，纯写死的进程调用，别提做并发。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;mammoth&lt;/strong&gt;：docx 一枝独秀，其他都不管。&lt;/p&gt;&#xA;&lt;p&gt;结果就是每个团队的文档管道，最后都长成同一副样子：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;if pdf:      走 pdfplumber / pypdf → 图片页降级 OCR&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif docx:   走 mammoth 或 python-docx&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif xlsx:   走 openpyxl 硬解&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif pptx:   走 python-pptx 拼接&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif rtf:    ???&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;elif epub:   走 ebooklib 再自己遍历&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;else:        raise UnsupportedFormat&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;四五个库拼在一起，四五套依赖，四五种失败姿势，输出格式还各说各话——docx 出来的表格是一种样子，xlsx 出来的表格又是另一种。想给 LLM 一个统一的 Markdown 骨架？做梦。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>2026 爬虫工具选型横评：Firecrawl、Crawl4AI、Scrapling、Scrapy、Crawlee 怎么选？</title>
+				<link>https://softon.top/software/2026-web-scraping-tools-comparison-ai-agent/</link>
+				<pubDate>Mon, 06 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/2026-web-scraping-tools-comparison-ai-agent/</guid>
+				<description>&lt;p&gt;2026 年再选爬虫工具，已经不能只看“能不能抓到网页”。&lt;/p&gt;&#xA;&lt;p&gt;如果你正在纠结 Firecrawl、Crawl4AI、Scrapling、Scrapy、Crawlee、Playwright、Selenium 这些主流爬虫工具到底怎么选，核心问题其实不是“哪个最强”，而是：&lt;strong&gt;你的爬虫最终要服务数据工程，还是服务 AI Agent / RAG / LLM 应用？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;过去，爬虫听起来很朴素。&lt;/p&gt;&#xA;&lt;p&gt;写个 &lt;code&gt;requests&lt;/code&gt;，套个 &lt;code&gt;BeautifulSoup&lt;/code&gt;，找到 CSS selector，把标题、价格、正文抠出来。像拿着小刀削苹果，动作不优雅，但够用。&lt;/p&gt;&#xA;&lt;p&gt;可到了 2026 年，这件事突然变复杂了。&lt;/p&gt;&#xA;&lt;p&gt;不是因为网页更难抓了——它一直难抓。真正变化的是：&lt;strong&gt;爬虫不再只是给数据库喂数据，它开始给 AI Agent、RAG、知识库和自动化工作流喂上下文。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;这导致工具选择逻辑彻底变了。&lt;/p&gt;&#xA;&lt;p&gt;过去我们问：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;能不能抓到 HTML？速度快不快？能不能跑大规模？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;现在还要问：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;能不能直接输出干净 Markdown？能不能给 LLM 少喂垃圾 token？能不能处理 JS-heavy 页面？能不能 self-host？能不能接 MCP？页面改版后会不会立刻暴毙？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;我用 Tavily 搜了一轮 2026 年最新资料，又补查了 GitHub、PyPI 和几个项目 README。结论很有意思：爬虫生态已经明显分成了两派。&lt;/p&gt;&#xA;&lt;p&gt;一派是老世界的“工程爬虫”：Scrapy、Crawlee、Playwright、Selenium。它们解决的是&lt;strong&gt;抓取、调度、浏览器自动化、工程稳定性&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;另一派是新世界的“AI 爬虫”：Firecrawl、Crawl4AI、Scrapling、ScrapeGraphAI。它们解决的是&lt;strong&gt;网页到 Markdown / JSON / Agent context 的转换&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;这两派不是谁取代谁，而是服务不同战场。选错工具，就像拿铲车进厨房切菜：不是不能动，是代价离谱。&lt;/p&gt;&#xA;&lt;p&gt;这篇横评会围绕几个真实问题展开：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;2026 年主流爬虫工具有哪些？&lt;/li&gt;&#xA;&lt;li&gt;Firecrawl 和 Crawl4AI 有什么区别？&lt;/li&gt;&#xA;&lt;li&gt;Scrapling 这种自适应爬虫适合什么场景？&lt;/li&gt;&#xA;&lt;li&gt;Scrapy、Crawlee、Playwright 这些老牌/工程化工具还值不值得用？&lt;/li&gt;&#xA;&lt;li&gt;如果目标是 AI Agent、RAG 或 LLM 知识库，应该选 API 服务还是本地开源工具？&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;先给结论2026-年爬虫工具怎么选&#34;&gt;先给结论：2026 年爬虫工具怎么选&#xA;&lt;/h2&gt;&lt;p&gt;如果只想要最短答案，我会这样选：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

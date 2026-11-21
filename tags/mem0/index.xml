@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Mem0 on softon.top</title>
+		<link>https://softon.top/tags/mem0/</link>
+		<description>Recent content in Mem0 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/mem0/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>MemorySync：一个 API 让 AI Agent 拥有记忆，但代价是什么？</title>
+				<link>https://softon.top/ai/memorysync-ai-agent-memory-api-vs-self-hosted/</link>
+				<pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/memorysync-ai-agent-memory-api-vs-self-hosted/</guid>
+				<description>&lt;p&gt;你有没有过这种体验：每次开新对话，AI agent 就像失忆一样，不记得你叫什么、不喜欢什么、上周聊过什么？&lt;/p&gt;&#xA;&lt;p&gt;MemorySync 就是为解决这个问题而生的。2026 年 10 月 Show HN 上，开发者 mohd_rafay 发布了一个托管记忆 API：一个 endpoint 存用户上下文，另一个 endpoint 检索。不用搭向量数据库，不用配 embedding 管道，不用管会话存储。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;MemorySync 是托管记忆 API，两个 endpoint 搞定存储和检索，面向不想自建记忆基础设施的开发者&lt;/li&gt;&#xA;&lt;li&gt;与 mem0/letta/agentmemory 的核心区别：MemorySync 是纯托管 SaaS，数据存在别人服务器上&lt;/li&gt;&#xA;&lt;li&gt;成本模型：按 API 调用量计费，轻度使用免费，重度使用成本可能超过自托管&lt;/li&gt;&#xA;&lt;li&gt;适合快速验证和中小项目；对数据隐私敏感或大规模场景应选自托管方案&lt;/li&gt;&#xA;&lt;li&gt;2026 年 AI agent 记忆层已成独立赛道，benchmark 生态成熟，选型需按场景权衡&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;memorysync-是什么&#34;&gt;MemorySync 是什么？&#xA;&lt;/h2&gt;&lt;p&gt;MemorySync 是一个托管的 AI agent 记忆 API。它的核心理念是：&lt;strong&gt;你不需要自己搭建记忆基础设施&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;工作流程：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;应用调用 store endpoint，发送用户上下文信息&lt;/li&gt;&#xA;&lt;li&gt;MemorySync 自动提取有用记忆，存入后端&lt;/li&gt;&#xA;&lt;li&gt;后续对话中，应用调用 retrieve endpoint 获取相关记忆&lt;/li&gt;&#xA;&lt;li&gt;Agent 用这些记忆个性化回应&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;作者在 HN 帖中说：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;I made MemorySync since I was getting bored of having to setup dedicated vector databases, embedding pipelines, and session storages every single time I wanted to make a LLM agent persistent.&amp;rdquo;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>PCIe 交换机 on softon.top</title>
+		<link>https://softon.top/tags/pcie-%E4%BA%A4%E6%8D%A2%E6%9C%BA/</link>
+		<description>Recent content in PCIe 交换机 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 20 Aug 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/pcie-%E4%BA%A4%E6%8D%A2%E6%9C%BA/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>本地跑 SOTA 大模型硬件分档：从 2k 到 55k 美元，jamesob 的账本比宣传更凶</title>
+				<link>https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/</link>
+				<pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/local-llm-hardware-tier-2k-40k-real-cost/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;你以为花 $40k 就能在自家客厅跑一台&amp;quot;几乎等于 Claude Opus&amp;quot;的机器？&#xA;jamesob 用 21 次 commit 告诉你：这数字得先加个 15k 才够诚实。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;一份被-18k-颗-star-抬上桌的账本&#34;&gt;一份被 1.8k 颗 Star 抬上桌的账本&#xA;&lt;/h2&gt;&lt;p&gt;前几天在 HN 头条上刷到一个仓库：&lt;a class=&#34;link&#34; href=&#34;https://github.com/jamesob/local-llm&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;jamesob/local-llm&lt;/a&gt;。作者一句 AI 都没让写（他在 README 里特意标了），把自家 4 张 RTX PRO 6000 的开销、BIOS 配置、PCIe 交换机接线一股脑贴出来。Star 数一天涨到 1.8k，HelloGitHub 第 124 期把它列为唯一推荐。&lt;/p&gt;&#xA;&lt;p&gt;这类&amp;quot;本地跑大模型&amp;quot;的教程网上一抓一大把，为什么 jamesob 这份能出圈？&lt;/p&gt;&#xA;&lt;p&gt;因为它不是那种&amp;quot;用 Ollama 一键装 Llama 3&amp;quot;的糊弄文章。它做的是一件更贵、也更少人愿意做的事：&lt;strong&gt;把两条极端预算路径同时摊开，让你看清&amp;quot;入门&amp;quot;和&amp;quot;发烧&amp;quot;之间到底差了什么&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;$2k 一档，48GB VRAM，跑 Qwen3.6-27B。$40k 一档，384GB VRAM，跑 GLM-5.2-594B。中间那个 $20k 档？作者自己都写着 TODO——他没试过，也懒得瞎编。&lt;/p&gt;&#xA;&lt;p&gt;这种&amp;quot;我只讲我亲手花过的钱&amp;quot;的姿态，比任何&amp;quot;2026 本地 LLM 终极指南&amp;quot;都值钱。&lt;/p&gt;&#xA;&lt;h2 id=&#34;2k-入门档48gb-vram-够干什么&#34;&gt;$2k 入门档：48GB VRAM 够干什么&#xA;&lt;/h2&gt;&lt;p&gt;先说结论：&lt;strong&gt;双 RTX 3090，48GB VRAM 总量，$2k 出头&lt;/strong&gt;。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
