@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Ladybird 浏览器 2026 年 11 月发布首个 Alpha：自研引擎，非 Chromium、Gecko、WebKit 分支，仅 macOS 与 Linux 可用。本文基于官方公告与第三方实测，拆清它现在能干什么、不能干什么，以及独立引擎在 Blink 一家独大的时代值不值得你花时间折腾。">
+<title>Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了</title>
+
+<link rel='canonical' href='https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了">
+<meta property='og:description' content="Ladybird 浏览器 2026 年 11 月发布首个 Alpha：自研引擎，非 Chromium、Gecko、WebKit 分支，仅 macOS 与 Linux 可用。本文基于官方公告与第三方实测，拆清它现在能干什么、不能干什么，以及独立引擎在 Blink 一家独大的时代值不值得你花时间折腾。">
+<meta property='og:url' content='https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='ladybird' /><meta property='article:tag' content='browser' /><meta property='article:tag' content='browser-engine' /><meta property='article:tag' content='open-source' /><meta property='article:tag' content='chromium-alternative' /><meta property='article:published_time' content='2026-11-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-26T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了">
+<meta name="twitter:description" content="Ladybird 浏览器 2026 年 11 月发布首个 Alpha：自研引擎，非 Chromium、Gecko、WebKit 分支，仅 macOS 与 Linux 可用。本文基于官方公告与第三方实测，拆清它现在能干什么、不能干什么，以及独立引擎在 Blink 一家独大的时代值不值得你花时间折腾。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了\"",
+  "description": "\"Ladybird 浏览器 2026 年 11 月发布首个 Alpha：自研引擎，非 Chromium、Gecko、WebKit 分支，仅 macOS 与 Linux 可用。本文基于官方公告与第三方实测，拆清它现在能干什么、不能干什么，以及独立引擎在 Blink 一家独大的时代值不值得你花时间折腾。\"",
+  "url": "\"https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/\"",
+  "datePublished": "2026-11-26T00:00:00Z",
+  "dateModified": "2026-11-26T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/\""
+  },
+  "keywords": "\"ladybird, browser, browser-engine, open-source, chromium-alternative\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了\"",
+      "item": "\"https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一个不用-chromium-的浏览器凭什么值得你花-10-分钟">一个不用 Chromium 的浏览器，凭什么值得你花 10 分钟</a></li>
+    <li><a href="#为什么不直接-fork-一个现成引擎">为什么不直接 fork 一个现成引擎？</a></li>
+    <li><a href="#alpha-到底能干什么不能干什么">Alpha 到底能干什么、不能干什么</a></li>
+    <li><a href="#没有扩展没有账号同步我凭什么还说它值得装">没有扩展、没有账号同步，我凭什么还说它值得装？</a></li>
+    <li><a href="#拿了赞助的独立还算是独立吗">拿了赞助的「独立」，还算是独立吗？</a></li>
+    <li><a href="#我的建议现在该怎么定位它">我的建议：现在该怎么定位它</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/homelab/">
+                Homelab
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/ladybird-independent-browser-engine-alpha-2026/">Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-26T00:00:00Z'>
+                    2026-11-26，星期四</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一个不用-chromium-的浏览器凭什么值得你花-10-分钟">一个不用 Chromium 的浏览器，凭什么值得你花 10 分钟</a></li>
+    <li><a href="#为什么不直接-fork-一个现成引擎">为什么不直接 fork 一个现成引擎？</a></li>
+    <li><a href="#alpha-到底能干什么不能干什么">Alpha 到底能干什么、不能干什么</a></li>
+    <li><a href="#没有扩展没有账号同步我凭什么还说它值得装">没有扩展、没有账号同步，我凭什么还说它值得装？</a></li>
+    <li><a href="#拿了赞助的独立还算是独立吗">拿了赞助的「独立」，还算是独立吗？</a></li>
+    <li><a href="#我的建议现在该怎么定位它">我的建议：现在该怎么定位它</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>你在浏览器地址栏输入一个网址，背后是谁在读 HTML、画 CSS、跑 JavaScript？答案大概率是 Blink——Chrome、Edge、Opera、Brave、Vivaldi 全是它的壳。剩下两个名字：Mozilla 的 Gecko 和 Apple 的 WebKit。三个引擎，撑着整个现代网页。</p>
+<p>然后 2026 年 11 月 23 日，第四个名字来了：<strong>Ladybird 首个 Alpha 正式上线</strong>，macOS 和 Linux 可下载。它不是又一个 Chromium 换皮，而是官方反复强调的「从地上长出来的新引擎，不是 fork」。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>Ladybird 是 SerenityOS 分裂出来的独立浏览器项目，由非营利组织 Ladybird Browser Initiative 运营，引擎完全自研，不基于 Blink / WebKit / Gecko。</li>
+<li>2026-11-23 发布首个 Alpha，仅 macOS 与 Linux；Windows 暂无原生版，官方建议在 WSL2 里跑 Linux 版。</li>
+<li>官方自认「今天不对安全性做任何承诺」，会崩、部分网站打不开，明确请安全研究者来打它。</li>
+<li>支持 WebDriver 与 Firefox DevTools 协议，做网页开发的人最有理由装一个。</li>
+<li>GitHub 仓库约 6.9 万 star、BSD-2-Clause 许可；官方路线图：2027 年 Linux/macOS Beta，2028 年面向大众的稳定版。</li>
+</ul>
+</blockquote>
+<h2 id="一个不用-chromium-的浏览器凭什么值得你花-10-分钟">一个不用 Chromium 的浏览器，凭什么值得你花 10 分钟
+</h2><p>先把话说清楚：我不是来劝你把 Chrome 卸载的。恰恰相反，Ladybird 官方自己都在说——<strong>别拿它当日常主力</strong>。项目负责人 Andreas Kling 的原话是「some websites won&rsquo;t work, and it will crash sometimes」（有些网站用不了，而且偶尔会崩），安全方面更是直接摊牌：「we make no promises about security today」（今天我们对安全不做任何承诺）。</p>
+<p>这种坦白在软件发布里很少见，反而让我想把它讲清楚。原因是它验证了一件更少见的事：<strong>一个小团队、靠捐款活着，把一个独立浏览器引擎推到了「双击就能装」的程度</strong>。在几乎所有浏览器都跑 Blink 的市场里，这本身就是个技术事件。</p>
+<p>Hackaday 的定性很到位：Ladybird 现在是「第三个在研的主要浏览器引擎家族」。这句话的分量在于历史——2000 年代浏览器战争留下的教训是单一生态主导互联网不是好事，而 2026 年的现实是 Blink 加 WebKit 几乎吃掉一切，Firefox 已经成了局外人。Ladybird 是在这个背景下长出来的，不是玩具。</p>
+<h2 id="为什么不直接-fork-一个现成引擎">为什么不直接 fork 一个现成引擎？
+</h2><p>Ladybird 的出身很怪：它最初是 <strong>SerenityOS</strong> 的一个组件——一个从零手写、刻意不依赖第三方库的极客操作系统。SerenityOS 有很强的「什么都自己写」文化，浏览器也跟着这个路子走。2024 年，浏览器部分被拆分出来成为独立项目，就是现在的 Ladybird。</p>
+<p>官方 FAQ 里专门回答了一个尖锐问题：你说你独立，可你们一开始用了 SerenityOS 的代码啊？回答是：<strong>重点是从零构建新引擎，不使用来自 Blink、WebKit、Gecko 或其他任何浏览器引擎的代码</strong>。出于历史原因它用了 SerenityOS 的一些库，但分裂之后不再受「全自己写」约束，现在也会用第三方库处理常见功能——图像、音视频格式、加密、图形等，其中一些库跟其他浏览器用的是同一个。</p>
+<p>技术栈上有个值得注意的转变：代码库起点和主体仍是 C++，但官方已宣布 <strong>Rust 作为 C++ 的继任语言</strong>，正在把子系统逐步移植到 Rust。GitHub 仓库的元数据也把主语言标为 Rust（仓库 <code>LadybirdBrowser/ladybird</code>，BSD-2-Clause 许可）。换句话说，这不是一个「新语言重写一切」的浪漫故事，而是老 C++ 引擎务实渐进地换心脏。</p>
+<p>项目的钱从哪来？官网写得很直白：<strong>完全靠捐赠和赞助</strong>，组织形式是 501(c)(3) 非营利机构。赞助档位从 Copper 1000 美元到 Platinum 10 万美元一年，官网列出的赞助者里能看到 Mitchell Hashimoto、Paul Copplestone、Andreas Mähler、The Primeagen 等名字。关键条款是：所有赞助都是无限制捐赠，<strong>董事会席位和其他影响力不出售，赞助方对技术路线和产品方向没有发言权</strong>。这和浏览器市场里那笔 everyone 都知道的「默认搜索引擎位置」生意划清了界限——Ladybird 明确拒绝这类变现。</p>
+<h2 id="alpha-到底能干什么不能干什么">Alpha 到底能干什么、不能干什么
+</h2><p>首次 Alpha 在 2026 年 11 月 23 日由 Kling 本人发文宣布。这是他说的「期待了很久的一篇帖子」。几个要点：</p>
+<ul>
+<li><strong>平台</strong>：macOS 和 Linux。没有 Windows 构建。</li>
+<li><strong>滚动更新通道</strong>：这是 Kling 说他自己最兴奋的部分——引擎迭代很快，以前你得自己从源码编译才能看到进步，现在普通用户能自动收到更新。</li>
+<li><strong>崩溃处理</strong>：崩溃后你可以先读崩溃报告，再决定要不要发出去；浏览器内可以直接举报打不开的网站。</li>
+<li><strong>开发友好</strong>：支持 WebDriver 做自动化测试，也支持 Firefox DevTools 协议。</li>
+</ul>
+<p>第三方报道补充了安装细节（来源为 Hardware Busters 汇总）：Linux 有 Flatpak、Ubuntu 和 Fedora 仓库包，以及不自动更新的 tarball；Mac 端是 DMG 镜像，体积约 70 MB——对比主流浏览器的下载量，这个数字相当克制。首次启动只有三个问题：搜索引擎、标签页布局、配色主题；支持垂直标签页；新标签页目前是空白。</p>
+<p>能力边界也得说明白：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>Alpha 现状</th>
+					<th>备注</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>平台</td>
+					<td>macOS / Linux</td>
+					<td>Windows 无原生版，官方建议在 WSL2 跑 Linux 版</td>
+			</tr>
+			<tr>
+					<td>自动更新</td>
+					<td>支持（rolling 通道）</td>
+					<td>tarball 安装不自动更新</td>
+			</tr>
+			<tr>
+					<td>扩展</td>
+					<td>不支持</td>
+					<td>第三方评论里被反复提到</td>
+			</tr>
+			<tr>
+					<td>账号 / 同步</td>
+					<td>无</td>
+					<td>官方未列为近期目标</td>
+			</tr>
+			<tr>
+					<td>WebDriver</td>
+					<td>支持</td>
+					<td>官方公告</td>
+			</tr>
+			<tr>
+					<td>DevTools 协议</td>
+					<td>支持 Firefox 协议</td>
+					<td>官方公告</td>
+			</tr>
+			<tr>
+					<td>安全性承诺</td>
+					<td>无</td>
+					<td>官方原话「no promises about security today」</td>
+			</tr>
+			<tr>
+					<td>安装包体积</td>
+					<td>Mac 约 70 MB</td>
+					<td>第三方测量</td>
+			</tr>
+			<tr>
+					<td>时间线</td>
+					<td>2027 Beta（Linux/macOS）、2028 稳定版</td>
+					<td>第三方转述官方路线图</td>
+			</tr>
+	</tbody>
+</table></div>
+<h2 id="没有扩展没有账号同步我凭什么还说它值得装">没有扩展、没有账号同步，我凭什么还说它值得装？
+</h2><p>如果你问「它比 Chrome 好在哪」，答案是：<strong>现在几乎没有</strong>。没有扩展、没有书签密码同步、没有移动端、没有账号体系。第三方评测对界面的形容是「modest, but functional」（朴素但能用），Kling 自己也是这么说的。</p>
+<p>这些缺失不是疏忽，是路线选择的必然结果。一个从零写的引擎，第一优先级只能是「把网页正确渲染出来」——HTML、CSS、JS、布局、排版，每一个都是深坑。官方月度总结里能看到他们的推进节奏：2026 年 9 月是安全加固（与 Trail of Bits 合作）、硬件视频解码；10 月是 CSS 动画、JavaScript JIT、新的 WebAssembly 引擎、界面重设计；再往前还有沙箱、下载管理、浏览历史、GPU 隔离等等。这些都是浏览器引擎的地基工程。</p>
+<p>值得对比的是「Fork 一个现成浏览器」的路线。同一批讨论里有人提出：AI 辅助软件开发的下一个目标应该是浏览器，fork 一个开源浏览器快速魔改。反对意见也很硬：浏览器是仅次于操作系统的关键软件，几乎所有个人数据和认证信息都从它走过，信任没法轻易给。Ladybird 选的是最慢的那条路——自己写引擎，但换来的是没有历史包袱、没有谁的商业议程绑在身上。代价就是上面那张表里的一串「无」。</p>
+<h2 id="拿了赞助的独立还算是独立吗">拿了赞助的「独立」，还算是独立吗？
+</h2><p>浏览器这行有个心照不宣的事实：大部分「免费」浏览器的收入来自默认搜索引擎的排位交易。Ladybird 的组织设计几乎每条都在对着这个事实划线：</p>
+<ul>
+<li>501(c)(3) 非营利，没有股东，不需要增长。</li>
+<li>赞助是无限制捐赠，不给董事会席位，不给产品决策权。</li>
+<li>官网明说不做默认搜索交易、不发币、不做任何形式的用户变现。</li>
+</ul>
+<p>你当然可以怀疑「拿了钱的独立」算不算真独立。我的看法是：<strong>制度约束比动机宣言更有说服力</strong>。不接受有投票权的赞助方、不设股权、把技术路线写成公开流程——这些是可验证的结构，比一句「我们很有良心」扎实。它也确实因此换来了社区信任：GitHub 上约 6.9 万 star、3300 多个 fork，对一个 2024 年才从 SerenityOS 分出来的项目来说，这个数字说明开发者愿意盯着它。</p>
+<h2 id="我的建议现在该怎么定位它">我的建议：现在该怎么定位它
+</h2><p><strong>别当生产力工具，当观察窗口。</strong> 具体分三类人：</p>
+<ul>
+<li><strong>普通用户</strong>：不用动。等 2028 稳定版再说，现在装它等于自愿当测试员，还要承担官方明说的「不安全」。</li>
+<li><strong>网页开发者</strong>：<strong>装</strong>。你的网站在第四个引擎上渲染成什么样，这件事现在只能靠真机试。它支持 WebDriver 和 Firefox DevTools 协议，验证成本低；而且你报的每个坏页面，都是在帮未来的互联网多留一条命。</li>
+<li><strong>开源/隐私爱好者</strong>：可以装在虚拟机或备用机上把玩，但别登录银行、公司 SSO、密码管理器。官方自己都求你来黑它——被攻破了记得写报告。</li>
+</ul>
+<p>有个细节挺能说明团队性格：Kling 在 Alpha 公告里直接喊话安全研究者「We want security nerds to hack it!」（我们欢迎安全极客来黑它），理由是新版浏览器被反复攻破是成长的一部分，攻破了请告诉他们怎么做到的，好去补洞。这种把「漏洞披露」写成邀请的姿态，比任何安全白皮书都更能建立信任。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 现在能把 Ladybird 当日常主力浏览器吗？</strong></p>
+<p>A: 不建议。官方明说部分网站打不开、会崩、对安全不做承诺。它现在的价值是「证明独立引擎能跑到双击安装」，不是替代你手头的浏览器。</p>
+<p><strong>Q2: Windows 用户完全没份吗？</strong></p>
+<p>A: 原生 Windows 版要等引擎基础稳固后再说，不在当前优先级。想在 Windows 上体验，官方给的路径是用 WSL2 跑 Linux 版本。原生 Windows 构建存在但属实验性质。</p>
+<p><strong>Q3: 支持 Chrome / Firefox 扩展吗？</strong></p>
+<p>A: 不支持。扩展是第三方讨论里被点名最多的缺失项，官方也没有把它放进 Alpha 阶段的目标。</p>
+<p><strong>Q4: 它安全吗？能用来登网银、公司账号吗？</strong></p>
+<p>A: 别。官方原话是今天不对安全做任何承诺，还主动邀请安全研究者攻击它。真有安全需求，继续用成熟的浏览器。</p>
+<p><strong>Q5: 既然 Firefox 也是非 Blink 引擎，Ladybird 跟它什么关系？</strong></p>
+<p>A: 竞争与互补并存。Gecko 是当前唯一有规模的独立引擎，Firefox 近年份额下滑、处境尴尬；Ladybird 是后来者，目标是做第三条真正独立的路线。两者共同的价值是给 Web 标准实现多留一份多样性。</p>
+<p><strong>Q6: 怎么装？</strong></p>
+<p>A: 官网首页进 Downloads。Linux 有 Flatpak、Ubuntu/Fedora 仓库包和不自动更新的 tarball；Mac 是 DMG。首次启动会问你搜索引擎、标签页布局和主题三个问题。</p>
+<p><strong>Q7: 为什么不直接用 Rust 全部重写，还要留着 C++？</strong></p>
+<p>A: 因为它是从 SerenityOS 的 C++ 项目里长出来的，重写整个引擎等于推倒重来。官方选择的是渐进策略：宣布 Rust 为 C++ 继任语言，逐个子系统移植。慢，但不赌项目生死。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/software/lightpanda-zig-headless-browser-ai-agent-crawler/" >Lightpanda：Zig 写的无头浏览器，给 AI Agent 当爬虫</a></li>
+<li><a class="link" href="/software/konode-private-browser-sync-to-your-own-storage/" >Konode：把浏览器数据同步到你自己的存储</a></li>
+<li><a class="link" href="/software/search-6mb-mac-browser-webkit-chrome-extensions/" >6MB 的 Mac 浏览器：WebKit 内核加一批 Chrome 扩展</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ladybird/">Ladybird</a>
+        
+            <a href="/tags/browser/">Browser</a>
+        
+            <a href="/tags/browser-engine/">Browser-Engine</a>
+        
+            <a href="/tags/open-source/">Open-Source</a>
+        
+            <a href="/tags/chromium-alternative/">Chromium-Alternative</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/ladybird-independent-browser-engine-alpha-2026\/'; 
+        const pageTitle = 'Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 330 天 1 小时 · 159 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-27 09:48:16 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

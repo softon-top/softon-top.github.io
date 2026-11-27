@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Chromium-Alternative on softon.top</title>
+		<link>https://softon.top/tags/chromium-alternative/</link>
+		<description>Recent content in Chromium-Alternative on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 26 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/chromium-alternative/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Ladybird 首个 Alpha 发布：不 fork 任何人的浏览器，到底走到哪一步了</title>
+				<link>https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/</link>
+				<pubDate>Thu, 26 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/ladybird-independent-browser-engine-alpha-2026/</guid>
+				<description>&lt;p&gt;你在浏览器地址栏输入一个网址，背后是谁在读 HTML、画 CSS、跑 JavaScript？答案大概率是 Blink——Chrome、Edge、Opera、Brave、Vivaldi 全是它的壳。剩下两个名字：Mozilla 的 Gecko 和 Apple 的 WebKit。三个引擎，撑着整个现代网页。&lt;/p&gt;&#xA;&lt;p&gt;然后 2026 年 11 月 23 日，第四个名字来了：&lt;strong&gt;Ladybird 首个 Alpha 正式上线&lt;/strong&gt;，macOS 和 Linux 可下载。它不是又一个 Chromium 换皮，而是官方反复强调的「从地上长出来的新引擎，不是 fork」。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Ladybird 是 SerenityOS 分裂出来的独立浏览器项目，由非营利组织 Ladybird Browser Initiative 运营，引擎完全自研，不基于 Blink / WebKit / Gecko。&lt;/li&gt;&#xA;&lt;li&gt;2026-11-23 发布首个 Alpha，仅 macOS 与 Linux；Windows 暂无原生版，官方建议在 WSL2 里跑 Linux 版。&lt;/li&gt;&#xA;&lt;li&gt;官方自认「今天不对安全性做任何承诺」，会崩、部分网站打不开，明确请安全研究者来打它。&lt;/li&gt;&#xA;&lt;li&gt;支持 WebDriver 与 Firefox DevTools 协议，做网页开发的人最有理由装一个。&lt;/li&gt;&#xA;&lt;li&gt;GitHub 仓库约 6.9 万 star、BSD-2-Clause 许可；官方路线图：2027 年 Linux/macOS Beta，2028 年面向大众的稳定版。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;一个不用-chromium-的浏览器凭什么值得你花-10-分钟&#34;&gt;一个不用 Chromium 的浏览器，凭什么值得你花 10 分钟&#xA;&lt;/h2&gt;&lt;p&gt;先把话说清楚：我不是来劝你把 Chrome 卸载的。恰恰相反，Ladybird 官方自己都在说——&lt;strong&gt;别拿它当日常主力&lt;/strong&gt;。项目负责人 Andreas Kling 的原话是「some websites won&amp;rsquo;t work, and it will crash sometimes」（有些网站用不了，而且偶尔会崩），安全方面更是直接摊牌：「we make no promises about security today」（今天我们对安全不做任何承诺）。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

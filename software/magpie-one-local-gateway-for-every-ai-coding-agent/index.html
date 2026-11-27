@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Claude Code 说 Anthropic Messages，Codex 说 OpenAI Responses。Go 本地网关 127.0.0.1:3425 双向翻译四协议，Codex 跑 DeepSeek、Claude Code 跑 Kimi，额度耗尽自动切号。拆清与 CC Switch/CCR 分工。">
+<title>Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套</title>
+
+<link rel='canonical' href='https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套">
+<meta property='og:description' content="Claude Code 说 Anthropic Messages，Codex 说 OpenAI Responses。Go 本地网关 127.0.0.1:3425 双向翻译四协议，Codex 跑 DeepSeek、Claude Code 跑 Kimi，额度耗尽自动切号。拆清与 CC Switch/CCR 分工。">
+<meta property='og:url' content='https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Software' /><meta property='article:tag' content='magpie' /><meta property='article:tag' content='AI Agent' /><meta property='article:tag' content='模型路由' /><meta property='article:tag' content='Claude Code' /><meta property='article:tag' content='Codex' /><meta property='article:tag' content='本地网关' /><meta property='article:tag' content='多模型' /><meta property='article:published_time' content='2026-11-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套">
+<meta name="twitter:description" content="Claude Code 说 Anthropic Messages，Codex 说 OpenAI Responses。Go 本地网关 127.0.0.1:3425 双向翻译四协议，Codex 跑 DeepSeek、Claude Code 跑 Kimi，额度耗尽自动切号。拆清与 CC Switch/CCR 分工。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套\"",
+  "description": "\"Claude Code 说 Anthropic Messages，Codex 说 OpenAI Responses。Go 本地网关 127.0.0.1:3425 双向翻译四协议，Codex 跑 DeepSeek、Claude Code 跑 Kimi，额度耗尽自动切号。拆清与 CC Switch/CCR 分工。\"",
+  "url": "\"https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/\"",
+  "datePublished": "2026-11-17T00:00:00Z",
+  "dateModified": "2026-11-17T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/\""
+  },
+  "keywords": "\"magpie, AI Agent, 模型路由, Claude Code, Codex, 本地网关, 多模型\"",
+  "articleSection": "\"software\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"software\"",
+      "item": "https:\/\/softon.top/software/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套\"",
+      "item": "\"https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#它到底在解决什么麻烦">它到底在解决什么麻烦？</a></li>
+    <li><a href="#四种协议互译是它最硬的那块">四种协议互译，是它最硬的那块</a></li>
+    <li><a href="#订阅共享让-claude-pro-也能喂-codex">订阅共享：让 Claude Pro 也能喂 Codex</a></li>
+    <li><a href="#同类的四个工具别再搞混">同类的四个工具，别再搞混</a></li>
+    <li><a href="#我的账本这些数据你该知道">我的账本：这些数据你该知道</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/homelab/">
+                Homelab
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/software/" style="background-color: hsl(37, 60%, 84%); color: hsl(37, 60%, 15%);">
+                软件推荐
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/software/magpie-one-local-gateway-for-every-ai-coding-agent/">Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-17T00:00:00Z'>
+                    2026-11-17，星期二</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：12分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/software/magpie-one-local-gateway-for-every-ai-coding-agent/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#它到底在解决什么麻烦">它到底在解决什么麻烦？</a></li>
+    <li><a href="#四种协议互译是它最硬的那块">四种协议互译，是它最硬的那块</a></li>
+    <li><a href="#订阅共享让-claude-pro-也能喂-codex">订阅共享：让 Claude Pro 也能喂 Codex</a></li>
+    <li><a href="#同类的四个工具别再搞混">同类的四个工具，别再搞混</a></li>
+    <li><a href="#我的账本这些数据你该知道">我的账本：这些数据你该知道</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>你是不是也卡在这个循环里：Claude Pro 订阅只能喂 Claude Code，Codex 想用 DeepSeek 得改一次 JSON，改完想换回去再改一次。客户端越多，机器上躺的配置文件越多，每个厂商的密钥、base URL、模型名各写一套。直到某个晚上你对着第 8 个 agent 的配置文件，突然不想干了。</p>
+<p>magpie 就是来终结这个循环的。一句话：<strong>让任意编程助手跑在任意厂商的模型上，全部从一个菜单栏面板切。</strong></p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>magpie 是 Go 写的本地网关，监听 <code>127.0.0.1:3425</code>，双向翻译 OpenAI Chat / OpenAI Responses / Anthropic Messages / Gemini 四种协议。</li>
+<li>它只改每个 agent 配置文件里&quot;那一个值&quot;，注释、顺序、格式全部保留；切回原模型自动还原。</li>
+<li>订阅（Claude Pro/Max、ChatGPT Plus、Copilot、Gemini）能被共享给其他 agent，多账号按意图/顺序/轮询/额度自动故障转移。</li>
+<li>和 CC Switch（改配置派）、CCR（可编程网关派）、New API（服务端派）分工不同，本文给选择表。</li>
+<li>默认每天向 PostHog 发一次匿名计数，<code>DO_NOT_TRACK=1</code> 可关；隐私掩码默认关闭，需要手动开。</li>
+</ul>
+</blockquote>
+<h2 id="它到底在解决什么麻烦">它到底在解决什么麻烦？
+</h2><p>先把问题摆清楚，不然你会觉得&quot;这工具我不用&quot;。</p>
+<p>每个 AI 编程助手都把模型配置写在自己的文件里，格式互不相通：Claude Code 用 <code>settings.json</code> 里的 Anthropic 字段，Codex 用 <code>config.toml</code>，Gemini CLI 又是另一套。更糟的是<strong>协议层就不兼容</strong>——Codex 只会说 OpenAI Responses，Claude Code 只会说 Anthropic Messages，两家不说同一种话。</p>
+<p>于是你陷入三重割裂：</p>
+<ul>
+<li><strong>模型割裂</strong>：想给 Claude Code 换个便宜模型，得先确认对方说不说 Messages。</li>
+<li><strong>订阅割裂</strong>：你付了 Claude Pro 的钱，它只在 Claude Code 里值钱；Codex 一分钱也花不到。</li>
+<li><strong>账号割裂</strong>：额度用尽时，你得手动改配置、重启会话，才能换下一个账号。</li>
+</ul>
+<p>magpie 的做法是在你和厂商之间插一个本地网关。所有 agent 都只跟 <code>127.0.0.1:3425</code> 说话，翻译和路由交给网关。你机器上的 <code>~/.claude/settings.json</code> 里那行 base URL，从 <code>https://api.anthropic.com</code> 变成 <code>http://127.0.0.1:3425</code>，剩下的什么都不用动。</p>
+<h2 id="四种协议互译是它最硬的那块">四种协议互译，是它最硬的那块
+</h2><p>官方 README 的原话是：网关说 OpenAI Chat Completions、OpenAI Responses、Anthropic Messages 和 Gemini，并在它们之间双向翻译，<strong>流式、工具调用和推理过程都带上</strong>。</p>
+<p>这句话是 magpie 和&quot;改配置工具&quot;的本质区别。CC Switch 默认模式只重写目标配置的键值，让 Claude Code 直连你选的厂商——如果那个厂商不说 Messages，就没得聊。magpie 的网关永远说 agent 想听的那种话，再把请求翻译成上游能懂的那种。</p>
+<p>实测场景很直白：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">magpie codex moonshot/kimi-k2.5              # Codex 跑 Kimi：Codex 说 Responses，网关翻成 Kimi 能听的形式</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">magpie claude deepseek/deepseek-v4-pro       # Claude Code 跑 DeepSeek：说 Messages，网关翻给 DeepSeek</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">magpie group add &#34;Opus anywhere&#34; models</span><span style="color:#f92672">=</span><span style="color:#e6db74">claude/claude-opus-5-5,copilot/claude-opus-5.5 routing=smart</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">magpie claude group/opus-anywhere             # 路由组：多订阅轮流上，额度耗尽自动换，agent 看不到报错</span>
+</span></span></code></pre></div><p>配置改写是<strong>原子</strong>的：README 明确写了&quot;comments, order and formatting stay as they were&quot;。你手写的那堆注释不会被打乱，切回 agent 自己的模型时旧值自动写回。</p>
+<h2 id="订阅共享让-claude-pro-也能喂-codex">订阅共享：让 Claude Pro 也能喂 Codex
+</h2><p>这是 magpie 最&quot;爽&quot;的部分，也是我最想提醒你谨慎的部分。</p>
+<p>官方文档里，<strong>Subscriptions</strong> 一节写得很明白：一个你已登录的 agent 本身就是&quot;一个带模型的订阅&quot;，所以 magpie 把它作为 provider 提供给其他所有 agent。支持共享的订阅包括：</p>
+<ul>
+<li>Claude：直接驱动本地真实的 <code>claude</code> 二进制，把 agent 的工具通过 MCP 桥接过去</li>
+<li>Codex / ChatGPT：你的 ChatGPT 套餐模型，用在其他任意 agent 里</li>
+<li>GitHub Copilot、Gemini (Code Assist)、Antigravity、Grok (SuperGrok) 等</li>
+</ul>
+<p>还有 <strong>Daily warm-up</strong>：可以给每个 Claude 和 ChatGPT 账号设定 5 小时窗口的启动时间，或者在上一个账号重置的瞬间自动开跑——把订阅的&quot;额度时钟&quot;榨到极致。</p>
+<p>听起来很美。但请把风险一并读完：</p>
+<ul>
+<li><strong>账号条款</strong>：把订阅共享给非官方客户端，是否违反厂商服务条款，需要你自己判断。magpie 官方 README 只写了&quot;Thanks to Kimi for supporting magpie and the open source community&quot;，并没有替任何厂商背书。</li>
+<li><strong>本地凭证读取</strong>：magpie 会去读 agent 的登录文件（Claude Code 和 Codex 的文件、Keychain）来发现订阅。不想让它读，去 <code>Settings → Privacy → Subscription accounts</code> 关掉，或 <code>magpie accounts discovery off</code>。</li>
+<li><strong>路由组的隐含成本</strong>：一个组里塞的账号越多，故障转移越&quot;无声&quot;，你也越容易忽略某个账号正在被高频调用。</li>
+</ul>
+<p>我的建议：<strong>先拿一个你不心疼的账号试</strong>，跑一周看额度消耗和报错率，再决定要不要把主力订阅也接进来。</p>
+<h2 id="同类的四个工具别再搞混">同类的四个工具，别再搞混
+</h2><p>选题时我特意把这几个项目全查了一遍，因为它们经常被混为一谈。先看数据（GitHub API，2026-11-17）：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: left">项目</th>
+					<th style="text-align: left">语言</th>
+					<th style="text-align: left">协议数</th>
+					<th style="text-align: left">星数</th>
+					<th style="text-align: left">License</th>
+					<th style="text-align: left">默认端口</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left"><strong>magpie</strong></td>
+					<td style="text-align: left">Go</td>
+					<td style="text-align: left">4 种双向翻译</td>
+					<td style="text-align: left">37,649</td>
+					<td style="text-align: left">MIT</td>
+					<td style="text-align: left">3425</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><strong>CC Switch</strong></td>
+					<td style="text-align: left">Rust</td>
+					<td style="text-align: left">Routing 模式下 4 种</td>
+					<td style="text-align: left">154,973</td>
+					<td style="text-align: left">MIT</td>
+					<td style="text-align: left">15721</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><strong>CCR</strong> (claude-code-router)</td>
+					<td style="text-align: left">TypeScript</td>
+					<td style="text-align: left">3 种统一端点</td>
+					<td style="text-align: left">38,191</td>
+					<td style="text-align: left">MIT</td>
+					<td style="text-align: left">3456</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><strong>New API</strong></td>
+					<td style="text-align: left">Go</td>
+					<td style="text-align: left">OpenAI/Claude/Gemini 兼容</td>
+					<td style="text-align: left">52,034</td>
+					<td style="text-align: left">AGPL-3.0</td>
+					<td style="text-align: left">服务端</td>
+			</tr>
+	</tbody>
+</table></div>
+<p><strong>CC Switch</strong>（farion1231/cc-switch，Tauri 2 桌面应用）走的是&quot;改配置派&quot;：默认 Direct 模式只重写目标配置的键值，先备份，MCP servers、skills、prompts 统一管理，90+ 厂商预设。它的 Routing 模式是可选的，默认不开。适合&quot;我就想手动给每个工具换厂商，别给我加中间层&quot;的人。</p>
+<p><strong>CCR</strong>（musistudio/claude-code-router）走&quot;可编程网关派&quot;：<code>127.0.0.1:3456</code>，agent profile 把 agent 接到网关，用 header/body 条件、rewrite、retry、credential pool、有序 fallback 决定每个请求去哪。适合&quot;我要写规则、要审计每次调用成本&quot;的人。</p>
+<p><strong>New API</strong>（QuantumNous/new-api）是&quot;服务端派&quot;：自托管 LLM 网关，OpenAI/Claude/Gemini 兼容 API、模型路由、访问控制、用量与成本记账。它服务的是团队/多用户场景，不是&quot;我台机上三个 agent 互换模型&quot;。</p>
+<p>magpie 的位置很清楚：<strong>一个本地网关 + 协议翻译 + 订阅共享 + 账号故障转移</strong>，目标是&quot;你机器上的每一个 agent 都能用任意模型，且额度耗尽时无感切换&quot;。官方 alternatives 页自己也承认三者重叠、各有所长，可以并排用。</p>
+<h2 id="我的账本这些数据你该知道">我的账本：这些数据你该知道
+</h2><p>不写&quot;我实测&quot;（我没装环境），只把可核数据摆出来：</p>
+<ul>
+<li><strong>仓库</strong>：<code>yetone/magpie</code>，Go，MIT，2026-09-23 建仓，2026-11-17 星数 37,649、fork 3,403。</li>
+<li><strong>发版密度</strong>：v0.1.4344 在 2026-11-17 03:22 发布；从 v0.1.4134（11-14 06:14）到 v0.1.4344（11-17 03:22），3 天 310 个版本，约每天 100 个。<strong>这不是&quot;稳定工具&quot;的节奏，是&quot;高速迭代中&quot;的节奏</strong>，介意的人请等。</li>
+<li><strong>支持 agent 数</strong>：README 列了 80+ 个名字，从 Claude Code、Codex、Gemini CLI 到 OpenClaw、Cursor CLI、Zed、Cline、Qoder、Kimi Code 等；只显示你机器上已安装的。</li>
+<li><strong>网关端点</strong>：<code>127.0.0.1:3425</code>，任何吃 base URL 的客户端都能直接指过来：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">export OPENAI_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">http://127.0.0.1:3425/v1     OPENAI_API_KEY=magpie</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export ANTHROPIC_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">http://127.0.0.1:3425     ANTHROPIC_API_KEY=magpie</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">export GOOGLE_GEMINI_BASE_URL</span><span style="color:#f92672">=</span><span style="color:#e6db74">http://127.0.0.1:3425 GEMINI_API_KEY=magpie</span>
+</span></span></code></pre></div><ul>
+<li><strong>隐私掩码</strong>：默认关闭；开启后密钥、邮箱、密码等在本地替换成 <code>{{API_KEY_xxx}}</code> 占位符再发出，回复里换回；值只在内存，不落盘；掩码跑不起来时请求直接 503，绝不原文外发。</li>
+<li><strong>每日计数</strong>：release 构建每天向 PostHog 发一次 <code>magpie active</code>，含随机 id、版本、系统、agent/provider/model 计数（各最多 50 条），不含名字、URL、密钥、提示词。源码构建从不发。<code>DO_NOT_TRACK=1</code> 或 <code>noStats: true</code> 全关。</li>
+</ul>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: magpie 会不会偷我的 API Key？</strong></p>
+<p>A: 不会主动上传。README 的 Privacy 一节写明：prompts、replies、keys、accounts 只发给你配置的 provider；默认每天发一次的只有匿名计数，且可用 <code>DO_NOT_TRACK=1</code> 关。但注意：你的 agent 请求经过网关，网关自然&quot;看得到&quot;请求内容——这是所有本地网关的共同前提，CCR、CC Switch Routing 模式同理。</p>
+<p><strong>Q2: 我需要开隐私掩码吗？</strong></p>
+<p>A: 看场景。掩码默认关闭；开了之后 <code>.env</code>、日志里的 token 会在本地被替换，agent 和你文件里仍是真值，厂商看不到。代价是&quot;想问这个 token 为什么被拒&quot;这类任务做不了，需要把该值加进 Never mask。建议先关，觉得有需求再开。</p>
+<p><strong>Q3: 装了 magpie，Claude Code 会不会变得不是原来的 Claude Code？</strong></p>
+<p>A: 会有一点变化。magpie 通过驱动本地真实的 <code>claude</code> 二进制并桥接工具，但请求走的是 <code>127.0.0.1:3425</code> 而非直连 Anthropic。协议是 Anthropic Messages，官方说流式、工具调用、推理都翻译，但<strong>具体到某个 beta 字段是否无损，只有实测能答</strong>——这正是它发版这么密的原因。</p>
+<p><strong>Q4: 和 CC Switch 到底选哪个？</strong></p>
+<p>A: 一句话：手动给每个工具换厂商、想保留原配置原样 → CC Switch；想让每个 agent 走同一个翻译网关、还要订阅共享和账号故障转移 → magpie。两者都 MIT，可以并存，magpie 的网关也能作为&quot;能吃自定义 base URL 的 provider&quot;被别的工具调用。</p>
+<p><strong>Q5: 为什么它 3 天发 310 个版本，是不是不稳？</strong></p>
+<p>A: 是高速迭代，不是不稳定。看 <code>open_issues_count</code> 有 4,395（2026-11-17），说明社区反馈量大、维护者在快速跟进。建议：生产环境别追最新版，锁一个你验证过的版本；个人玩具随便追。</p>
+<p><strong>Q6: 免费吗？有隐藏收费吗？</strong></p>
+<p>A: 开源 MIT，软件本身免费。你要花的是你自己的 API Key / 订阅费用。注意 README 底部列了赞助商标识，以及 <code>usemagpie.ai/go/…</code> 形式的推广链接会计数点击——那是站点行为，与本地网关功能无关。</p>
+<p><strong>Q7: 我只想让 Codex 用 DeepSeek，不想搞网关，有别的路吗？</strong></p>
+<p>A: 有。直接改 Codex 的 <code>config.toml</code> 指到 DeepSeek 的 OpenAI 兼容端点即可，代价是每次换模型都要手动改。magpie 的价值就在于把&quot;改一次&quot;变成&quot;点一下&quot;，并在额度耗尽时自动换——如果你只有一次性需求，别装。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/ai/ai-api-relay-station-risks-and-alternatives/" >AI API 中转站产业链拆解：4 种隐藏套路与自建替代方案</a></li>
+<li><a class="link" href="/ai/ai-relay-supply-chain-attack-agent-super-trojan/" >便宜 3 倍的 AI 中转站，正在把你的 Agent 变成超级木马</a></li>
+<li><a class="link" href="/software/claude-code-token-cost-cut-7-tips/" >把 Claude Code 月账单从 $200 砍到 $40：我亲测的 7 个 Token 省钱技巧</a></li>
+<li><a class="link" href="/software/claude-tap-ai-api-traffic-analyzer/" >Claude Code 钱花在哪了？claude-tap 把 AI 编程工具 API 流量扒了个底朝天</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/magpie/">Magpie</a>
+        
+            <a href="/tags/ai-agent/">AI Agent</a>
+        
+            <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%B7%AF%E7%94%B1/">模型路由</a>
+        
+            <a href="/tags/claude-code/">Claude-Code</a>
+        
+            <a href="/tags/codex/">Codex</a>
+        
+            <a href="/tags/%E6%9C%AC%E5%9C%B0%E7%BD%91%E5%85%B3/">本地网关</a>
+        
+            <a href="/tags/%E5%A4%9A%E6%A8%A1%E5%9E%8B/">多模型</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/ai/cosh-rust-multi-agent-orchestrator-worktree-comparison/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cosh：一个 Rust 写的 Agent 编排层，想同时跑 Claude、Codex、Goose 进同一个终端</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/dashi-ppt-skill-ai-agent-editable-pptx-full-guide/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">让 AI Agent 直接给你交可改的 PPTX：dashi-ppt-skill 一周实测</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/wintoastrelay-windows-toast-notification-relay-phone/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Codex 跑完手机会叫你：WinToastRelay 把 Windows 通知一键搬到 iPhone / Android</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/software/cursor-to-codex-two-weeks-real-feeling/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">从 Cursor 切到 Codex 半个月：我把 IDE 关了，改用 CLI 写代码</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/ai/hi-ai-agent-real-cost-latency/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">跟 AI Agent 说一句 Hi 到底花多少钱？比 token 更贵的是等待</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/software\/magpie-one-local-gateway-for-every-ai-coding-agent\/'; 
+        const pageTitle = 'Claude Code 用 Kimi、Codex 用 DeepSeek：一个本地网关把 80 个编程助手并成一套';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 330 天 1 小时 · 159 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-27 09:48:16 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

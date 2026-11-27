@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>RustDesk on softon.top</title>
+		<link>https://softon.top/tags/rustdesk/</link>
+		<description>Recent content in RustDesk on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 21 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/rustdesk/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>UU远程开始收费后，我算了笔账：这 238 元年卡到底该不该买</title>
+				<link>https://softon.top/software/uu-remote-vip-pricing-alternatives/</link>
+				<pubDate>Sat, 21 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/uu-remote-vip-pricing-alternatives/</guid>
+				<description>&lt;p&gt;干了三年全免费的远程桌面，突然要收钱了——这不是假设，是网易 UU 远程 11 月 19 日挂在客户端公告里的既定事实。12 月 1 日起上线 VIP 与 SVIP 两档会员，这是 UU 远程上线三年来的第一次收费。&lt;/p&gt;&#xA;&lt;p&gt;消息一出，社区分成两拨。一拨老用户表示感谢，说按需付费天经地义；另一拨盯着同一句话反复咀嚼：「以前免费开放的 4K、144 帧，怎么就变成付费权益了？」&lt;/p&gt;&#xA;&lt;p&gt;真正让人纠结的不是那 238 块钱，而是一个更朴素的问题：&lt;strong&gt;我每天到底在用它的哪部分能力？&lt;/strong&gt; 如果只是偶尔帮父母点一下手机、传个文件，免费版其实没被砍到痛处；如果你是拿它跑 4K 预览、多屏协作、甚至把平板当副屏的重度用户，那这一刀就砍在肋骨上。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;UU 远程免费版仍在：不限次、不限时、不排队、无广告，保留 1080P 30 帧、文件传输、远程开机、隐私屏、端口映射、远程终端。&lt;/li&gt;&#xA;&lt;li&gt;被收走的是高规格画质：4K 原画、144 帧、500Mbps 码率、真彩、HDR、无线副屏、多屏控制、虚拟屏，全部进 VIP。&lt;/li&gt;&#xA;&lt;li&gt;VIP 定价 30 元/月单月、24 元/月连续包月、238 元/年；SVIP 88/98 元/月、758 元/年，只多「全球远控节点」。&lt;/li&gt;&#xA;&lt;li&gt;12 月 1 日前注册的老用户可领年卡五折：VIP 119 元/年，折合 9.9 元/月，比 ToDesk 专业版 158 元/年还便宜。&lt;/li&gt;&#xA;&lt;li&gt;纯白嫖党有更硬的选择：RustDesk 客户端与 Server OSS 全免费自托管，数据不出自己机器。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;先把账本摊开uu-远程这次到底改了什么&#34;&gt;先把账本摊开：UU 远程这次到底改了什么&#xA;&lt;/h2&gt;&lt;p&gt;先把官方口径摆清楚。UU 远程的公告承诺：&lt;strong&gt;基础远控持续免费，不限次、不限时、不排队、无广告&lt;/strong&gt;。变的是「画质的归属」——过去三年免费期间对外开放的 4K、144 帧这些旗舰能力，从 12 月 1 日起划入付费档。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>API 费用 on softon.top</title>
+		<link>https://softon.top/tags/api-%E8%B4%B9%E7%94%A8/</link>
+		<description>Recent content in API 费用 on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 16 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/api-%E8%B4%B9%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>云端 API 三年 vs 本地自托管：Otis 这类极简本地 Agent 到底省不省钱（人民币口径实算）</title>
+				<link>https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/</link>
+				<pubDate>Wed, 16 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/otis-local-agent-vs-cloud-api-rmb-cost-ledger/</guid>
+				<description>&lt;p&gt;前阵子 Show HN 上一个叫 &lt;strong&gt;Otis&lt;/strong&gt; 的开源项目很对我的胃口：一个极简 AI Agent，安装时根据你的硬件自动推荐本地模型、自动下载、直接跑起来，还能接 Ollama、LM Studio、Nvidia PAIR。官方口径是&amp;quot;隐私优先、开箱即用&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;听着很美。但&amp;quot;开箱即用&amp;quot;四个字背后藏着一笔账：&lt;strong&gt;你的电费、显卡折旧、模型维护、没 SLA 的风险，全算你自己头上&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;所以我决定不动手装，先把账算完。本文用人民币口径，把本地自托管和云端 API 两条路三年的总成本拆开对一遍，看看&amp;quot;本地=省钱&amp;quot;这个直觉到底站不站得住。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;个人消费级（RTX 4090）本地月成本约 &lt;strong&gt;¥749&lt;/strong&gt;，只有日均 token 量超过 200-300 万才可能比 OpenAI 系 API 便宜&lt;/li&gt;&#xA;&lt;li&gt;托管开源 API（DeepInfra/Groq/Together 这一档）约 &lt;strong&gt;¥0.65-0.79/百万 token&lt;/strong&gt;，是个人本地自托管之前的正确中间站&lt;/li&gt;&#xA;&lt;li&gt;企业级自托管（2×A100）月成本约 &lt;strong&gt;¥8700&lt;/strong&gt;，三年 ¥31 万+，盈亏点推到日均 1500-2000 万 token，个人根本碰不到&lt;/li&gt;&#xA;&lt;li&gt;本地部署的真实成本 = 硬件摊销 + 电费 + 维护 + 无 SLA，隐藏成本吃硬件摊销的 20%-40%，很多人第一年会算错&lt;/li&gt;&#xA;&lt;li&gt;Otis 这类工具的价值不在省钱，在于&lt;strong&gt;把本地 Agent 的启动门槛从&amp;quot;折腾一周&amp;quot;压到&amp;quot;点一下安装&amp;quot;&lt;/strong&gt;，适不适合你取决于你的 token 量和隐私需求&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么本地省钱是错觉&#34;&gt;为什么&amp;quot;本地=省钱&amp;quot;是错觉？&#xA;&lt;/h2&gt;&lt;p&gt;先摆一个最反直觉的事实：&lt;strong&gt;本地 LLM 的标价是 0 元/百万 token，但这不是 0 成本，是成本被摊到你自己的硬件和电费里了&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;云端 API 的商业模式是：你按 token 付钱，我负责 GPU、冷却、运维、SLA。你付的钱里已经包含了这些成本，还带了利润。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

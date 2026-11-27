@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Mac on softon.top</title>
+		<link>https://softon.top/tags/mac/</link>
+		<description>Recent content in Mac on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 07 Sep 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/mac/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Sageling：给不会写代码的人的第一个本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B</title>
+				<link>https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/</link>
+				<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/ai/sageling-local-ai-agent-mac-mlx-qwen-in-process/</guid>
+				<description>&lt;p&gt;Claude Cowork、ChatGPT Team、Cursor Business，一个月 20 美元起，谁付得起？付得起的又一半不敢往里贴东西——治疗师的会谈记录、老师批的学生作业、律师起草的动议，一句“数据可能被用来改进模型”就够让人手抖。&lt;/p&gt;&#xA;&lt;p&gt;Sageling 昨天在 Hacker News 上冒出来（Show HN，2 points，冷启动），瞄的就是这块夹在“付不起”和“不敢用”中间的空白：Mac 端本地 AI 助手，MLX in-process 跑 Qwen 3.5 9B，模型直接嵌进 app，一句网络都不打。&lt;/p&gt;&#xA;&lt;p&gt;我看了官网和 HN 帖子，结合我用 Ollama、LM Studio、Claude Code 那一堆家伙的经验，觉得这条路子跟站上以前写过的本地 AI 都不太一样。今天就拆一拆。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Sageling 面向非开发者，MLX in-process 跑 Qwen 3.5 9B，8 GB 模型首次下载后完全离线可用&lt;/li&gt;&#xA;&lt;li&gt;走的不是 Ollama / LM Studio 那套“本地 API + 前端调”的路子，模型直接编进 app，砍掉一层 localhost 服务&lt;/li&gt;&#xA;&lt;li&gt;硬件门槛：Apple Silicon Mac + ≥16 GB 统一内存 + macOS 13 及以上&lt;/li&gt;&#xA;&lt;li&gt;目标场景：治疗师病历、老师批作业、律师文书、包含敏感信息的日常工作&lt;/li&gt;&#xA;&lt;li&gt;免费下载，不上传对话文件，记忆以纯文本存本地磁盘，可读可编辑可删&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么非开发者用不起也用不敢云-ai&#34;&gt;为什么非开发者用不起，也用不敢云 AI？&#xA;&lt;/h2&gt;&lt;p&gt;我朋友里那批不写代码的——一个做心理治疗，一个大学助教改考卷，还有个做劳动仲裁——她们对 AI 的印象基本停留在“能不能帮我写个邮件”。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

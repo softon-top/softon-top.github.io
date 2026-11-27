@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="WindowsiOS 把未修改的 Windows 11 24H2 ARM64 跑上免越狱 iPhone Duo。基于官方 README 拆解 ARM64 二进制翻译、4KB 软件 MMU、TCR_EL1.A1 ASID 陷阱、Prism 非对齐 LRCPC2、从零造 Intel ICH6 声卡，附可照做安装链路与门槛。">
+<title>iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核</title>
+
+<link rel='canonical' href='https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/'>
+
+<link rel="stylesheet" href="/scss/style.min.7bd43d5609ec0d58c7297a8516c4de7f50411e61297476547230ad78c727e328.css"><meta property='og:title' content="iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核">
+<meta property='og:description' content="WindowsiOS 把未修改的 Windows 11 24H2 ARM64 跑上免越狱 iPhone Duo。基于官方 README 拆解 ARM64 二进制翻译、4KB 软件 MMU、TCR_EL1.A1 ASID 陷阱、Prism 非对齐 LRCPC2、从零造 Intel ICH6 声卡，附可照做安装链路与门槛。">
+<meta property='og:url' content='https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/'>
+<meta property='og:site_name' content='softon.top'>
+<meta property='og:type' content='article'><meta property='article:section' content='Tutorials' /><meta property='article:tag' content='WindowsiOS' /><meta property='article:tag' content='iPhone' /><meta property='article:tag' content='ARM64' /><meta property='article:tag' content='JIT' /><meta property='article:tag' content='Virtualization' /><meta property='article:tag' content='Windows11' /><meta property='article:published_time' content='2026-11-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-11-15T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核">
+<meta name="twitter:description" content="WindowsiOS 把未修改的 Windows 11 24H2 ARM64 跑上免越狱 iPhone Duo。基于官方 README 拆解 ARM64 二进制翻译、4KB 软件 MMU、TCR_EL1.A1 ASID 陷阱、Prism 非对齐 LRCPC2、从零造 Intel ICH6 声卡，附可照做安装链路与门槛。"><link rel="stylesheet" href="/css/custom.min.9e314d7b687bd5169cb141809fcb10f0199174e2debe09f7e4a9b7612da42a20.css" integrity="sha256-njFNe2h71RacsUGAn8sQ8BmRdOLevgn35Km3YS2kKiA=">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7d178d65133f4c608043f716f6d7c313"}'></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "\"iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核\"",
+  "description": "\"WindowsiOS 把未修改的 Windows 11 24H2 ARM64 跑上免越狱 iPhone Duo。基于官方 README 拆解 ARM64 二进制翻译、4KB 软件 MMU、TCR_EL1.A1 ASID 陷阱、Prism 非对齐 LRCPC2、从零造 Intel ICH6 声卡，附可照做安装链路与门槛。\"",
+  "url": "\"https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/\"",
+  "datePublished": "2026-11-15T00:00:00Z",
+  "dateModified": "2026-11-15T00:00:00Z",
+  "inLanguage": "\"zh-CN\"",
+  "author": {
+    "@type": "Person",
+    "name": "\"softon\"",
+    "url": "\"https://softon.top\""
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "\"softon.top\"",
+    "url": "\"https://softon.top\""
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "\"https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/\""
+  },
+  "keywords": "\"WindowsiOS, iPhone, ARM64, JIT, Virtualization, Windows11\"",
+  "articleSection": "\"tutorials\""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "\"https://softon.top\""
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "\"tutorials\"",
+      "item": "https:\/\/softon.top/tutorials/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "\"iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核\"",
+      "item": "\"https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/\""
+    }
+  ]
+}
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">softon.top</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/ai/' >
+                
+                
+                
+                <span>AI观察</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/software/' >
+                
+                
+                
+                <span>软件推荐</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/tutorials/' >
+                
+                
+                
+                <span>实践手记</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/about/' >
+                
+                
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+        </div>
+        <h2 class="widget-title section-title">文章大纲</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#为什么这事此前没人做成">为什么这事此前没人做成？</a></li>
+    <li><a href="#asid-放错位置windows-唯一一处让-tlb-缓存全废的设计">ASID 放错位置：Windows 唯一一处让 TLB 缓存全废的设计</a></li>
+    <li><a href="#一个-rt--31-引发的死锁">一个 <code>rt == 31</code> 引发的死锁</a></li>
+    <li><a href="#prism-的非对齐访问会被苹果sigbus掉">Prism 的非对齐访问，会被苹果SIGBUS掉</a></li>
+    <li><a href="#没有现成驱动就自己造一个声卡">没有现成驱动，就自己造一个声卡</a></li>
+    <li><a href="#384-mib-jit-与-45-gb-内存跟-ios-内存模型讨价还价">384 MiB JIT 与 4.5 GB 内存：跟 iOS 内存模型讨价还价</a></li>
+    <li><a href="#内存地图45-gb-客户机-ram-和-384-mib-jit-怎么摆">内存地图：4.5 GB 客户机 RAM 和 384 MiB JIT 怎么摆</a></li>
+    <li><a href="#装机链路照着走一遍">装机链路：照着走一遍</a></li>
+    <li><a href="#上游它站在哪些人的肩膀上">上游：它站在哪些人的肩膀上</a></li>
+    <li><a href="#交互把折叠屏用成一台笔记本">交互：把折叠屏用成一台笔记本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/ai-agent/">
+                AI Agent
+            </a>
+        
+            <a href="/tags/claude-code/">
+                Claude-Code
+            </a>
+        
+            <a href="/tags/openclaw/">
+                OpenClaw
+            </a>
+        
+            <a href="/tags/windows/">
+                Windows
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90/">
+                开源
+            </a>
+        
+            <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/">
+                开源工具
+            </a>
+        
+            <a href="/tags/mcp/">
+                MCP
+            </a>
+        
+            <a href="/tags/ai%E7%BC%96%E7%A8%8B/">
+                AI编程
+            </a>
+        
+            <a href="/tags/codex/">
+                Codex
+            </a>
+        
+            <a href="/tags/homelab/">
+                Homelab
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tutorials/" style="background-color: hsl(64, 60%, 84%); color: hsl(64, 60%, 15%);">
+                实践手记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/">iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核</a>
+        </h2>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-11-15T00:00:00Z'>
+                    2026-11-15，星期日</time>
+            </div>
+        
+
+        <div style="display: flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <span>阅读时长：19分钟</span>
+            </div>
+        
+
+        <div class="twikoo-visitor-wrapper" 
+             style="display: none; align-items: center; gap: 4px;"
+             data-article-url="https://softon.top/tutorials/windowsios-windows-11-on-iphone-duo-jit-bringup/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M2 12s3 -7 10 -7s10 7 10 7s-3 7 -10 7s-10 -7 -10 -7" />
+    <circle cx="12" cy="12" r="2" />
+</svg>
+
+            <span>阅读人数：<span id="twikoo_visitors">0</span></span>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>文章大纲</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#为什么这事此前没人做成">为什么这事此前没人做成？</a></li>
+    <li><a href="#asid-放错位置windows-唯一一处让-tlb-缓存全废的设计">ASID 放错位置：Windows 唯一一处让 TLB 缓存全废的设计</a></li>
+    <li><a href="#一个-rt--31-引发的死锁">一个 <code>rt == 31</code> 引发的死锁</a></li>
+    <li><a href="#prism-的非对齐访问会被苹果sigbus掉">Prism 的非对齐访问，会被苹果SIGBUS掉</a></li>
+    <li><a href="#没有现成驱动就自己造一个声卡">没有现成驱动，就自己造一个声卡</a></li>
+    <li><a href="#384-mib-jit-与-45-gb-内存跟-ios-内存模型讨价还价">384 MiB JIT 与 4.5 GB 内存：跟 iOS 内存模型讨价还价</a></li>
+    <li><a href="#内存地图45-gb-客户机-ram-和-384-mib-jit-怎么摆">内存地图：4.5 GB 客户机 RAM 和 384 MiB JIT 怎么摆</a></li>
+    <li><a href="#装机链路照着走一遍">装机链路：照着走一遍</a></li>
+    <li><a href="#上游它站在哪些人的肩膀上">上游：它站在哪些人的肩膀上</a></li>
+    <li><a href="#交互把折叠屏用成一台笔记本">交互：把折叠屏用成一台笔记本</a></li>
+    <li><a href="#常见问题">常见问题</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <p>上周技术圈被一张图刷屏：一台折叠屏 iPhone，展开就是完整的 Windows 11 桌面，Edge 在跑，Antigravity 在跑，扬声器出声，麦克风能收。不是远程桌面，不是云电脑串流，是<strong>本地</strong>。</p>
+<p>更让人想点进去的是作者那句话——谷歌 AI Studio 负责人 Ammaar Reshi 说，他用 Gemini 4 Carbon 加上多 Agent 协作，<strong>大约两小时</strong>就做出来了。</p>
+<p>两小时。这三个字是诱饵，也是这篇文章要拆的坑。因为把官方 README 读完，你会发现真正的工程量根本不在那两小时里，而在于它<strong>必须同时满足 Windows NT 内核、ARMv8 架构、PCIe/USB/声卡硬件、iOS TXM 内存模型</strong>这四套互相打架的约束。少任何一条，Windows 就停在开机 Logo。</p>
+<blockquote>
+<p><strong>TL;DR</strong></p>
+<ul>
+<li>WindowsiOS 跑的是<strong>未修改的零售版 Windows 11 24H2 ARM64（Build 26100）</strong>，在免越狱的 iPhone Duo（<code>iPhone19,4</code>，A20 Pro，iOS 27 TXM）上，<strong>不依赖 Hypervisor.framework</strong>。</li>
+<li>免越狱的前提下，硬件 EL2 虚拟化在 iOS 16.4+ 已被苹果封死；UTM SE 这类解释器模拟器又慢 5–10 倍，带不动 Chromium/Electron 多进程栈。所以只剩一条路：<strong>ARM64→ARM64 动态二进制翻译 + 4KB 软件 MMU</strong>。</li>
+<li>最硬的三处：Windows 把 ASID 放在 <code>TTBR1_EL1</code>（<code>TCR_EL1.A1=1</code>）且每次上下文切换会瞬态经过 <code>ASID 0</code>；Prism 的 <code>LDAPUR/STLUR</code> 非对齐访问在苹果 EL0 会直接 <code>SIGBUS</code>；<code>virtio-win</code> <strong>没有</strong> Windows 声卡驱动，得从零写一个 Intel ICH6 HDA 控制器。</li>
+<li>结果是 idle 内存 <strong>1.46 GB / 4.5 GB</strong>（约 31.7%），4 个 A20 Pro 性能核 <strong>89% WFI 空闲</strong>，Edge 能渲染 HTTPS 页面，Google/passkey OAuth 能走通。</li>
+<li>门槛：Apple Silicon Mac + Xcode + <code>xcodegen</code>/<code>meson</code>/<code>ninja</code>/<code>llvm</code> + 官方 Win11 ARM64 ESD + EDK2 <code>QEMU_EFI.fd</code> + WHQL <code>NetKVM</code> 驱动。<strong>实验性项目，别指望日常可用。</strong></li>
+</ul>
+</blockquote>
+<h2 id="为什么这事此前没人做成">为什么这事此前没人做成？
+</h2><p>先把「不可能」这三个字拆开。不是没人试过，是三条路都被堵了。</p>
+<p><strong>第一条：硬件虚拟化。</strong> 苹果从 iOS 16.4 起限制 <code>com.apple.developer.kernel.hypervisor</code>，也就是 <code>Hypervisor.framework</code>。非越狱的 iPhone 上，硬件 EL2 虚拟化（UTM HV 那条路）没了。到 iOS 26/27 的 A20 Pro 这代，**Trusted Execution Monitor（TXM）**又加了一层：对任意 <code>MAP_JIT</code> 执行做硬件页表签名校验。你想在用户态划一块内存出来当&quot;虚拟 CPU 的 RAM&quot;，硬件先问一句：签名呢？</p>
+<p><strong>第二条：解释器模拟。</strong> UTM SE 这类 sideload / App Store 模拟器，落到 QEMU 的 TCG 线程解释器（TCI）。解释执行下，Windows 11 24H2 走到桌面要<strong>几十分钟</strong>，更别提驱动 Edge、Antigravity 这种多进程 Chromium/Electron 栈。慢 5–10 倍不是优化问题，是路线问题。</p>
+<p><strong>第三条：ARM64 二进制翻译只伺候过 macOS / Linux，没伺候过 Windows NT。</strong> <a class="link" href="https://github.com/Leviidev/Henge"  target="_blank" rel="noopener"
+    ><code>Leviidev/Henge</code></a> 已经证明：EL1&amp;0 的 ARM64→ARM64 动态翻译器 + 软件 MMU + TXM 双映射 JIT，能让 macOS（<code>vmapple</code>，16KB 页）在 modern iPhone 上接近原生速度跑起来。但 Windows NT ARM64 内核要的东西，Henge 没凑齐：</p>
+<ul>
+<li>严格 <strong>4KB stage-1 翻译粒度</strong>（<code>TG0</code>/<code>TG1</code>），跑在 16KB 页的 Darwin host 上；</li>
+<li>Windows 的 <strong><code>TCR_EL1.A1 = 1</code></strong>，ASID 放在 <code>TTBR1_EL1[63:48]</code>，而且 <code>KiSwapProcess</code> 里会有瞬态 <code>ASID 0</code>；</li>
+<li>Windows 11 的 <strong>Prism（<code>xtajit64.dll</code>）</strong> 非对齐 <code>FEAT_LRCPC2</code>（<code>LDAPUR</code>/<code>STLUR</code>）内存序语义（<code>SCTLR_EL1.nAA = 1</code>）；</li>
+<li>一整套能塞进 iOS Jetsam 内存预算的 <strong>UEFI + ACPI 6.3 + GICv3 LPI/ITS MSI-X + PCIe NVMe + USB 3.0 xHCI + Intel ICH6 HD Audio + WHQL VirtIO-Net</strong> PC 平台。</li>
+</ul>
+<p>WindowsiOS 干的事，就是把这四条凑齐。下面按&quot;哪条最难&quot;排序拆。</p>
+<h2 id="asid-放错位置windows-唯一一处让-tlb-缓存全废的设计">ASID 放错位置：Windows 唯一一处让 TLB 缓存全废的设计
+</h2><p>这是整篇技术含量最高的一段，也是 README 里写得最较真的地方。</p>
+<p>Linux 和 macOS 都把用户 ASID 放在 <code>TTBR0_EL1[63:48]</code>。Windows 11 ARM64 不——它把 <code>TCR_EL1.A1</code>（bit 22）设为 1，ASID 挪到 <code>TTBR1_EL1[63:48]</code>。这本身只是&quot;放的位置不一样&quot;，但真正的坑在下一步：<strong>每次进程切换（<code>KiSwapProcess</code>），Windows 会写新的 <code>TTBR0_EL1</code>（<code>DirectoryTableBase</code>），而 <code>TTBR1_EL1</code> 里的 ASID 会瞬态经过 <code>ASID 0</code>。</strong></p>
+<p>桌面上跑起来，这个切换是 <strong>64,800+ 次/秒</strong>。</p>
+<p>为什么这是灾难？因为软件 MMU 通常按 <code>TTBR0</code> 做 TLB 键，或者干脆在 <code>ASID 0</code> 下做 stash。两种做法都死：</p>
+<ul>
+<li>按 <code>TTBR0</code> 键 → 每次上下文切换，所有用户 TLB 项全部抖动失效；</li>
+<li>在 <code>ASID 0</code> 下 stash → 物理 <code>DirectoryTableBase</code> 页被回收复用时，陈旧的用户映射跨进程泄漏。</li>
+</ul>
+<p>解法在 <code>core/mmu.c</code> 的 <code>hv_mmu_ukey()</code>：合成一个规范地址空间键 <code>(ASID &lt;&lt; 48) | (TTBR0 &amp; OA_MASK)</code>，<strong>当 <code>TCR.A1 == 1</code> 时从 <code>TTBR1</code> 读 ASID，遇到 <code>ASID == 0</code> 直接返回 0</strong>。<code>HvTlbStash</code>（<code>hv_tlb_switch_user</code>）在上下文切换时保存/恢复约 266–313 个活跃用户 TLB 槽，微秒级完成，不用重走四级页表。</p>
+<p>顺带一提，<code>core/sysreg.c</code> 还得伪造 CPU 身份：暴露 ARM Cortex-A76 r4p1 的 <code>MIDR_EL1</code>（<code>0x414fd0b1</code>）、校准过的 <code>PMCCNTR_EL0</code>，以及按特权级分的 4 路软件 TLB（<code>[EL0, EL1, EL1+PAN]</code> 打包进单条 128 字节 cache line，这样内核在用户拷贝前后切 <code>PAN</code> 不会把 TLB 状态刷掉）。<code>ntoskrnl.exe</code> 在 <code>KiInitializeKernel</code> 里会校验 CPU 标识和周期计数器——糊弄不过去。</p>
+<h2 id="一个-rt--31-引发的死锁">一个 <code>rt == 31</code> 引发的死锁
+</h2><p>Clang 编出来的 C++（Chromium 的 <code>msedge.dll</code>、Electron 的 <code>Antigravity.exe</code>）经常发射这么一对：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">ldxr xzr, [rn]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stlxr ws, xt, [rn]</span>
+</span></span></code></pre></div><p>用意是&quot;布个独占监视器，但我不关心旧值&quot;，所以源寄存器写 <code>xzr</code>（<code>rt == 31</code>）。</p>
+<p>问题在于 AArch64 的机器码里，<code>31</code> 这个编号在 <code>LDXR</code> 中编码 <code>XZR</code>，但在 <code>MOV</code>/<code>ADD</code> 里编码 <strong><code>SP</code></strong>。如果你的翻译器在检查 <code>rt != 31</code> 之前，没把真实的内存字写进独占值字段 <code>HV_CPU_EXCL_VAL</code>，那么：要么 guest 的 <code>SP</code> 被改写，要么当 <code>[rn] != 0</code> 时 <code>STLXR</code> 的 <code>CASAL</code> 比较永远失败——渲染线程直接死锁。</p>
+<p><code>translate_excl()</code> 的处理：永远先载入 scratch 寄存器 <code>x6</code>，把 <code>x6</code> 记进 <code>HV_CPU_EXCL_VAL</code>，<code>rt == 31</code> 时抑制回写。128 位 <code>SLIST</code>（<code>LDXP</code>/<code>STXP</code> → <code>LDP</code> + <code>CASPAL</code>）也走同一条 inline LSE 快路径——Windows 的 dispatcher、heap、I/O manager 每秒要跑几百万次无锁 <code>ExpInterlockedPopEntrySList</code>，每次独占对都退出到 C 是扛不住启动性能的。</p>
+<h2 id="prism-的非对齐访问会被苹果sigbus掉">Prism 的非对齐访问，会被苹果SIGBUS掉
+</h2><p>Windows 11 ARM64 的 Prism（<code>xtajit64.dll</code>）负责把 x86-64 翻成 ARM64。它运行时 <code>SCTLR_EL1.nAA = 1</code>，允许 Weakly-Ordered RCpc 指令做非对齐访问，于是会发射非对齐的 <code>LDAPUR</code> / <code>STLUR</code> / <code>LDAPR</code>（<code>FEAT_LRCPC</code> / <code>FEAT_LRCPC2</code>）来模拟 x86-64 的 TSO 内存序。</p>
+<p>而 Darwin/XNU 在苹果芯片的 EL0 用户态强制 <code>SCTLR_EL1.nAA = 0</code>。结果就是：<strong>在 host 上一个非对齐的 <code>LDAPUR</code>/<code>STLUR</code>，直接 <code>SIGBUS</code>（<code>EXC_ARM_DA_ALIGN</code>）把进程干掉。</strong></p>
+<p><code>translate_mem_impl()</code> 的做法是在 <code>HV_MEM_ORDERED</code> 访问上套一层 inline 对齐掩码（<code>host_align</code>）：对齐的 RCpc 指令剥掉 <code>imm9</code> 后一条指令内联执行；非对齐的则无缝跳到 <code>core/memop.c</code> 里的 acquire/release 栅栏软件辅助例程。</p>
+<h2 id="没有现成驱动就自己造一个声卡">没有现成驱动，就自己造一个声卡
+</h2><p>这是我觉得最&quot;暴力&quot;的一处。</p>
+<p>Red Hat 的 <code>virtio-win</code> 套件里<strong>没有</strong> Windows 的 <code>virtio-snd</code> 驱动。也就是说，如果你按常规 virtio 思路接音频，Windows 11 ARM64 里就是没声音。</p>
+<p>WindowsiOS 的选择是：从零写一个 <strong>Intel ICH6 High Definition Audio PCIe 控制器（<code>8086:2668</code>，<code>PCI\CC_0403</code>）</strong>，配一个 6 节点全双工 HDA Codec（<code>1af4:0022</code>）：</p>
+<ul>
+<li><code>NID 0</code> Root → <code>NID 1</code> Audio Function Group → <code>NID 2</code> 立体声 DAC + <code>NID 3</code> 扬声器 Pin Complex（<code>0x01114010</code>）+ <code>NID 4</code> 立体声 ADC + <code>NID 5</code> 麦克风 Pin Complex（<code>0x01a19020</code>）；</li>
+<li>完整 CORB/RIRB verb 环引擎、24.000 MHz <code>WALCLK</code>、DMA Position Buffer（<code>DPLBASE</code>/<code>DPUBASE</code>）、<code>LPIB</code>、scatter-gather BDL 流。</li>
+</ul>
+<p>效果是 Windows 11 首次开机自动绑上 inbox 的 <code>hdaudbus.sys</code> + <code>HdAudio.sys</code>，48 kHz S16LE 播放流到 iOS <code>RemoteIO</code>（<code>AudioUnit</code>），麦克风采集走 <code>AudioQueueNewInput</code>。零驱动安装，插上就响。</p>
+<p>同类的&quot;从零造&quot;还有整台 PC 平台：EDK2 <code>ArmVirtQemu</code> UEFI（双 64MB pflash，<code>pflash1</code> 是可持久 Intel CFI01 NVRAM，这样 <code>bcdboot</code> 的 <code>Boot0001</code> 能跨重启存活）、程序化 ACPI 6.3（<code>RSDP</code>/<code>XSDT</code>/<code>FADT</code>/<code>GTDT</code>/<code>MCFG</code>/<code>MADT</code>/<code>IORT</code>/<code>DSDT</code>）、GICv3 ITS、NVMe 1.4（序列号 <code>WIN11IOS01</code>，带 deferred flush，避免 NTFS 元数据突发卡住 iOS 闪存）、USB 3.0 xHCI（实现了 Windows <code>USBXHCI.SYS</code> 硬性要求的 Event Data TRB 累积传输长度 <code>EDTLA</code> 与 <code>CC_STALL</code> 端点 halt 恢复）。</p>
+<h2 id="384-mib-jit-与-45-gb-内存跟-ios-内存模型讨价还价">384 MiB JIT 与 4.5 GB 内存：跟 iOS 内存模型讨价还价
+</h2><p>iOS 26/27 TXM 设备上，放在 <code>0x7000000000</code> 以上的可执行 JIT 映射会<strong>硬件挂死</strong>。<code>winios_jit.c</code> 的做法是：在 Mach-O 加载期于 <code>__DATA</code> 里 <code>0x180000000</code> 以下静态保留一块零填充区，在 <code>debugserver</code> 分配 <code>_M&lt;size&gt;,rx</code> 之前释放它，抢出 <strong>384 MiB 的 RX/RW 双映射 JIT</strong>。</p>
+<p>内存方面，在 <code>CS_DEBUGGED</code> 激活期间用 <code>mach_make_memory_entry_64</code> + <code>mach_memory_entry_ownership(..., LEDGER_NO_FOOTPRINT)</code> 预分配 <strong>4,608 MiB（4.5 GB）Jetsam 豁免的客户机内存</strong>，然后 LLDB 干净退出——给 iOS 留 <strong>约 2–3 GB Jetsam 余量</strong>。</p>
+<p>再配合&quot;离线 Hive 手术&quot;：用 WinPE 环境加一个 freestanding ARM64 Win32 工具（<code>tools/opt_hive_arm64.c</code>，以 <code>SeBackupPrivilege</code> + <code>SeRestorePrivilege</code> + <code>REG_OPTION_BACKUP_RESTORE</code> 打开 <code>SYSTEM</code>/<code>SOFTWARE</code> hive，绕过 <code>TrustedInstaller</code> DACL），<code>optimize_windows_lite.py</code> 砍掉 35+ 个后台 UWP/遥测/Defender/indexer 和 KVA Shadow 开销。最终：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: left">指标</th>
+					<th style="text-align: left">数值</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left">空闲桌面内存</td>
+					<td style="text-align: left"><strong>1.46 GB / 4.5 GB（~31.7%）</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: left">4 核 WFI 空闲率</td>
+					<td style="text-align: left"><strong>89%</strong></td>
+			</tr>
+			<tr>
+					<td style="text-align: left">Guest RAM</td>
+					<td style="text-align: left">4,608 MiB（Jetsam 豁免）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">JIT 映射</td>
+					<td style="text-align: left">384 MiB RX/RW 双映射（&lt; <code>0x7000000000</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">iOS Jetsam 余量</td>
+					<td style="text-align: left">~2–3 GB</td>
+			</tr>
+			<tr>
+					<td style="text-align: left">镜像容器</td>
+					<td style="text-align: left"><code>hvsparse</code>（跳过零块）</td>
+			</tr>
+	</tbody>
+</table></div>
+<h2 id="内存地图45-gb-客户机-ram-和-384-mib-jit-怎么摆">内存地图：4.5 GB 客户机 RAM 和 384 MiB JIT 怎么摆
+</h2><p>把上面的内存策略落成一张表，读者能更直观看到&quot;为什么一定要跟 iOS 讨价还价&quot;。以下是 README 给出的客户机物理地址映射与 PCIe 拓扑：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: left">客户机物理地址</th>
+					<th style="text-align: left">大小</th>
+					<th style="text-align: left">设备 / 子系统</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left"><code>0x0000_0000</code></td>
+					<td style="text-align: left">64 MiB</td>
+					<td style="text-align: left"><code>pflash0</code> — EDK2 <code>ArmVirtQemu</code> UEFI 代码（只读 <code>HvRam</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x0400_0000</code></td>
+					<td style="text-align: left">64 MiB</td>
+					<td style="text-align: left"><code>pflash1</code> — 可持久 Intel CFI01 UEFI 变量存储（<code>vars.fd</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x0800_0000</code></td>
+					<td style="text-align: left">64 KiB</td>
+					<td style="text-align: left">ARM GICv3 Distributor（<code>GICD</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x0808_0000</code></td>
+					<td style="text-align: left">128 KiB</td>
+					<td style="text-align: left">ARM GICv3 Interrupt Translation Service（<code>GIC ITS#0</code>，LPI MSI-X）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x080A_0000</code></td>
+					<td style="text-align: left">15 MiB</td>
+					<td style="text-align: left">ARM GICv3 每 vCPU Redistributor（<code>GICR</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x1000_0000</code></td>
+					<td style="text-align: left">752 MiB</td>
+					<td style="text-align: left">PCIe 32 位 MMIO 窗口 + PIO</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x4000_0000</code></td>
+					<td style="text-align: left">4.5 GiB</td>
+					<td style="text-align: left">客户机系统 DRAM（iOS 上 <code>hv_alloc_no_footprint</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x40_1000_0000</code></td>
+					<td style="text-align: left">256 MiB</td>
+					<td style="text-align: left">PCIe ECAM 配置空间（<code>MCFG</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><code>0x80_0000_0000</code></td>
+					<td style="text-align: left">512 GiB</td>
+					<td style="text-align: left">PCIe 64 位高位 MMIO BAR 窗口</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>PCIe GPEX 总线 <code>00</code> 上的五个端点，就是前面几节反复提到的那些&quot;从零造&quot;的硬件：</p>
+<ul>
+<li><code>00:00.0</code> — Red Hat GPEX 宿主桥（<code>1b36:0008</code>）</li>
+<li><code>00:01.0</code> — VirtIO 网卡（<code>1af4:1000</code>，WHQL <code>NetKVM</code> + <code>libslirp</code> NAT + <code>/.henge/</code> WebDAV/OAuth）</li>
+<li><code>00:02.0</code> — NVMe 1.4 控制器（<code>1b36:0010</code>，序列号 <code>WIN11IOS01</code>，MSI-X + <code>hvsparse</code> 后备）</li>
+<li><code>00:03.0</code> — USB 3.0 xHCI 控制器（<code>1b36:000d</code>，Port 1 HID Boot 键盘 + Port 2 绝对定位平板）</li>
+<li><code>00:04.0</code> — Intel ICH6 HD Audio（<code>8086:2668</code>，Codec <code>1af4:0022</code>，立体声喇叭 + 立体声麦克风）</li>
+</ul>
+<p>看这张表就能明白一件反直觉的事：<strong>这不是一台&quot;手机模拟 PC&quot;，是一台&quot;PC 塞进手机&quot;</strong>。所有标准 PC 固件/中断/存储/USB/音频/网络组件一个不少，只是全都用软件实现，跑在 iOS 用户态。Windows 11 24H2 拒绍 FDT/DeviceTree 启动，只认 ServerReady/PC 级的 UEFI + ACPI + MSI-X 拓扑——所以这层&quot;造假&quot;不是炫技，是硬需求。</p>
+<h2 id="装机链路照着走一遍">装机链路：照着走一遍
+</h2><p>先说前置条件，这部分能劝退绝大多数人：</p>
+<ul>
+<li><strong>Apple Silicon Mac</strong>（M1 或更新；作者开发用 M5 Pro）；</li>
+<li><strong>Xcode</strong>、<code>xcodegen</code>、<code>meson</code>、<code>ninja</code>、<code>pkg-config</code>、<code>libslirp</code>、<code>llvm</code>/<code>lld</code>（编 freestanding AArch64 Win32 客户机辅助工具用）、Python 3；</li>
+<li>官方 <strong>Windows 11 24H2 ARM64</strong> 零售 ESD，放在 <code>work/downloads/Win11_24H2_ARM64_en-us.esd</code>；</li>
+<li>EDK2 <code>QEMU_EFI.fd</code> 放 <code>work/code.fd</code>；</li>
+<li>WHQL <code>virtio-win</code> 的 <code>NetKVM</code>（<code>w11/ARM64</code>）驱动。</li>
+</ul>
+<p>注意：git 里<strong>不放</strong>任何镜像、固件、ISO，全在 <code>work/</code> 和 <code>build/</code>，被 <code>.gitignore</code> 强制排除。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 1. 交叉编译 iOS 依赖（libffi + glib + libslirp，目标 arm64-apple-ios）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">./scripts/build_ios_deps.sh</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 构建 macOS 宿主 VM、稀疏打包器、iOS 静态库，并跑核心 JIT/MMU 单测</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">make -j8 all ios-lib test-core</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 无人值守 WinPE DISM + NetKVM 注入 + BCDBOOT UEFI NVRAM 配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/opt/homebrew/bin/python3 scripts/provision_windows_arm64.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 离线 WinPE DISM 去臃肿 + SeRestorePrivilege 注册表 hive 手术 -&gt; 1.46 GB 空闲</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">/opt/homebrew/bin/python3 scripts/optimize_windows_lite.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. 打成跳过零块的稀疏容器，方便往 iOS 传</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">./build/hvsparse pack work/windows11_lite.img work/windows11.hvsparse</span>
+</span></span></code></pre></div><p>想先在 macOS 上验证一遍（不碰 iPhone）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">HV_OAUTH_BRIDGE</span><span style="color:#f92672">=</span><span style="color:#e6db74">1 ./build/winvm \
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  --cpus 4 --ram 4608 \
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  --bios work/code.fd --vars work/vars.fd \
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  --disk work/windows11_lite.img</span>
+</span></span></code></pre></div><p>真机部署：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># 由 ios/project.yml 生成 Xcode 工程并构建 Release iphoneos bundle</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xcodegen generate --spec ios/project.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xcodebuild -project ios/WindowsiOS.xcodeproj -scheme WindowsiOS -configuration Release \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">-sdk iphoneos -derivedDataPath build/DerivedData build</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 装 app，把 windows11.hvsparse + code.fd + vars.fd 拷到 Documents/Machines/Win11</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xcrun devicectl device install app --device &lt;DEVICE_UDID&gt; \</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">build/DerivedData/Build/Products/Release-iphoneos/WindowsiOS.app</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 以 --start-stopped 启动，用 LLDB bless 384 MiB TXM JIT + 4,608 MiB ledger-exempt RAM，再干净 detach</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">./scripts/launch_on_duo.sh &lt;DEVICE_UDID&gt; me.ammaar.windowsios</span>
+</span></span></code></pre></div><h2 id="上游它站在哪些人的肩膀上">上游：它站在哪些人的肩膀上
+</h2><p>README 有一节 <code>THIRD_PARTY_NOTICES.md</code>，列得很老实。这个项目不是从零发明，而是把几条已有路线焊在一起：</p>
+<div class="table-wrapper"><table>
+	<thead>
+			<tr>
+					<th style="text-align: left">上游项目</th>
+					<th style="text-align: left">许可证</th>
+					<th style="text-align: left">借来了什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/Leviidev/Henge"  target="_blank" rel="noopener"
+    ><code>Leviidev/Henge</code></a></td>
+					<td style="text-align: left">GPL-2.0-or-later</td>
+					<td style="text-align: left">ARM64→ARM64 动态翻译器 <code>HengeVM</code>、stage-1 软件 MMU、间接分支/返回缓存、多点触控板概念、<code>/.henge/</code> WebDAV guest-host 传输、iOS 26/27 TXM 双映射 JIT 底座</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/Leviidev/Husk"  target="_blank" rel="noopener"
+    ><code>Leviidev/Husk</code></a></td>
+					<td style="text-align: left">GPL-2.0-or-later</td>
+					<td style="text-align: left">ARM64 二进制翻译架构、iOS <code>libslirp</code> 交叉编译补丁、设备端 JIT 辅助思路</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/mxhm11cr/LinuxRunner"  target="_blank" rel="noopener"
+    ><code>mxhm11cr/LinuxRunner</code></a>（基于 <code>ish</code> / <code>ios-linuxkit</code>）</td>
+					<td style="text-align: left">—</td>
+					<td style="text-align: left">早期 ARM64 客户机 OS bring-up 模式、iOS runtime/Jetsam 纪律</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/StephenDev0/StikDebug"  target="_blank" rel="noopener"
+    ><code>StephenDev0/StikDebug</code></a> / <code>StikJIT</code>、<a class="link" href="https://github.com/jkcoxson/idevice"  target="_blank" rel="noopener"
+    ><code>jkcoxson/idevice</code></a></td>
+					<td style="text-align: left">MPL-2.0 / BSD-3-Clause / MIT</td>
+					<td style="text-align: left">iOS 26/27 TXM 调试器附着、<code>universal.js</code>（<code>BRK #0x69</code> / <code>BRK #0xF00D</code>）RX/RW 页 bless、<code>CS_DEBUGGED</code> ledger-exempt 内存使能</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://gitlab.freedesktop.org/slirp/libslirp"  target="_blank" rel="noopener"
+    ><code>libslirp</code></a></td>
+					<td style="text-align: left">BSD-3-Clause</td>
+					<td style="text-align: left">无 root 用户态 TCP/IP、DHCP、DNS NAT（<code>host/net_slirp.c</code>）</td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/tianocore/edk2"  target="_blank" rel="noopener"
+    >TianoCore EDK2 <code>ArmVirtQemu</code></a></td>
+					<td style="text-align: left">BSD-2-Clause-Patent</td>
+					<td style="text-align: left">AARCH64 UEFI 固件 <code>QEMU_EFI.fd</code></td>
+			</tr>
+			<tr>
+					<td style="text-align: left"><a class="link" href="https://github.com/virtio-win/kvm-guest-drivers-windows"  target="_blank" rel="noopener"
+    >Red Hat <code>virtio-win</code>（NetKVM）</a></td>
+					<td style="text-align: left">BSD-3-Clause / GPL-2.0</td>
+					<td style="text-align: left">WHQL 签名的 Windows 11 ARM64 VirtIO 网卡驱动</td>
+			</tr>
+	</tbody>
+</table></div>
+<p>这里有个值得说的模式：<strong>每个上游解决一个特定子问题，WindowsiOS 只解决&quot;把它们同时跑在 NT 内核下&quot;这个组合问题。</strong> Henge 伺候 macOS，LinuxRunner 伺候 Linux，StikDebug 解决 iOS 上的调试附着与页 bless，libslirp 解决网络，EDK2 解决固件，virtio-win 解决网卡——但<strong>没有任何一个</strong>同时满足 NT 内核的 4KB 页 + <code>TCR_EL1.A1</code> ASID + Prism LRCPC2 + 完整 PC 平台。这正是 README 里 &ldquo;What Didn&rsquo;t Exist Before This&rdquo; 那一节的真正含义。</p>
+<p>许可证上也得留神：主体是 GPL-2.0-or-later，但混了 MPL-2.0（StikDebug）、BSD-3-Clause（libslirp、virtio-win）、MIT（idevice）、BSD-2-Clause-Patent（EDK2）。你要拿它做二次分发，得按 <code>THIRD_PARTY_NOTICES.md</code> 逐条对上。</p>
+<h2 id="交互把折叠屏用成一台笔记本">交互：把折叠屏用成一台笔记本
+</h2><p>硬件跑起来之后是体验层。WindowsiOS 钩了 iOS 27 的 <code>UIHingeInteraction</code>，两种姿态：</p>
+<ul>
+<li><strong>折叠 = 笔记本模式</strong>：上半屏是 Windows（Obsidian-Glass 金属质感，Studio 摄像头指示灯，XAML 双击吸附），下半屏是 Midnight-Sapphire CNC 键盘面板——6 行 chiclet 键（<code>F1–F10</code>、Copilot 键、上下箭头叠放）+ 120 Hz 触觉哑光玻璃多点触控板。</li>
+<li><strong>展开 = Open Studio 模式</strong>：边缘到边缘的完整 Windows 11 画布，自动隐藏的磨砂命令胶囊。</li>
+</ul>
+<p>还有一个很聪明的细节：<strong>OAuth 回环</strong>。在 Antigravity 这类桌面 IDE 里点&quot;Continue with Google&quot;，<code>redirect_uri</code> 指向 Windows 内的一个 <code>http://localhost:&lt;PORT&gt;/oauth-callback</code>。<code>WinIOSBrowser.exe</code>（14 KB freestanding AArch64 Win32，注册为默认 HTTP/HTTPS handler）会解析这个 localhost URI，起一条客户机 TCP 中继（QEMU 用户态 NAT 的客户机侧地址 ↔ 本机回环地址，端口不变），调 <code>PUT /.henge/expose-port</code> 让 host 的 <code>net_slirp.c</code> 把 iOS 侧的本机回环和 IPv6 回环转发进客户机，再调 <code>/.henge/open-url</code> 弹出 iOS 原生 <code>SFSafariViewController</code>——<strong>直接复用你已有的 Safari Google 会话、Passkey、Face ID</strong>。token 一落回 Windows，sheet 带触感反馈自动收起。</p>
+<h2 id="常见问题">常见问题
+</h2><p><strong>Q1: 免越狱为什么这么难？苹果到底封了什么？</strong></p>
+<p>A: 从 iOS 16.4 起，苹果限制了 <code>com.apple.developer.kernel.hypervisor</code> 权限，非越狱设备上拿不到 <code>Hypervisor.framework</code>，硬件 EL2 虚拟化（UTM HV 那条路）直接没了。到 iOS 26/27 的 A20 Pro，TXM 还会对任意 <code>MAP_JIT</code> 执行做硬件页表签名校验，用户态自己划内存当虚拟 RAM 也会被拦。</p>
+<p><strong>Q2: 它和 UTM 的区别到底在哪？</strong></p>
+<p>A: UTM SE 走 QEMU 的 TCG 解释器，Windows 11 24H2 走到桌面要几十分钟，且带不动 Chromium/Electron 多进程栈。WindowsiOS 走 ARM64→ARM64 动态二进制翻译 + 4KB 软件 MMU，配合 TXM 双映射 JIT，速度接近原生，能跑 Edge 和 Antigravity。</p>
+<p><strong>Q3: <code>TCR_EL1.A1 = 1</code> 是什么？为什么它差点搞死整个项目？</strong></p>
+<p>A: 这是 Windows ARM64 把进程 ASID 放在 <code>TTBR1_EL1[63:48]</code>（而非 Linux/macOS 的 <code>TTBR0_EL1[63:48]</code>）的开关。配合 <code>KiSwapProcess</code> 每次切换瞬态经过 <code>ASID 0</code>（桌面负载下 64,800+ 次/秒），按 <code>TTBR0</code> 键或按 <code>ASID 0</code> stash 都会让 TLB 全废或跨进程泄漏。解法是 <code>hv_mmu_ukey()</code> 从 <code>TTBR1</code> 读 ASID 并显式处理 0。</p>
+<p><strong>Q4: Prism 的非对齐访问为什么会 SIGBUS？</strong></p>
+<p>A: Windows 11 ARM64 的 Prism（<code>xtajit64.dll</code>）在 <code>SCTLR_EL1.nAA = 1</code> 下会发非对齐 <code>LDAPUR</code>/<code>STLUR</code>，而苹果 EL0 强制 <code>nAA = 0</code>，host 上非对齐执行直接 <code>EXC_ARM_DA_ALIGN</code>。翻译器对 <code>HV_MEM_ORDERED</code> 访问加 inline 对齐掩码，非对齐的落到带栅栏的软件辅助例程。</p>
+<p><strong>Q5: 我没 Apple Silicon Mac，能玩吗？</strong></p>
+<p>A: 不能。前置条件硬性要求 Apple Silicon Mac + Xcode，镜像制备（ESD → DISM → hive 手术 → hvsparse）全在 macOS 上完成。作者开发用 M5 Pro。</p>
+<p><strong>Q6: 这项目是&quot;2 小时&quot;搞出来的吗？</strong></p>
+<p>A: 作者 Ammaar Reshi 说的是用 Gemini 4 Carbon 加多 Agent 协作，约 2 小时完成开发。但 README 里&quot;原创且困难&quot;的部分——4KB 软件 MMU、LSE 原子、LRCPC2 仿真、整台虚拟 PC 平台、ICH6 声卡、TXM JIT 与 hive 手术——是实打实的内核与硬件工程，且大量建立在 Henge、Husk、LinuxRunner、StikDebug、libslirp、EDK2、virtio-win 的既有成果上。2 小时是&quot;组装 + 攻关&quot;的时间，不是&quot;从零发明&quot;的时间。</p>
+<p><strong>Q7: 现在能当日常系统用吗？</strong></p>
+<p>A: 不能。官方 README 明确写&quot;实验性项目&quot;。它验证的是技术可行性：未修改的零售版 Windows 11 24H2 ARM64，在免越狱 iOS 上跑到可用交互。别把它当生产力环境。</p>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="/tutorials/pve-install-windows11-ltsc-practical-guide/" >PVE安装Windows11 LTSC实操指南（新手避坑+驱动安装）</a></li>
+<li><a class="link" href="/software/winpodx-linux-run-windows-apps-container-freerdp-analysis/" >Linux 不装完整 Windows，能不能直接开 Excel？WinPodX 的答案没那么轻松</a></li>
+<li><a class="link" href="/software/termux-containers-old-android-phone-run-docker-without-root/" >闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</a></li>
+<li><a class="link" href="/tutorials/ai-agent-sandbox-docker-gvisor-microvm-selection/" >给 AI Agent 上沙箱，到底隔离什么：Docker、gVisor、MicroVM 怎么选</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/windowsios/">WindowsiOS</a>
+        
+            <a href="/tags/iphone/">IPhone</a>
+        
+            <a href="/tags/arm64/">ARM64</a>
+        
+            <a href="/tags/jit/">JIT</a>
+        
+            <a href="/tags/virtualization/">Virtualization</a>
+        
+            <a href="/tags/windows11/">Windows11</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/tutorials/microsoft-windows-developer-config-one-command-dev-machine/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">重装 Windows 11 别再手动配环境了：微软官方脚本，一条命令变干净开发机</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/tutorials/windows-11-low-latency-profile-deep-test/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 11 低延迟模式深度评测：系统响应速度的真实提升，还是心理安慰？</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script src="//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js"></script>
+<div id="tcomment"></div>
+<style>
+    .twikoo {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+    :root[data-scheme="dark"] {
+        --twikoo-body-text-color-main: rgba(255, 255, 255, 0.9);
+        --twikoo-body-text-color: rgba(255, 255, 255, 0.7);
+    }
+    .twikoo .el-input-group__prepend,
+    .twikoo .tk-action-icon,
+    .twikoo .tk-submit-action-icon,
+    .twikoo .tk-time,
+    .twikoo .tk-comments-no,
+    .twikoo .tk-comments-count {
+        color: var(--twikoo-body-text-color);
+    }
+    .twikoo .el-input__inner,
+    .twikoo .el-textarea__inner,
+    .twikoo .tk-preview-container,
+    .twikoo .tk-content,
+    .twikoo .tk-nick,
+    .twikoo .tk-send,
+    .twikoo .tk-comments-no,
+    .twikoo .el-input__count,
+    .twikoo .tk-submit-action-icon {
+        color: var(--twikoo-body-text-color-main)!important;
+    }
+    .twikoo .el-button{
+        color: var(--twikoo-body-text-color)!important;
+    }
+    .twikoo .el-input__count {
+        color: var(--twikoo-body-text-color) !important;
+    }
+    .OwO .OwO-body {
+        background-color: var(--body-background) !important;
+        color: var(--body-text-color) !important;
+    }
+</style><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const pagePermalink = 'https:\/\/softon.top\/tutorials\/windowsios-windows-11-on-iphone-duo-jit-bringup\/'; 
+        const pageTitle = 'iPhone 上跑 Windows 11：2 小时开发背后，真正难的是让 ARM64 翻译器伺候好 NT 内核';
+
+        
+        twikoo.init({
+            envId: 'https:\/\/comment.softon.top',       
+            el: '#tcomment',lang: 'zh-CN',url: pagePermalink,          
+            title: pageTitle,
+            requiredFields: ['nick', 'mail']
+        });
+
+        
+        function initVisitorCount() {
+            
+            const visitorWrapper = document.querySelector('.twikoo-visitor-wrapper');
+            const countTag = visitorWrapper ? visitorWrapper.querySelector('#twikoo_visitors') : null;
+
+            
+            if (visitorWrapper && countTag) {
+                
+                visitorWrapper.style.display = 'flex';
+
+                
+                twikoo.getVisitorCount({ url: pagePermalink })
+                .then(count => {
+                    countTag.textContent = count || 0;
+                    
+                    twikoo.reportVisitor({ url: pagePermalink }).catch(err => {});
+                })
+                .catch(err => {
+                    console.log('Twikoo获取阅读数失败:', err);
+                    countTag.textContent = '0'; 
+                });
+            } else {
+                console.log('未匹配到阅读人数容器：');
+                console.log('文章URL:', pagePermalink);
+                console.log('页面中实际的data-article-url:', document.querySelector('.twikoo-visitor-wrapper')?.dataset.articleUrl);
+            }
+        }
+
+        
+        initVisitorCount();
+        setTimeout(initVisitorCount, 1000);
+    });
+</script>
+
+    
+
+    <footer class="site-footer">
+    <div class="container">
+        
+        <p>
+            © 2026 softon.top 
+        </p>
+
+        <p>
+            本站已稳定运行 330 天 1 小时 · 159 篇文章
+        </p>
+
+        
+        <p>
+            使用 <a href="https://gohugo.io/" target="_blank">Hugo</a> 构建  主题 <a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank">Stack</a> 由 Jimmy 设计 由 softon 魔改
+        </p>
+
+        
+        <p>
+            最近构建时间：2026-11-27 09:48:16 CST
+            <svg class="check-icon" width="16.8" height="16.8" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; vertical-align: middle;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </p>
+    </div>
+</footer>
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.a9874b886ba5885c3b90eaadb84133e4536b0d9f0b3da4a2452850a81eb64f64.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

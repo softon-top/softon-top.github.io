@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Launcher on softon.top</title>
+		<link>https://softon.top/tags/launcher/</link>
+		<description>Recent content in Launcher on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 19 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/launcher/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>ALTRun：不到 1MB 的启动器，凭什么把 Everything、Listary、剪贴板历史塞进一个窗口</title>
+				<link>https://softon.top/software/altrun-windows-launcher-pinyin-everything-quick-switch/</link>
+				<pubDate>Thu, 19 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/altrun-windows-launcher-pinyin-everything-quick-switch/</guid>
+				<description>&lt;p&gt;按 &lt;code&gt;Alt+Space&lt;/code&gt;，敲三个字母，回车——程序开了。就这么点需求，Windows 上却挤着至少四个名字：Wox、uTools、Listary、ALTRun。前三个我都用了超过一年，最后一个是我上周才从「小众软件」挖到的：一个 2013 年就开始写、中间沉寂、2023 年用 AutoHotkey v2 推倒重来的项目。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;ALTRun 安装包约 &lt;strong&gt;1.4 MB&lt;/strong&gt;（v2026.11.16），解压即用，不装 .NET / Electron，不写注册表。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;拼音首字母&lt;/strong&gt;是中文场景杀手锏：&lt;code&gt;wx&lt;/code&gt; 出微信，&lt;code&gt;jsb&lt;/code&gt; 出记事本，文件同理（&lt;code&gt;cs&lt;/code&gt; → 测试文件.zip）。&lt;/li&gt;&#xA;&lt;li&gt;装了 &lt;strong&gt;Everything&lt;/strong&gt; 就白嫖它的索引，没装则走内置索引；实测数据见下方表格。&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Quick Switch&lt;/strong&gt; 直接把打开/保存对话框跳到 Total Commander / Directory Opus / 资源管理器的当前目录，这是 Listary 的老绝活。&lt;/li&gt;&#xA;&lt;li&gt;它是 GPL-3.0 真开源，作者一人维护，每个 PR 在 Windows 上自动跑 &lt;strong&gt;8,000+ 项测试&lt;/strong&gt;。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;先说清楚它和那三位不是一个物种&#34;&gt;先说清楚：它和那三位不是一个物种&#xA;&lt;/h2&gt;&lt;p&gt;很多人搜到 ALTRun，第一反应是「又一个 Wox 模仿」。我一开始也这么想，直到把四个都摆在一起看内存占用。&lt;/p&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;维度&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;ALTRun&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Wox (2026 版)&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;uTools&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Listary&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;语言 / 内核&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;AutoHotkey v2&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Go（全原生 GPU 渲染）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;TypeScript / Electron 系&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;C++（内嵌 Everything）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GitHub Star&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~350&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~27,700&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;~20,000+（主站分发）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;无公开主仓库&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;体积 / 内存量级&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;最小一档（MB 级）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;官方称日常 ~150 MB 常驻&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;中（Electron 系）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;轻量，但 Pro $24.95&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;中文支持&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;strong&gt;拼音首字母 + 简繁界面&lt;/strong&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;一般，需插件&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;好&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;继承 Everything&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;插件生态&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;脚本（.ahk/.ps1/.bat/.py）&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Node/Python/脚本插件市场&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;中文插件市场最活跃&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;少&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;许可证&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GPL-3.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;GPL-3.0&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;闭源免费&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;免费 + Pro 收费&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;注：Wox 数据来自其官方 README（&lt;code&gt;Latest: v2.5.0 · Nov 2026&lt;/code&gt;）；Star 数为 2026-11-19 GitHub API 抓取，未独立核实更多版本细节。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Proot on softon.top</title>
+		<link>https://softon.top/tags/proot/</link>
+		<description>Recent content in Proot on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 06 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/proot/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>闲置安卓手机跑 Docker：termux-containers 免 Root 把旧手机变成小服务器</title>
+				<link>https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/</link>
+				<pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/termux-containers-old-android-phone-run-docker-without-root/</guid>
+				<description>&lt;p&gt;抽屉里那台吃灰的旧手机，屏幕碎了、电池鼓了、系统卡成 PPT，但你舍不得扔——万一哪天有用呢？&lt;/p&gt;&#xA;&lt;p&gt;现在它真有用武之地了。&lt;/p&gt;&#xA;&lt;p&gt;一个 10 月 31 日刚上线的开源项目 &lt;strong&gt;termux-containers&lt;/strong&gt;，让你可以在&lt;strong&gt;不 Root、不刷机、不跑虚拟机&lt;/strong&gt;的前提下，用 Docker Compose 风格的 YAML 配置文件，在安卓手机里跑起 Nginx、Cloudflared、Aria2 这类服务。&lt;/p&gt;&#xA;&lt;p&gt;听起来像是&amp;quot;把手机变成服务器&amp;quot;的又一个标题党？&lt;/p&gt;&#xA;&lt;p&gt;我研究了一圈它的实现原理，发现这次真的不太一样。它没有伪造一个 Docker Engine，而是老老实实走 Termux + PRoot-Distro 的路子——不是&amp;quot;兼容 Docker&amp;quot;，而是&lt;strong&gt;补上 Docker 最缺的那块拼图：声明式多容器编排&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;termux-containers 基于 PRoot-Distro，无需 Root、无需 Docker 守护进程，用 YAML 管理多个 OCI 容器&lt;/li&gt;&#xA;&lt;li&gt;项目 2026-10-31 上线，GitHub 49 stars，作者仅用两个镜像（cloudflared、fast note sync、cli proxy api）做了验证&lt;/li&gt;&#xA;&lt;li&gt;它是&amp;quot;类 Docker Compose&amp;quot;而非&amp;quot;Docker 替代&amp;quot;：无端口映射、无内核级隔离、强依赖 ARM64 镜像&lt;/li&gt;&#xA;&lt;li&gt;适合做低功耗常驻小服务（消息机器人、Webhook、下载工具），不适合跑重型应用&lt;/li&gt;&#xA;&lt;li&gt;折腾成本极低（一条命令安装），但要做好&amp;quot;后台被杀&amp;quot;和&amp;quot;镜像架构不兼容&amp;quot;的心理准备&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;它到底是个什么东西&#34;&gt;它到底是个什么东西？&#xA;&lt;/h2&gt;&lt;p&gt;先给结论：&lt;strong&gt;termux-containers 不是一个容器运行时，而是一个配置管理器。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;它自己不拉镜像、不跑容器、不管网络。真正干活的是 Termux 生态里的 &lt;strong&gt;PRoot-Distro&lt;/strong&gt;——一个能在 Android 用户空间里跑 Linux 发行版的工具。termux-containers 做的事情，是给 PRoot-Distro 套上一层&amp;quot;类 Docker Compose&amp;quot;的壳：&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

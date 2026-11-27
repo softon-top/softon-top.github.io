@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Shazao on softon.top</title>
+		<link>https://softon.top/tags/shazao/</link>
+		<description>Recent content in Shazao on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 10 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/shazao/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Typora 89 元 / 3 台设备，我找到一个 8.37MB 的单 EXE 替代：Shazao 沙枣</title>
+				<link>https://softon.top/software/shazao-windows-markdown-editor-typora-alternative/</link>
+				<pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/shazao-windows-markdown-editor-typora-alternative/</guid>
+				<description>&lt;p&gt;Typora 中文站写着：&lt;strong&gt;89 元 / 3 台设备 / 免费升级&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;英文站更直白：&lt;strong&gt;$14.99（不含税）&lt;/strong&gt;，15 天试用，最多 3 台设备。&lt;/p&gt;&#xA;&lt;p&gt;这是 Markdown 编辑器里最贵的一档——不是订阅，是买断，但只买断 3 台。家里一台、公司一台、笔记本一台，刚好卡死。第 4 台开始，要么再掏一次钱，要么忍。&lt;/p&gt;&#xA;&lt;p&gt;于是我在小众软件发现频道里翻到一个叫 Shazao（沙枣）的东西：8.37MB 单 EXE，Windows 原生，免费，不用注册登录，C++20 写的，不基于 Electron。&lt;/p&gt;&#xA;&lt;p&gt;它真的能替 Typora 吗？我把 GitHub 发布页、README、论坛原帖和 Typora 官方定价全翻了一遍。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Shazao 是 Windows 原生 Markdown 阅读/编辑器，单 EXE，C++20 + Win32/DirectWrite/Direct2D/WIC，非 Electron，免费无需登录。&lt;/li&gt;&#xA;&lt;li&gt;最新稳定版 v0.6.19（11 月 7 日），EXE 9.24MB、UPX 压缩版 3.51MB；小众软件标题写 8.37MB 是旧版体积。&lt;/li&gt;&#xA;&lt;li&gt;功能对标 Typora 的所见即所得 + Mermaid + 多格式导出，额外有历史版本恢复、富文本粘贴、阅读位置记忆。&lt;/li&gt;&#xA;&lt;li&gt;硬伤：不开源、只发 Windows EXE、macOS/Linux 直接劝退；v0.6.x 阶段窗口记忆、代码块编辑仍被吐槽。&lt;/li&gt;&#xA;&lt;li&gt;我的判断：Windows 用户想从 Typora 省钱迁出，可以试；跨平台、要审计源码、要生态插件的，别迁。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;为什么我又开始找-markdown-编辑器&#34;&gt;为什么我又开始找 Markdown 编辑器？&#xA;&lt;/h2&gt;&lt;p&gt;Typora 的定价不是问题，是&amp;quot;卡 3 台&amp;quot;这件事。89 元 / 3 台，平均一台 29.67 元，比一杯星巴克贵不了多少。真正难受的是：换机、修电脑、公司电脑、家里台式机、随身笔记本——现代人有 3 台以上设备太正常了。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

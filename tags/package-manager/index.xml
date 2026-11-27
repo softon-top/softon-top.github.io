@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Package-Manager on softon.top</title>
+		<link>https://softon.top/tags/package-manager/</link>
+		<description>Recent content in Package-Manager on softon.top</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 24 Nov 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://softon.top/tags/package-manager/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>WinGet 官方 MCP Server 上线：让 AI 帮你装软件，到底能信到什么程度</title>
+				<link>https://softon.top/software/winget-mcp-server-ai-install-windows-software/</link>
+				<pubDate>Tue, 24 Nov 2026 00:00:00 +0000</pubDate>
+				<guid>https://softon.top/software/winget-mcp-server-ai-install-windows-software/</guid>
+				<description>&lt;p&gt;你有没有过这种时刻：让 AI 帮你配环境，它给你一段 &lt;code&gt;winget install XXX&lt;/code&gt;，你复制粘贴回车，然后盯着进度条祈祷下载源没挂。如果 AI 能自己把这一步做完，体验会完全不同——微软在 WinGet 1.12 里内置的 MCP Server，就是在做这件事。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;WinGet 1.12 起内置 MCP Server，一条 &lt;code&gt;winget mcp&lt;/code&gt; 就能拿到客户端配置 JSON&lt;/li&gt;&#xA;&lt;li&gt;目前只开放 &lt;code&gt;find&lt;/code&gt;（搜包）和 &lt;code&gt;install&lt;/code&gt;（装包）两个工具，后者每次都要人工批准&lt;/li&gt;&#xA;&lt;li&gt;走的是标准 stdio MCP 协议，VS Code Copilot 与 GitHub Copilot CLI 有官方接入路径&lt;/li&gt;&#xA;&lt;li&gt;想把安装权交给 Agent，风险不在协议，而在「谁给 Agent 装、装的东西从哪来」&lt;/li&gt;&#xA;&lt;li&gt;本文结论：值得玩，但别当成无人值守的装机流水线&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;这事的本质微软把包管理器接进了-mcp-生态&#34;&gt;这事的本质：微软把「包管理器」接进了 MCP 生态&#xA;&lt;/h2&gt;&lt;p&gt;先交代背景。WinGet（Windows Package Manager）是微软自己的命令行包管理器，地位大概相当于 macOS 的 Homebrew、Linux 的 apt，2020 年随 Windows 10 后期版本铺开，Windows 11 直接内置。长期以来它的用法就一句话：&lt;code&gt;winget install Mozilla.Firefox&lt;/code&gt;。&lt;/p&gt;&#xA;&lt;p&gt;变化发生在 WinGet 1.12。根据 &lt;code&gt;microsoft/winget-cli&lt;/code&gt; 仓库 Discussion #5868（发布于 2025-11-11）的 v1.12.420 发布说明，这一版的新特性第一条就是：&lt;strong&gt;MCP server available; run &lt;code&gt;winget mcp&lt;/code&gt; for assistance on configuring your client&lt;/strong&gt;。同版本还顺手做了 App Installer 迁移到 WinUI 3、清单 schema 升到 v1.12、新增 Font 安装类型等。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
